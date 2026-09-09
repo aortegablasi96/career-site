@@ -35,8 +35,9 @@ Consequences until an implementation exists:
   them is an Architect decision that belongs in an ADR before implementation, not a detail to
   settle inside a build task.
 * The GitHub repository is `aortegablasi96/career-site` (public), with `main` as the default
-  branch. It currently carries only this scaffolding and GitHub's default labels; no issues,
-  pull requests, or project labels exist yet, so the GitHub sources of truth below have no
+  branch. Issue templates exist in `.github/ISSUE_TEMPLATE/` (Epic, User Story, Bug), and the
+  labels `epic`, `story`, `content`, `ui`, and `architecture` were added alongside GitHub's
+  defaults. No issues or pull requests exist yet, so the GitHub sources of truth below have no
   history to draw on.
 
 When code, tooling, and commands do exist, replace this section with them.
