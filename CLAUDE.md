@@ -34,9 +34,10 @@ Consequences until an implementation exists:
 * The stack, project structure, hosting, and content model are **undecided**. Choosing any of
   them is an Architect decision that belongs in an ADR before implementation, not a detail to
   settle inside a build task.
-* The directory is not a git repository and has no GitHub remote, so the GitHub sources of
-  truth below are aspirational. Initialising git and creating the repository is itself work to
-  agree with the owner rather than to do implicitly.
+* The GitHub repository is `aortegablasi96/career-site` (public), with `main` as the default
+  branch. It currently carries only this scaffolding and GitHub's default labels; no issues,
+  pull requests, or project labels exist yet, so the GitHub sources of truth below have no
+  history to draw on.
 
 When code, tooling, and commands do exist, replace this section with them.
 
