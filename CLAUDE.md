@@ -22,9 +22,11 @@ Avoid functionality or complexity that does not meaningfully support these goals
 
 ### Current Repository State
 
-The application is scaffolded but has no real content, no styling, and no deployment. It is a
-Next.js App Router project in TypeScript, configured for static export, per ADR-001 and
-ADR-002.
+The application is scaffolded but has no real content and no styling. It is a Next.js App
+Router project in TypeScript, configured for static export, per ADR-001 and ADR-002, and
+deployed to GitHub Pages, per ADR-003.
+
+The live site is at **https://aortegablasi96.github.io/career-site/**.
 
 Commands:
 
@@ -54,6 +56,19 @@ Tooling notes that are easy to trip over:
   There is no DOM environment or Testing Library; add them only when there is interactive
   behaviour to test. What to test is the Tester's decision.
 
+Deployment, per ADR-003:
+
+* `.github/workflows/ci.yml` runs lint, typecheck, test, and build on every pull request and on
+  every push to `main`. On `main` it then deploys `out/` to GitHub Pages. If any step fails,
+  nothing is deployed and the live site stays as it was. Running the workflow manually from the
+  Actions tab redeploys `main` without a new commit.
+* GitHub Pages serves the site under `/career-site`. The workflow passes that path to the build
+  as `PAGES_BASE_PATH`, and `next.config.ts` hands it to `basePath`. Locally the variable is
+  unset, so everything is served from the root. To reproduce the production build, set
+  `PAGES_BASE_PATH=/career-site` before building, then serve `out/` under `/career-site/`.
+* There is no custom domain yet. One is intended, with the apex as canonical, and ADR-003 lists
+  the steps to adopt it. The Pages source and domain are repository settings rather than code.
+
 Structure, beyond what Next.js's own defaults already imply:
 
 ```text
@@ -73,7 +88,6 @@ What does not exist yet, and should not be invented:
 * **Styling.** No CSS, no design tokens, no components. Typography, colour, spacing, responsive
   behaviour, and print styles are the Design Foundation, Epic #2. The placeholder page renders
   with browser defaults on purpose.
-* **Hosting and deployment.** Tracked in issue #7. The site is not reachable at a URL yet.
 * **The real content types.** `content/types.ts` covers only what the scaffold needs. The
   fields for roles, projects, skills, and credentials are a content decision that has not been
   made.
@@ -83,7 +97,7 @@ branch. Issue templates exist in `.github/ISSUE_TEMPLATE/` (Epic, User Story, Bu
 labels `epic`, `story`, `content`, `ui`, and `architecture` were added alongside GitHub's
 defaults.
 
-Update this section as tooling, styling, and deployment land.
+Update this section as styling and content land.
 
 ## Project Sources of Truth
 
@@ -262,7 +276,7 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001 and ADR-002 are accepted; the next ADR is `003`. No DDRs have been written yet, so the
+ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. No DDRs have been written yet, so the
 first is `DDR-001`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 ## Workflow
