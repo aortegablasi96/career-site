@@ -4,6 +4,10 @@
  * ADR-001: every design value is defined once, here, as a custom property at the root. Styles
  * use these tokens instead of literal values, and a value missing from here is a decision to
  * make, not a number to invent.
+ *
+ * DDR-004: the tokens are mobile-first. The values at the root are for the narrowest viewports,
+ * and the one breakpoint, at the end of this file, redefines the few that change where there is
+ * room.
  */
 
 :root {
@@ -21,6 +25,13 @@
   --font-size-large: 1.4rem;
   --font-size-x-large: 1.75rem;
   --font-size-xx-large: 2.2rem;
+
+  /* The step each level of heading uses, named by role, per DDR-004. These are the narrow values,
+     each one step below the full scale, so long words in headings fit a narrow column with
+     enlarged text. The breakpoint restores the full scale. */
+  --font-size-page-title: var(--font-size-x-large);
+  --font-size-section-title: var(--font-size-large);
+  --font-size-item-title: var(--font-size-medium);
 
   --font-weight-regular: 400;
   --font-weight-semibold: 600;
@@ -57,13 +68,39 @@
 
   /* The vertical rhythm: which step separates what. Each level is twice the one below, so a
      section boundary is plain from whitespace and its heading, without a rule or a colour. Space
-     between items is applied by the component that renders them. */
+     between items is applied by the component that renders them. The rhythm is the same at
+     every width. */
   --space-flow: var(--space-medium);
   --space-item: var(--space-large);
   --space-section: var(--space-x-large);
 
   /* The page is a single column as wide as the measure, with a gutter that keeps text off the
-     edges of a narrow screen. */
+     edges of a narrow screen, and space above and below the content. These are the narrow
+     values, half the full ones, per DDR-004: the page's edges tighten so a narrow column with
+     enlarged text keeps its width. The breakpoint restores the full values. */
   --content-width: var(--measure);
-  --page-gutter: var(--space-medium);
+  --page-gutter: var(--space-small);
+  --page-padding-block: var(--space-large);
+
+  /* The smallest an interactive target may be in each direction, per DDR-004. In px, as WCAG
+     measures it, because a target is sized for a finger rather than for the text. */
+  --target-size-min: 44px;
+}
+
+/*
+ * The breakpoint, per DDR-004, and the only one: the page has one layout at every width. From here
+ * up, the type and spacing scales apply exactly as DDR-001 and DDR-003 record them.
+ *
+ * It is in em, which in a media query is the browser's default font size, so a narrow screen with
+ * enlarged text falls below it just as a narrower screen does. At the default size it is 320px. A
+ * media query cannot read a custom property, so the width is written here, once.
+ */
+@media (min-width: 20em) {
+  :root {
+    --font-size-page-title: var(--font-size-xx-large);
+    --font-size-section-title: var(--font-size-x-large);
+    --font-size-item-title: var(--font-size-large);
+    --page-gutter: var(--space-medium);
+    --page-padding-block: var(--space-section);
+  }
 }

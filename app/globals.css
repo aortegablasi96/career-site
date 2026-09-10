@@ -4,6 +4,10 @@
  * These apply the tokens in app/tokens.css to plain HTML, so content renders in the site's type,
  * colours, and spacing before any component adds styles of its own. Typography follows DDR-001,
  * colour follows DDR-002, and spacing and layout follow DDR-003.
+ *
+ * How they adapt across widths follows DDR-004. These styles read the role tokens that adapt, and
+ * write no width media query: the site's one breakpoint is in app/tokens.css. Nothing here
+ * reorders content, so the visual order is the markup order.
  */
 
 /* DDR-002 decides against a dark mode. This tells the browser to draw its own parts of the page,
@@ -39,16 +43,18 @@ h6 {
   text-wrap: balance;
 }
 
+/* The three levels of heading take their size from a role, which steps down on the narrowest
+   viewports, per DDR-004. h4 to h6 are body size at every width. */
 h1 {
-  font-size: var(--font-size-xx-large);
+  font-size: var(--font-size-page-title);
 }
 
 h2 {
-  font-size: var(--font-size-x-large);
+  font-size: var(--font-size-section-title);
 }
 
 h3 {
-  font-size: var(--font-size-large);
+  font-size: var(--font-size-item-title);
 }
 
 h4,
@@ -89,11 +95,12 @@ a {
 
 /* The page is a single centred column as wide as the measure. The gutter is padding outside the
    column, so text keeps off the edges of a narrow screen and the column is exactly the measure on
-   a wide one. The page begins and ends with the space that separates sections. */
+   a wide one. The page begins and ends with the space that separates sections. On the narrowest
+   viewports, the gutter and that space are halved, per DDR-004. */
 main {
   max-inline-size: var(--content-width);
   margin-inline: auto;
-  padding-block: var(--space-section);
+  padding-block: var(--page-padding-block);
   padding-inline: var(--page-gutter);
 }
 
