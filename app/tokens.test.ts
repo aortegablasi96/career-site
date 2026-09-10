@@ -122,3 +122,54 @@ describe('colour tokens', () => {
     },
   );
 });
+
+// DDR-003 derives the spacing scale from a base unit and names the rhythm the page uses. These
+// tests read the tokens as written, so a value off the scale cannot be added quietly.
+const spaces = new Map(
+  [...tokens.matchAll(/--space-([\w-]+):\s*([^;]+);/g)].map(([, name, value]) => [
+    name,
+    value.trim(),
+  ]),
+);
+
+const steps = [...spaces].filter(([, value]) => value.endsWith('rem'));
+const stepNames = steps.map(([name]) => name);
+
+/** Any token's value, as written. */
+function token(name: string): string | undefined {
+  return tokens.match(new RegExp(`--${name}:\\s*([^;]+);`))?.[1].trim();
+}
+
+describe('spacing tokens', () => {
+  it('defines the scale', () => {
+    expect(stepNames).toEqual(['x-small', 'small', 'medium', 'large', 'x-large']);
+  });
+
+  it('writes every spacing token as a step in rem or a reference to a step', () => {
+    const onTheScale = new RegExp(`^\\d*\\.?\\d+rem$|^var\\(--space-(?:${stepNames.join('|')})\\)$`);
+
+    for (const [name, value] of spaces) {
+      expect(value, name).toMatch(onTheScale);
+    }
+  });
+
+  it('derives the scale from a 1rem base unit, each step twice the one below', () => {
+    const sizes = steps.map(([, value]) => rem(value));
+
+    expect(rem(spaces.get('medium')!)).toBe(1);
+    expect(sizes.slice(1)).toEqual(sizes.slice(0, -1).map((size) => size * 2));
+  });
+
+  it.each([
+    { role: 'flow', step: 'medium' },
+    { role: 'item', step: 'large' },
+    { role: 'section', step: 'x-large' },
+  ])('separates at the $role level by the $step step, as DDR-003 records', ({ role, step }) => {
+    expect(spaces.get(role)).toBe(`var(--space-${step})`);
+  });
+
+  it('holds the column to the measure, with a gutter from the scale', () => {
+    expect(token('content-width')).toBe('var(--measure)');
+    expect(token('page-gutter')).toBe('var(--space-medium)');
+  });
+});

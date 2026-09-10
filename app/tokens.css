@@ -45,4 +45,25 @@
   --color-focus: var(--color-accent);
   --focus-outline-width: 2px;
   --focus-outline-offset: 2px;
+
+  /* Spacing, per DDR-003. A base unit of 1rem, halved and doubled, so each step is twice the one
+     below. In rem, so space follows the reader's browser font-size setting with the text it
+     separates. A value not on this scale is a decision to make, not a number to write. */
+  --space-x-small: 0.25rem;
+  --space-small: 0.5rem;
+  --space-medium: 1rem;
+  --space-large: 2rem;
+  --space-x-large: 4rem;
+
+  /* The vertical rhythm: which step separates what. Each level is twice the one below, so a
+     section boundary is plain from whitespace and its heading, without a rule or a colour. Space
+     between items is applied by the component that renders them. */
+  --space-flow: var(--space-medium);
+  --space-item: var(--space-large);
+  --space-section: var(--space-x-large);
+
+  /* The page is a single column as wide as the measure, with a gutter that keeps text off the
+     edges of a narrow screen. */
+  --content-width: var(--measure);
+  --page-gutter: var(--space-medium);
 }

@@ -1,9 +1,9 @@
 /*
  * Base element styles.
  *
- * These apply the tokens in app/tokens.css to plain HTML, so content renders in the site's type
- * and colours before any component adds styles of its own. Typography follows DDR-001 and colour
- * follows DDR-002. Spacing has not been decided yet and is left to the browser until it is.
+ * These apply the tokens in app/tokens.css to plain HTML, so content renders in the site's type,
+ * colours, and spacing before any component adds styles of its own. Typography follows DDR-001,
+ * colour follows DDR-002, and spacing and layout follow DDR-003.
  */
 
 /* DDR-002 decides against a dark mode. This tells the browser to draw its own parts of the page,
@@ -13,6 +13,9 @@
 }
 
 body {
+  /* The browser's 8px default is not on the spacing scale. The page gutter, on main, replaces
+     it. */
+  margin: 0;
   color: var(--color-text);
   background-color: var(--color-surface);
   font-family: var(--font-family-body);
@@ -82,4 +85,44 @@ a {
 :focus-visible {
   outline: var(--focus-outline-width) solid var(--color-focus);
   outline-offset: var(--focus-outline-offset);
+}
+
+/* The page is a single centred column as wide as the measure. The gutter is padding outside the
+   column, so text keeps off the edges of a narrow screen and the column is exactly the measure on
+   a wide one. The page begins and ends with the space that separates sections. */
+main {
+  max-inline-size: var(--content-width);
+  margin-inline: auto;
+  padding-block: var(--space-section);
+  padding-inline: var(--page-gutter);
+}
+
+/*
+ * Vertical rhythm, per DDR-003.
+ *
+ * Space is set above an element and never below it, so the gap between two blocks is always the
+ * one the second asks for, and margins never collapse into a value that is not on the scale.
+ * These rules have zero specificity, through :where(), so a component's own class overrides them.
+ */
+
+/* The browser's default margins differ by element and are in em, so they fall off the scale. The
+   rules below replace them. */
+:where(h1, h2, h3, h4, h5, h6, p, ul, ol) {
+  margin-block: 0;
+}
+
+/* In the page, a section, or an item, each block follows the one before at the flow step. */
+:where(main, header, section, article, li) > * + * {
+  margin-block-start: var(--space-flow);
+}
+
+/* A major section is set apart by the section step, twice the space between items. With its
+   heading, that is the whole boundary: there is no rule or background. */
+:where(main > * + section) {
+  margin-block-start: var(--space-section);
+}
+
+/* Lists are indented by a step of the scale rather than the browser's 40px. */
+:where(ul, ol) {
+  padding-inline-start: var(--space-large);
 }
