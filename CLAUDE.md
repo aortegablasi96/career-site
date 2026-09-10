@@ -29,13 +29,30 @@ ADR-002.
 Commands:
 
 ```text
-npm install     Install dependencies
-npm run dev     Start the local development server at http://localhost:3000
-npm run build   Build the static site into out/
+npm install         Install dependencies
+npm run dev         Start the local development server at http://localhost:3000
+npm run lint        Lint with ESLint; any error or warning fails
+npm run typecheck   Generate Next.js route types, then type-check with tsc
+npm run test        Run the test suite once with Vitest
+npm run build       Build the static site into out/
 ```
+
+All of them run from a clean checkout after `npm install`, and none needs a running server.
 
 There is deliberately no `start` script: static export produces plain files, so `next start`
 does not apply. Serve `out/` with any static file server if you need to check built output.
+
+Tooling notes that are easy to trip over:
+
+* **Linting** uses `eslint-config-next` (Core Web Vitals and TypeScript presets) through the
+  ESLint CLI, because Next.js 16 removed `next lint`. ESLint is held at 9.x because
+  `eslint-config-next` depends on `eslint-plugin-react`, which does not yet support ESLint 10.
+* **Type checking** runs `next typegen` first because `next-env.d.ts` and the route types are
+  generated, gitignored files, and a plain `tsc` fails without them on a clean checkout.
+* **Tests** sit next to the code they cover as `*.test.ts` or `*.test.tsx`. They run in Node
+  and render components with `react-dom/server`, matching how pages are produced at build time.
+  There is no DOM environment or Testing Library; add them only when there is interactive
+  behaviour to test. What to test is the Tester's decision.
 
 Structure, beyond what Next.js's own defaults already imply:
 
@@ -56,8 +73,6 @@ What does not exist yet, and should not be invented:
 * **Styling.** No CSS, no design tokens, no components. Typography, colour, spacing, responsive
   behaviour, and print styles are the Design Foundation, Epic #2. The placeholder page renders
   with browser defaults on purpose.
-* **Lint, type-check, and test commands.** Tracked in issue #6. Type errors do already fail
-  `npm run build`, but that is the only validation currently wired up.
 * **Hosting and deployment.** Tracked in issue #7. The site is not reachable at a URL yet.
 * **The real content types.** `content/types.ts` covers only what the scaffold needs. The
   fields for roles, projects, skills, and credentials are a content decision that has not been
