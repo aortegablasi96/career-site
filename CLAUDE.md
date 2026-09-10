@@ -22,8 +22,8 @@ Avoid functionality or complexity that does not meaningfully support these goals
 
 ### Current Repository State
 
-The application is scaffolded, and its typographic, colour, and spacing systems are in place, but
-it has no real content and no components yet. It is a Next.js App Router project in TypeScript, configured
+The application is scaffolded, and its typographic, colour, spacing, and responsive systems are in
+place, but it has no real content and no components yet. It is a Next.js App Router project in TypeScript, configured
 for static export, per ADR-001 and ADR-002, and deployed to GitHub Pages, per ADR-003.
 
 The live site is at **https://aortegablasi96.github.io/career-site/**.
@@ -91,17 +91,26 @@ Styling follows ADR-001. `app/tokens.css` defines every design token once, as a 
 at `:root`, and `app/globals.css` applies the tokens to plain HTML elements. Component styles are
 to be CSS Modules that read the tokens rather than writing literal values. A value the tokens do
 not provide is a design decision to make, not a number to invent. `app/tokens.test.ts` holds the
-type scale to DDR-001's floors, every colour pairing to the contrast ratio DDR-002 records, and
-the spacing scale and rhythm to DDR-003, so changing a token means revising its decision record
-too. The spacing rules in `app/globals.css` are wrapped in `:where()`, so they have no
-specificity and a CSS Module's class overrides them.
+type scale to DDR-001's floors, every colour pairing to the contrast ratio DDR-002 records, the
+spacing scale and rhythm to DDR-003, and the breakpoint and what it adapts to DDR-004, so changing
+a token means revising its decision record too. The spacing rules in `app/globals.css` are
+wrapped in `:where()`, so they have no specificity and a CSS Module's class overrides them.
+
+The styles are mobile-first, per DDR-004. The `:root` values in `app/tokens.css` are for the
+narrowest viewports. The site's one breakpoint, a `min-width: 20em` media query at the end of that
+file, redefines the few role tokens that adapt: the heading sizes (`--font-size-page-title`,
+`--font-size-section-title`, `--font-size-item-title`) and the page's edges (`--page-gutter`,
+`--page-padding-block`). Styles read those roles rather than the steps behind them, and no other
+stylesheet writes a width media query, because a new breakpoint is a new decision. To check the
+breakpoint in a browser, change the browser's default font size, not the root's CSS font size:
+an em in a media query follows the former and ignores the latter.
 
 What does not exist yet, and should not be invented:
 
-* **Responsive and print styles.** Typography (DDR-001), colour (DDR-002), and spacing and
-  layout (DDR-003) are decided and implemented. The responsive strategy (#13) and print styles
-  (#14) are the rest of the Design Foundation, Epic #2, and there are no components yet. Until
-  they land, the page has one layout at every width and prints with browser defaults, on purpose.
+* **Print styles.** Typography (DDR-001), colour (DDR-002), spacing and layout (DDR-003), and
+  the responsive strategy (DDR-004) are decided and implemented. Print styles (#14) are the rest
+  of the Design Foundation, Epic #2, and there are no components yet. Until #14 lands, the page
+  prints with browser defaults, on purpose.
 * **The real content types.** `content/types.ts` covers only what the scaffold needs. The
   fields for roles, projects, skills, and credentials are a content decision that has not been
   made.
@@ -290,8 +299,8 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001, DDR-002, and DDR-003 are
-accepted; the next DDR is `004`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001, DDR-002, DDR-003, and DDR-004 are
+accepted; the next DDR is `005`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 ## Workflow
 

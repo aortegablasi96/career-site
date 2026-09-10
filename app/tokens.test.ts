@@ -5,18 +5,33 @@ import { describe, expect, it } from 'vitest';
 // so a later edit to the scale cannot quietly go below them.
 const tokens = readFileSync(new URL('./tokens.css', import.meta.url), 'utf8');
 
-const fontSizes = [...tokens.matchAll(/--font-size-([\w-]+):\s*([^;]+);/g)].map(
+// DDR-004 makes the tokens mobile-first: the root block holds every token at its value for the
+// narrowest viewports, and one media query redefines a few of them where there is room. The tests
+// of each scale read the root block.
+const breakpointRule = /@media\s*([^{]+?)\s*\{\s*:root\s*\{([^}]*)\}\s*\}/g;
+const breakpoints = [...tokens.matchAll(breakpointRule)].map(([, query, body]) => ({ query, body }));
+const root = tokens.replace(breakpointRule, '');
+
+const fontSizes = [...root.matchAll(/--font-size-([\w-]+):\s*([^;]+);/g)].map(
   ([, name, value]) => ({ name, value: value.trim() }),
 );
+
+// The steps of the scale are written in rem. The heading roles DDR-004 adds refer to a step.
+const fontSteps = fontSizes.filter(({ value }) => value.endsWith('rem'));
 
 /** The size in rem, which is also the size in multiples of 16px at the browser default. */
 function rem(value: string): number {
   return Number.parseFloat(value);
 }
 
+/** Any token's value at the root, as written. */
+function token(name: string): string | undefined {
+  return root.match(new RegExp(`--${name}:\\s*([^;]+);`))?.[1].trim();
+}
+
 describe('type scale tokens', () => {
   it('defines the scale', () => {
-    expect(fontSizes.map(({ name }) => name)).toEqual([
+    expect(fontSteps.map(({ name }) => name)).toEqual([
       'small',
       'medium',
       'large',
@@ -25,26 +40,30 @@ describe('type scale tokens', () => {
     ]);
   });
 
-  it('sizes every step in rem, so text follows the browser font-size setting', () => {
-    for (const { value } of fontSizes) {
-      expect(value).toMatch(/^\d*\.?\d+rem$/);
+  it('writes every size as a step in rem or a reference to one, so text follows the browser font-size setting', () => {
+    const onTheScale = new RegExp(
+      `^\\d*\\.?\\d+rem$|^var\\(--font-size-(?:${fontSteps.map(({ name }) => name).join('|')})\\)$`,
+    );
+
+    for (const { name, value } of fontSizes) {
+      expect(value, name).toMatch(onTheScale);
     }
   });
 
   it('sets body text at 16px or larger', () => {
-    const body = fontSizes.find(({ name }) => name === 'medium');
+    const body = fontSteps.find(({ name }) => name === 'medium');
 
     expect(rem(body!.value)).toBeGreaterThanOrEqual(1);
   });
 
   it('sets no step below 12px', () => {
-    for (const { value } of fontSizes) {
+    for (const { value } of fontSteps) {
       expect(rem(value)).toBeGreaterThanOrEqual(0.75);
     }
   });
 
   it('orders the steps from smallest to largest', () => {
-    const sizes = fontSizes.map(({ value }) => rem(value));
+    const sizes = fontSteps.map(({ value }) => rem(value));
 
     expect(sizes).toEqual([...sizes].sort((a, b) => a - b));
   });
@@ -53,7 +72,7 @@ describe('type scale tokens', () => {
 // DDR-002 records the contrast of every pairing the site uses. These tests measure the tokens as
 // written, so a colour change fails here until the decision record is revised with it.
 const colors = new Map(
-  [...tokens.matchAll(/--color-([\w-]+):\s*([^;]+);/g)].map(([, name, value]) => [
+  [...root.matchAll(/--color-([\w-]+):\s*([^;]+);/g)].map(([, name, value]) => [
     name,
     value.trim(),
   ]),
@@ -126,7 +145,7 @@ describe('colour tokens', () => {
 // DDR-003 derives the spacing scale from a base unit and names the rhythm the page uses. These
 // tests read the tokens as written, so a value off the scale cannot be added quietly.
 const spaces = new Map(
-  [...tokens.matchAll(/--space-([\w-]+):\s*([^;]+);/g)].map(([, name, value]) => [
+  [...root.matchAll(/--space-([\w-]+):\s*([^;]+);/g)].map(([, name, value]) => [
     name,
     value.trim(),
   ]),
@@ -134,11 +153,6 @@ const spaces = new Map(
 
 const steps = [...spaces].filter(([, value]) => value.endsWith('rem'));
 const stepNames = steps.map(([name]) => name);
-
-/** Any token's value, as written. */
-function token(name: string): string | undefined {
-  return tokens.match(new RegExp(`--${name}:\\s*([^;]+);`))?.[1].trim();
-}
 
 describe('spacing tokens', () => {
   it('defines the scale', () => {
@@ -168,8 +182,47 @@ describe('spacing tokens', () => {
     expect(spaces.get(role)).toBe(`var(--space-${step})`);
   });
 
-  it('holds the column to the measure, with a gutter from the scale', () => {
+  it('holds the column to the measure', () => {
     expect(token('content-width')).toBe('var(--measure)');
-    expect(token('page-gutter')).toBe('var(--space-medium)');
+  });
+});
+
+// DDR-004 adapts the scales at one breakpoint, in em, by redefining the role tokens that differ,
+// and records the step each takes on either side of it. These tests read the tokens as written,
+// so a second breakpoint, or a new adaptation, cannot be added quietly.
+const atBreakpoint = new Map(
+  [...(breakpoints[0]?.body ?? '').matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([, name, value]) => [
+    name,
+    value.trim(),
+  ]),
+);
+
+const adapted = [
+  { role: 'font-size-page-title', narrow: 'font-size-x-large', wide: 'font-size-xx-large' },
+  { role: 'font-size-section-title', narrow: 'font-size-large', wide: 'font-size-x-large' },
+  { role: 'font-size-item-title', narrow: 'font-size-medium', wide: 'font-size-large' },
+  { role: 'page-gutter', narrow: 'space-small', wide: 'space-medium' },
+  { role: 'page-padding-block', narrow: 'space-large', wide: 'space-section' },
+];
+
+describe('responsive tokens', () => {
+  it('has one breakpoint, a minimum width in em, so it follows the browser font-size setting', () => {
+    expect(breakpoints.map(({ query }) => query)).toEqual(['(min-width: 20em)']);
+  });
+
+  it('adapts only the heading sizes and the page edges, never a step of either scale', () => {
+    expect([...atBreakpoint.keys()]).toEqual(adapted.map(({ role }) => role));
+  });
+
+  it.each(adapted)(
+    'sets --$role to --$narrow below the breakpoint and --$wide from it, as DDR-004 records',
+    ({ role, narrow, wide }) => {
+      expect(token(role)).toBe(`var(--${narrow})`);
+      expect(atBreakpoint.get(role)).toBe(`var(--${wide})`);
+    },
+  );
+
+  it('sets the smallest interactive target at 44 CSS pixels', () => {
+    expect(token('target-size-min')).toBe('44px');
   });
 });
