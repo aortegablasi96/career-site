@@ -2,11 +2,19 @@
  * Base element styles.
  *
  * These apply the tokens in app/tokens.css to plain HTML, so content renders in the site's type
- * before any component adds styles of its own. Typography follows DDR-001. Colour and spacing
- * have not been decided yet and are left to the browser until they are.
+ * and colours before any component adds styles of its own. Typography follows DDR-001 and colour
+ * follows DDR-002. Spacing has not been decided yet and is left to the browser until it is.
  */
 
+/* DDR-002 decides against a dark mode. This tells the browser to draw its own parts of the page,
+   such as scrollbars and form controls, in their light form. */
+:root {
+  color-scheme: light;
+}
+
 body {
+  color: var(--color-text);
+  background-color: var(--color-surface);
   font-family: var(--font-family-body);
   font-size: var(--font-size-medium);
   font-weight: var(--font-weight-regular);
@@ -58,5 +66,20 @@ strong {
 }
 
 small {
+  color: var(--color-text-secondary);
   font-size: var(--font-size-small);
+}
+
+/* The underline, not the colour, is what marks a link: the accent is too close to the text colour
+   to tell them apart on its own. The colour applies to visited links too. */
+a {
+  color: var(--color-accent);
+  text-decoration-line: underline;
+}
+
+/* For keyboard focus only, not mouse clicks. The offset keeps the outline on the surface, where
+   its contrast is measured. */
+:focus-visible {
+  outline: var(--focus-outline-width) solid var(--color-focus);
+  outline-offset: var(--focus-outline-offset);
 }

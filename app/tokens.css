@@ -31,4 +31,18 @@
   /* The longest line running text may have. In ch, so it follows the font size and holds when
      text is enlarged; on a narrower viewport, text simply fills the width available. */
   --measure: 65ch;
+
+  /* Colour, per DDR-002. Light only, by decision. DDR-002 records the contrast of every pairing
+     intended for text, and app/tokens.test.ts checks it; any other pairing is unverified. */
+  --color-surface: #fbfaf8;
+  --color-text: #1c1b19;
+  --color-text-secondary: #5e5a54;
+  --color-accent: #1d4e89;
+  --color-border: #8c877f;
+
+  /* The keyboard focus outline. It is offset so it sits on the surface, and it is an outline
+     rather than a shadow so it survives forced-colours modes. */
+  --color-focus: var(--color-accent);
+  --focus-outline-width: 2px;
+  --focus-outline-offset: 2px;
 }
