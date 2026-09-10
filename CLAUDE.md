@@ -22,8 +22,8 @@ Avoid functionality or complexity that does not meaningfully support these goals
 
 ### Current Repository State
 
-The application is scaffolded, and its typographic system is in place, but it has no real
-content and no other styling yet. It is a Next.js App Router project in TypeScript, configured
+The application is scaffolded, and its typographic and colour systems are in place, but it has
+no real content and no other styling yet. It is a Next.js App Router project in TypeScript, configured
 for static export, per ADR-001 and ADR-002, and deployed to GitHub Pages, per ADR-003.
 
 The live site is at **https://aortegablasi96.github.io/career-site/**.
@@ -90,14 +90,16 @@ arrives.
 Styling follows ADR-001. `app/tokens.css` defines every design token once, as a custom property
 at `:root`, and `app/globals.css` applies the tokens to plain HTML elements. Component styles are
 to be CSS Modules that read the tokens rather than writing literal values. A value the tokens do
-not provide is a design decision to make, not a number to invent.
+not provide is a design decision to make, not a number to invent. `app/tokens.test.ts` holds the
+type scale to DDR-001's floors and every colour pairing to the contrast ratio DDR-002 records, so
+changing a token means revising its decision record too.
 
 What does not exist yet, and should not be invented:
 
-* **Most of the styling.** Typography is decided in DDR-001 and implemented. Colour, spacing and
-  layout, responsive behaviour, and print styles are the rest of the Design Foundation, Epic #2,
-  and there are no components yet. Until they land, everything except type renders with browser
-  defaults, on purpose.
+* **Most of the styling.** Typography (DDR-001) and colour (DDR-002) are decided and
+  implemented. Spacing and layout, responsive behaviour, and print styles are the rest of the
+  Design Foundation, Epic #2, and there are no components yet. Until they land, everything except
+  type and colour renders with browser defaults, on purpose.
 * **The real content types.** `content/types.ts` covers only what the scaffold needs. The
   fields for roles, projects, skills, and credentials are a content decision that has not been
   made.
@@ -286,8 +288,8 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001 is accepted; the next
-DDR is `002`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001 and DDR-002 are
+accepted; the next DDR is `003`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 ## Workflow
 
