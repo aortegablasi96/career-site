@@ -1,0 +1,62 @@
+/*
+ * Base element styles.
+ *
+ * These apply the tokens in app/tokens.css to plain HTML, so content renders in the site's type
+ * before any component adds styles of its own. Typography follows DDR-001. Colour and spacing
+ * have not been decided yet and are left to the browser until they are.
+ */
+
+body {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-medium);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  /* Long unbroken strings, such as URLs and email addresses, wrap instead of overflowing when
+     text is enlarged or the viewport is narrow. */
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-family-heading);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-heading);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--font-size-xx-large);
+}
+
+h2 {
+  font-size: var(--font-size-x-large);
+}
+
+h3 {
+  font-size: var(--font-size-large);
+}
+
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-medium);
+}
+
+p,
+li {
+  max-inline-size: var(--measure);
+  text-wrap: pretty;
+}
+
+b,
+strong {
+  font-weight: var(--font-weight-semibold);
+}
+
+small {
+  font-size: var(--font-size-small);
+}

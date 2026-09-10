@@ -1,0 +1,34 @@
+/*
+ * Design tokens.
+ *
+ * ADR-001: every design value is defined once, here, as a custom property at the root. Styles
+ * use these tokens instead of literal values, and a value missing from here is a decision to
+ * make, not a number to invent.
+ */
+
+:root {
+  /* Typography, per DDR-001. */
+
+  /* The families and their fallback stacks are loaded in app/layout.tsx, which defines
+     --font-source-sans-3 and --font-source-serif-4 on the root element. */
+  --font-family-body: var(--font-source-sans-3);
+  --font-family-heading: var(--font-source-serif-4);
+
+  /* A major third (1.25) from an 18px body size, rounded. In rem, so every step follows the
+     reader's browser font-size setting. The smallest step is the smallest text on the site. */
+  --font-size-small: 0.9rem;
+  --font-size-medium: 1.125rem;
+  --font-size-large: 1.4rem;
+  --font-size-x-large: 1.75rem;
+  --font-size-xx-large: 2.2rem;
+
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+
+  --line-height-body: 1.5;
+  --line-height-heading: 1.2;
+
+  /* The longest line running text may have. In ch, so it follows the font size and holds when
+     text is enlarged; on a narrower viewport, text simply fills the width available. */
+  --measure: 65ch;
+}

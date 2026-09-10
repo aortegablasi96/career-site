@@ -22,9 +22,9 @@ Avoid functionality or complexity that does not meaningfully support these goals
 
 ### Current Repository State
 
-The application is scaffolded but has no real content and no styling. It is a Next.js App
-Router project in TypeScript, configured for static export, per ADR-001 and ADR-002, and
-deployed to GitHub Pages, per ADR-003.
+The application is scaffolded, and its typographic system is in place, but it has no real
+content and no other styling yet. It is a Next.js App Router project in TypeScript, configured
+for static export, per ADR-001 and ADR-002, and deployed to GitHub Pages, per ADR-003.
 
 The live site is at **https://aortegablasi96.github.io/career-site/**.
 
@@ -55,6 +55,10 @@ Tooling notes that are easy to trip over:
   and render components with `react-dom/server`, matching how pages are produced at build time.
   There is no DOM environment or Testing Library; add them only when there is interactive
   behaviour to test. What to test is the Tester's decision.
+* **Fonts** are committed to `app/fonts/`, with their licences, and loaded by
+  `next/font/local` in `app/layout.tsx`, so builds need no network access for fonts.
+  `next/font` is a compile-time transform whose loaders throw outside the Next.js compiler, so
+  a test that imports the root layout mocks `next/font/local`, as `app/layout.test.tsx` does.
 
 Deployment, per ADR-003:
 
@@ -72,7 +76,7 @@ Deployment, per ADR-003:
 Structure, beyond what Next.js's own defaults already imply:
 
 ```text
-app/        Routes and layouts
+app/        Routes and layouts, the global stylesheets, and the fonts
 content/    All user-facing prose, as typed TypeScript modules
 ```
 
@@ -83,11 +87,17 @@ directly. A copy change should never require editing a component. `content/place
 exists only to give the scaffold something to render and should be deleted once real content
 arrives.
 
+Styling follows ADR-001. `app/tokens.css` defines every design token once, as a custom property
+at `:root`, and `app/globals.css` applies the tokens to plain HTML elements. Component styles are
+to be CSS Modules that read the tokens rather than writing literal values. A value the tokens do
+not provide is a design decision to make, not a number to invent.
+
 What does not exist yet, and should not be invented:
 
-* **Styling.** No CSS, no design tokens, no components. Typography, colour, spacing, responsive
-  behaviour, and print styles are the Design Foundation, Epic #2. The placeholder page renders
-  with browser defaults on purpose.
+* **Most of the styling.** Typography is decided in DDR-001 and implemented. Colour, spacing and
+  layout, responsive behaviour, and print styles are the rest of the Design Foundation, Epic #2,
+  and there are no components yet. Until they land, everything except type renders with browser
+  defaults, on purpose.
 * **The real content types.** `content/types.ts` covers only what the scaffold needs. The
   fields for roles, projects, skills, and credentials are a content decision that has not been
   made.
@@ -276,8 +286,8 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. No DDRs have been written yet, so the
-first is `DDR-001`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001 is accepted; the next
+DDR is `002`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 ## Workflow
 
