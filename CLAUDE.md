@@ -22,25 +22,53 @@ Avoid functionality or complexity that does not meaningfully support these goals
 
 ### Current Repository State
 
-The repository currently contains **no application code**: no framework, package manager,
-build, lint, or test tooling, and no source files. It holds only project instructions,
-skills, and decision-record templates.
+The application is scaffolded but has no real content, no styling, and no deployment. It is a
+Next.js App Router project in TypeScript, configured for static export, per ADR-001 and
+ADR-002.
 
-Consequences until an implementation exists:
+Commands:
 
-* There are no build, lint, run, or test commands to document. Do not invent them.
-* "Follow the existing codebase" and "reuse existing components/patterns" have no referent
-  yet. The first change in a given area is a new decision, not a pattern to copy.
-* The stack, project structure, hosting, and content model are **undecided**. Choosing any of
-  them is an Architect decision that belongs in an ADR before implementation, not a detail to
-  settle inside a build task.
-* The GitHub repository is `aortegablasi96/career-site` (public), with `main` as the default
-  branch. Issue templates exist in `.github/ISSUE_TEMPLATE/` (Epic, User Story, Bug), and the
-  labels `epic`, `story`, `content`, `ui`, and `architecture` were added alongside GitHub's
-  defaults. No issues or pull requests exist yet, so the GitHub sources of truth below have no
-  history to draw on.
+```text
+npm install     Install dependencies
+npm run dev     Start the local development server at http://localhost:3000
+npm run build   Build the static site into out/
+```
 
-When code, tooling, and commands do exist, replace this section with them.
+There is deliberately no `start` script: static export produces plain files, so `next start`
+does not apply. Serve `out/` with any static file server if you need to check built output.
+
+Structure, beyond what Next.js's own defaults already imply:
+
+```text
+app/        Routes and layouts
+content/    All user-facing prose, as typed TypeScript modules
+```
+
+`content/` is the part worth knowing about. ADR-001 forbids user-facing prose inside
+components, and ADR-002 makes `content/` the single place it lives: `content/types.ts` defines
+the shapes, one module per content type exports the records, and Server Components import them
+directly. A copy change should never require editing a component. `content/placeholder.ts`
+exists only to give the scaffold something to render and should be deleted once real content
+arrives.
+
+What does not exist yet, and should not be invented:
+
+* **Styling.** No CSS, no design tokens, no components. Typography, colour, spacing, responsive
+  behaviour, and print styles are the Design Foundation, Epic #2. The placeholder page renders
+  with browser defaults on purpose.
+* **Lint, type-check, and test commands.** Tracked in issue #6. Type errors do already fail
+  `npm run build`, but that is the only validation currently wired up.
+* **Hosting and deployment.** Tracked in issue #7. The site is not reachable at a URL yet.
+* **The real content types.** `content/types.ts` covers only what the scaffold needs. The
+  fields for roles, projects, skills, and credentials are a content decision that has not been
+  made.
+
+The GitHub repository is `aortegablasi96/career-site` (public), with `main` as the default
+branch. Issue templates exist in `.github/ISSUE_TEMPLATE/` (Epic, User Story, Bug), and the
+labels `epic`, `story`, `content`, `ui`, and `architecture` were added alongside GitHub's
+defaults.
+
+Update this section as tooling, styling, and deployment land.
 
 ## Project Sources of Truth
 
@@ -219,8 +247,8 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-No decision records have been written yet, so the first of each kind is `001`.
-Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+ADR-001 and ADR-002 are accepted; the next ADR is `003`. No DDRs have been written yet, so the
+first is `DDR-001`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 ## Workflow
 
@@ -346,3 +374,13 @@ Use skills to separate responsibilities.
 Use the existing codebase as the default implementation reference.
 
 When something is unclear, identify the uncertainty rather than inventing a requirement or silently making a significant decision.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
