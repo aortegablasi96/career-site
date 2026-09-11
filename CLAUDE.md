@@ -22,8 +22,8 @@ Avoid functionality or complexity that does not meaningfully support these goals
 
 ### Current Repository State
 
-The application is scaffolded, and its typographic, colour, spacing, and responsive systems are in
-place, but it has no real content and no components yet. It is a Next.js App Router project in TypeScript, configured
+The application is scaffolded, and its typographic, colour, spacing, responsive, and print systems
+are in place, but it has no real content and no components yet. It is a Next.js App Router project in TypeScript, configured
 for static export, per ADR-001 and ADR-002, and deployed to GitHub Pages, per ADR-003.
 
 The live site is at **https://aortegablasi96.github.io/career-site/**.
@@ -92,9 +92,10 @@ at `:root`, and `app/globals.css` applies the tokens to plain HTML elements. Com
 to be CSS Modules that read the tokens rather than writing literal values. A value the tokens do
 not provide is a design decision to make, not a number to invent. `app/tokens.test.ts` holds the
 type scale to DDR-001's floors, every colour pairing to the contrast ratio DDR-002 records, the
-spacing scale and rhythm to DDR-003, and the breakpoint and what it adapts to DDR-004, so changing
-a token means revising its decision record too. The spacing rules in `app/globals.css` are
-wrapped in `:where()`, so they have no specificity and a CSS Module's class overrides them.
+spacing scale and rhythm to DDR-003, the breakpoint and what it adapts to DDR-004, and the print
+treatment to DDR-005, so changing a token means revising its decision record too. The spacing and
+print rules in `app/globals.css` are wrapped in `:where()`, so they have no specificity and a CSS
+Module's class overrides them.
 
 The styles are mobile-first, per DDR-004. The `:root` values in `app/tokens.css` are for the
 narrowest viewports. The site's one breakpoint, a `min-width: 20em` media query at the end of that
@@ -105,12 +106,22 @@ stylesheet writes a width media query, because a new breakpoint is a new decisio
 breakpoint in a browser, change the browser's default font size, not the root's CSS font size:
 an em in a media query follows the former and ignores the latter.
 
+Print follows DDR-005. ADR-002 makes the page itself the CV, so what a browser prints, or saves
+as a PDF, is designed rather than left to defaults. A `@media print` block in `app/tokens.css`
+sets `--root-font-size` to 10pt, so every rem, type and space alike, is measured from a size suited
+to paper. It also makes the paper the surface and lets the column fill the sheet, and an `@page`
+rule beside it sets 2cm margins. The `@media print` block in `app/globals.css` hides `nav`, prints
+each link's address after it, keeps entries whole, and keeps headings with what follows, which
+Firefox does not honour (#23). A component
+hides its own screen-only elements in print and adds no print-only content. Check print by saving
+a PDF in two browsers, and recheck page breaks when the amount of content changes.
+
 What does not exist yet, and should not be invented:
 
-* **Print styles.** Typography (DDR-001), colour (DDR-002), spacing and layout (DDR-003), and
-  the responsive strategy (DDR-004) are decided and implemented. Print styles (#14) are the rest
-  of the Design Foundation, Epic #2, and there are no components yet. Until #14 lands, the page
-  prints with browser defaults, on purpose.
+* **Components.** The Design Foundation, Epic #2, is decided and implemented: typography
+  (DDR-001), colour (DDR-002), spacing and layout (DDR-003), responsive behaviour (DDR-004), and
+  print (DDR-005). No components exist yet, and none should be built ahead of the pages that
+  need them.
 * **The real content types.** `content/types.ts` covers only what the scaffold needs. The
   fields for roles, projects, skills, and credentials are a content decision that has not been
   made.
@@ -299,8 +310,8 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001, DDR-002, DDR-003, and DDR-004 are
-accepted; the next DDR is `005`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001 to DDR-005 are
+accepted; the next DDR is `006`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 ## Workflow
 

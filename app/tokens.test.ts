@@ -6,11 +6,13 @@ import { describe, expect, it } from 'vitest';
 const tokens = readFileSync(new URL('./tokens.css', import.meta.url), 'utf8');
 
 // DDR-004 makes the tokens mobile-first: the root block holds every token at its value for the
-// narrowest viewports, and one media query redefines a few of them where there is room. The tests
-// of each scale read the root block.
-const breakpointRule = /@media\s*([^{]+?)\s*\{\s*:root\s*\{([^}]*)\}\s*\}/g;
-const breakpoints = [...tokens.matchAll(breakpointRule)].map(([, query, body]) => ({ query, body }));
-const root = tokens.replace(breakpointRule, '');
+// narrowest viewports, and one media query redefines a few of them where there is room. DDR-005
+// redefines some for paper in a print media query. The tests of each scale read the root block.
+const mediaRule = /@media\s*([^{]+?)\s*\{\s*:root\s*\{([^}]*)\}\s*\}/g;
+const mediaRules = [...tokens.matchAll(mediaRule)].map(([, query, body]) => ({ query, body }));
+const breakpoints = mediaRules.filter(({ query }) => query !== 'print');
+const print = mediaRules.find(({ query }) => query === 'print');
+const root = tokens.replace(mediaRule, '');
 
 const fontSizes = [...root.matchAll(/--font-size-([\w-]+):\s*([^;]+);/g)].map(
   ([, name, value]) => ({ name, value: value.trim() }),
@@ -27,6 +29,13 @@ function rem(value: string): number {
 /** Any token's value at the root, as written. */
 function token(name: string): string | undefined {
   return root.match(new RegExp(`--${name}:\\s*([^;]+);`))?.[1].trim();
+}
+
+/** Every custom property a media query's root block redefines, as written. */
+function redefined(body = ''): Map<string, string> {
+  return new Map(
+    [...body.matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([, name, value]) => [name, value.trim()]),
+  );
 }
 
 describe('type scale tokens', () => {
@@ -48,6 +57,10 @@ describe('type scale tokens', () => {
     for (const { name, value } of fontSizes) {
       expect(value, name).toMatch(onTheScale);
     }
+  });
+
+  it('measures every rem from the browser font-size setting on screen', () => {
+    expect(token('root-font-size')).toBe('100%');
   });
 
   it('sets body text at 16px or larger', () => {
@@ -190,12 +203,7 @@ describe('spacing tokens', () => {
 // DDR-004 adapts the scales at one breakpoint, in em, by redefining the role tokens that differ,
 // and records the step each takes on either side of it. These tests read the tokens as written,
 // so a second breakpoint, or a new adaptation, cannot be added quietly.
-const atBreakpoint = new Map(
-  [...(breakpoints[0]?.body ?? '').matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([, name, value]) => [
-    name,
-    value.trim(),
-  ]),
-);
+const atBreakpoint = redefined(breakpoints[0]?.body);
 
 const adapted = [
   { role: 'font-size-page-title', narrow: 'font-size-x-large', wide: 'font-size-xx-large' },
@@ -224,5 +232,38 @@ describe('responsive tokens', () => {
 
   it('sets the smallest interactive target at 44 CSS pixels', () => {
     expect(token('target-size-min')).toBe('44px');
+  });
+});
+
+// DDR-005 sets the page for paper by redefining tokens in print, and gives the sheet its margins.
+// These tests read the tokens as written, so the print treatment cannot drift from the record.
+const inPrint = redefined(print?.body);
+
+const forPaper = [
+  { name: 'root-font-size', value: '10pt' },
+  { name: 'color-surface', value: 'transparent' },
+  { name: 'content-width', value: 'none' },
+  { name: 'page-gutter', value: '0' },
+  { name: 'page-padding-block', value: '0' },
+];
+
+describe('print tokens', () => {
+  it('redefines only the base size, the surface, and the column and its edges', () => {
+    expect([...inPrint.keys()]).toEqual(forPaper.map(({ name }) => name));
+  });
+
+  it.each(forPaper)('sets --$name to $value in print, as DDR-005 records', ({ name, value }) => {
+    expect(inPrint.get(name)).toBe(value);
+  });
+
+  it('keeps the smallest text at 9pt or larger on paper, the 12px floor DDR-001 sets', () => {
+    const base = Number.parseFloat(inPrint.get('root-font-size')!);
+    const smallest = Math.min(...fontSteps.map(({ value }) => rem(value)));
+
+    expect(base * smallest).toBeGreaterThanOrEqual(9 - 1e-9);
+  });
+
+  it('gives the sheet margins in a unit of the paper', () => {
+    expect(tokens).toMatch(/@page\s*\{\s*margin:\s*2cm;\s*\}/);
   });
 });

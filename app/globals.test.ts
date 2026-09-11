@@ -83,3 +83,33 @@ describe('responsive base styles', () => {
     expect(declarations).not.toMatch(/\border\s*:|-reverse\b|\bgrid-(?:area|row|column)\b/);
   });
 });
+
+// DDR-005 treats the page for paper. The tokens do most of it; the print rules add what they
+// cannot express.
+const print = declarations.match(/@media print\s*\{([\s\S]*)\}\s*$/)?.[1] ?? '';
+
+describe('print base styles', () => {
+  it('measures every rem from the root font size token, which DDR-005 sets for paper', () => {
+    expect(rule(':root')).toMatch(/font-size:\s*var\(--root-font-size\);/);
+  });
+
+  it('hides in-page navigation, which leads nowhere on paper', () => {
+    expect(print).toMatch(/:where\(nav\)\s*\{\s*display:\s*none;\s*\}/);
+  });
+
+  it('prints the address after every link that leaves the page', () => {
+    expect(print).toMatch(
+      /:where\(a\[href\]:not\(\[href\^='#'\]\)\)::after\s*\{\s*content:\s*' \(' attr\(href\) '\)';\s*\}/,
+    );
+  });
+
+  it('keeps a heading on the page with what it introduces', () => {
+    expect(print).toMatch(
+      /:where\(h1, h2, h3, h4, h5, h6\)\s*\{\s*break-after:\s*avoid;\s*break-inside:\s*avoid;\s*\}/,
+    );
+  });
+
+  it('never splits a single entry across two pages', () => {
+    expect(print).toMatch(/:where\(article, li\)\s*\{\s*break-inside:\s*avoid;\s*\}/);
+  });
+});
