@@ -14,6 +14,9 @@
    such as scrollbars and form controls, in their light form. */
 :root {
   color-scheme: light;
+  /* Every rem is measured from here: the reader's own setting on screen, and a size suited to paper
+     in print, per DDR-005. */
+  font-size: var(--root-font-size);
 }
 
 body {
@@ -132,4 +135,36 @@ main {
 /* Lists are indented by a step of the scale rather than the browser's 40px. */
 :where(ul, ol) {
   padding-inline-start: var(--space-large);
+}
+
+/*
+ * Paper, per DDR-005.
+ *
+ * The tokens adapt the type, colour, and layout for print. These rules add what paper needs and
+ * the tokens cannot express. Like the spacing rules, they have zero specificity, through :where(),
+ * so a component's own class overrides them.
+ */
+@media print {
+  /* In-page navigation leads nowhere on paper. */
+  :where(nav) {
+    display: none;
+  }
+
+  /* A link cannot be followed on paper, so its address is printed after it. A link within the page
+     leads nowhere on paper, so it prints nothing. */
+  :where(a[href]:not([href^='#']))::after {
+    content: ' (' attr(href) ')';
+  }
+
+  /* A heading stays on the same page as what it introduces, and a single entry, such as a role or
+     a project, is never split across two pages. Firefox does not honour break-after: avoid, so
+     there a section heading can still end a page; DDR-005 records this. */
+  :where(h1, h2, h3, h4, h5, h6) {
+    break-after: avoid;
+    break-inside: avoid;
+  }
+
+  :where(article, li) {
+    break-inside: avoid;
+  }
 }

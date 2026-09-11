@@ -13,6 +13,10 @@
 :root {
   /* Typography, per DDR-001. */
 
+  /* The size every rem is measured from. On screen it is the reader's own browser font-size
+     setting, so the scales follow it. DDR-005 sets it for paper. */
+  --root-font-size: 100%;
+
   /* The families and their fallback stacks are loaded in app/layout.tsx, which defines
      --font-source-sans-3 and --font-source-serif-4 on the root element. */
   --font-family-body: var(--font-source-sans-3);
@@ -103,4 +107,26 @@
     --page-gutter: var(--space-medium);
     --page-padding-block: var(--space-section);
   }
+}
+
+/*
+ * Paper, per DDR-005: printing, and saving as a PDF from the browser. The whole type and spacing
+ * system is set from a 10pt base, so its proportions hold at a size suited to paper. The column
+ * fills the sheet between its margins, and the surface is the paper itself, so the page reads the
+ * same whether or not the browser prints backgrounds.
+ */
+@media print {
+  :root {
+    --root-font-size: 10pt;
+    --color-surface: transparent;
+    --content-width: none;
+    --page-gutter: 0;
+    --page-padding-block: 0;
+  }
+}
+
+/* The sheet's margins, per DDR-005. They are a measure of the paper, not a step of the spacing
+   scale, so they are written in cm, here, once. The paper size is left to the visitor. */
+@page {
+  margin: 2cm;
 }
