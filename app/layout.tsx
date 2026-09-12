@@ -24,9 +24,14 @@ const sourceSerif = localFont({
   fallback: ['Georgia', 'serif'],
 });
 
+// The same title and description serve search results and link previews.
 export const metadata: Metadata = {
   title: site.title,
   description: site.description,
+  openGraph: {
+    title: site.title,
+    description: site.description,
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

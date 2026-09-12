@@ -1,0 +1,5 @@
+/* When the contents move to a section, its heading lands this far below the top of the window
+   rather than against it, per DDR-006. */
+.section {
+  scroll-margin-block-start: var(--space-medium);
+}

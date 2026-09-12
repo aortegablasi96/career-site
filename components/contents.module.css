@@ -1,0 +1,22 @@
+/* Set apart from the contact links above by twice the flow step, per DDR-006. The first section
+   follows at the section step, from the base styles. The base styles also hide it in print. */
+.contents {
+  margin-block-start: var(--space-large);
+}
+
+/* A row that wraps when it runs out of width, so it needs no breakpoint. */
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-medium);
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+/* Every target is at least the minimum in each direction, per DDR-004. */
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-size-min);
+  min-inline-size: var(--target-size-min);
+}

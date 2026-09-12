@@ -1,0 +1,44 @@
+/* The name, the positioning, and the location form one block, set tighter than the flow that
+   follows, per DDR-006. */
+
+/* The most prominent text after the name, without joining the heading outline: a larger step, in
+   the body face at regular weight, which it inherits. */
+.positioning {
+  margin-block-start: var(--space-small);
+  font-size: var(--font-size-large);
+}
+
+.location {
+  margin-block-start: var(--space-x-small);
+}
+
+/* One link on each line, with no bullets or indentation. */
+.contact {
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+/* Every target is at least the minimum in each direction, per DDR-004. As a flex container the
+   link no longer wraps with the text around it, so an address wider than the column, such as the
+   email address at 320px with text at 200%, is let break anywhere rather than overflow the page. */
+.contactLink {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-size-min);
+  min-inline-size: var(--target-size-min);
+  overflow-wrap: anywhere;
+}
+
+@media print {
+  /* Nothing is tapped on paper, so the link takes the height of its text, per DDR-006. */
+  .contactLink {
+    display: inline;
+    min-block-size: 0;
+    min-inline-size: 0;
+  }
+
+  /* The link's text is its address, so the address is not printed again after it, per DDR-006. */
+  .contactLink::after {
+    content: none;
+  }
+}

@@ -23,8 +23,9 @@ Avoid functionality or complexity that does not meaningfully support these goals
 ### Current Repository State
 
 The application is scaffolded, and its typographic, colour, spacing, responsive, and print systems
-are in place, but it has no real content and no components yet. It is a Next.js App Router project in TypeScript, configured
-for static export, per ADR-001 and ADR-002, and deployed to GitHub Pages, per ADR-003.
+are in place. The career page, Epic #25, is being built one section at a time: so far it has its
+introduction and the frame the sections join. It is a Next.js App Router project in TypeScript,
+configured for static export, per ADR-001 and ADR-002, and deployed to GitHub Pages, per ADR-003.
 
 The live site is at **https://aortegablasi96.github.io/career-site/**.
 
@@ -77,15 +78,18 @@ Structure, beyond what Next.js's own defaults already imply:
 
 ```text
 app/        Routes and layouts, the global stylesheets, and the fonts
+components/ Presentational components, each with its CSS Module and its test
 content/    All user-facing prose, as typed TypeScript modules
 ```
 
 `content/` is the part worth knowing about. ADR-001 forbids user-facing prose inside
 components, and ADR-002 makes `content/` the single place it lives: `content/types.ts` defines
 the shapes, one module per content type exports the records, and Server Components import them
-directly. A copy change should never require editing a component. `content/placeholder.ts`
-exists only to give the scaffold something to render and should be deleted once real content
-arrives.
+directly. A copy change should never require editing a component. `app/page.tsx` imports the
+content and passes it to the components as props.
+
+`app/page.tsx` also holds the page's sections in one ordered list. Each entry renders as a
+section and is listed in the contents, so a section story adds its section in that one place.
 
 Styling follows ADR-001. `app/tokens.css` defines every design token once, as a custom property
 at `:root`, and `app/globals.css` applies the tokens to plain HTML elements. Component styles are
@@ -95,7 +99,8 @@ type scale to DDR-001's floors, every colour pairing to the contrast ratio DDR-0
 spacing scale and rhythm to DDR-003, the breakpoint and what it adapts to DDR-004, and the print
 treatment to DDR-005, so changing a token means revising its decision record too. The spacing and
 print rules in `app/globals.css` are wrapped in `:where()`, so they have no specificity and a CSS
-Module's class overrides them.
+Module's class overrides them. `components/stylesheets.test.ts` holds every component stylesheet to
+the same rules: tokens only, no width media query, and no reordering.
 
 The styles are mobile-first, per DDR-004. The `:root` values in `app/tokens.css` are for the
 narrowest viewports. The site's one breakpoint, a `min-width: 20em` media query at the end of that
@@ -119,15 +124,16 @@ a PDF in two browsers, and recheck page breaks when the amount of content change
 
 What does not exist yet, and should not be invented:
 
-* **Components.** The Design Foundation, Epic #2, is decided and implemented: typography
-  (DDR-001), colour (DDR-002), spacing and layout (DDR-003), responsive behaviour (DDR-004), and
-  print (DDR-005). No components exist yet, and none should be built ahead of the pages that
-  need them. DDR-006 decides the career page's structure: its outline, the introduction, the
-  contents, the entry anatomy shared by roles, projects, and credentials, and the labelled list
-  shared by skills and languages. The section stories of Epic #25 build to it.
-* **The real content types.** `content/types.ts` covers only what the scaffold needs. The
-  fields for roles, projects, skills, and credentials are a content decision that has not been
-  made.
+* **The remaining sections' components.** The Design Foundation, Epic #2, is decided and
+  implemented: typography (DDR-001), colour (DDR-002), spacing and layout (DDR-003), responsive
+  behaviour (DDR-004), and print (DDR-005). DDR-006 decides the career page's structure: its
+  outline, the introduction, the contents, the entry anatomy shared by roles, projects, and
+  credentials, and the labelled list shared by skills and languages. So far the introduction,
+  the contents, the section wrapper, and the metadata line exist. The entry and the labelled list
+  are built by the section stories that first need them, #29 to #32, and not before.
+* **The remaining content types.** `content/types.ts` covers the site metadata, the
+  introduction, and the contents. Each section story adds the type for its own records, to the
+  fields the Content Brief on #25 sets.
 
 The GitHub repository is `aortegablasi96/career-site` (public), with `main` as the default
 branch. Issue templates exist in `.github/ISSUE_TEMPLATE/` (Epic, User Story, Bug), and the
