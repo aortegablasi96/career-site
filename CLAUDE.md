@@ -113,7 +113,8 @@ to paper. It also makes the paper the surface and lets the column fill the sheet
 rule beside it sets 2cm margins. The `@media print` block in `app/globals.css` hides `nav`, prints
 each link's address after it, keeps entries whole, and keeps headings with what follows, which
 Firefox does not honour (#23). A component
-hides its own screen-only elements in print and adds no print-only content. Check print by saving
+hides its own screen-only elements in print, and may drop screen-only sizing such as the minimum
+target size, per DDR-006, but adds no print-only content. Check print by saving
 a PDF in two browsers, and recheck page breaks when the amount of content changes.
 
 What does not exist yet, and should not be invented:
@@ -121,7 +122,9 @@ What does not exist yet, and should not be invented:
 * **Components.** The Design Foundation, Epic #2, is decided and implemented: typography
   (DDR-001), colour (DDR-002), spacing and layout (DDR-003), responsive behaviour (DDR-004), and
   print (DDR-005). No components exist yet, and none should be built ahead of the pages that
-  need them.
+  need them. DDR-006 decides the career page's structure: its outline, the introduction, the
+  contents, the entry anatomy shared by roles, projects, and credentials, and the labelled list
+  shared by skills and languages. The section stories of Epic #25 build to it.
 * **The real content types.** `content/types.ts` covers only what the scaffold needs. The
   fields for roles, projects, skills, and credentials are a content decision that has not been
   made.
@@ -310,8 +313,8 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001 to DDR-005 are
-accepted; the next DDR is `006`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001 to DDR-006 are
+accepted; the next DDR is `007`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 ## Workflow
 
