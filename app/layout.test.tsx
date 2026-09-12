@@ -1,6 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
-import RootLayout from '@/app/layout';
+import RootLayout, { metadata } from '@/app/layout';
+import { introduction } from '@/content/introduction';
 
 // next/font is a compile-time transform, and outside the Next.js compiler its loaders throw.
 // The stand-in returns the configured variable name as the class, so tests can see which font
@@ -30,5 +31,18 @@ describe('RootLayout', () => {
     );
 
     expect(html).toContain('<body><main></main></body>');
+  });
+});
+
+describe('metadata', () => {
+  it('titles the document with the name and positioning the introduction shows', () => {
+    expect(metadata.title).toBe(`${introduction.name} – ${introduction.positioning}`);
+  });
+
+  it('gives link previews the same title and description as search results', () => {
+    expect(metadata.openGraph).toMatchObject({
+      title: metadata.title,
+      description: metadata.description,
+    });
   });
 });

@@ -1,10 +1,34 @@
-import { placeholder } from '@/content/placeholder';
+import type { ReactNode } from 'react';
+import { Contents } from '@/components/contents';
+import { Introduction } from '@/components/introduction';
+import { Section } from '@/components/section';
+import { contents } from '@/content/contents';
+import { introduction } from '@/content/introduction';
+
+/** A major section of the page: where the contents link to, its title, and what it holds. */
+interface PageSection {
+  id: string;
+  title: string;
+  body: ReactNode;
+}
+
+/**
+ * The page's sections, in the order the Content Brief on #25 sets. Each one renders as a section
+ * and is listed in the contents, from this one list, so the two cannot disagree. The section
+ * stories of Epic #25 add them.
+ */
+const sections: readonly PageSection[] = [];
 
 export default function HomePage() {
   return (
     <main>
-      <h1>{placeholder.heading}</h1>
-      <p>{placeholder.message}</p>
+      <Introduction introduction={introduction} />
+      <Contents label={contents.label} sections={sections} />
+      {sections.map(({ id, title, body }) => (
+        <Section key={id} id={id} title={title}>
+          {body}
+        </Section>
+      ))}
     </main>
   );
 }
