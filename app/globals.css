@@ -117,7 +117,7 @@ main {
 
 /* The browser's default margins differ by element and are in em, so they fall off the scale. The
    rules below replace them. */
-:where(h1, h2, h3, h4, h5, h6, p, ul, ol) {
+:where(h1, h2, h3, h4, h5, h6, p, ul, ol, dl) {
   margin-block: 0;
 }
 

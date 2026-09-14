@@ -1,0 +1,18 @@
+/* Skill groups in a section are separated by the item step, as entries are, per DDR-003 and
+   DDR-006. */
+.group + .group {
+  margin-block-start: var(--space-item);
+}
+
+/* The levels are set closer to the group's name than the flow, so the group reads as one item, as
+   an entry's body does, per DDR-006. */
+.group > * + * {
+  margin-block-start: var(--space-small);
+}
+
+@media print {
+  /* A skill group is kept whole on paper, as an entry is, per DDR-006. */
+  .group {
+    break-inside: avoid;
+  }
+}

@@ -24,7 +24,8 @@ Avoid functionality or complexity that does not meaningfully support these goals
 
 The application is scaffolded, and its typographic, colour, spacing, responsive, and print systems
 are in place. The career page, Epic #25, is being built one section at a time: so far it has its
-introduction, the frame the sections join, and the experience and projects sections. It is a Next.js App Router
+introduction, the frame the sections join, and the experience, projects, skills, and languages
+sections. It is a Next.js App Router
 project in TypeScript, configured for static export, per ADR-001 and ADR-002, and deployed to
 GitHub Pages, per ADR-003.
 
@@ -120,7 +121,9 @@ rule beside it sets 2cm margins. The `@media print` block in `app/globals.css` h
 each link's address after it, keeps entries whole, and keeps headings with what follows, which
 Firefox does not honour (#23). A component
 hides its own screen-only elements in print, and may drop screen-only sizing such as the minimum
-target size, per DDR-006, but adds no print-only content. Check print by saving
+target size, per DDR-006, but adds no print-only content. What DDR-006 keeps whole on paper but
+the base styles do not, because it is not an `article` or list item, such as a skill group or
+the labelled list, is kept whole by its own component. Check print by saving
 a PDF in two browsers, and recheck page breaks when the amount of content changes.
 
 What does not exist yet, and should not be invented:
@@ -130,12 +133,12 @@ What does not exist yet, and should not be invented:
   behaviour (DDR-004), and print (DDR-005). DDR-006 decides the career page's structure: its
   outline, the introduction, the contents, the entry anatomy shared by roles, projects, and
   credentials, and the labelled list shared by skills and languages. So far the introduction,
-  the contents, the section wrapper, the metadata line, the entry, the date range, and the
-  experience and projects sections exist. Credentials (#32) reuse the entry and the date range.
-  The labelled list is built by the story that first needs it, #31, and not before.
+  the contents, the section wrapper, the metadata line, the entry, the date range, the labelled
+  list, and the experience, projects, skills, and languages sections exist. Credentials (#32)
+  reuse the entry and the date range.
 * **The remaining content types.** `content/types.ts` covers the site metadata, the
-  introduction, the contents, dates, roles, and projects. Each section story adds the type for its own
-  records, to the fields the Content Brief on #25 sets.
+  introduction, the contents, dates, roles, projects, skills, and languages. Credentials (#32)
+  add their own type, to the fields the Content Brief on #25 sets.
 
 The GitHub repository is `aortegablasi96/career-site` (public), with `main` as the default
 branch. Issue templates exist in `.github/ISSUE_TEMPLATE/` (Epic, User Story, Bug), and the
