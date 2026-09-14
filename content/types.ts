@@ -5,7 +5,7 @@
  * TypeScript modules and imported directly by Server Components.
  *
  * Only the types the page renders so far are defined here. Each section story of Epic #25 adds
- * the type for its own records: skills, credentials, and languages are still to come.
+ * the type for its own records: credentials are still to come.
  */
 
 /** Site-level metadata. Rendered into the document head rather than the page body. */
@@ -94,4 +94,46 @@ export interface Projects {
   title: string;
   /** In the order the page shows them, per ADR-002. */
   projects: readonly Project[];
+}
+
+/** The three levels a skill can have, per the Content Brief on #25. */
+export type SkillLevel = 'advanced' | 'proficient' | 'basic';
+
+/** A level, with the word the page shows for it. Levels are words, not scores, per DDR-006. */
+export interface SkillLevelName {
+  level: SkillLevel;
+  name: string;
+}
+
+/** A group of skills in the skills section, such as AI, per the Content Brief on #25. */
+export interface SkillGroup {
+  /** The group's name, which is its heading, per DDR-006. */
+  name: string;
+  /** The skills at each level, in the order the page shows them. A level with none is left out. */
+  skills: Partial<Record<SkillLevel, readonly string[]>>;
+}
+
+/** The skills section. */
+export interface Skills {
+  /** The section's heading, which its link in the contents shows too. */
+  title: string;
+  /** Every level, strongest first, which is the order each group shows them in, per DDR-006. */
+  levels: readonly SkillLevelName[];
+  /** In the order the page shows them, per ADR-002. */
+  groups: readonly SkillGroup[];
+}
+
+/** A language the owner speaks, per the Content Brief on #25. */
+export interface Language {
+  name: string;
+  /** The owner's level, on the CEFR scale, such as "Native (C2)" or "C1". */
+  level: string;
+}
+
+/** The languages section. */
+export interface Languages {
+  /** The section's heading, which its link in the contents shows too. */
+  title: string;
+  /** In the order the page shows them, per ADR-002. */
+  languages: readonly Language[];
 }
