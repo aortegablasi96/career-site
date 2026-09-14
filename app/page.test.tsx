@@ -25,7 +25,7 @@ describe('HomePage', () => {
     const listed = [...html.matchAll(/<a href="#([^"]+)"/g)].map(([, id]) => id);
     const shown = [...html.matchAll(/<section id="([^"]+)"/g)].map(([, id]) => id);
 
-    expect(shown).toEqual(['experience', 'projects', 'skills', 'languages']);
+    expect(shown).toEqual(['experience', 'projects', 'skills', 'education', 'languages']);
     expect(listed).toEqual(shown);
   });
 
