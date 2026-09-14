@@ -5,7 +5,7 @@
  * TypeScript modules and imported directly by Server Components.
  *
  * Only the types the page renders so far are defined here. Each section story of Epic #25 adds
- * the type for its own records: roles, projects, skills, credentials, and languages.
+ * the type for its own records: projects, skills, credentials, and languages are still to come.
  */
 
 /** Site-level metadata. Rendered into the document head rather than the page body. */
@@ -39,4 +39,36 @@ export interface Introduction {
 export interface Contents {
   /** The accessible name of the navigation, so assistive technology can announce it. */
   label: string;
+}
+
+/** A month, as its machine-readable value: the year and the month's two digits, such as "2024-10". */
+export type Month = `${number}-${number}`;
+
+/** How dates read on the page, per DDR-006. */
+export interface DateLabels {
+  /** The names of the twelve months, January first, as a date shows them. */
+  months: readonly string[];
+  /** What a current role shows in place of its end month. */
+  present: string;
+}
+
+/** A role in the experience section, per the Content Brief on #25. */
+export interface Role {
+  /** The job title, which is the entry's heading, per DDR-006. */
+  title: string;
+  company: string;
+  place: string;
+  start: Month;
+  /** Left out while the role is current. */
+  end?: Month;
+  /** Two to four points on what the owner did, CV-style, without pronouns. */
+  points: readonly string[];
+}
+
+/** The experience section. */
+export interface Experience {
+  /** The section's heading, which its link in the contents shows too. */
+  title: string;
+  /** Newest first. The page shows them in this order, per ADR-002. */
+  roles: readonly Role[];
 }
