@@ -1,0 +1,27 @@
+/* A row of labelled links that wraps when it runs out of width, so it needs no breakpoint, per
+   DDR-006. The entry sets it below the description at the small step. */
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-medium);
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+/* Every target is at least the minimum in each direction, per DDR-004. */
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-size-min);
+  min-inline-size: var(--target-size-min);
+}
+
+@media print {
+  /* Nothing is tapped on paper, so the link takes the height of its text, per DDR-006. Its address
+     still prints after it, from the base styles, per DDR-005. */
+  .link {
+    display: inline;
+    min-block-size: 0;
+    min-inline-size: 0;
+  }
+}
