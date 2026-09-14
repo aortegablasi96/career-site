@@ -1,8 +1,11 @@
 import type { ReactNode } from 'react';
 import { Contents } from '@/components/contents';
+import { Experience } from '@/components/experience';
 import { Introduction } from '@/components/introduction';
 import { Section } from '@/components/section';
 import { contents } from '@/content/contents';
+import { dateLabels } from '@/content/dates';
+import { experience } from '@/content/experience';
 import { introduction } from '@/content/introduction';
 
 /** A major section of the page: where the contents link to, its title, and what it holds. */
@@ -17,7 +20,13 @@ interface PageSection {
  * and is listed in the contents, from this one list, so the two cannot disagree. The section
  * stories of Epic #25 add them.
  */
-const sections: readonly PageSection[] = [];
+const sections: readonly PageSection[] = [
+  {
+    id: 'experience',
+    title: experience.title,
+    body: <Experience roles={experience.roles} dateLabels={dateLabels} />,
+  },
+];
 
 export default function HomePage() {
   return (

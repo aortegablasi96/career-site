@@ -24,8 +24,9 @@ Avoid functionality or complexity that does not meaningfully support these goals
 
 The application is scaffolded, and its typographic, colour, spacing, responsive, and print systems
 are in place. The career page, Epic #25, is being built one section at a time: so far it has its
-introduction and the frame the sections join. It is a Next.js App Router project in TypeScript,
-configured for static export, per ADR-001 and ADR-002, and deployed to GitHub Pages, per ADR-003.
+introduction, the frame the sections join, and the experience section. It is a Next.js App Router
+project in TypeScript, configured for static export, per ADR-001 and ADR-002, and deployed to
+GitHub Pages, per ADR-003.
 
 The live site is at **https://aortegablasi96.github.io/career-site/**.
 
@@ -129,11 +130,12 @@ What does not exist yet, and should not be invented:
   behaviour (DDR-004), and print (DDR-005). DDR-006 decides the career page's structure: its
   outline, the introduction, the contents, the entry anatomy shared by roles, projects, and
   credentials, and the labelled list shared by skills and languages. So far the introduction,
-  the contents, the section wrapper, and the metadata line exist. The entry and the labelled list
-  are built by the section stories that first need them, #29 to #32, and not before.
+  the contents, the section wrapper, the metadata line, the entry, the date range, and the
+  experience section exist. Projects (#30) and credentials (#32) reuse the entry, and credentials
+  the date range. The labelled list is built by the story that first needs it, #31, and not before.
 * **The remaining content types.** `content/types.ts` covers the site metadata, the
-  introduction, and the contents. Each section story adds the type for its own records, to the
-  fields the Content Brief on #25 sets.
+  introduction, the contents, dates, and roles. Each section story adds the type for its own
+  records, to the fields the Content Brief on #25 sets.
 
 The GitHub repository is `aortegablasi96/career-site` (public), with `main` as the default
 branch. Issue templates exist in `.github/ISSUE_TEMPLATE/` (Epic, User Story, Bug), and the

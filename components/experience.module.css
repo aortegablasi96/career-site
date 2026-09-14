@@ -1,0 +1,4 @@
+/* Consecutive points are set closer than the flow, per DDR-006. */
+.points > li + li {
+  margin-block-start: var(--space-small);
+}

@@ -16,6 +16,21 @@ describe('MetadataLine', () => {
     expect(read).toBe('A  B  C');
   });
 
+  it('takes markup as a part, such as a date with its machine-readable value', () => {
+    const html = renderToStaticMarkup(
+      <MetadataLine
+        parts={[
+          'ABB',
+          <time key="date" dateTime="2024-10">
+            Oct 2024
+          </time>,
+        ]}
+      />,
+    );
+
+    expect(html).toMatch(/ABB <span aria-hidden="true">·<\/span> <time datetime="2024-10">Oct 2024<\/time>/i);
+  });
+
   it('shows a single part with no separator', () => {
     const html = renderToStaticMarkup(<MetadataLine parts={['Jun 2024']} />);
 

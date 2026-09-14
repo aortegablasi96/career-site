@@ -16,4 +16,16 @@ describe('HomePage', () => {
   it('no longer shows the placeholder', () => {
     expect(html).not.toContain('This site is being built');
   });
+
+  it('lists the experience section in the contents, and follows them with it', () => {
+    expect(html).toMatch(/<nav [^>]*>.*<a href="#experience"[^>]*>Experience<\/a>.*<\/nav><section id="experience"/);
+  });
+
+  it('never skips a heading level', () => {
+    const levels = [...html.matchAll(/<h(\d)/g)].map(([, level]) => Number(level));
+
+    for (const [index, level] of levels.entries()) {
+      expect(level).toBeLessThanOrEqual((levels[index - 1] ?? 0) + 1);
+    }
+  });
 });
