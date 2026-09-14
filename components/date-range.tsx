@@ -4,8 +4,11 @@ import type { DateLabels, Month } from '@/content/types';
 // wraps, as the metadata line does in a narrow column with enlarged text, never starts with either.
 const noBreakSpace = ' ';
 
-/** A month as the page shows it, such as "Oct 2024", marked up with its machine-readable value. */
-function MonthDate({ month, labels }: { month: Month; labels: DateLabels }) {
+/**
+ * A month as the page shows it, such as "Oct 2024", marked up with its machine-readable value. On
+ * its own, it is the month a certification was granted, per DDR-006.
+ */
+export function MonthDate({ month, labels }: { month: Month; labels: DateLabels }) {
   const [year, number] = month.split('-');
 
   return <time dateTime={month}>{`${labels.months[Number(number) - 1]}${noBreakSpace}${year}`}</time>;

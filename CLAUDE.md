@@ -23,9 +23,10 @@ Avoid functionality or complexity that does not meaningfully support these goals
 ### Current Repository State
 
 The application is scaffolded, and its typographic, colour, spacing, responsive, and print systems
-are in place. The career page, Epic #25, is being built one section at a time: so far it has its
-introduction, the frame the sections join, and the experience, projects, skills, and languages
-sections. It is a Next.js App Router
+are in place. The career page, Epic #25, has its introduction, the frame the sections join, and
+all five of its sections: experience, projects, skills, education and certifications, and
+languages. What remains of the Epic is rechecking page breaks against the finished page (#23).
+It is a Next.js App Router
 project in TypeScript, configured for static export, per ADR-001 and ADR-002, and deployed to
 GitHub Pages, per ADR-003.
 
@@ -126,19 +127,19 @@ the base styles do not, because it is not an `article` or list item, such as a s
 the labelled list, is kept whole by its own component. Check print by saving
 a PDF in two browsers, and recheck page breaks when the amount of content changes.
 
-What does not exist yet, and should not be invented:
+What exists, to reuse rather than reinvent:
 
-* **The remaining sections' components.** The Design Foundation, Epic #2, is decided and
-  implemented: typography (DDR-001), colour (DDR-002), spacing and layout (DDR-003), responsive
-  behaviour (DDR-004), and print (DDR-005). DDR-006 decides the career page's structure: its
-  outline, the introduction, the contents, the entry anatomy shared by roles, projects, and
-  credentials, and the labelled list shared by skills and languages. So far the introduction,
-  the contents, the section wrapper, the metadata line, the entry, the date range, the labelled
-  list, and the experience, projects, skills, and languages sections exist. Credentials (#32)
-  reuse the entry and the date range.
-* **The remaining content types.** `content/types.ts` covers the site metadata, the
-  introduction, the contents, dates, roles, projects, skills, and languages. Credentials (#32)
-  add their own type, to the fields the Content Brief on #25 sets.
+* **The components.** The Design Foundation, Epic #2, is decided and implemented: typography
+  (DDR-001), colour (DDR-002), spacing and layout (DDR-003), responsive behaviour (DDR-004), and
+  print (DDR-005). DDR-006 decides the career page's structure: its outline, the introduction,
+  the contents, the entry anatomy shared by roles, projects, and credentials, and the labelled
+  list shared by skills and languages. The introduction, the contents, the section wrapper, the
+  metadata line, the entry, the date range, the labelled list, and the experience, projects,
+  skills, credentials, and languages sections implement it. A certification is an entry with no
+  body, showing only the month it was granted.
+* **The content types.** `content/types.ts` covers the site metadata, the introduction, the
+  contents, dates, roles, projects, skills, credentials, and languages. A credential is a degree
+  or a certification.
 
 The GitHub repository is `aortegablasi96/career-site` (public), with `main` as the default
 branch. Issue templates exist in `.github/ISSUE_TEMPLATE/` (Epic, User Story, Bug), and the

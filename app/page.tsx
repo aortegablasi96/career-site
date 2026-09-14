@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Contents } from '@/components/contents';
+import { Credentials } from '@/components/credentials';
 import { Experience } from '@/components/experience';
 import { Introduction } from '@/components/introduction';
 import { Languages } from '@/components/languages';
@@ -7,6 +8,7 @@ import { Projects } from '@/components/projects';
 import { Section } from '@/components/section';
 import { Skills } from '@/components/skills';
 import { contents } from '@/content/contents';
+import { credentials } from '@/content/credentials';
 import { dateLabels } from '@/content/dates';
 import { experience } from '@/content/experience';
 import { introduction } from '@/content/introduction';
@@ -41,6 +43,11 @@ const sections: readonly PageSection[] = [
     id: 'skills',
     title: skills.title,
     body: <Skills levels={skills.levels} groups={skills.groups} />,
+  },
+  {
+    id: 'education',
+    title: credentials.title,
+    body: <Credentials credentials={credentials.credentials} dateLabels={dateLabels} />,
   },
   {
     id: 'languages',

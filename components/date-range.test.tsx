@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { dateLabels } from '@/content/dates';
-import { DateRange } from './date-range';
+import { DateRange, MonthDate } from './date-range';
 
 /** The rendered text, with no-break spaces shown as ordinary spaces. */
 const read = (html: string) => html.replace(/<[^>]+>/g, '').replace(/ /g, ' ');
@@ -36,6 +36,15 @@ describe('DateRange', () => {
     const html = renderToStaticMarkup(<DateRange start="2014-01" end="2019-12" labels={dateLabels} />);
 
     expect(read(html)).toBe('Jan 2014 – Dec 2019');
+  });
+});
+
+describe('MonthDate', () => {
+  it('shows a single month, such as the month a certification was granted, with its machine-readable value', () => {
+    const html = renderToStaticMarkup(<MonthDate month="2024-06" labels={dateLabels} />);
+
+    expect(read(html)).toBe('Jun 2024');
+    expect(html).toMatch(/^<time datetime="2024-06">Jun.2024<\/time>$/i);
   });
 });
 

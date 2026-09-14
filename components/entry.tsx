@@ -4,7 +4,8 @@ import styles from './entry.module.css';
 
 /**
  * A role, a project, or a credential, which share one anatomy, per DDR-006: a title, a line of
- * metadata, and a body. It is an article, which the print styles keep whole on one page.
+ * metadata, and a body, which a certification does not have. It is an article, which the print
+ * styles keep whole on one page.
  */
 export function Entry({
   title,
@@ -13,7 +14,7 @@ export function Entry({
 }: {
   title: string;
   metadata: readonly ReactNode[];
-  children: ReactNode;
+  children?: ReactNode;
 }) {
   return (
     <article className={styles.entry}>

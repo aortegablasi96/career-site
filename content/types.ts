@@ -4,8 +4,8 @@
  * ADR-002 records that all user-facing prose lives in `content/`, authored as typed
  * TypeScript modules and imported directly by Server Components.
  *
- * Only the types the page renders so far are defined here. Each section story of Epic #25 adds
- * the type for its own records: credentials are still to come.
+ * Each section story of Epic #25 added the type for its own records, so only the types the page
+ * renders are defined here.
  */
 
 /** Site-level metadata. Rendered into the document head rather than the page body. */
@@ -121,6 +121,38 @@ export interface Skills {
   levels: readonly SkillLevelName[];
   /** In the order the page shows them, per ADR-002. */
   groups: readonly SkillGroup[];
+}
+
+/** A degree, per the Content Brief on #25: the months it ran, and its thesis. */
+export interface Degree {
+  /** The degree's name, which is the entry's heading, per DDR-006. */
+  name: string;
+  institution: string;
+  start: Month;
+  end: Month;
+  /** What the thesis was about, CV-style, without pronouns. It is the entry's body, per DDR-006. */
+  thesis: string;
+}
+
+/** A certification, per the Content Brief on #25, named and dated as its certificate states. */
+export interface Certification {
+  /** The certification's name, exactly as its certificate gives it, which is the entry's heading. */
+  name: string;
+  /** Who issued it, in the place a degree's institution takes, per DDR-006. */
+  institution: string;
+  /** The month it was granted, which is the only date it shows, per DDR-006. */
+  granted: Month;
+}
+
+/** A degree or a certification. Both are entries, and a certification has no body, per DDR-006. */
+export type Credential = Degree | Certification;
+
+/** The education and certifications section. */
+export interface Credentials {
+  /** The section's heading, which its link in the contents shows too. */
+  title: string;
+  /** Newest first, per DDR-006. The page shows them in this order, per ADR-002. */
+  credentials: readonly Credential[];
 }
 
 /** A language the owner speaks, per the Content Brief on #25. */

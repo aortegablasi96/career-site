@@ -23,4 +23,12 @@ describe('Entry', () => {
       /<\/h3><p[^>]*>ToBeIT <span aria-hidden="true">·<\/span> Barcelona, Spain<\/p><p>Body<\/p><\/article>$/,
     );
   });
+
+  it('ends at its metadata line when it has no body, as a certification does', () => {
+    const certification = renderToStaticMarkup(
+      <Entry title="Project Management Professional (PMP)" metadata={['Project Management Institute']} />,
+    );
+
+    expect(certification).toMatch(/<\/h3><p[^>]*>Project Management Institute<\/p><\/article>$/);
+  });
 });
