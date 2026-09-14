@@ -2,11 +2,13 @@ import type { ReactNode } from 'react';
 import { Contents } from '@/components/contents';
 import { Experience } from '@/components/experience';
 import { Introduction } from '@/components/introduction';
+import { Projects } from '@/components/projects';
 import { Section } from '@/components/section';
 import { contents } from '@/content/contents';
 import { dateLabels } from '@/content/dates';
 import { experience } from '@/content/experience';
 import { introduction } from '@/content/introduction';
+import { projects } from '@/content/projects';
 
 /** A major section of the page: where the contents link to, its title, and what it holds. */
 interface PageSection {
@@ -25,6 +27,11 @@ const sections: readonly PageSection[] = [
     id: 'experience',
     title: experience.title,
     body: <Experience roles={experience.roles} dateLabels={dateLabels} />,
+  },
+  {
+    id: 'projects',
+    title: projects.title,
+    body: <Projects projects={projects.projects} />,
   },
 ];
 

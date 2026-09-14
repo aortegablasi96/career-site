@@ -5,7 +5,7 @@
  * TypeScript modules and imported directly by Server Components.
  *
  * Only the types the page renders so far are defined here. Each section story of Epic #25 adds
- * the type for its own records: projects, skills, credentials, and languages are still to come.
+ * the type for its own records: skills, credentials, and languages are still to come.
  */
 
 /** Site-level metadata. Rendered into the document head rather than the page body. */
@@ -71,4 +71,27 @@ export interface Experience {
   title: string;
   /** Newest first. The page shows them in this order, per ADR-002. */
   roles: readonly Role[];
+}
+
+/** A project in the projects section, per the Content Brief on #25. */
+export interface Project {
+  /** The project's name, which is the entry's heading, per DDR-006. */
+  name: string;
+  /** The technologies it uses, which form the entry's metadata line, per DDR-006. */
+  technologies: readonly string[];
+  /** What the project is and what it demonstrates, CV-style, without pronouns. */
+  description: string;
+  /**
+   * The repository first, then a live version where one exists. Each link is labelled rather than
+   * showing its address, which prints after it on paper, per DDR-006.
+   */
+  links: readonly Link[];
+}
+
+/** The projects section. */
+export interface Projects {
+  /** The section's heading, which its link in the contents shows too. */
+  title: string;
+  /** In the order the page shows them, per ADR-002. */
+  projects: readonly Project[];
 }

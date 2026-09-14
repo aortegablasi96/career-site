@@ -21,6 +21,14 @@ describe('HomePage', () => {
     expect(html).toMatch(/<nav [^>]*>.*<a href="#experience"[^>]*>Experience<\/a>.*<\/nav><section id="experience"/);
   });
 
+  it('lists every section in the contents, in the order the Content Brief sets', () => {
+    const listed = [...html.matchAll(/<a href="#([^"]+)"/g)].map(([, id]) => id);
+    const shown = [...html.matchAll(/<section id="([^"]+)"/g)].map(([, id]) => id);
+
+    expect(shown).toEqual(['experience', 'projects']);
+    expect(listed).toEqual(shown);
+  });
+
   it('never skips a heading level', () => {
     const levels = [...html.matchAll(/<h(\d)/g)].map(([, level]) => Number(level));
 

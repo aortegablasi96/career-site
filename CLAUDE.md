@@ -24,7 +24,7 @@ Avoid functionality or complexity that does not meaningfully support these goals
 
 The application is scaffolded, and its typographic, colour, spacing, responsive, and print systems
 are in place. The career page, Epic #25, is being built one section at a time: so far it has its
-introduction, the frame the sections join, and the experience section. It is a Next.js App Router
+introduction, the frame the sections join, and the experience and projects sections. It is a Next.js App Router
 project in TypeScript, configured for static export, per ADR-001 and ADR-002, and deployed to
 GitHub Pages, per ADR-003.
 
@@ -131,10 +131,10 @@ What does not exist yet, and should not be invented:
   outline, the introduction, the contents, the entry anatomy shared by roles, projects, and
   credentials, and the labelled list shared by skills and languages. So far the introduction,
   the contents, the section wrapper, the metadata line, the entry, the date range, and the
-  experience section exist. Projects (#30) and credentials (#32) reuse the entry, and credentials
-  the date range. The labelled list is built by the story that first needs it, #31, and not before.
+  experience and projects sections exist. Credentials (#32) reuse the entry and the date range.
+  The labelled list is built by the story that first needs it, #31, and not before.
 * **The remaining content types.** `content/types.ts` covers the site metadata, the
-  introduction, the contents, dates, and roles. Each section story adds the type for its own
+  introduction, the contents, dates, roles, and projects. Each section story adds the type for its own
   records, to the fields the Content Brief on #25 sets.
 
 The GitHub repository is `aortegablasi96/career-site` (public), with `main` as the default
