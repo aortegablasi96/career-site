@@ -277,6 +277,8 @@ Risks:
   stays text, so the cause lies with the site's web fonts. They are variable fonts, per DDR-001,
   and PDF has no direct support for variable fonts, but that has not been confirmed as the cause.
   #22 tracks it, and a fix may mean a change to how the fonts are loaded.
+  Resolved by DDR-007. The checks for #22 confirmed that the variable font files were the cause,
+  and DDR-007 replaces them with static files, which Firefox's PDFs keep as text.
 
 ## Related Documents
 
@@ -291,3 +293,4 @@ Risks:
 * DDR-002, the colour system, whose pairings and signals print keeps
 * DDR-003, spacing and layout, whose rhythm print keeps in proportion
 * DDR-004, the responsive strategy, whose pattern of redefining tokens print follows
+* DDR-007, static font files, which resolves the Firefox PDF text risk

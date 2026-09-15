@@ -60,7 +60,9 @@ Tooling notes that are easy to trip over:
   There is no DOM environment or Testing Library; add them only when there is interactive
   behaviour to test. What to test is the Tester's decision.
 * **Fonts** are committed to `app/fonts/`, with their licences, and loaded by
-  `next/font/local` in `app/layout.tsx`, so builds need no network access for fonts.
+  `next/font/local` in `app/layout.tsx`, so builds need no network access for fonts. Each
+  family is one static file per weight, not a variable font, per DDR-007: Firefox draws variable
+  fonts as outlines when it saves a PDF, so the printed CV's text could not be selected.
   `next/font` is a compile-time transform whose loaders throw outside the Next.js compiler, so
   a test that imports the root layout mocks `next/font/local`, as `app/layout.test.tsx` does.
 
@@ -325,8 +327,8 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001 to DDR-006 are
-accepted; the next DDR is `007`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001 to DDR-007 are
+accepted, with DDR-007 superseding DDR-001's choice of variable font files; the next DDR is `008`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 ## Workflow
 
