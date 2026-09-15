@@ -157,8 +157,8 @@ main {
   }
 
   /* A heading stays on the same page as what it introduces, and a single entry, such as a role or
-     a project, is never split across two pages. Firefox does not honour break-after: avoid, so
-     there a section heading can still end a page; DDR-005 records this. */
+     a project, is never split across two pages. Firefox does not honour break-after: avoid, so a
+     section also keeps its heading and first item in one block that is not split, per DDR-008. */
   :where(h1, h2, h3, h4, h5, h6) {
     break-after: avoid;
     break-inside: avoid;

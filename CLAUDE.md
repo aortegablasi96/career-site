@@ -25,8 +25,8 @@ Avoid functionality or complexity that does not meaningfully support these goals
 The application is scaffolded, and its typographic, colour, spacing, responsive, and print systems
 are in place. The career page, Epic #25, has its introduction, the frame the sections join, and
 all five of its sections: experience, projects, skills, education and certifications, and
-languages. What remains of the Epic is rechecking page breaks against the finished page (#23).
-It is a Next.js App Router
+languages. Its page breaks were rechecked against the finished page for #23, and each section
+now keeps its heading with its first item on paper, per DDR-008. It is a Next.js App Router
 project in TypeScript, configured for static export, per ADR-001 and ADR-002, and deployed to
 GitHub Pages, per ADR-003.
 
@@ -95,6 +95,8 @@ content and passes it to the components as props.
 
 `app/page.tsx` also holds the page's sections in one ordered list. Each entry renders as a
 section and is listed in the contents, so a section story adds its section in that one place.
+A section is given its items one element each, such as one role, so that it can keep its heading
+with its first item on paper, per DDR-008.
 
 Styling follows ADR-001. `app/tokens.css` defines every design token once, as a custom property
 at `:root`, and `app/globals.css` applies the tokens to plain HTML elements. Component styles are
@@ -121,8 +123,9 @@ as a PDF, is designed rather than left to defaults. A `@media print` block in `a
 sets `--root-font-size` to 10pt, so every rem, type and space alike, is measured from a size suited
 to paper. It also makes the paper the surface and lets the column fill the sheet, and an `@page`
 rule beside it sets 2cm margins. The `@media print` block in `app/globals.css` hides `nav`, prints
-each link's address after it, keeps entries whole, and keeps headings with what follows, which
-Firefox does not honour (#23). A component
+each link's address after it, keeps entries whole, and keeps headings with what follows. Firefox
+does not honour that last rule, so `components/section.tsx` holds each section's heading and first
+item in one block that print keeps whole, per DDR-008. A component
 hides its own screen-only elements in print, and may drop screen-only sizing such as the minimum
 target size, per DDR-006, but adds no print-only content. What DDR-006 keeps whole on paper but
 the base styles do not, because it is not an `article` or list item, such as a skill group or
@@ -327,8 +330,10 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001 to DDR-007 are
-accepted, with DDR-007 superseding DDR-001's choice of variable font files; the next DDR is `008`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001 to DDR-008 are
+accepted, with DDR-007 superseding DDR-001's choice of variable font files, and DDR-008 superseding
+DDR-005's acceptance that Firefox can leave a section heading at the foot of a page; the next DDR
+is `009`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 ## Workflow
 

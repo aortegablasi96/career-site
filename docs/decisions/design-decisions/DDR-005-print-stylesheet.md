@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-11
 
+DDR-008 supersedes this record's acceptance that Firefox can leave a section heading at the foot
+of a printed page. Each section now keeps its heading and first item in one block that print keeps
+whole (#23). The rest of this record stands.
+
 ## Context
 
 ADR-002 made the page itself the canonical CV. No separate PDF is maintained or generated. That
@@ -132,6 +136,9 @@ enforce.
 * **Firefox does not honour the rule that keeps a heading with what follows it.** There, a section
   heading can end a page, although entries still stay whole. The owner accepted this limitation
   rather than add a workaround. #23 tracks rechecking it once real content exists.
+  Superseded by DDR-008. With real content, the recheck found a section heading ending a page in
+  20 of 31 layouts, so each section now keeps its heading and first item in one block that Firefox
+  does not split.
 * **Sections are not forced onto new pages.** A section starts wherever the previous one ends, so
   pages fill rather than ending half-empty.
 * **An entry longer than a page still breaks**, as it must.
@@ -263,7 +270,8 @@ Tradeoffs:
 * Headings and metadata run the full width while paragraphs keep the measure, so right edges
   vary.
 * Keeping entries whole can leave space at the foot of a page, where the next entry did not fit.
-* In Firefox, a section heading can end a page.
+* In Firefox, a section heading can end a page. Superseded by DDR-008, which keeps each section's
+  heading with its first item.
 
 Risks:
 * Page breaks depend on how much content there is. They were checked on a representative page, and
