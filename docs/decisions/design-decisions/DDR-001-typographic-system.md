@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-10
 
+DDR-007 supersedes this record's choice of variable font files: each family is now served as one
+static file per weight, because Firefox draws variable fonts as outlines in a saved PDF (#22).
+The rest of this record stands.
+
 ## Context
 
 Almost everything a visitor sees on this site is text. ADR-002 established a single scrolling
@@ -70,6 +74,9 @@ never invisible while the font loads.
   ever needed, add the italic files rather than relying on obliques synthesised by the browser.
 * **Payload.** The two files total about 80 KB: Source Sans 3 is 29 KB and Source Serif 4 is
   51 KB.
+
+Superseded by DDR-007: the variable files are replaced by static files pinned to the two weights
+below, with the same letterforms, subset, and loading.
 
 ### Type scale
 
@@ -259,3 +266,4 @@ Risks:
 * ADR-002, which made content plain strings and the page the CV
 * GitHub issues #11 (colour), #12 (spacing and layout), #13 (responsive strategy), and #14
   (print), which build on this system
+* DDR-007, static font files, which supersedes this record's choice of variable font files

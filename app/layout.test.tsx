@@ -3,11 +3,22 @@ import { describe, expect, it, vi } from 'vitest';
 import RootLayout, { metadata } from '@/app/layout';
 import { introduction } from '@/content/introduction';
 
+type FontOptions = {
+  variable: string;
+  weight?: string;
+  src: string | { path: string; weight?: string }[];
+};
+
 // next/font is a compile-time transform, and outside the Next.js compiler its loaders throw.
 // The stand-in returns the configured variable name as the class, so tests can see which font
-// variables reach the page.
+// variables reach the page. It also keeps each font's options, so tests can see what is loaded.
+const fontOptions = vi.hoisted(() => [] as FontOptions[]);
+
 vi.mock('next/font/local', () => ({
-  default: ({ variable }: { variable: string }) => ({ variable }),
+  default: (options: FontOptions) => {
+    fontOptions.push(options);
+    return { variable: options.variable };
+  },
 }));
 
 describe('RootLayout', () => {
@@ -21,6 +32,17 @@ describe('RootLayout', () => {
     const html = renderToStaticMarkup(<RootLayout>{null}</RootLayout>);
 
     expect(html).toMatch(/^<html [^>]*class="--font-source-sans-3 --font-source-serif-4"/);
+  });
+
+  // DDR-007: Firefox draws a variable font as outlines when it saves a PDF, so the printed CV
+  // would lose its text (#22). Each font is one static file for each of DDR-001's two weights.
+  it('loads each font as one static file per weight, which a PDF saved from Firefox keeps as text', () => {
+    expect(fontOptions).toHaveLength(2);
+
+    for (const { src, weight } of fontOptions) {
+      expect(weight).toBeUndefined();
+      expect(Array.isArray(src) && src.map((file) => file.weight)).toEqual(['400', '600']);
+    }
   });
 
   it('renders the page inside the document body', () => {
