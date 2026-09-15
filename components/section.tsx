@@ -4,14 +4,22 @@ import styles from './section.module.css';
 /**
  * One of the page's major sections, per DDR-006. It is named by its heading, so it is a landmark
  * a screen reader can move to, and its id is where the contents link to.
+ *
+ * It is given its items, such as roles or skill groups, one element each. The heading and the
+ * first item share one block, which print keeps on one page, so a heading never ends a page
+ * without what it introduces, per DDR-008.
  */
-export function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
+export function Section({ id, title, items }: { id: string; title: string; items: readonly ReactNode[] }) {
   const headingId = `${id}-title`;
+  const [first, ...rest] = items;
 
   return (
     <section id={id} aria-labelledby={headingId} className={styles.section}>
-      <h2 id={headingId}>{title}</h2>
-      {children}
+      <div className={styles.opening}>
+        <h2 id={headingId}>{title}</h2>
+        {first}
+      </div>
+      {rest}
     </section>
   );
 }

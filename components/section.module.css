@@ -3,3 +3,22 @@
 .section {
   scroll-margin-block-start: var(--space-medium);
 }
+
+/* The heading and the first item share one block, per DDR-008. It keeps the spacing a section has
+   without it: the first item follows the heading at the flow step, and the next item follows the
+   block at the item step, as entries and skill groups follow one another, per DDR-003. */
+.opening > * + * {
+  margin-block-start: var(--space-flow);
+}
+
+.opening + * {
+  margin-block-start: var(--space-item);
+}
+
+@media print {
+  /* The block is kept whole on paper, so a heading never ends a page without its first item.
+     Firefox ignores break-after: avoid on the heading, but honours this, per DDR-008 (#23). */
+  .opening {
+    break-inside: avoid;
+  }
+}

@@ -331,7 +331,8 @@ Risks:
   DDR-004 accepts breaks at that extreme, and nothing is clipped. A title such as "Education and
   credentials" avoids it, but the wording is a content decision.
 * **Page length.** The brief expects about two A4 pages. That depends on how much the copy says,
-  and is checked once it exists, with #23's recheck.
+  and is checked once it exists, with #23's recheck. That recheck found that the finished page
+  prints on five A4 pages, in Firefox and in Edge.
 * **The contents on a phone.** Five links, each at least 44px tall, can wrap to three rows at
   narrow widths with enlarged text. That is expected, but it should be seen with real titles.
 * **Repeated link labels.** The project links share labels such as "Source code". Their purpose is
@@ -350,3 +351,5 @@ Risks:
 * DDR-003, spacing and layout, whose steps compose the entries
 * DDR-004, the responsive strategy, whose single layout and target size the page keeps
 * DDR-005, the print stylesheet, to which this record adds one allowance and one exception
+* DDR-008, section openings in print, which keeps each section's heading with its first item on
+  paper
