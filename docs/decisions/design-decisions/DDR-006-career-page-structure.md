@@ -1,8 +1,20 @@
 # DDR-006-Career Page Structure
 
-Status: Accepted
+Status: Superseded
 
 Date: 2026-09-12
+
+Superseded by DDR-010, the career page redesign structure, on 2026-09-16. Epic #42 rebuilds the page
+to a design the owner made in Figma, and DDR-010 replaces this record's structure.
+
+What DDR-010 carries forward: the page's outline and heading order, the contents row and the reasons
+a sticky bar was rejected, the rule that each contact link shows its address as its text and the
+print exception that follows from it, levels as words, and newest-first ordering.
+
+What DDR-010 replaces: the single metadata line and the entry anatomy shared by roles, projects and
+credentials, which become a timeline row and a media-and-text row; and the labelled list, which
+becomes level badges for skills and cards for languages. The single 65ch column it assumed is
+replaced too, by DDR-003's supersession on #44.
 
 ## Context
 
@@ -353,3 +365,5 @@ Risks:
 * DDR-005, the print stylesheet, to which this record adds one allowance and one exception
 * DDR-008, section openings in print, which keeps each section's heading with its first item on
   paper
+* DDR-010, the career page redesign structure, which supersedes this record, and GitHub issues #42
+  and #43, the Epic and the design story that produced it

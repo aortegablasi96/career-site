@@ -336,10 +336,18 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001 to DDR-009 are
-accepted, with DDR-007 superseding DDR-001's choice of variable font files, and DDR-008 superseding
-DDR-005's acceptance that Firefox can leave a section heading at the foot of a page; the next DDR
-is `010`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001 to DDR-005 and DDR-007 to
+DDR-010 are accepted, with DDR-007 superseding DDR-001's choice of variable font files, DDR-008
+superseding DDR-005's acceptance that Firefox can leave a section heading at the foot of a page, and
+DDR-010 superseding DDR-006's career page structure; DDR-006 is `Superseded`. The next DDR is `011`.
+Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+
+DDR-010 is the design contract for Epic #42, the career page redesign. It is decided but not yet
+built: the page described under "Current Repository State" is still DDR-006's. DDR-001 to DDR-005
+and DDR-008 all remain `Accepted` and still describe the page as it stands, and each is reworked by
+its own story on that Epic — #44 for type, colour, spacing and responsive behaviour, and #52 for
+print. Until those land, DDR-010 describes the intended page and the older records describe the
+built one.
 
 ## Workflow
 
