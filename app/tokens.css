@@ -177,11 +177,27 @@
      the component caps them to the space it has so nothing overflows a narrow screen. */
   --project-media-width: 17.5rem;
   --project-media-ratio: 4 / 3;
+
+  /* How many language cards stand side by side below the wide breakpoint, per DDR-010: one at the
+     narrowest, two from the narrow breakpoint. It is a count rather than a length, so it has no
+     unit.
+
+     It is here rather than in the component because the change happens at the narrow breakpoint,
+     which DDR-014 keeps in this file, and a component may write only the wide one. The count at
+     the wide breakpoint is four, and languages.module.css writes it beside the query that engages
+     it, as the timeline and the projects write their columns.
+
+     One column at the narrowest is what keeps the row from overflowing. A breakpoint is in em of
+     the browser's default font size, so a reader at 200% text on a 320px screen falls below 20em
+     and gets one card to a line rather than two too narrow to hold "Native (C2)". DDR-014 records
+     the behaviour; its narrow-breakpoint table lists the four role tokens that existed when it was
+     written, and this is the fifth. */
+  --language-columns: 1;
 }
 
 /*
  * The narrow breakpoint, per DDR-014. From here up, the page and section titles take the full
- * scale DDR-011 records and the page's edges open out.
+ * scale DDR-011 records, the page's edges open out, and the language cards stand two to a row.
  *
  * It is in em, which in a media query is the browser's default font size, so a narrow screen with
  * enlarged text falls below it just as a narrower screen does. At the default size it is 320px. A
@@ -193,6 +209,7 @@
     --font-size-section-title: var(--font-size-x-large);
     --page-gutter: var(--space-medium);
     --page-padding-block: var(--space-section);
+    --language-columns: 2;
   }
 }
 

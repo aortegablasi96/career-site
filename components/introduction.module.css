@@ -43,9 +43,19 @@
    falls past the foot of the photo run back out to the full column. Without this the name wraps in
    an L around the photo, which is the one place on the page it would be most obvious. What follows
    the name clears the photo on its own and returns to the full column, which is where the summary
-   wants to be. */
+   wants to be.
+
+   The minimum is what stops that becoming a squeeze when text is enlarged, per #68. The photo is
+   sized in rem, so it grows with the reader's text while the room beside it shrinks: at 390px and
+   200% the name had 119px and broke mid-word onto seven lines, and at 320px it had 49px and took
+   seventeen, about one letter each, which put the contact controls 3777px down the page — the very
+   thing DDR-010 places the photo beside the name to prevent. A block that establishes its own
+   formatting context and cannot fit beside a float moves below it instead, so asking for at least
+   the longest word is what tells the browser when beside is no longer possible. The name then takes
+   the full column under the photo, and at the default size, where it fits, nothing changes. */
 .text > h1 {
   display: flow-root;
+  min-inline-size: min-content;
 }
 
 /* The most prominent text after the name, without joining the heading outline: a larger step in the

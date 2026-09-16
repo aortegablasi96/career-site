@@ -15,26 +15,17 @@ const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 const { roles } = experience;
 const role = (company: string) => roles.find((candidate) => candidate.company === company)!;
 
-const styles = readFileSync(new URL('./experience.module.css', import.meta.url), 'utf8').replace(
-  /\/\*[\s\S]*?\*\//g,
-  '',
-);
+// Only what is a role's alone is here. The row itself is the shared timeline, per DDR-010, and
+// components/timeline.test.tsx holds its stylesheet.
+const styles = readFileSync(new URL('./experience.module.css', import.meta.url), 'utf8')
+  .replace(/\r\n/g, '\n')
+  .replace(/\/\*[\s\S]*?\*\//g, '');
 
-/** The stylesheet before its media query, so a rule there is read apart from the one inside it. */
-const base = styles.split('@media')[0];
-
-/** The declarations of the rule whose selector list is exactly `selector`, inside `within`. */
-function rule(selector: string, within = base): string {
+/** The declarations of the rule whose selector list is exactly `selector`. */
+function rule(selector: string): string {
   const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-  return within.match(new RegExp(`(?:^|[{}])\\s*${escaped}\\s*\\{([^}]*)\\}`))?.[1] ?? '';
-}
-
-/** The body of a media query, so a rule inside it is read separately from the same rule outside. */
-function media(query: string): string {
-  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-  return styles.match(new RegExp(`@media\\s*${escaped}\\s*\\{([\\s\\S]*?)\\n\\}`))?.[1] ?? '';
+  return styles.match(new RegExp(`(?:^|[{}])\\s*${escaped}\\s*\\{([^}]*)\\}`))?.[1] ?? '';
 }
 
 describe('Experience', () => {
@@ -94,47 +85,12 @@ describe('Experience', () => {
   });
 });
 
-// DDR-010 lays the timeline out and DDR-014 gives it the one breakpoint it may write. These read
-// the stylesheet as written, so a later edit cannot quietly drop a rule an acceptance criterion
-// rests on.
+// What is a role’s alone in the timeline, per DDR-010: the bullet points. The row itself is
+// held by components/timeline.test.tsx.
 describe('experience styles', () => {
-  const wide = media('(min-width: 48em)');
-
-  it('lays a row out as the date column, the spine, and the content, per DDR-010', () => {
-    expect(rule('.role', wide)).toMatch(
-      /grid-template-columns:\s*var\(--timeline-date-width\) var\(--timeline-spine-width\) 1fr;/,
-    );
-    expect(rule('.dates', wide)).toMatch(/text-align:\s*end;/);
-  });
-
-  it('is a single column below the wide breakpoint, with the dates above the title', () => {
-    expect(rule('.role')).not.toMatch(/display:\s*grid;/);
-    expect(rule('.role > * + *')).toMatch(/margin-block-start:\s*var\(--space-x-small\);/);
-  });
-
-  it('does not render the spine below the wide breakpoint, so it is absent there entirely', () => {
-    expect(rule('.spine')).toMatch(/display:\s*none;/);
-    expect(rule('.spine', wide)).toMatch(/display:\s*flex;/);
-  });
-
-  it('draws the spine in the decoration colour, which may carry no information, per DDR-012', () => {
-    expect(rule('.dot')).toMatch(/inline-size:\s*var\(--timeline-dot-size\);/);
-    expect(rule('.dot')).toMatch(/background-color:\s*var\(--color-decoration\);/);
-    expect(rule('.line')).toMatch(/inline-size:\s*var\(--timeline-line-width\);/);
-    expect(rule('.line')).toMatch(/background-color:\s*var\(--color-decoration\);/);
-  });
-
-  // The space between two roles is carried inside the row, so the line reaches the next dot rather
-  // than breaking at the gap between them. The last row has no next dot to reach.
-  it('runs the line to the next role, and no further than the last one', () => {
-    expect(rule('.content')).toMatch(/padding-block-end:\s*var\(--space-item\);/);
-    expect(rule('section > .role')).toMatch(/margin-block-start:\s*0;/);
-    expect(rule('section > .role:last-child .content')).toMatch(/padding-block-end:\s*0;/);
-    expect(rule('section > .role:last-child .line')).toMatch(/display:\s*none;/);
-  });
-
   it('sets bullet text at the small step, as DDR-011 records', () => {
     expect(rule('.points')).toMatch(/font-size:\s*var\(--font-size-small\);/);
+    expect(rule('.points > li + li')).toMatch(/margin-block-start:\s*var\(--space-small\);/);
   });
 });
 

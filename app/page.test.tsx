@@ -46,13 +46,15 @@ describe('HomePage', () => {
   // its first item in one block, which print keeps whole (#23).
   it('holds each section’s heading in one block with the section’s first item', () => {
     const openings = [
-      ...html.matchAll(/<section id="([^"]+)"[^>]*><div[^>]*><h2[^>]*>[^<]+<\/h2><(article|section|dl)[\s>]/g),
+      ...html.matchAll(/<section id="([^"]+)"[^>]*><div[^>]*><h2[^>]*>[^<]+<\/h2><(article|div|dl)[\s>]/g),
     ].map(([, id, tag]) => [id, tag]);
 
+    // Skills opens with a div because its item is a row of two groups rather than one group: the
+    // two columns DDR-010 gives the section have to be one grid, and a grid needs one parent.
     expect(openings).toEqual([
       ['experience', 'article'],
       ['projects', 'article'],
-      ['skills', 'section'],
+      ['skills', 'div'],
       ['education', 'article'],
       ['languages', 'dl'],
     ]);
