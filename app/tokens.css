@@ -129,6 +129,24 @@
   /* The smallest an interactive target may be in each direction, per DDR-014. In px, as WCAG
      measures it, because a target is sized for a finger rather than for the text. */
   --target-size-min: 44px;
+
+  /* The profile photo, square, per DDR-010: 96px below the wide breakpoint and 208px from it. In
+     rem, as --content-width is, so the photo keeps its proportion to the name beside it when text
+     is enlarged.
+
+     The UI Review on #43 put the narrow photo at 176px, above the name rather than beside it.
+     Measured against the real content on #48, that put the contact controls 60px below the fold of
+     a 390px phone — the very thing DDR-010 places the photo beside the name to prevent. At 96px,
+     beside the name at every width, they clear it. The owner chose this on #48; #52 or a later
+     design story records it.
+
+     Two tokens rather than one that adapts, because DDR-014 gives the wide breakpoint to the
+     components and keeps it out of this file: what changes there is layout, and a media query
+     cannot read a custom property. The introduction reads the first and swaps to the second at
+     that breakpoint. It also returns to the first on paper, where DDR-010 asks for the photo
+     reduced beside the name; at the 10pt base DDR-005 sets, that is 21mm. */
+  --photo-size: 6rem;
+  --photo-size-wide: 13rem;
 }
 
 /*

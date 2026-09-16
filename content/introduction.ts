@@ -6,8 +6,15 @@ import type { Introduction } from './types';
  * Every statement traces to the owner's knowledge base or their answers on #26 and #28. The
  * summary gives no number of years, as the brief requires. The ABB role is current, and the page
  * is public, so availability is an invitation to talk rather than an announced job search.
+ *
+ * The photo was adopted on Epic #42, reversing the Content Brief's decision against one. The file
+ * it names is a plain stand-in until the owner supplies their portrait, and #47 carries what it has
+ * to be. Its alternative text is written for the portrait rather than for the stand-in, so that
+ * replacing the file is the whole of the change; it is worth reading back against the real photo
+ * once it lands.
  */
 export const introduction: Introduction = {
+  photo: { file: '/andreu-ortega-blasi-photo.webp', alt: 'Andreu Ortega Blasi' },
   name: 'Andreu Ortega Blasi',
   positioning: 'Product manager for AI and IoT products',
   location: 'Lugano, Switzerland',
@@ -17,8 +24,8 @@ export const introduction: Introduction = {
   availability:
     'Alongside my role at ABB, in 2026 I earned the PMI-CPMAI certification and built three AI applications of my own, using RAG, agents, and MCP. I am happy to talk about AI and IoT product roles.',
   contact: [
-    { text: 'aortegablasi@gmail.com', href: 'mailto:aortegablasi@gmail.com' },
-    { text: 'linkedin.com/in/andreu-ob', href: 'https://www.linkedin.com/in/andreu-ob/' },
-    { text: 'github.com/aortegablasi96', href: 'https://github.com/aortegablasi96' },
+    { text: 'aortegablasi@gmail.com', href: 'mailto:aortegablasi@gmail.com', icon: 'email' },
+    { text: 'linkedin.com/in/andreu-ob', href: 'https://www.linkedin.com/in/andreu-ob/', icon: 'linkedin' },
+    { text: 'github.com/aortegablasi96', href: 'https://github.com/aortegablasi96', icon: 'github' },
   ],
 };

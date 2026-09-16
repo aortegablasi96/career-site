@@ -1,44 +1,171 @@
-/* The name, the positioning, and the location form one block, set tighter than the flow that
-   follows, per DDR-006. */
+/*
+ * The introduction, per DDR-010.
+ *
+ * The photo sits beside the name at every width. Below the wide breakpoint it is small and the
+ * text runs past it, so the name and the positioning line sit alongside it and the summary returns
+ * to the full column beneath; from the wide breakpoint the photo takes a column of its own and all
+ * the text sits in the other. The markup order is the same at both and nothing is reordered, per
+ * DDR-014: the photo is first in the markup and first on the page.
+ *
+ * DDR-010 puts the photo beside the name so that it never pushes the positioning line or the
+ * contact controls below the fold on a phone. Stacking it above the name below the breakpoint,
+ * which is what the UI Review on #43 drew, does exactly that — measured on #48, by 60px at 390px.
+ * This is the layout that keeps the reason the record gives.
+ */
 
-/* The most prominent text after the name, without joining the heading outline: a larger step, in
-   the body face at regular weight, which it inherits. */
+/* Both dimensions are fixed, so the box is the right size before the image arrives and the page
+   does not shift when it does. A portrait that is not square is cropped rather than distorted.
+
+   The text runs past the photo rather than sharing a column with it, so that the summary keeps the
+   full width of a narrow screen instead of being squeezed into what is left beside a photo. */
+.photo {
+  float: inline-start;
+  inline-size: var(--photo-size);
+  block-size: var(--photo-size);
+  margin-inline-end: var(--space-medium);
+  margin-block-end: var(--space-small);
+  border-radius: var(--radius-large);
+  object-fit: cover;
+}
+
+/* The text column is a div, which the base styles' flow rule does not reach, so it sets the rhythm
+   between its own blocks. Every step is the flow step, and the two that sit tighter say so below.
+   It adds no space above itself, so the name starts level with the top of the photo. */
+.text {
+  margin-block-start: 0;
+}
+
+.text > * + * {
+  margin-block-start: var(--space-flow);
+}
+
+/* The name takes the width left beside the photo and keeps it, rather than letting the line that
+   falls past the foot of the photo run back out to the full column. Without this the name wraps in
+   an L around the photo, which is the one place on the page it would be most obvious. What follows
+   the name clears the photo on its own and returns to the full column, which is where the summary
+   wants to be. */
+.text > h1 {
+  display: flow-root;
+}
+
+/* The most prominent text after the name, without joining the heading outline: a larger step in the
+   accent, at medium weight. It reads with the name above it rather than as a paragraph of its
+   own, so it follows at the small step. */
 .positioning {
   margin-block-start: var(--space-small);
+  color: var(--color-accent);
   font-size: var(--font-size-large);
+  font-weight: var(--font-weight-medium);
 }
 
 .location {
   margin-block-start: var(--space-x-small);
 }
 
-/* One link on each line, with no bullets or indentation. */
-.contact {
+/* The four controls wrap onto as many rows as they need, rather than being cut off or scrolled. */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-small);
   padding-inline-start: 0;
   list-style: none;
 }
 
-/* Every target is at least the minimum in each direction, per DDR-004. As a flex container the
-   link no longer wraps with the text around it, so an address wider than the column, such as the
-   email address at 320px with text at 200%, is let break anywhere rather than overflow the page. */
-.contactLink {
+/* A pill. Every target is at least the minimum in each direction, per DDR-014, reached by padding
+   rather than by enlarging the text. As a flex container the link no longer wraps with the text
+   around it, so an address wider than the column, such as the email address at 320px with text at
+   200%, is let break anywhere rather than overflow the page. */
+.contact,
+.cv {
   display: inline-flex;
+  gap: var(--space-small);
   align-items: center;
   min-block-size: var(--target-size-min);
   min-inline-size: var(--target-size-min);
+  padding-block: var(--space-small);
+  padding-inline: var(--space-medium);
+  border-radius: var(--radius-pill);
+  text-decoration-line: none;
   overflow-wrap: anywhere;
 }
 
+/* The contact pills are outlined. The edge of a control carries meaning, so it is drawn in the
+   secondary ink at 7.07:1 rather than in the decoration colour, per DDR-012. */
+.contact {
+  border: 1px solid var(--color-text-secondary);
+}
+
+/* The CV pill is filled, which sets it apart from the three addresses. White on the accent is
+   7.90:1, per DDR-012. Its border matches its fill, so both kinds of pill are the same size. */
+.cv {
+  border: 1px solid var(--color-accent);
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: var(--font-weight-medium);
+}
+
+/* From here the photo sits beside the text, per DDR-010. This is the one width a component may
+   write, per DDR-014. */
+@media (min-width: 48em) {
+  .introduction {
+    display: grid;
+    grid-template-columns: var(--photo-size-wide) 1fr;
+    gap: var(--space-large);
+    align-items: start;
+  }
+
+  /* The grid places the photo, so it stops floating and the text no longer runs past it: from here
+     the whole of the text sits in the second column. */
+  .photo {
+    float: none;
+    inline-size: var(--photo-size-wide);
+    block-size: var(--photo-size-wide);
+    margin-inline-end: 0;
+    margin-block-end: 0;
+  }
+}
+
 @media print {
-  /* Nothing is tapped on paper, so the link takes the height of its text, per DDR-006. */
-  .contactLink {
+  /* The photo prints beside the name, per DDR-010. The layout is written here rather than left to
+     the wide breakpoint because a sheet of A4 inside its margins is about 40em, so that query does
+     not match on paper. The photo drops to the narrower of the two sizes, which is the reduction
+     DDR-010 asks for; #52 settles the printed measure. */
+  .introduction {
+    display: grid;
+    grid-template-columns: var(--photo-size) 1fr;
+    gap: var(--space-medium);
+  }
+
+  .photo {
+    float: none;
+    inline-size: var(--photo-size);
+    block-size: var(--photo-size);
+    margin-inline-end: 0;
+    margin-block-end: 0;
+  }
+
+  /* A download control is dead on paper, and the paper is the CV, per DDR-010. */
+  .cvItem {
+    display: none;
+  }
+
+  /* Nothing is tapped on paper, so a control takes the height of its text and drops the box that
+     gave it a target, per DDR-010. */
+  .controls {
+    display: block;
+  }
+
+  .contact {
     display: inline;
     min-block-size: 0;
     min-inline-size: 0;
+    padding-block: 0;
+    padding-inline: 0;
+    border: none;
   }
 
   /* The link's text is its address, so the address is not printed again after it, per DDR-006. */
-  .contactLink::after {
+  .contact::after {
     content: none;
   }
 }

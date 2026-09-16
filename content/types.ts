@@ -21,8 +21,44 @@ export interface Link {
   href: string;
 }
 
-/** The introduction at the top of the page, in the order DDR-006 sets. */
+/**
+ * An image this site carries, per ADR-004: one committed file, shown at the size it was prepared
+ * at, with no pipeline and no variants beside it.
+ */
+export interface Image {
+  /**
+   * Where the file sits, as a path from the site's root. It is not a URL: every reference to a
+   * binary asset goes through `asset()` first, per ADR-004, so it resolves under the Pages base
+   * path as well as locally.
+   */
+  file: string;
+  /** What the image shows, for a reader who does not see it. No image on this site is decorative. */
+  alt: string;
+}
+
+/**
+ * The mark a contact control carries beside its address.
+ *
+ * DDR-010 gives each control an icon as a second, non-colour cue that it is a control, since the
+ * pills are the one place on the page a link is not underlined. Which mark a control takes is
+ * recorded here, beside the link, rather than worked out from its address: a component should not
+ * have to recognise a host to know what to draw. It is a key the component maps to a shape, as
+ * `SkillLevel` is a key it maps to a tint, so no prose leaves `content/`.
+ */
+export type ContactIcon = 'email' | 'linkedin' | 'github';
+
+/** A contact address in the introduction, shown as a pill control, per DDR-010. */
+export interface ContactLink extends Link {
+  icon: ContactIcon;
+}
+
+/** The introduction at the top of the page, in the order DDR-010 sets. */
 export interface Introduction {
+  /**
+   * The owner, beside the name rather than above it, per DDR-010, so it never pushes the
+   * positioning line or the contact controls below the fold on a phone.
+   */
+  photo: Image;
   /** The page title. */
   name: string;
   /** One line saying what the owner does. */
@@ -31,8 +67,8 @@ export interface Introduction {
   relocation: string;
   summary: string;
   availability: string;
-  /** Each link's text is its own address, so it is not printed twice, per DDR-006. */
-  contact: readonly Link[];
+  /** Each link's text is its own address, so it is not printed twice, per DDR-006 and DDR-010. */
+  contact: readonly ContactLink[];
 }
 
 /** The list of links to the page's sections, per DDR-006. */

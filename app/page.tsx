@@ -8,6 +8,7 @@ import { Projects } from '@/components/projects';
 import { Section } from '@/components/section';
 import { Skills } from '@/components/skills';
 import { contents } from '@/content/contents';
+import { cv } from '@/content/cv';
 import { credentials } from '@/content/credentials';
 import { dateLabels } from '@/content/dates';
 import { experience } from '@/content/experience';
@@ -66,7 +67,7 @@ const sections: readonly PageSection[] = [
 export default function HomePage() {
   return (
     <main>
-      <Introduction introduction={introduction} />
+      <Introduction introduction={introduction} cv={cv} />
       <Contents label={contents.label} sections={sections} />
       {sections.map(({ id, title, items }) => (
         <Section key={id} id={id} title={title} items={items} />
