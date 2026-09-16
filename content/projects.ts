@@ -27,7 +27,7 @@ export const projects: Projects = {
       ],
     },
     {
-      name: 'Career Conversation Chatbot',
+      name: 'Digital Twin',
       technologies: ['LangGraph', 'OpenAI Agents SDK', 'Chroma', 'Cohere', 'FastAPI', 'Next.js'],
       description:
         'A chatbot that answers questions about the career on this page, in the visitor’s language. Demonstrates an agentic RAG system: several agents filter each question, retrieve the documents, write a professional answer, and send push notifications, while semantic vector search and BM25 lexical search run concurrently and are reranked with Cohere for precision.',

@@ -10,9 +10,13 @@ import type { Cv } from './types';
  *
  * The digest watches the content, not the file. It catches the facts moving; it cannot catch a CV
  * that was already out of step, which is why ADR-005 also lists what the two documents must share.
+ *
+ * So this records the content the CV was last *reviewed against*, which is not the same as the two
+ * agreeing. They do not: issue #59 lists nine differences the owner has knowingly accepted for now,
+ * to be resolved before #48 ships the control that offers the file.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '0094c5fa341c33eec22763f666a4ff3b3d9275355c21747404351c25f2bd7577',
+  contentDigest: '3dfd5a661b84e10f245a56d20cbb4d8dfcdf6f32d046624c86b05ad57decf99a',
 };
