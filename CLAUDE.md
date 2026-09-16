@@ -496,9 +496,8 @@ and what does not; read the new one first and the old one for the reasoning behi
 
 DDR-010 is the design contract for Epic #42, the career page redesign, and it is built: its token
 layer under #44, its introduction under #48, its five section components under #49 to #51, and its
-print treatment under #52, as DDR-015. What DDR-010 still asks for and nothing has built is the
-decorative rule beside each section's `h2`, which the UI Review on #43 gives `section.tsx`. #72 owns
-it, under Epic #70.
+print treatment under #52, as DDR-015. Everything DDR-010 asks for is now built: the decorative rule
+beside each section's `h2`, the last of it, landed under #72.
 
 **Epic #70 closes the remaining gaps between the page and the Figma design**, and its `Not Included`
 section is the part to read before touching it. The owner also keeps the redesign as a Figma
@@ -519,6 +518,15 @@ the design's oval. `--photo-size` and `--photo-size-wide` are now `--photo-width
 stylesheet sets one length and a shape rather than two lengths. Measured at the browser's real
 default font size, the taller photo moves the contact controls not at all at 390px, 32px at 320px
 and 64px at 200% text, and it costs no sheet on paper.
+
+**#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
+pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the
+accessibility tree and cannot reach the accessible name the section takes from its heading. It is a
+border in `--color-decoration`, so paper drops it at the token layer with no print rule of its own.
+The rule grows from a basis of zero and **yields to nothing when the title needs the whole line** —
+which only ever happens to "Education and certifications", below about 390px or with enlarged text.
+That is deliberate: giving it a minimum width instead takes the content to 342px in a 320px viewport
+at 200% text, which is a reflow failure. Decoration gives way to the title.
 
 Everything the section stories left to #52 has landed. For the record, since the gaps are named in
 those PRs: the timeline prints its date column, the projects print their media beside their text,
