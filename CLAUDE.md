@@ -28,9 +28,9 @@ all five of its sections: experience, projects, skills, education and certificat
 languages. Its page breaks were rechecked against the finished page for #23, and each section
 now keeps its heading with its first item on paper, per DDR-015.
 
-**The redesign, Epic #42, has all of its structure built.** Every section below is DDR-010's; what
-is left on the epic is the print treatment, #52, and the real media, #63. The token layer is the
-redesign's, under #44: Lora and
+**The redesign, Epic #42, is complete.** Every section below is DDR-010's, and its print treatment
+landed under #52. The real media it was still waiting on, #63, moved to Epic #70. The token layer is
+the redesign's, under #44: Lora and
 DM Sans, the seven-step scale, the new palette, the wider page column and the second breakpoint are
 all in place, and DDR-011 to DDR-014 supersede DDR-001 to DDR-004.
 
@@ -494,8 +494,21 @@ and what does not; read the new one first and the old one for the reasoning behi
 DDR-010 is the design contract for Epic #42, the career page redesign, and it is built: its token
 layer under #44, its introduction under #48, its five section components under #49 to #51, and its
 print treatment under #52, as DDR-015. What DDR-010 still asks for and nothing has built is the
-decorative rule beside each section's `h2`, which the UI Review on #43 gives `section.tsx`; no story
-owns it yet. What is left on the epic itself is the real media, #63.
+decorative rule beside each section's `h2`, which the UI Review on #43 gives `section.tsx`. #72 owns
+it, under Epic #70.
+
+**Epic #70 closes the remaining gaps between the page and the Figma design**, and its `Not Included`
+section is the part to read before touching it. The owner also keeps the redesign as a Figma
+*design* file, `career-site-design`
+(https://www.figma.com/design/RhUMRELzXCfPc0IYa0uHse/career-site-design), which every Figma MCP tool
+can read, unlike the Make file. **It is the same draft DDR-010 was written against**, so a difference
+between it and the page is usually a recorded rejection rather than a defect: DDR-010 rejects the
+sticky bar, the footer, the divider between sections and the gradient monogram; DDR-011 the 10–11px
+text and the 15px body; DDR-012 the accent `#4f46e5` and the greys `#94a3b8` and `#64748b`; DDR-014
+the 37px targets. Audited in full on #70, what genuinely differed with no record either way is #71
+to #78: the photo's shape, the heading rule, letter-spacing, the uppercase label treatment, the
+bullet markers, elevation, the skills' ink, and one place where the code contradicts DDR-013. #63
+moved onto that epic because #71 settles the shape the real photograph is cropped to.
 
 Everything the section stories left to #52 has landed. For the record, since the gaps are named in
 those PRs: the timeline prints its date column, the projects print their media beside their text,
@@ -512,7 +525,8 @@ introduction.** Every break rule behaves identically in both. Firefox simply set
 line longer than Edge does, which pushes the second role past the foot of page 1, and
 `break-inside: avoid` then moves the whole role rather than splitting it. The difference is one line
 wide, so an edit to the summary could move Firefox to four sheets or Edge to five. The stand-ins are
-already the full 4:3 box, so the real pictures on #63 will not change the length.
+already the full 4:3 box, so the real pictures on #63 will not change the length. The photograph
+could: #71 may give it a taller ratio than the square it is shown at today.
 
 ADR-004 and ADR-005 together decide the downloadable CV and the site's first binary assets. The CV
 itself has landed, under #56: `public/andreu-ortega-blasi-cv.pdf` is a separately designed document,
