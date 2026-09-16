@@ -41,10 +41,13 @@ a wide screen.
 Two things about the introduction are worth knowing before changing it:
 
 * **The photo is a placeholder.** `public/andreu-ortega-blasi-photo.webp` is a flat tinted square,
-  not the owner's portrait, which is #47's to supply. Replacing the file is the whole of the
-  change: the path and the alternative text in `content/introduction.ts` are written for the real
-  photo. Do not build anything else on the stand-in, and do not draw a monogram or a gradient in
-  its place — DDR-010 rejects both.
+  not the owner's portrait. Every binary asset this site shows is the owner's to produce, and they
+  have chosen to run on stand-ins meanwhile; #63 replaces them. Replacing the file is the whole of
+  the change: the path and the alternative text in `content/introduction.ts` are written for the
+  real photo. Do not build anything else on the stand-in, do not draw a monogram or a gradient in
+  its place — DDR-010 rejects both — and do not go and capture a picture, which the owner has said
+  they will take themselves. A story that needs media the owner has not supplied, such as #50,
+  commits a blank stand-in the same way and leaves the real file to #63.
 * **The photo sits beside the name at every width**, where DDR-010 and the UI Review on #43 put it
   above the name below the wide breakpoint. Measured against the real copy on #48, stacking it left
   the contact controls 2px below the fold of a 390px phone, which is the very thing DDR-010 places
