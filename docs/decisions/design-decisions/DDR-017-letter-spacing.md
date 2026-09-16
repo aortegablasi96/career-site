@@ -10,6 +10,12 @@ wrapping all stand unchanged, and so does its guarantee that a PDF spells every 
 does — which this record re-checks, because tracking is a thing a PDF's text extraction can be made
 to read wrong.
 
+**DDR-018 closes this record's one open tradeoff.** The `x-loose` pair below — a level badge and a
+skill group's name — was drawn for uppercase and landed on lowercase, one story early, which is
+recorded under Consequences as the visible cost of separating tracking from case. DDR-018 sets those
+two, and the timeline's date range, in capitals. Every value here stands; what changes is the text
+they are measured against, so the reflow and PDF checks below were both repeated there.
+
 ## Context
 
 DDR-011 settled seven sizes, two families and three weights, and said nothing about the space

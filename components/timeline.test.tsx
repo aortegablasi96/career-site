@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { dateLabels } from '@/content/dates';
+import { DateRange } from './date-range';
 import { TimelineRow } from './timeline';
 
 const role = renderToStaticMarkup(
@@ -71,6 +73,21 @@ describe('TimelineRow', () => {
     expect(classes(credential)[0]).toBe(2);
   });
 
+  // DDR-018 draws the case in the stylesheet, so the string a screen reader announces, and the
+  // value the time element carries, are still the ones content/ writes.
+  it('draws the case rather than rewriting the dates, so the row keeps what it announces', () => {
+    const dated = renderToStaticMarkup(
+      <TimelineRow
+        dates={<DateRange start="2024-10" labels={dateLabels} />}
+        title="Digital Product Manager"
+        subtitle="Zerouno Informatica"
+      />,
+    );
+
+    expect(dated).toMatch(/<time datetime="2024-10">Oct.2024<\/time>/i);
+    expect(text(dated).replace(/ /g, ' ')).toContain('Oct 2024 – Present');
+  });
+
   it('shows only the dates in the date column when there is no place, as a credential has none', () => {
     expect(text(credential)).toContain('Jun 2024 Project Management Professional (PMP)');
     expect(credential.match(/<p[^>]*>/g)).toHaveLength(2);
@@ -124,10 +141,25 @@ describe('timeline styles', () => {
 
   // DDR-017 opens the dates, which label the row, and leaves the place below them alone, which is
   // a proper name and reads as the words it is. The two sit in the same column, so the tracking is
-  // the date line's own rather than the column's.
+  // the date line's own rather than the column's. DDR-018 sets the rest of the label treatment on
+  // the same line, and on no other.
   it('opens the dates and leaves the place beside them alone, per DDR-017', () => {
-    expect(rule('.dateRange')).toMatch(/letter-spacing:\s*var\(--letter-spacing-loose\);/);
+    expect(rule('.dates .dateRange')).toMatch(/letter-spacing:\s*var\(--letter-spacing-loose\);/);
     expect(rule('.dates')).not.toMatch(/letter-spacing/);
+  });
+
+  it('sets the dates in uppercase, semibold and the accent, per DDR-018', () => {
+    const dateRange = rule('.dates .dateRange');
+
+    expect(dateRange).toMatch(/text-transform:\s*uppercase;/);
+    expect(dateRange).toMatch(/font-weight:\s*var\(--font-weight-semibold\);/);
+    expect(dateRange).toMatch(/color:\s*var\(--color-accent\);/);
+  });
+
+  // The place is the one other line in the column, and DDR-018 leaves it exactly as it was: the
+  // secondary ink the metadata line gives it, at the weight and case it is written in.
+  it('leaves the place below the dates in its own case, weight and ink', () => {
+    expect(rule('.dates')).not.toMatch(/text-transform|font-weight|color/);
   });
 
   // The space between two rows is carried inside the row, so the line reaches the next dot rather

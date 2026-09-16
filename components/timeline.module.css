@@ -30,11 +30,23 @@ section > .row {
   margin-block-start: var(--space-x-small);
 }
 
-/* The dates are a label for the row rather than a piece of its prose, so they are opened up, per
-   DDR-017. The place below them is not: it is a proper name, and it reads as the words it is. That
-   is why this is the date line's own class and not the date column's. */
-.dateRange {
+/* The dates are a label for the row rather than a piece of its prose, so they are set as one, per
+   DDR-018: uppercase, semibold, and in the accent, which is what makes the column scannable down
+   the edge it shares with the content. The case is drawn here rather than written into `content/`,
+   so a screen reader still announces "Oct 2024 – Present" and the `time` element keeps its
+   machine-readable value. The place below them is none of those things: it is a proper name, and it
+   reads as the words it is. That is why this is the date line's own class and not the date
+   column's.
+
+   The selector names the column as well as the line so that the ink is settled here rather than by
+   the order the bundler happens to emit two stylesheets in: `.metadata`, in another module, sets
+   the secondary ink on the same element at the same specificity. The tracking, which DDR-017 added
+   and nothing else sets, rides along in the same rule. */
+.dates .dateRange {
+  color: var(--color-accent);
+  font-weight: var(--font-weight-semibold);
   letter-spacing: var(--letter-spacing-loose);
+  text-transform: uppercase;
 }
 
 /* The space to the next row, carried inside this one so the spine can run through it. */

@@ -30,9 +30,13 @@
 /* The group's name is a label for the block below it rather than a title over it, so it takes the
    widest tracking, per DDR-017. It is an h3, as a role's job title is, and this is the one place an
    item title is set apart from the rest: the name of a group is the only h3 on the page that labels
-   a list instead of naming a thing. */
+   a list instead of naming a thing. The case that goes with that tracking is DDR-018's, and it is
+   drawn here rather than written into `content/`, so a screen reader still announces "Product and
+   delivery". It is already semibold, as every heading is, so the weight the other two labels take
+   is nothing to write here. */
 .name {
   letter-spacing: var(--letter-spacing-x-loose);
+  text-transform: uppercase;
 }
 
 /* A level's skills are metadata rather than running text, so they sit at the step DDR-011 gives
@@ -45,14 +49,31 @@
 /* A badge is its own word on a tint that repeats what the word says, so it reads the same in
    greyscale, on paper and to a screen reader, per DDR-010. It is the smallest step on the site,
    which DDR-011 allows for tags and badges alone. Inline-block, so it takes its padding while
-   sitting on the line with the skills it labels. */
+   sitting on the line with the skills it labels.
+
+   Uppercase and a weight above the line it leads, per DDR-018, which is what tells the badge apart
+   from the skills beside it now that both are words in a line: the tint says the same thing, and a
+   badge that lost its tint on paper had only its position left. The case is drawn rather than
+   written into `content/`, so a screen reader still announces "Advanced".
+
+   The tracking is the loose step, where DDR-017 gave the badge the x-loose one, and the reason is
+   the PDF rather than the page. DM Sans at +0.1em, at any weight above regular, puts enough space
+   between two letters that an extractor reads each one as a word: printed to A4, "PROFICIENT" came
+   back out of both browsers as "P R O F I C I E N T", which is the fault DDR-011's guarantee exists
+   to prevent. Measured one property at a time, the case has nothing to do with it — sentence case
+   at 500 splits the same way — and no weight the site ships is safe at +0.1em but the 400 the badge
+   had before it was a label. At +0.025em every weight comes back whole from both browsers, so this
+   is the one value that leaves the badge both heavier than its line and readable out of a PDF.
+   DDR-018 records the amendment; the group's name keeps x-loose, because Lora is not affected. */
 .badge {
   display: inline-block;
   padding-block: var(--space-x-small);
   padding-inline: var(--space-small);
   border-radius: var(--radius-small);
   font-size: var(--font-size-x-small);
-  letter-spacing: var(--letter-spacing-x-loose);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-loose);
+  text-transform: uppercase;
 }
 
 /* The three tints, strongest first, each measured against the ink it carries in DDR-012: 7.29:1,
