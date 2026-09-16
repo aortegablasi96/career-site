@@ -304,6 +304,31 @@ describe('spacing tokens', () => {
     expect(atBreakpoint.has('photo-size')).toBe(false);
     expect(atBreakpoint.has('photo-size-wide')).toBe(false);
   });
+
+  // DDR-010's timeline, at the widths the UI Review on #43 measured: a 160px date column, a 28px
+  // spine, and a 12px dot. In rem, as the page column and the photo are, so the timeline keeps its
+  // proportion to the text beside it when text is enlarged.
+  it('sizes the timeline’s columns and its dot in rem, at the widths DDR-010 lays out', () => {
+    expect(token('timeline-date-width')).toBe('10rem');
+    expect(token('timeline-spine-width')).toBe('1.75rem');
+    expect(token('timeline-dot-size')).toBe('0.75rem');
+  });
+
+  it('keeps the dot inside the spine column it sits in', () => {
+    expect(rem(token('timeline-dot-size')!)).toBeLessThan(rem(token('timeline-spine-width')!));
+  });
+
+  // The line down the spine marks the path from one dot to the next and gains nothing from growing
+  // with the text, so it is a hairline in px, as the focus outline is.
+  it('draws the spine’s line as a hairline in px', () => {
+    expect(token('timeline-line-width')).toBe('2px');
+  });
+
+  it('lays the timeline out in the components rather than here, so the wide breakpoint stays theirs', () => {
+    for (const name of ['timeline-date-width', 'timeline-spine-width', 'timeline-dot-size', 'timeline-line-width']) {
+      expect(atBreakpoint.has(name), name).toBe(false);
+    }
+  });
 });
 
 // DDR-014 adapts the scales at the narrow breakpoint, in em, by redefining the role tokens that

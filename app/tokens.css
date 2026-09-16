@@ -147,6 +147,24 @@
      reduced beside the name; at the 10pt base DDR-005 sets, that is 21mm. */
   --photo-size: 6rem;
   --photo-size-wide: 13rem;
+
+  /* The timeline's three columns, per DDR-010: the dates, the spine, and the content. The date
+     column and the spine are the widths the UI Review on #43 measured, 160px and 28px, and the dot
+     that marks each role on the spine is 12px across. All three are in rem, as the page column and
+     the photo are, so the timeline keeps its proportion to the text beside it when text is
+     enlarged.
+
+     The line running down the spine is a hairline, like the focus outline, so it is in px: it
+     marks the path from one dot to the next and gains nothing from growing with the text. The
+     clear space the UI Review draws around the dot is the smallest step of the spacing scale
+     rather than its 3px, so the value stays on the scale.
+
+     Only the components that lay out a timeline read these, and only from the wide breakpoint,
+     which DDR-014 keeps out of this file. */
+  --timeline-date-width: 10rem;
+  --timeline-spine-width: 1.75rem;
+  --timeline-dot-size: 0.75rem;
+  --timeline-line-width: 2px;
 }
 
 /*
