@@ -157,6 +157,14 @@ describe('a project’s media', () => {
   it('never grows wider than the room the row has for it', () => {
     expect(rule('.media')).toMatch(/max-inline-size:\s*100%;/);
   });
+
+  // DDR-013's radius table gives a language card and a piece of project media the same corner, and
+  // reserves the small radius for a technology tag and a level badge. The page drew the media at
+  // the small one until #73, so the two surfaces the record groups together were rounded
+  // differently.
+  it('is rounded at the large radius, as a language card is, per DDR-013', () => {
+    expect(rule('.media')).toMatch(/border-radius:\s*var\(--radius-large\);/);
+  });
 });
 
 // DDR-010 gives the Digital Twin its demo video in place of a still. The file itself is outstanding
@@ -212,6 +220,17 @@ describe('a project whose media is a video', () => {
 
     expect(name(video)).toBe('onScreen');
     expect(name(still)).toBe('onPaper');
+  });
+
+  // Both are the same box as a still project's image: one class carries the width, the ratio and
+  // the radius, so the three never drift apart. Read by its first part, since the mark above is
+  // its last.
+  it('draws the video and the printed still as the same box an image would be', () => {
+    const first = (markup: string) =>
+      (markup.match(/class="([^"]*)"/)?.[1]?.split(' ')[0] ?? '').replace(/^_|_[^_]*$/g, '');
+
+    expect(first(video)).toBe('media');
+    expect(first(still)).toBe('media');
   });
 });
 
