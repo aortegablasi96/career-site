@@ -336,8 +336,9 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001 to ADR-004 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
-separate CV file; the rest of ADR-002 stands. The next ADR is `005`. DDR-001 to DDR-005 and DDR-007
+ADR-001 to ADR-005 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
+separate CV file, and ADR-005 superseding the part of ADR-004 that makes the CV a PDF saved from the
+page's print output; the rest of both records stands. The next ADR is `006`. DDR-001 to DDR-005 and DDR-007
 to DDR-010 are accepted, with DDR-007 superseding DDR-001's choice of variable font files, DDR-008
 superseding DDR-005's acceptance that Firefox can leave a section heading at the foot of a page, and
 DDR-010 superseding DDR-006's career page structure; DDR-006 is `Superseded`. The next DDR is `011`.
@@ -350,12 +351,15 @@ its own story on that Epic — #44 for type, colour, spacing and responsive beha
 print. Until those land, DDR-010 describes the intended page and the older records describe the
 built one.
 
-ADR-004 is decided but not yet built, for the same reason. It adds a downloadable CV and the site's
-first binary assets, and it is implemented by #47, #48 and #52. Until then there is no `public/`
-directory, no `app/asset.ts`, and no `content/cv.ts`. When those land: every binary file lives in
-`public/`, every reference to one goes through `asset()` so it resolves under `PAGES_BASE_PATH`,
-and the committed CV is a PDF saved from the page's own print output, tied to the content by a
-digest that fails the test suite when the page's facts change and the file does not.
+ADR-004 and ADR-005 together decide the downloadable CV and the site's first binary assets. The CV
+itself has landed, under #56: `public/andreu-ortega-blasi-cv.pdf` is a separately designed document,
+and `content/cv.ts` carries a digest over the content modules that `content/cv.test.ts` checks, so a
+change to any fact on the page fails the test suite until the CV is brought back into step. ADR-005
+lists the facts the two documents must share and makes the site the one that wins when they disagree.
+
+The rest is decided but not yet built: `app/asset.ts`, through which every reference to a binary must
+pass so it resolves under `PAGES_BASE_PATH`, and the CV control itself, are #47's and #48's. Until
+they land nothing on the page links to the CV.
 
 ## Workflow
 

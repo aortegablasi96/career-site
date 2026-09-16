@@ -8,6 +8,13 @@ Supersedes the part of ADR-002 that rules out a separate CV file. The rest of AD
 is still authored as typed TypeScript modules in `content/`, the page is still the CV, and the print
 stylesheet is still what produces it.
 
+The part of this record that makes the downloadable CV a PDF saved from the page's own print output
+is `Superseded` by ADR-005, a separately designed CV, on 2026-09-16. The file the owner supplied was
+a separately designed document rather than a photograph of the page, and ADR-005 decides to keep it
+and to state what must agree between the two. Everything else here stands, and ADR-005 keeps it
+explicitly: the file's location and name, the size budget, where binary assets live, the `asset()`
+helper, and the digest below.
+
 ## Context
 
 Epic #42 rebuilds the career page to a design the owner made in Figma, and that design adds two
@@ -85,6 +92,12 @@ shows up on the live site and never in development.
 
 ### 1. The downloadable CV is the page's own print output, saved as a PDF and committed
 
+> **Superseded by ADR-005.** The CV is a separately designed document, authored outside this
+> repository. What replaces the guarantee this section rested on is a closed list of the facts the
+> two documents must share, and a rule that the site wins when they disagree. Section 2's digest is
+> unchanged and does more work than it did here.
+
+
 The file is `public/andreu-ortega-blasi-cv.pdf`. It is produced by building the site, opening the
 page in a browser, and saving it as a PDF through the print stylesheet — the same output any visitor
 gets by printing the page themselves. It is then committed to the repository.
@@ -98,6 +111,10 @@ Component.
 
 This is the whole point of the choice: **there is still only one design of the CV.** The PDF is not a
 second rendering of the facts, it is a photograph of the first one.
+
+> **Superseded by ADR-005.** There are now two designs, and the cost of that is accepted deliberately
+> rather than avoided. ADR-005 records what holds them together, and why the artefact a hiring
+> decision is made from should not be chosen for the architecture's convenience.
 
 ### 2. A digest ties the file to the content, so it cannot go stale silently
 
@@ -414,6 +431,7 @@ Negative:
 
 ## Related Documents
 
+* ADR-005, which supersedes the part of this record that makes the file the page's print output
 * GitHub issue #45, which this decision resolves
 * GitHub issue #42, the Career Page Redesign, which adopts the download and the media
 * ADR-002, whose rule against a separate CV file this record supersedes in part, and whose content
