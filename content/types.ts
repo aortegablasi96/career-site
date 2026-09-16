@@ -37,6 +37,33 @@ export interface Image {
 }
 
 /**
+ * A video this site carries, per ADR-004: one committed MP4, with a poster still beside it and
+ * nothing fetched until someone presses play.
+ *
+ * The poster is a separate committed file rather than a frame pulled out of the video, because
+ * ADR-004 rules out an image pipeline, and because DDR-010 prints the poster where the video
+ * element itself cannot go.
+ */
+export interface Video {
+  /** Where the file sits, as a path from the site's root, reached through `asset()` as an image is. */
+  file: string;
+  /** The still shown before the video is played, and what prints, per DDR-010. Also a path. */
+  poster: string;
+  /**
+   * What the video shows, for a reader who does not watch it. It is the video's accessible name as
+   * well as its description, so nothing on the page depends on playing it.
+   */
+  description: string;
+}
+
+/**
+ * What a project shows beside its text, per DDR-010: a still of the application running, or its
+ * demo video with a poster still. Both are 4:3 and both are described, so an entry reads correctly
+ * whether or not its asset arrives.
+ */
+export type ProjectMedia = Image | Video;
+
+/**
  * The mark a contact control carries beside its address.
  *
  * DDR-010 gives each control an icon as a second, non-colour cue that it is a control, since the
@@ -113,7 +140,12 @@ export interface Experience {
 export interface Project {
   /** The project's name, which is the entry's heading, per DDR-006. */
   name: string;
-  /** The technologies it uses, which form the entry's metadata line, per DDR-006. */
+  /** What the project looks like running, shown beside the text, per DDR-010. */
+  media: ProjectMedia;
+  /**
+   * The technologies it uses, shown as tags rather than as a line of metadata, per DDR-010, so a
+   * technical reader can scan the stack without reading the description.
+   */
   technologies: readonly string[];
   /** What the project is and what it demonstrates, CV-style, without pronouns. */
   description: string;
