@@ -86,7 +86,7 @@ describe('TimelineRow', () => {
 // the stylesheet as written, so a later edit cannot quietly drop a rule an acceptance criterion
 // rests on.
 describe('timeline styles', () => {
-  const wide = media('(min-width: 48em)');
+  const wide = media('(min-width: 48em), print');
 
   it('lays a row out as the date column, the spine, and the content, per DDR-010', () => {
     expect(rule('.row', wide)).toMatch(

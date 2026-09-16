@@ -1,12 +1,26 @@
 # DDR-005-Print Stylesheet
 
-Status: Accepted
+Status: Superseded
 
 Date: 2026-09-11
 
-DDR-008 supersedes this record's acceptance that Firefox can leave a section heading at the foot
-of a printed page. Each section now keeps its heading and first item in one block that print keeps
-whole (#23). The rest of this record stands.
+**Superseded by DDR-015**, which reworks the print treatment for the redesigned page. Read DDR-015
+first, and this record for the reasoning behind what it keeps.
+
+What DDR-015 carries forward from here, unchanged in substance: paper is a medium rather than a
+layout, so the tokens express the change wherever they can; the sheet's 2cm margins in a unit of the
+paper; the column filling the sheet from the left margin; running text held to the measure; the
+surface being the paper; browser headers and footers left to the visitor; a link printing its address
+after it; an entry never split across two pages; and sections not forced onto new pages.
+
+What does not carry forward: the **10pt base**, which becomes 11pt so that the smallest step of
+DDR-011's scale lands back at 9pt rather than 8.1pt; the **five-token print block**, which now drops
+every tinted surface and the decoration colour as well; and the assumption that **one layout serves
+both the screen and the sheet**, which the redesign's multi-column rows ended — a sheet is a wide
+surface, so a component that lays out in columns writes `(min-width: 48em), print`.
+
+DDR-008 had already superseded this record's acceptance that Firefox can leave a section heading at
+the foot of a printed page. That block survives into DDR-015.
 
 ## Context
 

@@ -26,7 +26,7 @@ The application is scaffolded, and its typographic, colour, spacing, responsive,
 are in place. The career page, Epic #25, has its introduction, the frame the sections join, and
 all five of its sections: experience, projects, skills, education and certifications, and
 languages. Its page breaks were rechecked against the finished page for #23, and each section
-now keeps its heading with its first item on paper, per DDR-008.
+now keeps its heading with its first item on paper, per DDR-015.
 
 **The redesign, Epic #42, has all of its structure built.** Every section below is DDR-010's; what
 is left on the epic is the print treatment, #52, and the real media, #63. The token layer is the
@@ -176,7 +176,7 @@ content and passes it to the components as props.
 `app/page.tsx` also holds the page's sections in one ordered list. Each entry renders as a
 section and is listed in the contents, so a section story adds its section in that one place.
 A section is given its items one element each, such as one role, so that it can keep its heading
-with its first item on paper, per DDR-008.
+with its first item on paper, per DDR-015.
 
 Styling follows ADR-001. `app/tokens.css` defines every design token once, as a custom property
 at `:root`, and `app/globals.css` applies the tokens to plain HTML elements. Component styles are
@@ -185,11 +185,12 @@ not provide is a design decision to make, not a number to invent. `app/tokens.te
 type scale to DDR-011's floors, every colour pairing to the contrast ratio DDR-012 records, the
 spacing scale, rhythm, column and radii to DDR-013, the narrow breakpoint and what it adapts to
 DDR-014, the two photo sizes and the timeline's and the projects' measures to DDR-010, and the print
-treatment to DDR-005, so changing a token
-means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
+treatment to DDR-015 — the 11pt base, every surface dropped and no ink touched, and the 28mm photo
+— so changing a token means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
 component stylesheet to the same rules: tokens only, no reordering, and no width media query but
-the wide breakpoint. **ADR-006 says which literals it admits**: `0`, `auto` and `none` anywhere,
+the wide breakpoint, which DDR-015 lets a component extend to paper as `(min-width: 48em), print`
+and no further. **ADR-006 says which literals it admits**: `0`, `auto` and `none` anywhere,
 `100%` on `max-inline-size` and `max-block-size`, and `min-content` on `min-inline-size` and
 `min-block-size`. The shape of the rule, which a new case should be tested against rather than the
 list, is that **a limit may name the space there is or the space the content needs, and a size may
@@ -212,31 +213,57 @@ the test enforces it. A third breakpoint is a new decision and a new record. To 
 browser, change the browser's default font size, not the root's CSS font size: an em in a media
 query follows the former and ignores the latter.
 
-Print follows DDR-005. ADR-002 makes the page itself the CV, so what a browser prints, or saves
-as a PDF, is designed rather than left to defaults. A `@media print` block in `app/tokens.css`
-sets `--root-font-size` to 10pt, so every rem, type and space alike, is measured from a size suited
-to paper. It also makes the paper the surface and lets the column fill the sheet, and an `@page`
-rule beside it sets 2cm margins. The `@media print` block in `app/globals.css` hides `nav`, prints
-each link's address after it, keeps entries whole, and keeps headings with what follows. Firefox
-does not honour that last rule, so `components/section.tsx` holds each section's heading and first
-item in one block that print keeps whole, per DDR-008. A component
-hides its own screen-only elements in print, and may drop screen-only sizing such as the minimum
-target size, per DDR-006, but adds no print-only content. What DDR-006 keeps whole on paper but
-the base styles do not, because it is not an `article` or list item, such as a skill group or
-the row of language cards, is kept whole by its own component. What a PDF says, not only how it
-looks, is part of the design: `app/globals.css` sets `font-variant-ligatures: none` and
+Print follows DDR-015, which supersedes DDR-005 and DDR-008. ADR-002 makes the page itself the CV,
+so what a browser prints, or saves as a PDF, is designed rather than left to defaults.
+
+**Paper is the wide surface.** A component that lays out in columns writes
+`@media (min-width: 48em), print`, so the sheet gets the layout the wide screen gets: the timeline's
+date column, the projects' media beside their text, two columns of skill groups, four language cards
+in a row. A sheet of A4 inside its margins is about 40em and an em in a media query is the browser's
+default font size, which paper does not have, so the width alone never matches on paper; writing the
+grid twice would leave the two free to drift. `components/stylesheets.test.ts` admits that one
+variation and no other. **The introduction is the exception**: at 28mm the printed photo is short,
+so a column of its own would leave three quarters of it empty, and the UI Review asks for the photo
+beside the *name* — which is the float the narrow layout already uses. Its print block writes no
+layout at all.
+
+The `@media print` block in `app/tokens.css` sets `--root-font-size` to 11pt, so every rem, type and
+space alike, is measured from a size suited to paper: body text at 11pt and the smallest step, the
+tags and badges, at 8.9pt. It makes **every** surface transparent — the page, the card, the tag and
+the three level tints — and the decoration colour with them, so no component writes a print rule to
+drop its own background and the sheet reads the same whether or not the browser prints background
+graphics. It lets the column fill the sheet, and sets the printed photo to 28mm, in mm because a
+photograph on a sheet is a size of the paper. An `@page` rule beside it sets 2cm margins.
+
+The `@media print` block in `app/globals.css` hides `nav`, prints each link's address after it,
+keeps entries whole, and keeps headings with what follows. Firefox does not honour that last rule,
+so `components/section.tsx` holds each section's heading and first item in one block that print
+keeps whole, per DDR-015. A component hides its own screen-only elements in print, and may drop
+screen-only sizing such as the minimum target size, but adds no print-only content. What the base
+styles do not keep whole, because it is not an `article` or list item, such as a skill group or the
+row of language cards, is kept whole by its own component.
+
+**A video does not print.** Measured on #52: Edge prints an empty box with a dead scrubber and no
+poster at all, and Firefox prints the poster under a controls bar. So a project whose media is a
+video renders its poster a second time as an image, and exactly one of the two is displayed — the
+video on screen, the still on paper. That is the same content in the form paper can carry, not
+print-only content, and DDR-015 draws the line.
+
+What a PDF says, not only how it looks, is part of the design: `app/globals.css` sets `font-variant-ligatures: none` and
 `font-feature-settings: 'calt' 0`, per DDR-011, because Firefox writes a glyph that no character
 maps to into a saved PDF as the replacement character, which left words such as "Software"
 unsearchable (#40). In Lora and DM Sans those are the ligatures and the contextual alternates, and
-with both off a PDF spells every word as the page does. Check print by saving a PDF in two
-browsers, read the text back out of both, and recheck page breaks when the amount of content
-changes.
+with both off a PDF spells every word as the page does — re-verified on #52, where all 466 distinct
+words the page shows came back out of both browsers' PDFs through both pypdf and pdfium, with no
+replacement character and the apostrophe still U+2019. The only word that does not come back is
+"Get", from the CV control print hides. Check print by saving a PDF in two browsers, read the text
+back out of both, and recheck page breaks when the amount of content changes.
 
 What exists, to reuse rather than reinvent:
 
 * **The design system.** Typography (DDR-011), colour (DDR-012), spacing and layout (DDR-013) and
-  responsive behaviour (DDR-014) are the redesign's, reworked on #44. Print (DDR-005) is still the
-  Design Foundation's, until #52.
+  responsive behaviour (DDR-014) are the redesign's, reworked on #44, and print (DDR-015) is the
+  redesign's too, reworked on #52.
 * **The components.** Every section is DDR-010's: the introduction under #48, the timeline that
   experience and education share under #49 and #51, the projects' media-and-text row under #50, and
   the skill groups and language cards under #51. What still carries over from DDR-006 is its
@@ -443,10 +470,10 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-005, DDR-008 and DDR-010 to DDR-014. The next DDR is `015`. Status values
-are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010 to DDR-015. The next DDR is `016`. Status values are `Proposed`,
+`Accepted`, `Superseded`, or `Deprecated`.
 
-`Superseded` are DDR-001 to DDR-004, DDR-006, DDR-007 and DDR-009:
+`Superseded` are DDR-001 to DDR-009:
 
 | Superseded | By      | What changed                                                            |
 | ---------- | ------- | ----------------------------------------------------------------------- |
@@ -456,49 +483,36 @@ are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 | DDR-004    | DDR-014 | A second breakpoint, at 48em, so one layout at every width is given up   |
 | DDR-006    | DDR-010 | The whole career page structure                                          |
 | DDR-007    | DDR-011 | The Source font files it prepares no longer exist; its rule carries over |
+| DDR-005    | DDR-015 | An 11pt base, every tint dropped at the token layer, and paper takes the wide layout |
+| DDR-008    | DDR-015 | Its block survives; its claim that both browsers break alike does not    |
 | DDR-009    | DDR-011 | Its PDF guarantee is re-established for the new faces, and widened       |
 
-DDR-008 supersedes DDR-005's acceptance that Firefox can leave a section heading at the foot of a
-page. Each superseded record says at the top what carries forward and what does not; read the new
-one first and the old one for the reasoning behind it.
+DDR-008 had superseded DDR-005's acceptance that Firefox can leave a section heading at the foot of
+a page, before DDR-015 superseded both. Each superseded record says at the top what carries forward
+and what does not; read the new one first and the old one for the reasoning behind it.
 
-DDR-010 is the design contract for Epic #42, the career page redesign. It is built: its token layer
-under #44, its introduction under #48, and its five section components under #49 to #51. What DDR-010
-still asks for and nothing has built is the decorative rule beside each section's `h2`, which the UI
-Review on #43 gives `section.tsx`; no story owns it yet. **DDR-005 and DDR-008, the
-print records, still describe most of the page as it stands** and are reworked by #52. These gaps
-are open until that lands:
+DDR-010 is the design contract for Epic #42, the career page redesign, and it is built: its token
+layer under #44, its introduction under #48, its five section components under #49 to #51, and its
+print treatment under #52, as DDR-015. What DDR-010 still asks for and nothing has built is the
+decorative rule beside each section's `h2`, which the UI Review on #43 gives `section.tsx`; no story
+owns it yet. What is left on the epic itself is the real media, #63.
 
-* DDR-005's own arithmetic is out of step with DDR-011's scale, which `app/tokens.test.ts` records
-  rather than hides: DDR-005 chose its 10pt base so that the smallest text came to 9pt, and the new
-  scale reaches 8.1pt.
-* DDR-005 predates the photo, so `components/introduction.module.css` carries the introduction's
-  own print rules: the photo prints beside the name at 21mm, where DDR-010 asks for it reduced and
-  the UI Review on #43 suggested about 28mm, and the CV control does not print at all. The layout
-  is written into the print block rather than left to the wide breakpoint, because a sheet of A4
-  inside its margins is about 40em and that query does not match on paper — which is worth knowing
-  before #50 to #52 rely on it.
-* The timeline meets the same thing and #49 left it to #52, which owns the print treatment: on
-  paper the wide query does not match, so a role prints as a single column with its dates above the
-  job title, where DDR-010 prints them in the date column. Nothing is lost — the spine is decoration
-  and is absent, and no role is split across two sheets — but the printed timeline is not yet the
-  one the record draws.
-* The projects print the same way, and #50 left them to #52 for the same reason: the media prints
-  above the text rather than beside it. A project's tags drop their tint on paper, which DDR-010
-  does ask for, and no project is split across two sheets. What #52 still owes the projects is the
-  two-column row on paper, and the rule that prints a video's poster in place of the video element —
-  which nothing needs until #63 supplies a video.
-* The skills and the languages meet it a third time, and #51 left them to #52 as well: the skill
-  groups print in one column where DDR-010 draws two, and the language cards print two to a row
-  rather than four, because on paper the 20em query matches and the 48em one does not. What DDR-010
-  does ask for on paper is done — the badges and the cards drop their tints, fills and edges, each
-  group is kept whole, and so is the row of cards.
+Everything the section stories left to #52 has landed. For the record, since the gaps are named in
+those PRs: the timeline prints its date column, the projects print their media beside their text,
+the skill groups print two to a row and the language cards four, the printed photo is 28mm beside
+the name, the type base is 11pt rather than 10pt, and a video prints its poster as an image.
 
-Printed in Firefox and Edge on #51, the page runs to **six A4 sheets**, with the same breaks in
-both. #23 recorded five, #48 had it at four, and #50 was back at five; the level badges and the
-language cards have now spent a sixth. Nothing is split across two sheets in either browser, and no
-section heading is stranded. The stand-ins are the full 4:3 box, so real pictures will not shorten
-it. #52 owns the print treatment and states the final length.
+**Printed on #52 in Edge 153 and Firefox 155**, to A4 through WebDriver, the page runs to **four
+sheets in Edge and five in Firefox**. #23 recorded five, #48 had it at four, #50 and #51 took it to
+six; the wide layout on paper has taken two sheets back off it. In both browsers no section heading
+is stranded and none of the 18 items is split across two sheets.
+
+**The two browsers no longer agree on the total, and that is worth knowing before touching the
+introduction.** Every break rule behaves identically in both. Firefox simply sets the summary one
+line longer than Edge does, which pushes the second role past the foot of page 1, and
+`break-inside: avoid` then moves the whole role rather than splitting it. The difference is one line
+wide, so an edit to the summary could move Firefox to four sheets or Edge to five. The stand-ins are
+already the full 4:3 box, so the real pictures on #63 will not change the length.
 
 ADR-004 and ADR-005 together decide the downloadable CV and the site's first binary assets. The CV
 itself has landed, under #56: `public/andreu-ortega-blasi-cv.pdf` is a separately designed document,

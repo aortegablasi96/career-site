@@ -136,25 +136,13 @@
 }
 
 @media print {
-  /* The photo prints beside the name, per DDR-010. The layout is written here rather than left to
-     the wide breakpoint because a sheet of A4 inside its margins is about 40em, so that query does
-     not match on paper. The photo drops to the narrower of the two sizes, which is the reduction
-     DDR-010 asks for; #52 settles the printed measure. */
-  .introduction {
-    display: grid;
-    grid-template-columns: var(--photo-size) 1fr;
-    gap: var(--space-medium);
-  }
+  /* The introduction is the one section whose paper layout is the narrow one, per DDR-015. Paper
+     takes the wide layout everywhere else, but the printed photo is 28mm — short — so a column of
+     its own would leave three quarters of it empty, and the UI Review on #43 asks for the photo
+     beside the *name*, which is what the float at the top of this file does. So there is no layout
+     to write here: the float is already it, and print redefines the token that sizes it.
 
-  .photo {
-    float: none;
-    inline-size: var(--photo-size);
-    block-size: var(--photo-size);
-    margin-inline-end: 0;
-    margin-block-end: 0;
-  }
-
-  /* A download control is dead on paper, and the paper is the CV, per DDR-010. */
+     A download control is dead on paper, and the paper is the CV, per DDR-010. */
   .cvItem {
     display: none;
   }

@@ -80,8 +80,10 @@ section > .row:last-child .line {
 }
 
 /* From here the row is the timeline's three columns, per DDR-010. This is the one width a
-   component may write, per DDR-014. */
-@media (min-width: 48em) {
+   component may write, per DDR-014, and paper takes it too, per DDR-015: a sheet is a wide surface,
+   and DDR-010 prints the dates in the date column. The spine keeps its column there but is not
+   drawn, because print makes the decoration colour transparent. */
+@media (min-width: 48em), print {
   .row {
     display: grid;
     grid-template-columns: var(--timeline-date-width) var(--timeline-spine-width) 1fr;

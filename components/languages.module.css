@@ -44,7 +44,7 @@
 
 /* From here the four cards stand in one row, per DDR-010. This is the one width a component may
    write, per DDR-014. */
-@media (min-width: 48em) {
+@media (min-width: 48em), print {
   .cards {
     grid-template-columns: repeat(4, 1fr);
   }
@@ -56,12 +56,12 @@
     break-inside: avoid;
   }
 
-  /* A card prints its text and drops its fill and its edge, per DDR-010, so the row reads the same
-     whether or not the browser prints background graphics. */
+  /* A card prints its text alone, per DDR-010. Its fill and the colour of its edge are dropped by
+     the tokens, per DDR-015; what is left here is the space the box asked for, which a box that is
+     no longer drawn does not need. The border keeps its hairline of width so the four columns stay
+     the widths they were measured at. */
   .card {
     padding-block: 0;
     padding-inline: 0;
-    border: none;
-    background-color: var(--color-surface);
   }
 }

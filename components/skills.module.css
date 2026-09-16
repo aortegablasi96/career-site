@@ -66,7 +66,7 @@
 
 /* From here two groups stand side by side, per DDR-010. This is the one width a component may
    write, per DDR-014. */
-@media (min-width: 48em) {
+@media (min-width: 48em), print {
   .row {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -87,12 +87,8 @@
     break-inside: avoid;
   }
 
-  /* A badge prints its word and drops its tint, per DDR-010. Every tint in the redesign is
-     redundant with the word it holds, so the page reads the same whether or not the browser prints
-     background graphics, and each badge's ink stays dark enough to read on the paper. */
-  .advanced,
-  .proficient,
-  .basic {
-    background-color: var(--color-surface);
-  }
+  /* A badge keeps its ink and loses its tint, which DDR-015 drops at the token layer for every
+     surface at once, so there is no rule for it here. What is left of the badge is the word, which
+     is what carried the meaning on screen too, and the padding that surrounded the tint becomes the
+     space between the word and the skills it labels. */
 }

@@ -171,7 +171,9 @@ describe('a project whose media is a video', () => {
       description: 'The Digital Twin chatbot answering a question',
     },
   };
-  const video = renderToStaticMarkup(<Projects projects={[demo]} />).match(/<video[^>]*>/)?.[0] ?? '';
+  const markup = renderToStaticMarkup(<Projects projects={[demo]} />);
+  const video = markup.match(/<video[^>]*>/)?.[0] ?? '';
+  const still = markup.match(/<img[^>]*>/)?.[0] ?? '';
 
   it('shows the video with controls, per DDR-010', () => {
     expect(video).toMatch(/\bcontrols\b/);
@@ -193,18 +195,44 @@ describe('a project whose media is a video', () => {
     expect(video).toContain('aria-label="The Digital Twin chatbot answering a question"');
     expect(video).not.toContain('aria-hidden');
   });
+
+  // DDR-010 prints one still per project, and measured on #52 a video element cannot be it: Edge
+  // prints an empty box with a dead scrubber and no poster at all, and Firefox prints the poster
+  // under a controls bar. So the poster is rendered a second time, as an image, and exactly one of
+  // the two is displayed — the video on screen, the still on paper, per DDR-015.
+  it('carries its poster as an image for paper, described in the same words', () => {
+    expect(still).toContain('src="/project-digital-twin.webp"');
+    expect(still).toContain('alt="The Digital Twin chatbot answering a question"');
+  });
+
+  it('marks the two so that exactly one is shown, and the row keeps a single media element', () => {
+    // A CSS Module is hashed when it is imported, so the class is read back by its last part.
+    const name = (markup: string) =>
+      (markup.match(/class="([^"]*)"/)?.[1]?.split(' ').at(-1) ?? '').replace(/^_|_[^_]*$/g, '');
+
+    expect(name(video)).toBe('onScreen');
+    expect(name(still)).toBe('onPaper');
+  });
 });
 
 // DDR-010 decides how a project is laid out and what it does on paper. These read the stylesheet as
 // written, so a later edit cannot quietly drop a rule an acceptance criterion rests on.
 describe('project styles', () => {
-  const wide = media('(min-width: 48em)');
+  const wide = media('(min-width: 48em), print');
   const paper = media('print');
 
   it('gives the media a column of its own from the wide breakpoint, per DDR-010', () => {
     expect(rule('.project', wide)).toMatch(
       /grid-template-columns:\s*var\(--project-media-width\)\s*1fr;/,
     );
+  });
+
+  // A video element cannot be the still DDR-010 prints, so the poster is rendered a second time as
+  // an image and the two swap places on paper, per DDR-015.
+  it('shows the video on screen and its poster still on paper, per DDR-015', () => {
+    expect(rule('.onPaper')).toMatch(/display:\s*none;/);
+    expect(rule('.onScreen', paper)).toMatch(/display:\s*none;/);
+    expect(rule('.onPaper', paper)).toMatch(/display:\s*block;/);
   });
 
   it('separates projects by the item step, as roles and skill groups are, per DDR-013', () => {
@@ -217,8 +245,11 @@ describe('project styles', () => {
     expect(rule('.tag')).toMatch(/font-size:\s*var\(--font-size-x-small\);/);
   });
 
-  it('drops a tag’s tint on paper, where the word alone says it, per DDR-010', () => {
-    expect(rule('.tag', paper)).toMatch(/background-color:\s*var\(--color-surface\);/);
+  // The tint is dropped by the token, for every surface on the page at once, per DDR-015, so the
+  // tag has no print rule of its own and its padding becomes the space between one technology and
+  // the next.
+  it('leaves a tag nothing to say on paper, since the tint is dropped by the token, per DDR-015', () => {
+    expect(rule('.tag', paper)).toBe('');
   });
 
   it('drops the minimum target size, which nothing on paper needs, per DDR-006', () => {

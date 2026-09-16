@@ -189,9 +189,8 @@ describe('introduction styles', () => {
     );
     expect(rule('.photo', wide)).toMatch(/inline-size:\s*var\(--photo-size-wide\);/);
     // The grid places it, so the text stops running past it and the whole of it takes the second
-    // column. The same applies on paper, which is laid out by the print rules rather than by width.
+    // column.
     expect(rule('.photo', wide)).toMatch(/float:\s*none;/);
-    expect(rule('.photo', paper)).toMatch(/float:\s*none;/);
   });
 
   it('gives every control at least the minimum target in each direction, per DDR-014', () => {
@@ -213,11 +212,15 @@ describe('introduction styles', () => {
     expect(rule('.cvItem', paper)).toMatch(/display:\s*none;/);
   });
 
-  it('keeps the photo beside the name on paper, reduced, per DDR-010', () => {
-    expect(rule('.introduction', paper)).toMatch(
-      /grid-template-columns:\s*var\(--photo-size\)\s*1fr;/,
-    );
-    expect(rule('.photo', paper)).toMatch(/inline-size:\s*var\(--photo-size\);/);
+  // The introduction is the one section whose paper layout is the narrow one rather than the wide
+  // one, per DDR-015: the photo prints at 28mm, which is short, so a column of its own would leave
+  // three quarters of it empty, and the UI Review on #43 asks for it beside the *name*. That is the
+  // float at the top of the file, so the print block writes no layout at all and the size comes
+  // from the token print redefines.
+  it('leaves the photo beside the name on paper, by the float rather than a layout of its own', () => {
+    expect(paper).not.toMatch(/grid-template-columns|float/);
+    expect(rule('.photo')).toMatch(/float:\s*inline-start;/);
+    expect(rule('.photo')).toMatch(/inline-size:\s*var\(--photo-size\);/);
   });
 
   it('prints a contact address once, as the link’s own text, per DDR-006', () => {
