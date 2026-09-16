@@ -474,7 +474,7 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010 to DDR-017. The next DDR is `018`. Status values are `Proposed`,
+The accepted DDRs are DDR-010 to DDR-018. The next DDR is `019`. Status values are `Proposed`,
 `Accepted`, `Superseded`, or `Deprecated`.
 
 `Superseded` are DDR-001 to DDR-009:
@@ -532,16 +532,49 @@ at 200% text, which is a reflow failure. Decoration gives way to the title.
 **#74 has landed, as DDR-017: the page has tracking**, which it had nowhere before. Three values in
 em — `--letter-spacing-tight` at −0.025em, `--letter-spacing-loose` at 0.025em and
 `--letter-spacing-x-loose` at 0.1em — and six users: `h1` and `h2` take tight, from
-`app/globals.css`; a technology tag and the timeline's date range take loose; a level badge and a
-skill group's name take x-loose. Everything else is left at the spacing its face was drawn with, so
+`app/globals.css`; a technology tag, the timeline's date range and, since #75, a level badge take
+loose; a skill group's name takes x-loose. Everything else is left at the spacing its face was drawn with, so
 there is no `normal` token. **em, not rem**, is deliberate and is the type system's one exception:
 tracking is a proportion of the letters it separates, and a 48px title and a 13px badge cannot share
 an absolute amount. Two classes exist only to carry it, `.name` in skills and `.dateRange` in the
 timeline — the place beside the date range is untracked, and a skill group's name is the one `h3`
 set apart from the other item titles. `components/stylesheets.test.ts` now reads `letter-spacing`
-alongside the sizes and spaces, so a literal tracking value fails the suite. **The `x-loose` pair is
-drawn uppercase in the design and lands here lowercase**; #75 sets the caps, and until it does those
-two labels read airier than intended.
+alongside the sizes and spaces, so a literal tracking value fails the suite. The `x-loose` pair was
+drawn uppercase in the design and landed lowercase; **#75 closed that gap**, below.
+
+**#75 has landed, as DDR-018: the page's three labels are set as labels.** The timeline's date
+range, a level badge and a skill group's name are uppercase and semibold, and the date range is in
+the accent where it was the secondary ink. That is the whole of it: three rules, in the two classes
+DDR-017 left as hooks and in `.badge`. The **case is drawn, never written** — `text-transform` in
+the stylesheet, so a screen reader is still handed "Oct 2024 – Present" and "Advanced", the `time`
+element keeps its value, and `content/cv.ts`'s digest does not move. **Semibold, not the design's
+bold**, because the site ships files for 400, 500 and 600 only and DDR-011 makes a fifth file a
+decision of its own; the group name was already semibold, as every heading is, so only two rules
+write a weight. The technology tags are deliberately **not** part of it: they are proper names, and
+`NEXT.JS` is not one. The accent adds no pairing — DDR-012 already measures it at 7.38:1 on the page
+— and the place below the date range is untouched.
+
+Three things about it are worth knowing before touching any of them.
+
+* **A level badge's tracking dropped from x-loose to loose, and DDR-018 amends DDR-017 to say so.**
+  It is not a preference: **DM Sans above regular at +0.1em does not survive being saved as a PDF**.
+  A semibold badge printed to A4 came back out of both browsers as `P R O F I C I E N T`, which is
+  exactly the failure DDR-017 named as tracking's risk and checked for. Measured one property at a
+  time in both browsers, the case has nothing to do with it — sentence case at 600 splits the same
+  way — and no weight but the original 400 is safe at +0.1em, so the tracking is what had to give.
+  At +0.025em every weight comes back whole. A skill group's name keeps x-loose because it is
+  **Lora**, which is unaffected, and it is now that token's only user. Give x-loose to DM Sans again
+  and the page has to be printed and read back before it can ship.
+* `timeline.module.css` writes `.dates .dateRange`, the one **two-class selector** in `components/`,
+  because `.metadata` sets the secondary ink on the same element from another module at the same
+  specificity, and a single class would leave the winner to the order the bundler emits the two
+  files in.
+* **The tightest fit on the page is now the date column**: from the wide breakpoint it is a fixed
+  10rem, and the widest range, "Mar 2022 – May 2023", sets at 158.1px in 160px, where it was
+  149.7px. It still sets on one line, and it wraps rather than overflows if it ever stops, but
+  anything that widens a date range should be measured against those 1.9px. Checked at 320px,
+  360px, 390px and 1280px, each at the browser's default font size and at double it: no horizontal
+  scrollbar in any of the eight, and no group name gained a line.
 
 Everything the section stories left to #52 has landed. For the record, since the gaps are named in
 those PRs: the timeline prints its date column, the projects print their media beside their text,
@@ -554,6 +587,10 @@ six; the wide layout on paper has taken two sheets back off it. In both browsers
 is stranded and none of the 18 items is split across two sheets. Rechecked on #74, after tracking
 landed: still four and five, with no heading stranded, and all 434 distinct words back out of both
 PDFs through both pypdf and pdfium — every word but "Get", from the CV control print hides.
+Rechecked again on #75, after the capitals: still four and five, every word back out of both PDFs
+through both readers but "Get", no replacement character, the apostrophe still U+2019, and no run of
+single letters anywhere — which is the check that **caught** the badge's tracking on that story, so
+it is not a formality.
 
 **The two browsers no longer agree on the total, and that is worth knowing before touching the
 introduction.** Every break rule behaves identically in both. Firefox simply sets the summary one

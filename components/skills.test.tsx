@@ -117,17 +117,41 @@ describe('skills styles', () => {
     expect(css).toMatch(/\.level\s*\{[^}]*font-size:\s*var\(--font-size-small\);/);
   });
 
-  // DDR-017 gives the group's name and the level badge the widest tracking, which is what marks
-  // them as labels for what follows rather than titles over it.
-  it('opens the group name and the level badge to the widest tracking, per DDR-017', () => {
+  // DDR-017 gives the group's name the widest tracking, which is what marks it as a label for what
+  // follows rather than a title over it. DDR-018 takes the badge back a step, to the value the tags
+  // and the date range take: DM Sans above regular at +0.1em comes out of a PDF spelt letter by
+  // letter, and a badge that is now semibold cannot stay there. Lora is unaffected, so the group's
+  // name does not move.
+  it('opens the group name widest and the badge one step less, per DDR-017 and DDR-018', () => {
     expect(css).toMatch(/\.name\s*\{[^}]*letter-spacing:\s*var\(--letter-spacing-x-loose\);/);
-    expect(css).toMatch(/\.badge\s*\{[^}]*letter-spacing:\s*var\(--letter-spacing-x-loose\);/);
+    expect(css).toMatch(/\.badge\s*\{[^}]*letter-spacing:\s*var\(--letter-spacing-loose\);/);
+    expect(css).not.toMatch(/\.badge\s*\{[^}]*letter-spacing:\s*var\(--letter-spacing-x-loose\);/);
   });
 
   // The skills themselves are words to read, so they keep the spacing DM Sans was drawn with. The
   // tracking belongs to the badge that leads the line, not to the line.
   it('leaves the skills beside the badge at the spacing the face was drawn with', () => {
     expect(css).not.toMatch(/\.level\s*\{[^}]*letter-spacing/);
+  });
+
+  // DDR-018 gives the two the case the tracking was drawn for. The group's name is an h3, which is
+  // already semibold, so only the badge writes a weight.
+  it('sets the group name and the level badge in uppercase, per DDR-018', () => {
+    expect(css).toMatch(/\.name\s*\{[^}]*text-transform:\s*uppercase;/);
+    expect(css).toMatch(/\.badge\s*\{[^}]*text-transform:\s*uppercase;/);
+  });
+
+  // The group name is an h3 and is semibold already, so it writes no weight at all.
+  it('sets a badge heavier than the skills beside it, at a weight a font file exists for', () => {
+    expect(css).toMatch(/\.badge\s*\{[^}]*font-weight:\s*var\(--font-weight-semibold\);/);
+    expect(css).not.toMatch(/\.name\s*\{[^}]*font-weight/);
+  });
+
+  // The case belongs to the badge and the name, and to nothing else in the section: the skills
+  // themselves are words to read, and so is everything a level's line holds after the badge.
+  it('leaves the skills beside the badge in the case the content writes them in', () => {
+    expect(css).not.toMatch(/\.level\s*\{[^}]*text-transform/);
+    expect(css).not.toMatch(/\.group\s*\{[^}]*text-transform/);
   });
 });
 

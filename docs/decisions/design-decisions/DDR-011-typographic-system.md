@@ -15,6 +15,13 @@ and the four short labels. This record says nothing about the space between lett
 is what DDR-017 fills; everything below stands unchanged, including the PDF guarantee, which
 DDR-017 re-checks because tracking is a way to lose it that has nothing to do with glyph mapping.
 
+DDR-018 amends this record in two smaller places. It adds a use to the **weights** table below: 600
+is now the headings, `b` and `strong`, *and* the timeline's date range and a level badge, because
+the design draws those labels bold and 700 is a weight this record ships no file for. And it
+restates the **PDF guarantee** once, precisely — a PDF spells every word as the page *draws* it, and
+from DDR-018 the page draws three labels in capitals. The sizes, families, weights, floor, line
+heights, measure and wrapping are untouched.
+
 DDR-001's rem sizing, its measure, its no-italics rule and its wrapping rules carry forward
 unchanged. DDR-007's rule — one static file per weight, derived by pinning the variable font —
 carries forward unchanged. DDR-009's guarantee carries forward, and is widened: it now covers every
@@ -210,7 +217,7 @@ Three, where DDR-001 had two.
 | ------------------------ | ------ | ---------------------------------------------------- |
 | `--font-weight-regular`  | 400    | Body text                                            |
 | `--font-weight-medium`   | 500    | The positioning line, the contents links, tags, badges |
-| `--font-weight-semibold` | 600    | Headings, and `b` and `strong`                        |
+| `--font-weight-semibold` | 600    | Headings, `b` and `strong`, and the labels DDR-018 sets |
 
 500 is the one addition. The draft uses it for everything that is neither running text nor a
 heading, and without it those elements would have to reach for 600, which belongs to headings.
