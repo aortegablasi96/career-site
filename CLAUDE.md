@@ -90,6 +90,16 @@ Two things about the introduction are worth knowing before changing it:
   the photo beside the name to prevent. The owner chose the deviation on #48; a later design story
   records it. Below the breakpoint the photo floats and the name takes the width beside it, so the
   summary returns to the full column underneath.
+* **Beside is conditional, per #68.** The photo is sized in rem, so it grows with the reader's text
+  while the room beside it shrinks; before #68 the name was squeezed to 119px at 390px and 200% and
+  broke mid-word onto seven lines, and to 49px at 320px, where it took seventeen.
+  `min-inline-size: min-content` on the `h1` is what fixes it: a block that establishes its own
+  formatting context and cannot fit beside a float moves below it instead. So the name drops under
+  the photo, at the full column, once its longest word no longer fits beside it — at 360px and
+  390px nothing changes at any text size the page was checked at, and at 320px the name now sits
+  below the photo at the default size too, which is three whole words rather than four broken lines.
+  Anything that changes the photo's size, the name's size or the float has to be rechecked at 200%,
+  not only at 100%.
 
 It is a Next.js App Router
 project in TypeScript, configured for static export, per ADR-001 and ADR-002, and deployed to
@@ -179,11 +189,12 @@ treatment to DDR-005, so changing a token
 means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
 component stylesheet to the same rules: tokens only, no reordering, and no width media query but
-the wide breakpoint. **ADR-006 says which literals it admits**: `0`, `auto` and `none` anywhere, and
-`100%` on `max-inline-size` and `max-block-size` alone, because "no wider than the room there is"
-names the space an element was given rather than a size of its own. #50 widened the rule for the
-projects' media, the one fixed-size box on the site wide enough to overflow a 320px screen when
-text is enlarged; #51 narrowed it to those two properties and recorded why.
+the wide breakpoint. **ADR-006 says which literals it admits**: `0`, `auto` and `none` anywhere,
+`100%` on `max-inline-size` and `max-block-size`, and `min-content` on `min-inline-size` and
+`min-block-size`. The shape of the rule, which a new case should be tested against rather than the
+list, is that **a limit may name the space there is or the space the content needs, and a size may
+not**. #50 widened the rule for the projects' media; #51 narrowed it to the two maxima, then added
+the two minima for the introduction's name, per #68.
 
 The styles are mobile-first, per DDR-014. The `:root` values in `app/tokens.css` are for the
 narrowest viewports, and the site has two breakpoints, both in em.
@@ -428,8 +439,9 @@ DDR-001-short-title.md
 ADR-001 to ADR-006 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
 separate CV file, and ADR-005 superseding the part of ADR-004 that makes the CV a PDF saved from the
 page's print output; the rest of both records stands. ADR-006 supersedes nothing: it refines
-ADR-001's styling boundary by saying which literal values a component stylesheet may write, which
-is `0`, `auto`, `none`, and `100%` on a maximum alone. The next ADR is `007`.
+ADR-001's styling boundary by saying which literal values a component stylesheet may write: `0`,
+`auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
+`007`.
 
 The accepted DDRs are DDR-005, DDR-008 and DDR-010 to DDR-014. The next DDR is `015`. Status values
 are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.

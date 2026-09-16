@@ -34,8 +34,22 @@ const tokensOnly = /^(?:0|auto|none|var\(--[\w-]+\))(?:\s+(?:0|auto|none|var\(--
 const tokensOrRoom =
   /^(?:0|auto|none|100%|var\(--[\w-]+\))(?:\s+(?:0|auto|none|100%|var\(--[\w-]+\)))*$/;
 
+/**
+ * The same, and `min-content`, which ADR-006 admits on a minimum and nowhere else.
+ *
+ * `min-inline-size: min-content` says "at least the longest word". It is measured from the content
+ * and the face it is set in, so it changes with the text and with the reader's font size and there
+ * is no number a token could hold either. On `inline-size` it would be a layout decision — shrink
+ * to the longest word — and stays out.
+ */
+const tokensOrWord =
+  /^(?:0|auto|none|min-content|var\(--[\w-]+\))(?:\s+(?:0|auto|none|min-content|var\(--[\w-]+\)))*$/;
+
 /** The two properties ADR-006 lets `100%` through on. */
 const maximum = /^max-(?:inline|block)-size$/;
+
+/** The two it lets `min-content` through on. */
+const minimum = /^min-(?:inline|block)-size$/;
 
 /** Every size or space declaration in a stylesheet, as its property and its value. */
 function declarations(css: string): readonly { property: string; value: string }[] {
@@ -60,7 +74,13 @@ describe('component stylesheets', () => {
 
     it('sets sizes and space from tokens only, per ADR-006', () => {
       for (const { property, value } of declarations(css)) {
-        expect(value).toMatch(maximum.test(property) ? tokensOrRoom : tokensOnly);
+        if (maximum.test(property)) {
+          expect(value).toMatch(tokensOrRoom);
+        } else if (minimum.test(property)) {
+          expect(value).toMatch(tokensOrWord);
+        } else {
+          expect(value).toMatch(tokensOnly);
+        }
       }
     });
 

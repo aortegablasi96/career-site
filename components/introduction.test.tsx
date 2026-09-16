@@ -174,6 +174,15 @@ describe('introduction styles', () => {
     expect(rule('.text > h1')).toMatch(/display:\s*flow-root;/);
   });
 
+  // #68: the photo is sized in rem, so it grows with the reader's text while the room beside it
+  // shrinks. Without a minimum the name was squeezed to 119px at 390px and 200%, and broke mid-word
+  // onto seven lines; at 320px it had 49px and took seventeen. The minimum is what moves the name
+  // below the photo once the longest word no longer fits beside it, which is the rule browsers
+  // already apply to a block that establishes its own formatting context.
+  it('drops the name below the photo rather than squeezing it, when text is enlarged, per #68', () => {
+    expect(rule('.text > h1')).toMatch(/min-inline-size:\s*min-content;/);
+  });
+
   it('gives the photo a column of its own from the wide breakpoint, per DDR-010', () => {
     expect(rule('.introduction', wide)).toMatch(
       /grid-template-columns:\s*var\(--photo-size-wide\)\s*1fr;/,

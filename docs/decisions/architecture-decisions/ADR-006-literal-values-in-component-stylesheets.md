@@ -35,6 +35,15 @@ groups and the language cards sit in `1fr` grid tracks, and the education timeli
 tokens the experience timeline already has. So the widening is not on its way to becoming the normal
 way to write a size: one element on the site needs it, and it needs it on one property.
 
+The testing on #51 then found a second case, on the other side. #68 records it: the introduction's
+photo is sized in rem, so it grows with the reader's text while the name held beside it is left with
+less and less room, until at 200% on a 320px screen the name breaks onto seventeen lines of about
+one letter each. The fix is `min-inline-size: min-content` on the name — a block that establishes
+its own formatting context and cannot fit beside a float moves below it instead, so asking for at
+least the longest word is what tells the browser when beside is no longer possible. That is the same
+kind of value as `100%` on a maximum, arriving at the same moment from the opposite direction, and
+the first draft of this record would have forbidden it.
+
 The question this record answers is therefore narrow, and worth answering once: **which literal
 values may a component stylesheet write, and why are they not design decisions?**
 
@@ -46,9 +55,16 @@ A component stylesheet may write, in a size or space declaration, only:
 2. **`0`**, which is the absence of a size or a space and is the same number in every system.
 3. **`auto`** and **`none`**, which hand the decision to the layout or remove a constraint.
 4. **`100%` on `max-inline-size` and `max-block-size`, and nowhere else.**
+5. **`min-content` on `min-inline-size` and `min-block-size`, and nowhere else.**
 
 Everything else is a design decision, and belongs in `app/tokens.css` with a decision record behind
 it.
+
+The shape of the rule is worth stating on its own, because it is what a sixth case should be tested
+against rather than the list: **a limit may name the space there is or the space the content needs;
+a size may not.** The two sides of a box's constraints are where a stylesheet says "not past here",
+and what lies past there is decided by the page, the reader and the text rather than by the design.
+A size says how large something is, which is exactly what a token exists to hold.
 
 ### Why the first three are not design decisions
 
@@ -74,6 +90,29 @@ The same `100%` on any other property is a design value and stays forbidden:
 Restricting it to the two maxima keeps the guard as tight as it was for everything else while
 admitting exactly the case that was measured. It also means the rule can be checked mechanically
 rather than argued about: the test reads the property name, not the intent.
+
+### Why `min-content` on a minimum, and only there
+
+`min-inline-size: min-content` says **"at least the longest word"**. It is measured from the content
+and from the face it is set in, so it changes with the text, with the typeface and with the reader's
+font size. There is no number a token could hold here either: the value the design would have to
+write down is "whatever 'Andreu' is wide at whatever size the reader has chosen".
+
+It is the counterpart of `100%` on a maximum. One says the element may not outgrow the room it was
+given; the other says it may not be squeezed below what its own content needs. Neither states a
+size, and a reader who wants to know how large the element is learns nothing from either.
+
+The same keyword on any other property is a design value and stays forbidden:
+
+* `inline-size: min-content` is a layout choice — shrink this box to its longest word — and a
+  component that wants it is designing, not preventing a squeeze.
+* `max-inline-size: min-content` is a cap written as a content measurement, which is the same choice
+  said backwards.
+
+`max-content` and `fit-content` are **not** admitted. Nothing on the site needs them, and neither
+carries this record's argument: `max-content` asks for the width of the text unwrapped, which is a
+size, and `fit-content` is a preference between two of them. A later story that wants one should
+argue for it here rather than read this list as "intrinsic keywords are fine".
 
 ### Where the rule lives
 
@@ -124,6 +163,25 @@ Cons:
 * A test cannot check a justification, so the guard would rest on review alone — which is the
   situation that produced this question.
 
+### Option D: Keep the rule to `100%`, and solve #68 without an intrinsic keyword
+
+This was the shape of this record's first draft, which forbade `min-content`. The alternatives to it
+were tried on #68:
+
+Pros:
+* One fewer keyword in the rule, and one fewer thing to tell apart from its neighbour.
+
+Cons:
+* Dropping the `h1`'s `display: flow-root` halves the height but restores the L-shaped wrap around
+  the photo that #48 added the rule to prevent, which the UI Review calls the one place on the page
+  it would be most obvious.
+* Sizing the photo in px would stop it growing with the text, which is a token decision DDR-010 made
+  deliberately so the photo keeps its proportion to the name beside it.
+* A token holding the width at which the name no longer fits would have to be a number that depends
+  on the reader's font size, the typeface and the length of the owner's name. It cannot be written
+  down, which is the same reason `100%` could not be tokenised.
+* A third breakpoint would be a new decision and a new record, for something that is not a width.
+
 ## Consequences
 
 Positive:
@@ -134,14 +192,23 @@ Positive:
 * A future stylesheet that reaches for `inline-size: 100%` fails the test and has to say why, which
   is the conversation worth having.
 * The rule is mechanical. Nobody has to decide whether a particular `100%` is "really" a size.
+* It has a shape rather than only a list, so the sixth case has something to be tested against:
+  a limit may name the space there is or the space the content needs, a size may not.
+* #68's fix is one declaration rather than a redesign of the introduction, because the rule the
+  browser already implements — a formatting-context root that cannot fit beside a float moves below
+  it — is reachable once the minimum may be written.
 
 Negative:
-* One more record to read before writing a stylesheet, for a rule that affects one declaration on
+* One more record to read before writing a stylesheet, for a rule that affects two declarations on
   the site today.
-* The distinction is subtle. `max-inline-size: 100%` and `inline-size: 100%` differ by three
-  characters and the test is the only thing that tells them apart.
-* If a later design genuinely needs an element to fill its parent, the rule will have to be revised
-  rather than worked around. That is intended, but it is a cost.
+* The distinctions are subtle. `max-inline-size: 100%` and `inline-size: 100%` differ by three
+  characters, `min-inline-size: min-content` and `inline-size: min-content` by four, and the test is
+  the only thing that tells either pair apart.
+* If a later design genuinely needs an element to fill its parent, or to shrink to its longest word,
+  the rule will have to be revised rather than worked around. That is intended, but it is a cost.
+* The list grew once within a single pull request, which is a fair warning that it will grow again.
+  The shape above is the defence: each addition has to be a limit, and has to be a value no token
+  could hold.
 
 ## Related Documents
 
@@ -149,7 +216,10 @@ Negative:
   outcomes this record chose between
 * GitHub pull request #66, which made the widening, and the Testing Report on it, which flagged the
   reading as one the Builder should not make alone
-* GitHub issue #50, the projects section, whose media is the one element that needs the allowance
+* GitHub issue #50, the projects section, whose media is the one element that needs the `100%`
+  allowance
+* GitHub issue #68, the introduction's name under enlarged text, which is the one element that needs
+  the `min-content` allowance, and GitHub issue #48, which added the rule #68 corrects
 * ADR-001, whose styling boundary this record refines
 * DDR-013, which holds the spacing scale and the radii the tokens provide
 * DDR-014, whose rule against horizontal scrolling at 320px is what the cap protects
