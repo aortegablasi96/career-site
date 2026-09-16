@@ -16,13 +16,17 @@ wrong.
 Both families join certain letter pairs into a single glyph, a ligature. Source Sans 3 joins ff,
 ft, and fft; Source Serif 4 joins ff, fi, fl, ft, fj, and their three-letter forms. A ligature
 glyph is not in the font's character map, because no single character produces it, so when Firefox
-155 writes the glyph into a PDF it has nothing to say the glyph stands for and writes the
-replacement character, U+FFFD.
+writes the glyph into a PDF it has nothing to say the glyph stands for and writes the replacement
+character, U+FFFD.
 
-Firefox's PDF of the finished page, on A4, contained 14 of them. "Microsoft" came out as
+Firefox's PDF of the finished page contained 14 of them. "Microsoft" came out as
 "Microso&#xFFFD;" and "Software" as "So&#xFFFD;ware". A reader searching the PDF for either word
 finds nothing, copying a line gives damaged words, and a screen reader reads the damage aloud.
 Edge's PDF of the same page contained none.
+
+The checks used Firefox 156.0 and Edge 153 on Windows 11, through WebDriver's print command, on
+A4, as the checks for #22 did. #40 reported the fault in Firefox 155.0.1, and it reproduces
+unchanged in 156.0.
 
 The same checks found a second, quieter fault with the same cause. Source Serif 4 maps both the
 modifier letters U+02BB and U+02BC and the curly quotes U+2018 and U+2019 to the same two glyphs.
