@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-// DDR-002 relies on two base styles for accessibility that no component should have to repeat.
+// DDR-012 relies on two base styles for accessibility that no component should have to repeat.
 // These tests read the stylesheet as written, so a later edit cannot quietly remove them.
 const globals = readFileSync(new URL('./globals.css', import.meta.url), 'utf8');
 
@@ -14,6 +14,9 @@ function rule(selector: string): string {
 
   return globals.match(new RegExp(`(?:^|\\n)${escaped}\\s*\\{([^}]*)\\}`))?.[1] ?? '';
 }
+
+/** The selector list of the rule that styles every level of heading. */
+const headings = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].join(',\n');
 
 describe('base styles', () => {
   it('underlines links, so they are not told apart from text by colour alone', () => {
@@ -31,15 +34,25 @@ describe('base styles', () => {
   });
 });
 
-// DDR-009 turns ligatures off, because Firefox writes a ligature into a saved PDF as the
-// replacement character, which leaves words such as "Software" unsearchable and misread aloud.
+// DDR-011 switches off every font feature that would substitute a glyph no character maps to,
+// because Firefox writes such a glyph into a saved PDF as the replacement character, which leaves
+// words such as "certifications" unsearchable and misread aloud (#40). In Lora and DM Sans those
+// features are the ligatures and the contextual alternates.
 describe('base typography', () => {
   it('turns ligatures off, so every word survives being saved as a PDF', () => {
     expect(rule('body')).toMatch(/font-variant-ligatures:\s*none;/);
   });
+
+  it('turns contextual alternates off with them, for the same reason', () => {
+    expect(rule('body')).toMatch(/font-feature-settings:\s*'calt' 0;/);
+  });
+
+  it("sets headings in the heading ink, the darkest of DDR-012's three levels", () => {
+    expect(rule(headings)).toMatch(/color:\s*var\(--color-text-heading\);/);
+  });
 });
 
-// DDR-003 lays the page out from the spacing tokens alone, and relies on the section step, with the
+// DDR-013 lays the page out from the spacing tokens alone, and relies on the section step, with the
 // section's heading, to show where one section ends and the next begins.
 describe('base layout', () => {
   it('sets the page in a single centred column, as wide as the content width', () => {
@@ -48,6 +61,10 @@ describe('base layout', () => {
     expect(main).toMatch(/max-inline-size:\s*var\(--content-width\);/);
     expect(main).toMatch(/margin-inline:\s*auto;/);
     expect(main).toMatch(/padding-inline:\s*var\(--page-gutter\);/);
+  });
+
+  it('holds running text to the measure rather than to the column, per DDR-013', () => {
+    expect(rule(['p', 'li'].join(',\n'))).toMatch(/max-inline-size:\s*var\(--measure\);/);
   });
 
   it('separates major sections by the section step', () => {
@@ -68,14 +85,15 @@ describe('base layout', () => {
   });
 });
 
-// DDR-004 adapts the page through role tokens, keeps the site's one breakpoint in app/tokens.css,
-// and makes the markup order the visual order at every width.
+// DDR-014 adapts the page through role tokens, keeps the narrow breakpoint in app/tokens.css, and
+// makes the markup order the visual order at every width. The base styles engage neither
+// breakpoint: what changes at the wide one is the sections' layout, which is theirs to write.
 describe('responsive base styles', () => {
   it.each([
     { heading: 'h1', role: 'page-title' },
     { heading: 'h2', role: 'section-title' },
     { heading: 'h3', role: 'item-title' },
-  ])('sizes $heading by the $role role, so it steps down on the narrowest viewports', ({ heading, role }) => {
+  ])('sizes $heading by the $role role, which DDR-014 adapts or holds', ({ heading, role }) => {
     expect(rule(heading)).toMatch(new RegExp(`font-size:\\s*var\\(--font-size-${role}\\);`));
   });
 
@@ -83,7 +101,7 @@ describe('responsive base styles', () => {
     expect(rule('main')).toMatch(/padding-block:\s*var\(--page-padding-block\);/);
   });
 
-  it('writes no width media query, so the breakpoint stays in one place', () => {
+  it('writes no width media query at all, so a page-wide adaptation stays in the tokens', () => {
     expect(declarations).not.toMatch(/@media[^{]*width/);
   });
 

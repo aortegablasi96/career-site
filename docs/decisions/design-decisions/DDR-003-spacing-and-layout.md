@@ -1,8 +1,12 @@
 # DDR-003-Spacing and Layout
 
-Status: Accepted
+Status: Superseded
 
 Date: 2026-09-10
+
+Superseded by DDR-013, spacing and layout for the career page redesign. Only the layout changes:
+the column is no longer the measure. This record's spacing scale, its three-level rhythm and its
+choice of whitespace over rules to separate sections are carried forward there unchanged.
 
 ## Context
 

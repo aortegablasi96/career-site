@@ -2,15 +2,15 @@
  * Base element styles.
  *
  * These apply the tokens in app/tokens.css to plain HTML, so content renders in the site's type,
- * colours, and spacing before any component adds styles of its own. Typography follows DDR-001,
- * colour follows DDR-002, and spacing and layout follow DDR-003.
+ * colours, and spacing before any component adds styles of its own. Typography follows DDR-011,
+ * colour follows DDR-012, and spacing and layout follow DDR-013.
  *
- * How they adapt across widths follows DDR-004. These styles read the role tokens that adapt, and
- * write no width media query: the site's one breakpoint is in app/tokens.css. Nothing here
- * reorders content, so the visual order is the markup order.
+ * How they adapt across widths follows DDR-014. These styles read the role tokens that adapt, and
+ * write no width media query: the site's breakpoints are in app/tokens.css. Nothing here reorders
+ * content, so the visual order is the markup order.
  */
 
-/* DDR-002 decides against a dark mode. This tells the browser to draw its own parts of the page,
+/* DDR-012 decides against a dark mode. This tells the browser to draw its own parts of the page,
    such as scrollbars and form controls, in their light form. */
 :root {
   color-scheme: light;
@@ -29,10 +29,14 @@ body {
   font-size: var(--font-size-medium);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-body);
-  /* No ligatures, per DDR-009. Both families join letter pairs such as ff and ft into one glyph,
-     and Firefox writes that glyph into a saved PDF as U+FFFD, so "Software" cannot be found or
-     read aloud (#40). The joins are worth less than the words. */
+  /* No substitution that produces a glyph no character maps to, per DDR-011. Both families join
+     fi and fl into one glyph, and Lora also raises a colon after a digit; Firefox writes any such
+     glyph into a saved PDF as U+FFFD, so "certifications" could not be found or read aloud (#40).
+     Ligatures are switched off here, and contextual alternates with them, because DM Sans uses
+     them only for icon tokens such as arrow_right and Lora only for that colon. The joins are
+     worth less than the words. */
   font-variant-ligatures: none;
+  font-feature-settings: 'calt' 0;
   /* Long unbroken strings, such as URLs and email addresses, wrap instead of overflowing when
      text is enlarged or the viewport is narrow. */
   overflow-wrap: break-word;
@@ -44,14 +48,17 @@ h3,
 h4,
 h5,
 h6 {
+  /* Headings are the darkest ink on the page, one level above the body text, per DDR-012. */
+  color: var(--color-text-heading);
   font-family: var(--font-family-heading);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-heading);
   text-wrap: balance;
 }
 
-/* The three levels of heading take their size from a role, which steps down on the narrowest
-   viewports, per DDR-004. h4 to h6 are body size at every width. */
+/* The three levels of heading take their size from a role. The page and section titles step down
+   on the narrowest viewports, per DDR-014; an item title is already body size. h4 to h6 are body
+   size at every width. */
 h1 {
   font-size: var(--font-size-page-title);
 }
@@ -100,10 +107,11 @@ a {
   outline-offset: var(--focus-outline-offset);
 }
 
-/* The page is a single centred column as wide as the measure. The gutter is padding outside the
-   column, so text keeps off the edges of a narrow screen and the column is exactly the measure on
-   a wide one. The page begins and ends with the space that separates sections. On the narrowest
-   viewports, the gutter and that space are halved, per DDR-004. */
+/* The page is a single centred column, wide enough for the sections to place things beside each
+   other, per DDR-013. The gutter is padding outside the column, so content keeps off the edges of
+   a narrow screen. Running text is held to the measure by the rule above rather than by the
+   column. The page begins and ends with the space that separates sections. On the narrowest
+   viewports, the gutter and that space are halved, per DDR-014. */
 main {
   max-inline-size: var(--content-width);
   margin-inline: auto;
@@ -112,7 +120,7 @@ main {
 }
 
 /*
- * Vertical rhythm, per DDR-003.
+ * Vertical rhythm, per DDR-013.
  *
  * Space is set above an element and never below it, so the gap between two blocks is always the
  * one the second asks for, and margins never collapse into a value that is not on the scale.
@@ -131,7 +139,7 @@ main {
 }
 
 /* A major section is set apart by the section step, twice the space between items. With its
-   heading, that is the whole boundary: there is no rule or background. */
+   heading, that is the whole boundary: there is no rule between sections and no background. */
 :where(main > * + section) {
   margin-block-start: var(--space-section);
 }

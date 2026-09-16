@@ -1,8 +1,15 @@
 # DDR-009-No Ligatures
 
-Status: Accepted
+Status: Superseded
 
 Date: 2026-09-16
+
+Superseded by DDR-011, the typographic system of the career page redesign. This record's guarantee
+— that every word of the page comes out of a saved PDF exactly as it reads — is re-established there
+for Lora and DM Sans, and widened to cover every font feature that would substitute a glyph no
+character maps to, because in those faces the ligatures are not the only one that would. The
+character-map edit below is not carried forward: neither new face maps a glyph from more than one
+character, so there is nothing to delete.
 
 Supersedes nothing. It adds a typographic rule to DDR-001's system and a derivation step to
 DDR-007's font files, and both records stand.

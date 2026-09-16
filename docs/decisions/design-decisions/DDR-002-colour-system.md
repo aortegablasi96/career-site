@@ -1,8 +1,13 @@
 # DDR-002-Colour System
 
-Status: Accepted
+Status: Superseded
 
 Date: 2026-09-10
+
+Superseded by DDR-012, the colour system of the career page redesign, which changes the surface,
+the accent and the inks and adds the tinted surfaces the new patterns need. This record's focus
+indicator, its underline rule, its "colour is never the only signal" rule and its decision against a
+dark mode are carried forward there.
 
 ## Context
 
