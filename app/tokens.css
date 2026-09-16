@@ -98,6 +98,17 @@
      border that ever carries meaning, such as a control's edge, uses --color-text-secondary. */
   --color-decoration: #94a3b8;
 
+  /* The marker on a role's bullet points, per DDR-019. It is an indigo lighter than the accent, so
+     the dot reads as quieter than the text it marks while staying visible.
+
+     It is not decoration, and that is why it is a colour of its own rather than the one above. It
+     is the only thing that tells a point from a paragraph once the indent is a single step, and it
+     is drawn on paper, where decoration is not. So it is held to the 3:1 WCAG 1.4.11 asks of
+     meaningful non-text — 4.17:1 on the page — where the hairlines above sit below it. The design's
+     own `#a5b4fc` is 1.86:1, fainter than anything else this page draws; DDR-019 measures the
+     ramp. */
+  --color-marker: #6366f1;
+
   /* The keyboard focus outline. It is offset so it sits on the surface, and it is an outline
      rather than a shadow so it survives forced-colours modes. */
   --color-focus: var(--color-accent);

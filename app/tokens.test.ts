@@ -217,6 +217,7 @@ describe('colour tokens', () => {
       'surface-level-basic',
       'text-level-basic',
       'decoration',
+      'marker',
       'focus',
     ]);
   });
@@ -259,8 +260,11 @@ describe('colour tokens', () => {
       required: 4.5,
       recorded: 6.92,
     },
-    // Non-text elements that carry meaning: WCAG 2.2 AA asks 3:1.
+    // Non-text elements that carry meaning: WCAG 2.2 AA asks 3:1. The bullet marker is one of
+    // them, per DDR-019: it prints, and once the indent is a single step it is what tells a point
+    // from a paragraph. It sits on the page and never on a card, so that is the one pairing.
     { foreground: 'focus', background: 'surface', required: 3, recorded: 7.38 },
+    { foreground: 'marker', background: 'surface', required: 3, recorded: 4.17 },
   ])(
     '$foreground on $background meets $required:1, at the $recorded:1 DDR-012 records',
     ({ foreground, background, required, recorded }) => {
@@ -276,6 +280,17 @@ describe('colour tokens', () => {
   // holds the value to what the record measured, so it cannot drift into carrying meaning.
   it('draws decoration at the 2.39:1 DDR-012 records, which is why it may carry no information', () => {
     expect(contrast(color('decoration'), color('surface'))).toBeCloseTo(2.39, 2);
+  });
+
+  // DDR-019 measures the design's own `#a5b4fc` at 1.86:1, below even the hairlines, and takes
+  // the lightest indigo of the ramp that clears 3:1 instead. This holds the marker apart from the
+  // decoration above it: a colour that may carry meaning cannot quietly drift down to one that may
+  // not.
+  it('draws the bullet marker lighter than the accent and darker than decoration, per DDR-019', () => {
+    const marker = contrast(color('marker'), color('surface'));
+
+    expect(marker).toBeGreaterThan(contrast(color('decoration'), color('surface')));
+    expect(marker).toBeLessThan(contrast(color('accent'), color('surface')));
   });
 
   it('keeps the focus outline in the accent, per DDR-012', () => {

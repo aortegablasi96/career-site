@@ -46,8 +46,9 @@ two rows is padding at the foot of the content column rather than a margin betwe
 spine's line runs through it to the next dot; the last row in a section, which
 `timeline.module.css` finds as `section > .row:last-child`, drops both. `--timeline-*` in
 `app/tokens.css` holds its measures. `experience.module.css` holds what is a role's alone, which is
-the bullet points; a credential has no place, a degree's body is its thesis sentence, and a
-certification has no body at all.
+the bullet points — indented one step of the scale and marked by the browser's own disc recoloured
+through `::marker`, per DDR-019; a credential has no place, a degree's body is its thesis sentence,
+and a certification has no body at all.
 
 **The projects section is the redesign's media-and-text row, under #50.** A project is one
 `article`: below the wide breakpoint a single column with its media above the name, and from the
@@ -187,7 +188,7 @@ not provide is a design decision to make, not a number to invent. `app/tokens.te
 type scale to DDR-011's floors, every colour pairing to the contrast ratio DDR-012 records, the
 spacing scale, rhythm, column and radii to DDR-013, the narrow breakpoint and what it adapts to
 DDR-014, the photo's two widths and its ratio to DDR-016, the three tracking values to DDR-017,
-the timeline's and the projects' measures to DDR-010, and the print
+the bullet marker's 4.17:1 to DDR-019, the timeline's and the projects' measures to DDR-010, and the print
 treatment to DDR-015 — the 11pt base, every surface dropped and no ink touched, and the 28mm photo
 — so changing a token means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
@@ -474,7 +475,7 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010 to DDR-018. The next DDR is `019`. Status values are `Proposed`,
+The accepted DDRs are DDR-010 to DDR-019. The next DDR is `020`. Status values are `Proposed`,
 `Accepted`, `Superseded`, or `Deprecated`.
 
 `Superseded` are DDR-001 to DDR-009:
@@ -576,6 +577,30 @@ Three things about it are worth knowing before touching any of them.
   360px, 390px and 1280px, each at the browser's default font size and at double it: no horizontal
   scrollbar in any of the eight, and no group name gained a line.
 
+**#76 has landed, as DDR-019: a role's points are indented one step and their marker is
+recoloured.** Two declarations in `experience.module.css` — `padding-inline-start: var(--space-medium)`
+on the list, and `color: var(--color-marker)` on `.points > li::marker` — and one new token. They
+are the only marked list on the site; the other four `ul`s set `list-style: none`, so the two steps
+`app/globals.css` gives every list now apply to nothing that is drawn.
+
+Three things about it are worth knowing before touching it.
+
+* **The marker is recoloured, never replaced.** `list-style: none` and a drawn dot would cost the
+  list its semantics in Safari and VoiceOver, would need `position: absolute` to hang beside the
+  first line of a wrapped point — which `components/stylesheets.test.ts` forbids — and would put the
+  dot's size on neither scale. Recoloured, the marker keeps its semantics, its hanging alignment and
+  a size proportional to the text: about 4.8px beside the 14px points in Chromium, which is the
+  design's 4px without a length. `components/experience.test.tsx` fails if either `list-style` or
+  `content` appears in that stylesheet.
+* **`--color-marker` is `#6366f1`, not the design's `#a5b4fc`.** The design's value is 1.86:1 on the
+  page — fainter than the hairlines DDR-012 calls the lightest that read at all — so DDR-019 takes
+  the lightest of the ramp that clears the 3:1 WCAG asks of meaningful non-text, at 4.17:1. The
+  owner chose it on #76 over reusing `--color-accent`.
+* **It is deliberately not `--color-decoration`.** DDR-015 makes decoration transparent at the token
+  layer, so a marker drawn in it would leave the printed CV with no markers at all, where it has
+  them today. That is the whole reason the palette gains a colour rather than reusing one, and it is
+  why `--color-marker` is absent from the print block that drops every surface.
+
 Everything the section stories left to #52 has landed. For the record, since the gaps are named in
 those PRs: the timeline prints its date column, the projects print their media beside their text,
 the skill groups print two to a row and the language cards four, the printed photo is 28mm beside
@@ -590,7 +615,10 @@ PDFs through both pypdf and pdfium — every word but "Get", from the CV control
 Rechecked again on #75, after the capitals: still four and five, every word back out of both PDFs
 through both readers but "Get", no replacement character, the apostrophe still U+2019, and no run of
 single letters anywhere — which is the check that **caught** the badge's tracking on that story, so
-it is not a formality.
+it is not a formality. Rechecked on #76, after the bullet marker and its indent: still four and
+five, no heading stranded, no item split, every word back out of both readers in both browsers, and
+the markers themselves drawn on every sheet that carries points — the one thing on the page that
+prints and is neither text nor a surface.
 
 **The two browsers no longer agree on the total, and that is worth knowing before touching the
 introduction.** Every break rule behaves identically in both. Firefox simply sets the summary one

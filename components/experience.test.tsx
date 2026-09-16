@@ -92,6 +92,21 @@ describe('experience styles', () => {
     expect(rule('.points')).toMatch(/font-size:\s*var\(--font-size-small\);/);
     expect(rule('.points > li + li')).toMatch(/margin-block-start:\s*var\(--space-small\);/);
   });
+
+  // DDR-019: one step of the scale rather than the two the base styles give every list, which is
+  // half the width back in the narrowest column the page has.
+  it('indents the points by a single step, as DDR-019 records', () => {
+    expect(rule('.points')).toMatch(/padding-inline-start:\s*var\(--space-medium\);/);
+  });
+
+  // The marker is recoloured rather than replaced, per DDR-019, so the list stays a list and the
+  // marker stays a marker. A rule that set `list-style: none` or drew the dot with `content` would
+  // be doing something else, and would have to answer for the semantics it takes away.
+  it('draws the marker in the marker ink, and leaves it a marker', () => {
+    expect(rule('.points > li::marker')).toMatch(/color:\s*var\(--color-marker\);/);
+    expect(styles).not.toMatch(/list-style/);
+    expect(styles).not.toMatch(/content:/);
+  });
 });
 
 describe('experience content', () => {
