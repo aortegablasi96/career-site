@@ -31,6 +31,15 @@
   object-fit: cover;
 }
 
+/* A project whose media is a video carries the video and its poster still, and shows one of them:
+   the video on screen, the still on paper, per DDR-015. A video element cannot be the printed image
+   DDR-010 asks for — Edge prints an empty box with a dead scrubber and Firefox prints the poster
+   under a controls bar — so the still is what paper shows. Only one is ever displayed, so the row
+   still has a single media element beside its text. */
+.onPaper {
+  display: none;
+}
+
 /* The text column is a div, which the base styles' flow rule does not reach, so it sets the rhythm
    between its own blocks. Every step is the flow step, and the one that sits tighter says so
    below. */
@@ -81,7 +90,7 @@
 
 /* From here the media takes a column of its own beside the text, per DDR-010. This is the one
    width a component may write, per DDR-014. */
-@media (min-width: 48em) {
+@media (min-width: 48em), print {
   .project {
     display: grid;
     grid-template-columns: var(--project-media-width) 1fr;
@@ -97,14 +106,20 @@
 }
 
 @media print {
-  /* A tag prints its text and drops its tint, per DDR-010. Every tint in the redesign is redundant
-     with the word it holds, so the page reads the same whether or not the browser prints
-     background graphics. */
-  .tag {
-    background-color: var(--color-surface);
+  /* Paper takes the poster still and not the video, per DDR-015. */
+  .onScreen {
+    display: none;
   }
 
-  /* Nothing is tapped on paper, so the link takes the height of its text, per DDR-006. Its address
+  .onPaper {
+    display: block;
+  }
+
+  /* A tag has no print rule of its own: DDR-015 drops every tint at the token layer, so the tag
+     prints its text, and the padding that surrounded the tint becomes the space that separates one
+     technology from the next. The row still wraps and still needs no breakpoint.
+
+     Nothing is tapped on paper, so the link takes the height of its text, per DDR-006. Its address
      still prints after it, from the base styles, per DDR-005. */
   .link {
     display: inline;

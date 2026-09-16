@@ -12,7 +12,7 @@ const html = renderToStaticMarkup(<Languages languages={languages.languages} />)
 const css = readFileSync(new URL('./languages.module.css', import.meta.url), 'utf8')
   .replace(/\r\n/g, '\n')
   .replace(/\/\*[\s\S]*?\*\//g, '');
-const wide = css.match(/@media \(min-width: 48em\)\s*\{([\s\S]*?)\n\}/)?.[1] ?? '';
+const wide = css.match(/@media \(min-width: 48em\), print\s*\{([\s\S]*?)\n\}/)?.[1] ?? '';
 const print = css.match(/@media print\s*\{([\s\S]*)\}\s*$/)?.[1] ?? '';
 
 describe('Languages', () => {
@@ -64,9 +64,11 @@ describe('Languages in print', () => {
     expect(print).toMatch(/\.cards\s*\{[^}]*break-inside:\s*avoid;/);
   });
 
-  it('drops the card’s fill and its edge, which carry nothing the text does not, per DDR-010', () => {
-    expect(print).toMatch(/\.card\s*\{[^}]*border:\s*none;/);
-    expect(print).toMatch(/\.card\s*\{[^}]*background-color:\s*var\(--color-surface\);/);
+  // The fill and the colour of the edge are dropped by the tokens, per DDR-015, so what a card
+  // says here is only that a box nobody draws needs no padding.
+  it('drops the space the card asked for, once nothing draws it, per DDR-010', () => {
+    expect(print).toMatch(/\.card\s*\{[^}]*padding-block:\s*0;/);
+    expect(print).toMatch(/\.card\s*\{[^}]*padding-inline:\s*0;/);
   });
 });
 

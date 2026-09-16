@@ -87,12 +87,17 @@ describe('component stylesheets', () => {
     // DDR-014 gives up DDR-004's one layout at every width, which is the cost of the timeline and
     // the other multi-column rows. What replaces it is this: a component may engage the wide
     // breakpoint, and may write no other width of its own. A third breakpoint is a new decision.
-    it('writes no width media query but the wide breakpoint, so a width stays a decision', () => {
+    //
+    // DDR-015 adds the one variation: a component may extend that query to paper, and only to
+    // paper, because a sheet is a wide surface and the columns are what a wide surface is for. The
+    // width alone never matches on A4, so without this each component would repeat its grid in a
+    // print block and the two could drift.
+    it('writes no width media query but the wide breakpoint, or that query and paper', () => {
       const queries = [...css.matchAll(/@media([^{]*)\{/g)].map(([, query]) => query.trim());
 
       expect(css).not.toMatch(/@container/);
       for (const query of queries.filter((query) => /width/.test(query))) {
-        expect(query).toBe('(min-width: 48em)');
+        expect(['(min-width: 48em)', '(min-width: 48em), print']).toContain(query);
       }
     });
 

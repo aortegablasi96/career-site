@@ -1,11 +1,24 @@
 # DDR-008-Section Openings in Print
 
-Status: Accepted
+Status: Superseded
 
 Date: 2026-09-15
 
-Supersedes the part of DDR-005 that accepted Firefox leaving a section heading at the foot of a
-printed page. The rest of DDR-005 stands.
+**Superseded by DDR-015**, which reworks the print treatment for the redesigned page. Read DDR-015
+first, and this record for the measurements behind the block it keeps.
+
+What DDR-015 carries forward, unchanged: each section holds its heading and its first item in one
+block that print keeps whole, because Firefox ignores `break-after: avoid`. This record expected the
+block to need re-expressing for the redesign; it did not, because `components/section.tsx` groups
+whatever the first item is and the redesign changed only what that item is.
+
+What does not carry forward: the measured claim that **Edge and Firefox break the page in the same
+places**. On the redesigned page they do not — Edge prints four sheets and Firefox five, because
+Firefox sets the introduction's summary one line longer and a whole role then moves rather than
+splitting. Every break rule still behaves identically in both.
+
+This record supersedes the part of DDR-005 that accepted Firefox leaving a section heading at the
+foot of a printed page.
 
 ## Context
 

@@ -22,16 +22,23 @@ import styles from './projects.module.css';
 function Media({ media }: { media: ProjectMedia }) {
   if ('poster' in media) {
     return (
-      <video
-        className={styles.media}
-        src={asset(media.file)}
-        poster={asset(media.poster)}
-        preload="none"
-        controls
-        aria-label={media.description}
-      >
-        {media.description}
-      </video>
+      <>
+        <video
+          className={`${styles.media} ${styles.onScreen}`}
+          src={asset(media.file)}
+          poster={asset(media.poster)}
+          preload="none"
+          controls
+          aria-label={media.description}
+        >
+          {media.description}
+        </video>
+        {/* The same still, for paper. DDR-010 prints one image per project, and a video element
+            cannot be one: measured on #52, Edge prints an empty box with a dead scrubber and no
+            poster at all, and Firefox prints the poster under a controls bar. Exactly one of the two
+            is displayed at any time, so the row still has one media element beside its text. */}
+        <img className={`${styles.media} ${styles.onPaper}`} src={asset(media.poster)} alt={media.description} />
+      </>
     );
   }
 

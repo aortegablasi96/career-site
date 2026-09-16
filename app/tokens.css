@@ -143,8 +143,8 @@
      Two tokens rather than one that adapts, because DDR-014 gives the wide breakpoint to the
      components and keeps it out of this file: what changes there is layout, and a media query
      cannot read a custom property. The introduction reads the first and swaps to the second at
-     that breakpoint. It also returns to the first on paper, where DDR-010 asks for the photo
-     reduced beside the name; at the 10pt base DDR-005 sets, that is 21mm. */
+     that breakpoint. On paper the wide token is redefined again, to the measure DDR-015 gives the
+     printed photo. */
   --photo-size: 6rem;
   --photo-size-wide: 13rem;
 
@@ -220,6 +220,12 @@
  * token and is written by the components that lay out: a media query cannot read a custom
  * property, so there is no way to give it a token either. components/stylesheets.test.ts holds
  * every component stylesheet to that one width and no other.
+ *
+ * Paper takes the same layouts, per DDR-015, so a component writes `(min-width: 48em), print`
+ * rather than repeating its grid in a print block. A sheet of A4 inside its margins is about 40em,
+ * so the width alone never matches on paper — and an em in a media query is the browser's default
+ * font size, which paper does not have. The columns are what a wide surface is for, and a sheet is
+ * one; writing them once is what stops the screen and the paper drifting apart.
  */
 
 /*
@@ -230,11 +236,37 @@
  */
 @media print {
   :root {
-    --root-font-size: 10pt;
+    --root-font-size: 11pt;
+
+    /* Every surface is the paper. The page's own tint, the white card, the tag's tint and the three
+       level tints all drop, so the sheet reads the same whether or not the browser prints
+       background graphics, and no ink is spent on a colour. Nothing is lost: every tint in the
+       redesign repeats the word it holds, per DDR-010. The inks they carry are not touched, and
+       each is darker on white paper than on the page it was measured against. */
     --color-surface: transparent;
+    --color-surface-card: transparent;
+    --color-surface-tag: transparent;
+    --color-surface-level-advanced: transparent;
+    --color-surface-level-proficient: transparent;
+    --color-surface-level-basic: transparent;
+
+    /* Decoration does not print. This is the whole of it: the timeline's dot and line, and the
+       language card's edge. Each carries no information, so paper simply does not draw it. The
+       spine keeps its column rather than being removed from the grid, so the date column stays
+       where the reader of a screen would expect it. */
+    --color-decoration: transparent;
+
     --content-width: none;
     --page-gutter: 0;
     --page-padding-block: 0;
+
+    /* The photo prints beside the name at 28mm, the measure the UI Review on #43 gives it. It is
+       the narrow token because the introduction is the one section whose paper layout is the narrow
+       one, per DDR-015: at 28mm the photo is short, so a column of its own would leave three
+       quarters of it empty, and what the review asks for is the photo beside the name. It is in mm
+       because a photograph on a sheet is a size of the paper rather than a multiple of the type, as
+       the sheet's own margins are. Screen is untouched. */
+    --photo-size: 28mm;
   }
 }
 

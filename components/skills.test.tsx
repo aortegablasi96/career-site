@@ -30,7 +30,7 @@ const levelsOf = (group: string) =>
 const css = readFileSync(new URL('./skills.module.css', import.meta.url), 'utf8')
   .replace(/\r\n/g, '\n')
   .replace(/\/\*[\s\S]*?\*\//g, '');
-const wide = css.match(/@media \(min-width: 48em\)\s*\{([\s\S]*?)\n\}/)?.[1] ?? '';
+const wide = css.match(/@media \(min-width: 48em\), print\s*\{([\s\S]*?)\n\}/)?.[1] ?? '';
 const print = css.match(/@media print\s*\{([\s\S]*)\}\s*$/)?.[1] ?? '';
 
 /** Every skill at a level, across the groups. */
@@ -123,8 +123,10 @@ describe('Skills in print', () => {
     expect(print).toMatch(/\.group\s*\{[^}]*break-inside:\s*avoid;/);
   });
 
-  it('drops every badge’s tint, which the word inside it makes redundant, per DDR-010', () => {
-    expect(print).toMatch(/\.advanced,\s*\.proficient,\s*\.basic\s*\{[^}]*background-color:\s*var\(--color-surface\);/);
+  // The tints are dropped by the tokens, for every surface at once, per DDR-015, so a badge keeps
+  // its ink and nothing here repeats the rule per level.
+  it('leaves a badge nothing to say on paper, since the tints are dropped by the tokens, per DDR-015', () => {
+    expect(print).not.toMatch(/background-color/);
   });
 });
 

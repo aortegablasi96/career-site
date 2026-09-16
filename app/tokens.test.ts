@@ -406,39 +406,73 @@ describe('responsive tokens', () => {
   });
 });
 
-// DDR-005 sets the page for paper by redefining tokens in print, and gives the sheet its margins.
+// DDR-015 sets the page for paper by redefining tokens in print, and gives the sheet its margins.
 // These tests read the tokens as written, so the print treatment cannot drift from the record.
 const inPrint = redefined(print?.body);
 
 const forPaper = [
-  { name: 'root-font-size', value: '10pt' },
+  { name: 'root-font-size', value: '11pt' },
   { name: 'color-surface', value: 'transparent' },
+  { name: 'color-surface-card', value: 'transparent' },
+  { name: 'color-surface-tag', value: 'transparent' },
+  { name: 'color-surface-level-advanced', value: 'transparent' },
+  { name: 'color-surface-level-proficient', value: 'transparent' },
+  { name: 'color-surface-level-basic', value: 'transparent' },
+  { name: 'color-decoration', value: 'transparent' },
   { name: 'content-width', value: 'none' },
   { name: 'page-gutter', value: '0' },
   { name: 'page-padding-block', value: '0' },
+  { name: 'photo-size', value: '28mm' },
 ];
 
 describe('print tokens', () => {
-  it('redefines only the base size, the surface, and the column and its edges', () => {
+  it('redefines only the base size, every surface, the decoration, the column and its edges, and the photo', () => {
     expect([...inPrint.keys()]).toEqual(forPaper.map(({ name }) => name));
   });
 
-  it.each(forPaper)('sets --$name to $value in print, as DDR-005 records', ({ name, value }) => {
+  it.each(forPaper)('sets --$name to $value in print, as DDR-015 records', ({ name, value }) => {
     expect(inPrint.get(name)).toBe(value);
   });
 
-  // DDR-005 chose its 10pt base so that the smallest step of DDR-001's scale came to exactly 9pt,
-  // DDR-001's 12px floor. DDR-011's scale reaches lower, so at the same base the tags and level
-  // badges print at 8.1pt. DDR-005 is #52's to rework, and this test records where the two records
-  // stand rather than endorsing it: body text still prints at 10pt, and either record changing
-  // fails here.
-  it('prints body text at 10pt, and the smallest step at 8.1pt, which #52 has to settle', () => {
+  // DDR-015: every tint on the page is dropped on paper, so the sheet reads the same whether or not
+  // the browser prints background graphics, and the decoration is not drawn at all. The inks the
+  // tints carried are untouched: each is darker on white paper than on the surface it was measured
+  // against, so no pairing DDR-012 records gets worse.
+  it('drops every surface and the decoration, and touches no ink, per DDR-015', () => {
+    const dropped = [...inPrint.keys()].filter((name) => inPrint.get(name) === 'transparent');
+    const surfaces = [...root.matchAll(/--(color-surface[\w-]*|color-decoration):/g)].map(
+      ([, name]) => name,
+    );
+
+    expect(dropped.sort()).toEqual(surfaces.sort());
+    for (const name of inPrint.keys()) {
+      expect(name).not.toMatch(/^color-text/);
+    }
+  });
+
+  // The photo prints beside the name at the measure the UI Review on #43 gives it. The introduction
+  // is the one section whose paper layout is the narrow one, per DDR-015 — a 28mm photo is short,
+  // so a column of its own would leave three quarters of it empty — so it is the narrow token that
+  // print redefines. The measure is in mm because a photograph on a sheet is a size of the paper
+  // rather than a multiple of the type, as the sheet's own margins are.
+  it('prints the photo at 28mm beside the name, in a unit of the paper, per DDR-015', () => {
+    expect(inPrint.get('photo-size')).toBe('28mm');
+    expect(token('photo-size')).toMatch(/rem$/);
+    expect(inPrint.has('photo-size-wide')).toBe(false);
+  });
+
+  // DDR-005 chose a 10pt base so that the smallest step of DDR-001's scale came to exactly 9pt.
+  // DDR-011's scale reaches lower, so at that base the tags and badges printed at 8.1pt, and
+  // DDR-011 handed the question to #52. DDR-015 settles it by raising the base to 11pt, which puts
+  // body text at 11pt and the smallest step back at 9pt, and which was measured to cost no extra
+  // sheet. Either record changing fails here.
+  it('prints body text at 11pt and the smallest step at 9pt, as DDR-015 settles', () => {
     const base = Number.parseFloat(inPrint.get('root-font-size')!);
     const body = fontSteps.find(({ name }) => name === 'medium')!;
     const smallest = Math.min(...fontSteps.map(({ value }) => rem(value)));
 
-    expect(base * rem(body.value)).toBeCloseTo(10, 5);
-    expect(base * smallest).toBeCloseTo(8.125, 5);
+    expect(base * rem(body.value)).toBeCloseTo(11, 5);
+    expect(base * smallest).toBeCloseTo(8.94, 2);
   });
 
   it('gives the sheet margins in a unit of the paper', () => {
