@@ -89,7 +89,7 @@ describe('projects content', () => {
   it('lists the three portfolio projects, then this site, as #26 decided', () => {
     expect(projects.projects.map(({ name }) => name)).toEqual([
       'NumisBook',
-      'Career Conversation Chatbot',
+      'Digital Twin',
       'Stock Portfolio Viewer',
       'This site',
     ]);

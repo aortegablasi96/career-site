@@ -159,9 +159,10 @@ Above the wide breakpoint, three columns: a date column, a narrow spine column, 
 
 Above the wide breakpoint, two columns: a media column and the text. Below it, media above text.
 
-1. **The media** is 4:3. Three projects show a screenshot; the Career Conversation Chatbot shows its
-   demo video with browser controls, no autoplay and no loop. Each has alternative text, and every
-   entry reads correctly if its asset fails to load.
+1. **The media** is 4:3. Three projects show a screenshot; the Digital Twin project — named the
+   Career Conversation Chatbot when this record was written — shows its demo video with browser
+   controls, no autoplay and no loop. Each has alternative text, and every entry reads correctly if
+   its asset fails to load.
 2. **The text**: the project's name (`h3`), a wrapping row of technology tags, the description, then
    the labelled links.
 
