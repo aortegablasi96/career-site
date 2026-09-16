@@ -169,3 +169,27 @@ export interface Languages {
   /** In the order the page shows them, per ADR-002. */
   languages: readonly Language[];
 }
+
+/**
+ * The downloadable CV, per ADR-004 and ADR-005.
+ *
+ * The file is a separately designed document, not a photograph of the page, so ADR-005 lists the
+ * facts it must share with the site and makes the site the one that wins when they disagree. The
+ * digest below is what tells anyone that the two have moved apart.
+ */
+export interface Cv {
+  /** What the download control shows, per DDR-010. The control itself is #48's. */
+  label: string;
+  /**
+   * Where the file sits, as a path from the site's root. It is not a URL: every reference to a
+   * binary asset goes through `asset()` first, per ADR-004, so it resolves under the Pages base
+   * path as well as locally.
+   */
+  file: string;
+  /**
+   * A fingerprint of the content modules that hold the site's prose, which `content/cv.test.ts`
+   * recomputes. When the page's facts change this stops matching, and the test suite fails until
+   * the CV has been brought back into step and this value replaced.
+   */
+  contentDigest: string;
+}
