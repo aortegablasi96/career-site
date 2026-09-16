@@ -62,7 +62,10 @@ Tooling notes that are easy to trip over:
 * **Fonts** are committed to `app/fonts/`, with their licences, and loaded by
   `next/font/local` in `app/layout.tsx`, so builds need no network access for fonts. Each
   family is one static file per weight, not a variable font, per DDR-007: Firefox draws variable
-  fonts as outlines when it saves a PDF, so the printed CV's text could not be selected.
+  fonts as outlines when it saves a PDF, so the printed CV's text could not be selected. The files
+  are derived, not downloaded: DDR-007 pins each weight, and DDR-009 then deletes U+02BB and U+02BC
+  from the serif files' character map, because Firefox otherwise spells the apostrophe in a saved
+  PDF with a character the page does not use. Re-deriving a font means doing both.
   `next/font` is a compile-time transform whose loaders throw outside the Next.js compiler, so
   a test that imports the root layout mocks `next/font/local`, as `app/layout.test.tsx` does.
 
@@ -129,8 +132,11 @@ item in one block that print keeps whole, per DDR-008. A component
 hides its own screen-only elements in print, and may drop screen-only sizing such as the minimum
 target size, per DDR-006, but adds no print-only content. What DDR-006 keeps whole on paper but
 the base styles do not, because it is not an `article` or list item, such as a skill group or
-the labelled list, is kept whole by its own component. Check print by saving
-a PDF in two browsers, and recheck page breaks when the amount of content changes.
+the labelled list, is kept whole by its own component. What a PDF says, not only how it
+looks, is part of the design: `app/globals.css` sets `font-variant-ligatures: none`, per DDR-009,
+because Firefox writes a ligature into a saved PDF as the replacement character, which left words
+such as "Software" unsearchable (#40). Check print by saving a PDF in two browsers, read the text
+back out of both, and recheck page breaks when the amount of content changes.
 
 What exists, to reuse rather than reinvent:
 
@@ -330,10 +336,10 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001 to DDR-008 are
+ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001 to DDR-009 are
 accepted, with DDR-007 superseding DDR-001's choice of variable font files, and DDR-008 superseding
 DDR-005's acceptance that Firefox can leave a section heading at the foot of a page; the next DDR
-is `009`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+is `010`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 ## Workflow
 

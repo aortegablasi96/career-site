@@ -286,7 +286,9 @@ Risks:
   and PDF has no direct support for variable fonts, but that has not been confirmed as the cause.
   #22 tracks it, and a fix may mean a change to how the fonts are loaded.
   Resolved by DDR-007. The checks for #22 confirmed that the variable font files were the cause,
-  and DDR-007 replaces them with static files, which Firefox's PDFs keep as text.
+  and DDR-007 replaces them with static files, which Firefox's PDFs keep as text. The text those
+  PDFs then kept was not all spelled as the page is: #40 found that Firefox writes a ligature as
+  the replacement character. Resolved by DDR-009, which turns ligatures off.
 
 ## Related Documents
 
@@ -302,3 +304,4 @@ Risks:
 * DDR-003, spacing and layout, whose rhythm print keeps in proportion
 * DDR-004, the responsive strategy, whose pattern of redefining tokens print follows
 * DDR-007, static font files, which resolves the Firefox PDF text risk
+* DDR-009, no ligatures, which resolves what the same PDFs then spelled wrongly

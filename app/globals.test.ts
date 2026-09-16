@@ -31,6 +31,14 @@ describe('base styles', () => {
   });
 });
 
+// DDR-009 turns ligatures off, because Firefox writes a ligature into a saved PDF as the
+// replacement character, which leaves words such as "Software" unsearchable and misread aloud.
+describe('base typography', () => {
+  it('turns ligatures off, so every word survives being saved as a PDF', () => {
+    expect(rule('body')).toMatch(/font-variant-ligatures:\s*none;/);
+  });
+});
+
 // DDR-003 lays the page out from the spacing tokens alone, and relies on the section step, with the
 // section's heading, to show where one section ends and the next begins.
 describe('base layout', () => {
