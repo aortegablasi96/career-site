@@ -4,9 +4,25 @@
  */
 
 /* Bullet text is the small step, per DDR-011. Consecutive points are set closer than the flow, so
-   the row reads as one item. */
+   the row reads as one item.
+
+   The points are indented by one step of the spacing scale rather than the two the base styles give
+   every list, per DDR-019. They are the densest text on the page, in the narrowest column it has,
+   and the step the base styles use was chosen for a list in a full-width column. The marker hangs
+   in the step, as a marker does. */
 .points {
+  padding-inline-start: var(--space-medium);
   font-size: var(--font-size-small);
+}
+
+/* The marker is the browser's own disc, drawn in the marker ink instead of the text's, per DDR-019.
+   Recolouring the marker rather than replacing it is what keeps everything else true: the list is
+   still a list to a screen reader, the marker is still announced as nothing, it hangs beside the
+   first line of a point however many lines the point runs to, and its size follows the text rather
+   than being a length of its own. That is why the design's 4px is not a token here — at the small
+   step the disc is about that, and it grows with the reader's text. */
+.points > li::marker {
+  color: var(--color-marker);
 }
 
 .points > li + li {
