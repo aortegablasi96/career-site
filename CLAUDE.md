@@ -28,20 +28,26 @@ all five of its sections: experience, projects, skills, education and certificat
 languages. Its page breaks were rechecked against the finished page for #23, and each section
 now keeps its heading with its first item on paper, per DDR-008.
 
-**The redesign, Epic #42, is part built.** The token layer is the redesign's, under #44: Lora and
+**The redesign, Epic #42, has all of its structure built.** Every section below is DDR-010's; what
+is left on the epic is the print treatment, #52, and the real media, #63. The token layer is the
+redesign's, under #44: Lora and
 DM Sans, the seven-step scale, the new palette, the wider page column and the second breakpoint are
 all in place, and DDR-011 to DDR-014 supersede DDR-001 to DDR-004.
 
 **The introduction is the redesign's, under #48**: the photo, the positioning line in the accent,
 and four pill controls — the three contact addresses and the "Get my CV" download.
 
-**The experience section is the redesign's timeline, under #49.** A role is one `article`: below the
-wide breakpoint a single column with its dates and place above the job title, and from the
-breakpoint a three-column grid of a date column, a decorative spine, and the content. The spine is
-`aria-hidden` and not rendered at all below the breakpoint. The space between two roles is padding
-at the foot of the content column rather than a margin between the rows, so the spine's line runs
-through it to the next dot; the last role in the section, which `experience.module.css` finds as
-`section > .role:last-child`, drops both. `--timeline-*` in `app/tokens.css` holds its measures.
+**The experience and education sections are the redesign's timeline, under #49 and #51.** A role and
+a credential share one pattern, per DDR-010, and `components/timeline.tsx` is it. A row is one
+`article`: below the wide breakpoint a single column with its dates, and a role's place, above the
+title, and from the breakpoint a three-column grid of a date column, a decorative spine, and the
+content. The spine is `aria-hidden` and not rendered at all below the breakpoint. The space between
+two rows is padding at the foot of the content column rather than a margin between the rows, so the
+spine's line runs through it to the next dot; the last row in a section, which
+`timeline.module.css` finds as `section > .row:last-child`, drops both. `--timeline-*` in
+`app/tokens.css` holds its measures. `experience.module.css` holds what is a role's alone, which is
+the bullet points; a credential has no place, a degree's body is its thesis sentence, and a
+certification has no body at all.
 
 **The projects section is the redesign's media-and-text row, under #50.** A project is one
 `article`: below the wide breakpoint a single column with its media above the name, and from the
@@ -52,10 +58,19 @@ narrow screen with enlarged text wraps rather than scrolls sideways. The media i
 project whose content gives it a `Video`, a `video` with its poster, controls and `preload="none"`;
 no project carries a video yet, so the branch is exercised by a test rather than by the page.
 
-The other three section components are still DDR-006's until #51 rebuilds them, so they do not
-yet use the wider column or the wide breakpoint, and the page still reads as left-weighted below the
-projects section on a wide screen. `entry.tsx`, `entry.module.css` and DDR-006's entry anatomy
-survive for credentials alone; experience and projects no longer use them.
+**The skills and languages sections are the redesign's, under #51.** A skill group is its name as an
+`h3` followed by one block per level, strongest first: a level badge — the level as a word in a
+tinted pill — and then that level's skills, separated by middle dots the same way the metadata line
+separates its parts. Groups stand two to a row from the wide breakpoint and one below. The *row* is
+what `app/page.tsx` hands the section, not the group, because the two columns have to be one grid
+and a grid needs one parent: `skillRows` in `components/skills.tsx` splits them, and it holds the
+count that `skills.module.css` draws. A language is a card — the language as its term, the CEFR
+level below it in the accent — and the four stand in a row from the wide breakpoint, two between the
+breakpoints and one below the narrowest. That last step is `--language-columns` in `app/tokens.css`,
+because it happens at the narrow breakpoint, which a component may not write.
+
+Every section is now the redesign's, so DDR-006's entry anatomy and its labelled list are gone:
+`entry.tsx`, `entry.module.css` and `labelled-list.*` were removed on #51, with their tests.
 
 Two things about the introduction are worth knowing before changing it:
 
@@ -164,10 +179,11 @@ treatment to DDR-005, so changing a token
 means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
 component stylesheet to the same rules: tokens only, no reordering, and no width media query but
-the wide breakpoint. Its tokens-only rule admits `100%` beside `0`, `auto` and `none`, because
-"no wider than the room there is" names the space an element was given rather than a size of its
-own; #50 widened it for the projects' media, which is the first fixed-size box on the site wide
-enough to overflow a 320px screen when text is enlarged.
+the wide breakpoint. **ADR-006 says which literals it admits**: `0`, `auto` and `none` anywhere, and
+`100%` on `max-inline-size` and `max-block-size` alone, because "no wider than the room there is"
+names the space an element was given rather than a size of its own. #50 widened the rule for the
+projects' media, the one fixed-size box on the site wide enough to overflow a 320px screen when
+text is enlarged; #51 narrowed it to those two properties and recorded why.
 
 The styles are mobile-first, per DDR-014. The `:root` values in `app/tokens.css` are for the
 narrowest viewports, and the site has two breakpoints, both in em.
@@ -196,7 +212,7 @@ item in one block that print keeps whole, per DDR-008. A component
 hides its own screen-only elements in print, and may drop screen-only sizing such as the minimum
 target size, per DDR-006, but adds no print-only content. What DDR-006 keeps whole on paper but
 the base styles do not, because it is not an `article` or list item, such as a skill group or
-the labelled list, is kept whole by its own component. What a PDF says, not only how it
+the row of language cards, is kept whole by its own component. What a PDF says, not only how it
 looks, is part of the design: `app/globals.css` sets `font-variant-ligatures: none` and
 `font-feature-settings: 'calt' 0`, per DDR-011, because Firefox writes a glyph that no character
 maps to into a saved PDF as the replacement character, which left words such as "Software"
@@ -210,14 +226,12 @@ What exists, to reuse rather than reinvent:
 * **The design system.** Typography (DDR-011), colour (DDR-012), spacing and layout (DDR-013) and
   responsive behaviour (DDR-014) are the redesign's, reworked on #44. Print (DDR-005) is still the
   Design Foundation's, until #52.
-* **The components.** The introduction is DDR-010's, under #48, the experience timeline under #49,
-  and the projects' media-and-text row under #50. The rest still implement DDR-006: its outline, the
-  contents, the entry anatomy now used by credentials alone, and the labelled list shared by skills
-  and languages. The contents, the section wrapper, the metadata line, the entry, the date range,
-  the labelled list, and the skills, credentials, and languages sections implement it. A
-  certification is an entry with no body, showing only the month it was granted. The metadata line
-  serves both records: DDR-010 gives the timeline's dates, place and company a line each, which is
-  one of these with a single part.
+* **The components.** Every section is DDR-010's: the introduction under #48, the timeline that
+  experience and education share under #49 and #51, the projects' media-and-text row under #50, and
+  the skill groups and language cards under #51. What still carries over from DDR-006 is its
+  outline, its contents row, and the metadata line — which DDR-010 narrows to a single part, so the
+  timeline's dates, place and company each get a line set the same way. The contents, the section
+  wrapper, the metadata line and the date range are shared by the sections that need them.
 * **The icons**, in `components/icon.tsx`: one per contact address and one for the CV. They are
   inline SVG rather than committed files, drawn in `currentColor` and sized in em, and each is
   hidden from assistive technology because it repeats what its control's own text says. Which mark
@@ -411,9 +425,11 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001 to ADR-005 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
+ADR-001 to ADR-006 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
 separate CV file, and ADR-005 superseding the part of ADR-004 that makes the CV a PDF saved from the
-page's print output; the rest of both records stands. The next ADR is `006`.
+page's print output; the rest of both records stands. ADR-006 supersedes nothing: it refines
+ADR-001's styling boundary by saying which literal values a component stylesheet may write, which
+is `0`, `auto`, `none`, and `100%` on a maximum alone. The next ADR is `007`.
 
 The accepted DDRs are DDR-005, DDR-008 and DDR-010 to DDR-014. The next DDR is `015`. Status values
 are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
@@ -434,11 +450,12 @@ DDR-008 supersedes DDR-005's acceptance that Firefox can leave a section heading
 page. Each superseded record says at the top what carries forward and what does not; read the new
 one first and the old one for the reasoning behind it.
 
-DDR-010 is the design contract for Epic #42, the career page redesign. Its token layer is built,
-under #44, and its introduction under #48; the five section components described under "Current
-Repository State" are still DDR-006's until #49 to #51 rebuild them. **DDR-005 and DDR-008, the
-print records, still describe most of the page as it stands** and are reworked by #52. Two gaps are
-open until that lands:
+DDR-010 is the design contract for Epic #42, the career page redesign. It is built: its token layer
+under #44, its introduction under #48, and its five section components under #49 to #51. What DDR-010
+still asks for and nothing has built is the decorative rule beside each section's `h2`, which the UI
+Review on #43 gives `section.tsx`; no story owns it yet. **DDR-005 and DDR-008, the
+print records, still describe most of the page as it stands** and are reworked by #52. These gaps
+are open until that lands:
 
 * DDR-005's own arithmetic is out of step with DDR-011's scale, which `app/tokens.test.ts` records
   rather than hides: DDR-005 chose its 10pt base so that the smallest text came to 9pt, and the new
@@ -459,11 +476,17 @@ open until that lands:
   does ask for, and no project is split across two sheets. What #52 still owes the projects is the
   two-column row on paper, and the rule that prints a video's poster in place of the video element —
   which nothing needs until #63 supplies a video.
+* The skills and the languages meet it a third time, and #51 left them to #52 as well: the skill
+  groups print in one column where DDR-010 draws two, and the language cards print two to a row
+  rather than four, because on paper the 20em query matches and the 48em one does not. What DDR-010
+  does ask for on paper is done — the badges and the cards drop their tints, fills and edges, each
+  group is kept whole, and so is the row of cards.
 
-Printed in Firefox and Edge on #50, the page runs to **five A4 sheets**, with the same breaks in
-both. #48 had it at four, where #23 recorded five; DDR-011's denser scale bought a sheet back and
-the projects' media has now spent it. The stand-ins are the full 4:3 box, so real pictures will not
-shorten it. #52 states the final length.
+Printed in Firefox and Edge on #51, the page runs to **six A4 sheets**, with the same breaks in
+both. #23 recorded five, #48 had it at four, and #50 was back at five; the level badges and the
+language cards have now spent a sixth. Nothing is split across two sheets in either browser, and no
+section heading is stranded. The stand-ins are the full 4:3 box, so real pictures will not shorten
+it. #52 owns the print treatment and states the final length.
 
 ADR-004 and ADR-005 together decide the downloadable CV and the site's first binary assets. The CV
 itself has landed, under #56: `public/andreu-ortega-blasi-cv.pdf` is a separately designed document,

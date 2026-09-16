@@ -1,0 +1,67 @@
+/*
+ * The languages, per DDR-010: four cards in a row from the wide breakpoint, two columns between the
+ * breakpoints, and one column below the narrowest.
+ *
+ * The count below the wide breakpoint is a token, `--language-columns`, because the narrow
+ * breakpoint is the tokens' and a component may write only the wide one, per DDR-014. The count at
+ * the wide breakpoint is written here, with the query that engages it, as the timeline's and the
+ * projects' column counts are.
+ *
+ * One column below 20em is what keeps the row from overflowing: a breakpoint is in em of the
+ * browser's default font size, so a reader at 200% text on a 320px screen falls below it and gets
+ * one card per line rather than two cards too narrow to hold "Native (C2)".
+ */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(var(--language-columns), 1fr);
+  gap: var(--space-medium);
+}
+
+/* A card is the page's one white surface, per DDR-012, edged with a hairline. The edge carries no
+   information — the term and its value are a pair in the markup — so it is drawn in the decoration
+   colour, which may sit below 3:1 for that reason. */
+.card {
+  padding-block: var(--space-medium);
+  padding-inline: var(--space-medium);
+  border: 1px solid var(--color-decoration);
+  border-radius: var(--radius-large);
+  background-color: var(--color-surface-card);
+}
+
+/* The language is the term, so it is set apart from its level by weight rather than by size: there
+   is no heading here, and nothing below body size a term could take. */
+.name {
+  font-weight: var(--font-weight-semibold);
+}
+
+/* The level in the accent, at 7.90:1 on the card, per DDR-012. The browser indents a value by 40px,
+   which is not on the scale; here it sits under its term. */
+.level {
+  margin-block-start: var(--space-x-small);
+  margin-inline-start: 0;
+  color: var(--color-accent);
+}
+
+/* From here the four cards stand in one row, per DDR-010. This is the one width a component may
+   write, per DDR-014. */
+@media (min-width: 48em) {
+  .cards {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media print {
+  /* The row is short and is kept whole on paper, per DDR-010. */
+  .cards {
+    break-inside: avoid;
+  }
+
+  /* A card prints its text and drops its fill and its edge, per DDR-010, so the row reads the same
+     whether or not the browser prints background graphics. */
+  .card {
+    padding-block: 0;
+    padding-inline: 0;
+    border: none;
+    background-color: var(--color-surface);
+  }
+}

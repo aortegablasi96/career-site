@@ -364,13 +364,19 @@ const adapted = [
   { role: 'page-padding-block', narrow: 'space-large', wide: 'space-section' },
 ];
 
+// DDR-014's table also sends the language cards from one column to two at the breakpoint, and a
+// component may write only the wide breakpoint, so the count adapts here. It is a count rather than
+// a step, which is why it is held separately: one card to a line at the narrowest is what keeps the
+// row from overflowing a 320px screen at 200% text, per DDR-010 and #51.
+const adaptedCounts = [{ role: 'language-columns', narrow: '1', wide: '2' }];
+
 describe('responsive tokens', () => {
   it('redefines tokens at one breakpoint only, a minimum width in em, so it follows the browser font-size setting', () => {
     expect(breakpoints.map(({ query }) => query)).toEqual(['(min-width: 20em)']);
   });
 
-  it('adapts only the page and section titles and the page edges, never a step of either scale', () => {
-    expect([...atBreakpoint.keys()]).toEqual(adapted.map(({ role }) => role));
+  it('adapts only the page and section titles, the page edges and the language columns, never a step of either scale', () => {
+    expect([...atBreakpoint.keys()]).toEqual([...adapted, ...adaptedCounts].map(({ role }) => role));
   });
 
   it.each(adapted)(
@@ -378,6 +384,14 @@ describe('responsive tokens', () => {
     ({ role, narrow, wide }) => {
       expect(token(role)).toBe(`var(--${narrow})`);
       expect(atBreakpoint.get(role)).toBe(`var(--${wide})`);
+    },
+  );
+
+  it.each(adaptedCounts)(
+    'sets --$role to $narrow below the breakpoint and $wide from it, as DDR-010 records',
+    ({ role, narrow, wide }) => {
+      expect(token(role)).toBe(narrow);
+      expect(atBreakpoint.get(role)).toBe(wide);
     },
   );
 

@@ -1,9 +1,10 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-// ADR-001 has component styles read the tokens rather than write literal values. DDR-014 keeps the
-// narrow breakpoint in app/tokens.css, lets a component write the wide one and no other, and makes
-// the markup order the visual order. These tests hold every component stylesheet to that, as
+// ADR-001 has component styles read the tokens rather than write literal values, and ADR-006 says
+// which literals are not design values and may therefore be written. DDR-014 keeps the narrow
+// breakpoint in app/tokens.css, lets a component write the wide one and no other, and makes the
+// markup order the visual order. These tests hold every component stylesheet to that, as
 // app/globals.test.ts holds the base styles.
 const directory = new URL('./', import.meta.url);
 const stylesheets = readdirSync(directory)
@@ -17,15 +18,35 @@ const stylesheets = readdirSync(directory)
 /**
  * A value made only of tokens, zero, and keywords, with no literal length.
  *
- * `100%` counts as a keyword here rather than a length. It names the space the element has been
- * given rather than a size of its own, so it decides nothing a token could hold: ADR-001 asks that
- * a value the tokens do not provide be a design decision rather than a number invented in a
- * stylesheet, and "no wider than the room there is" is neither. The projects' media is the first
- * element on the site that needs it, because it is the first fixed-size box wide enough to
- * overflow a 320px screen when text is enlarged.
+ * ADR-006 records why none of the three literals is a design decision: `0` is nothing, `auto` hands
+ * the decision to the layout, and `none` removes a limit that was there. None of them is a length,
+ * so none of them can disagree with the design system.
  */
-const tokensOnly =
+const tokensOnly = /^(?:0|auto|none|var\(--[\w-]+\))(?:\s+(?:0|auto|none|var\(--[\w-]+\)))*$/;
+
+/**
+ * The same, and `100%`, which ADR-006 admits on a maximum and nowhere else.
+ *
+ * `max-inline-size: 100%` says "no wider than the room there is". It names the space the element
+ * has been given rather than a size of its own, so there is no number a token could hold. The same
+ * `100%` on `inline-size`, or on a padding, would be a design value and stays out.
+ */
+const tokensOrRoom =
   /^(?:0|auto|none|100%|var\(--[\w-]+\))(?:\s+(?:0|auto|none|100%|var\(--[\w-]+\)))*$/;
+
+/** The two properties ADR-006 lets `100%` through on. */
+const maximum = /^max-(?:inline|block)-size$/;
+
+/** Every size or space declaration in a stylesheet, as its property and its value. */
+function declarations(css: string): readonly { property: string; value: string }[] {
+  const pattern =
+    /\b(margin|padding|gap|column-gap|row-gap|font-size|(?:min-|max-)?(?:inline|block)-size|scroll-margin)([\w-]*):\s*([^;]+);/g;
+
+  return [...css.matchAll(pattern)].map(([, property, suffix, value]) => ({
+    property: `${property}${suffix}`,
+    value: value.trim(),
+  }));
+}
 
 describe('component stylesheets', () => {
   it('exist', () => {
@@ -37,15 +58,9 @@ describe('component stylesheets', () => {
       expect(css).not.toMatch(/#[\da-f]{3,8}\b|rgba?\(|hsla?\(/i);
     });
 
-    it('sets sizes and space from tokens only', () => {
-      const values = [
-        ...css.matchAll(
-          /\b(?:margin|padding|gap|column-gap|row-gap|font-size|(?:min-|max-)?(?:inline|block)-size|scroll-margin)[\w-]*:\s*([^;]+);/g,
-        ),
-      ].map(([, value]) => value.trim());
-
-      for (const value of values) {
-        expect(value).toMatch(tokensOnly);
+    it('sets sizes and space from tokens only, per ADR-006', () => {
+      for (const { property, value } of declarations(css)) {
+        expect(value).toMatch(maximum.test(property) ? tokensOrRoom : tokensOnly);
       }
     });
 
@@ -62,7 +77,9 @@ describe('component stylesheets', () => {
     });
 
     it('does not reorder content, so the visual order is the markup order', () => {
-      expect(css).not.toMatch(/\border\s*:|-reverse\b|\bgrid-(?:area|row|column)\b|position:\s*(?:absolute|fixed|sticky)/);
+      expect(css).not.toMatch(
+        /\border\s*:|-reverse\b|\bgrid-(?:area|row|column)\b|position:\s*(?:absolute|fixed|sticky)/,
+      );
     });
   });
 });

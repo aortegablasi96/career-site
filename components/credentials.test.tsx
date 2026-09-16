@@ -11,8 +11,8 @@ const html = renderToStaticMarkup(<Credentials credentials={credentials.credenti
 /** The markup's text, as a reader meets it. */
 const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 
-/** Each credential's entry, in the order the page shows them. */
-const entries = html.match(/<article[^>]*>.*?<\/article>/g) ?? [];
+/** Each credential's row, in the order the page shows them. */
+const rows = html.match(/<article[^>]*>.*?<\/article>/g) ?? [];
 
 const isCertification = (credential: Credential): credential is Certification => 'granted' in credential;
 const isDegree = (credential: Credential): credential is Degree => 'thesis' in credential;
@@ -22,20 +22,25 @@ const degrees = credentials.credentials.filter(isDegree);
 const degree = (name: string) => degrees.find((candidate) => candidate.name.startsWith(name))!;
 
 describe('Credentials', () => {
-  it('renders each credential as an entry, in the order the content gives', () => {
-    const titles = entries.map((entry) => entry.match(/<h3>([^<]+)<\/h3>/)?.[1]);
+  it('renders each credential as a row of the timeline, in the order the content gives', () => {
+    const titles = rows.map((row) => row.match(/<h3>([^<]+)<\/h3>/)?.[1]);
 
+    expect(rows).toHaveLength(credentials.credentials.length);
     expect(titles).toEqual(credentials.credentials.map(({ name }) => name));
   });
 
-  it('gives each certification its issuer and the month it was granted, per DDR-006', () => {
-    expect(text).toContain('Project Management Institute · May 2026');
-    expect(text).toContain('Project Management Institute · Jun 2024');
+  // DDR-010 moves the institution out of DDR-006's middle-dot line onto a line of its own, and the
+  // dates into the date column, which comes before the title in the reading order, per DDR-014.
+  it('gives each certification the month it was granted, then its name and its issuer', () => {
+    expect(text).toContain('May 2026 PMI Certified Professional in Managing AI (PMI-CPMAI) Project Management Institute');
+    expect(text).toContain('Jun 2024 Project Management Professional (PMP) Project Management Institute');
+    expect(text).not.toContain('Project Management Institute ·');
   });
 
-  it('gives each degree its institution and the months it ran, per DDR-006', () => {
-    expect(text).toContain('Universitat Politècnica de Catalunya · Sep 2020 – Feb 2022');
-    expect(text).toContain('Universitat Politècnica de Catalunya · Sep 2014 – Feb 2019');
+  it('gives each degree the months it ran, then its name and its institution', () => {
+    expect(text).toContain('Sep 2020 – Feb 2022 Master’s degree in IoT Universitat Politècnica de Catalunya');
+    expect(text).toContain('Sep 2014 – Feb 2019 Bachelor’s degree in IT Universitat Politècnica de Catalunya');
+    expect(text).not.toContain('Universitat Politècnica de Catalunya ·');
   });
 
   it('marks up every date with its machine-readable value', () => {
@@ -48,21 +53,33 @@ describe('Credentials', () => {
     }
   });
 
-  it('follows a degree’s metadata with its thesis, as a paragraph', () => {
+  it('follows a degree’s institution with its thesis, as a paragraph', () => {
     for (const [index, credential] of credentials.credentials.entries()) {
       if (isDegree(credential)) {
-        expect(entries[index]!.endsWith(`</p><p>${credential.thesis}</p></article>`)).toBe(true);
+        expect(rows[index]!.endsWith(`</p><p>${credential.thesis}</p></div></article>`)).toBe(true);
       }
     }
   });
 
-  it('ends a certification at its metadata line, with one date and no body', () => {
+  it('ends a certification at its institution, with one date and no body', () => {
     for (const [index, credential] of credentials.credentials.entries()) {
       if (isCertification(credential)) {
-        expect(entries[index]).toMatch(/<\/h3><p[^>]*>.*<\/p><\/article>$/);
-        expect(entries[index]!.match(/<p/g)).toHaveLength(1);
-        expect(entries[index]!.match(/<time/g)).toHaveLength(1);
+        expect(rows[index]).toMatch(/<\/h3><p[^>]*>[^<]*<\/p><\/div><\/article>$/);
+        // The dates, and the institution. A role has a third for its place; a credential has none.
+        expect(rows[index]!.match(/<p/g)).toHaveLength(2);
+        expect(rows[index]!.match(/<time/g)).toHaveLength(1);
       }
+    }
+  });
+
+  // Every credential is a row of the same timeline experience uses, per DDR-010, so the ornament is
+  // hidden from assistive technology here too.
+  it('hides the timeline’s ornament from assistive technology, and gives it no text', () => {
+    const spines = [...html.matchAll(/<div [^>]*aria-hidden="true"[^>]*>(.*?)<\/div>/g)];
+
+    expect(spines).toHaveLength(credentials.credentials.length);
+    for (const [, inner] of spines) {
+      expect(inner.replace(/<[^>]+>/g, '')).toBe('');
     }
   });
 });

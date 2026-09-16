@@ -19,10 +19,11 @@ const links = [...html.matchAll(/<a href="([^"]+)"[^>]*>(.*?)<\/a>/g)].map(([, h
   markup: inner,
 }));
 
-const styles = readFileSync(new URL('./introduction.module.css', import.meta.url), 'utf8').replace(
-  /\/\*[\s\S]*?\*\//g,
-  '',
-);
+// Line endings are normalised first: a selector list below is matched across the newline that
+// separates its two selectors, and git hands the file back with CRLF on a Windows checkout.
+const styles = readFileSync(new URL('./introduction.module.css', import.meta.url), 'utf8')
+  .replace(/\r\n/g, '\n')
+  .replace(/\/\*[\s\S]*?\*\//g, '');
 
 /**
  * The declarations of the rule whose selector list is exactly `selector`, inside `within`.

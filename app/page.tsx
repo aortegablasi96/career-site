@@ -6,7 +6,7 @@ import { Introduction } from '@/components/introduction';
 import { Languages } from '@/components/languages';
 import { Projects } from '@/components/projects';
 import { Section } from '@/components/section';
-import { Skills } from '@/components/skills';
+import { Skills, skillRows } from '@/components/skills';
 import { contents } from '@/content/contents';
 import { cv } from '@/content/cv';
 import { credentials } from '@/content/credentials';
@@ -48,7 +48,13 @@ const sections: readonly PageSection[] = [
   {
     id: 'skills',
     title: skills.title,
-    items: skills.groups.map((group) => <Skills key={group.name} levels={skills.levels} groups={[group]} />),
+    // The section's item is a row of two groups rather than one group, because the two columns
+    // DDR-010 gives the section have to be one grid and a grid needs one parent. One group to an
+    // item would put the first inside the block the section keeps whole with its heading, per
+    // DDR-008, and the rest outside it, which no grid can span.
+    items: skillRows(skills.groups).map((groups) => (
+      <Skills key={groups[0]!.name} levels={skills.levels} groups={groups} />
+    )),
   },
   {
     id: 'education',

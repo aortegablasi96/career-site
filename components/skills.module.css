@@ -1,18 +1,98 @@
-/* Skill groups in a section are separated by the item step, as entries are, per DDR-003 and
-   DDR-006. */
+/*
+ * The skills, per DDR-010.
+ *
+ * The section is two columns of groups from the wide breakpoint and one below. A row is the grid
+ * that holds two of them; the page hands the section one row at a time, so that it can keep its
+ * heading with its first item on paper, per DDR-008. Below the breakpoint a row draws nothing and
+ * its groups simply follow one another, so the section reads as one column without being rebuilt.
+ */
+
+/* Rows follow one another at the item step, as the groups inside them do, so the rhythm does not
+   change where one row ends and the next begins. The first row follows the heading inside the
+   block the section keeps whole with it, per DDR-008, so the section's own rules give it its
+   space. */
+.row + .row {
+  margin-block-start: var(--space-item);
+}
+
+/* Groups in a section are separated by the item step, as roles and projects are, per DDR-013. From
+   the wide breakpoint the two sit side by side and this no longer applies. */
 .group + .group {
   margin-block-start: var(--space-item);
 }
 
 /* The levels are set closer to the group's name than the flow, so the group reads as one item, as
-   an entry's body does, per DDR-006. */
+   a timeline row's content does. */
 .group > * + * {
   margin-block-start: var(--space-small);
 }
 
+/* A level's skills are metadata rather than running text, so they sit at the step DDR-011 gives
+   dates, places and bullet text. The badge leads the line and the skills follow it, separated by
+   middle dots that assistive technology does not announce. */
+.level {
+  font-size: var(--font-size-small);
+}
+
+/* A badge is its own word on a tint that repeats what the word says, so it reads the same in
+   greyscale, on paper and to a screen reader, per DDR-010. It is the smallest step on the site,
+   which DDR-011 allows for tags and badges alone. Inline-block, so it takes its padding while
+   sitting on the line with the skills it labels. */
+.badge {
+  display: inline-block;
+  padding-block: var(--space-x-small);
+  padding-inline: var(--space-small);
+  border-radius: var(--radius-small);
+  font-size: var(--font-size-x-small);
+}
+
+/* The three tints, strongest first, each measured against the ink it carries in DDR-012: 7.29:1,
+   8.88:1 and 6.92:1. They read as a ranking, which is intended, and nothing depends on their doing
+   so: the word inside each badge says the same thing. */
+.advanced {
+  background-color: var(--color-surface-level-advanced);
+  color: var(--color-text-level-advanced);
+}
+
+.proficient {
+  background-color: var(--color-surface-level-proficient);
+  color: var(--color-text-level-proficient);
+}
+
+.basic {
+  background-color: var(--color-surface-level-basic);
+  color: var(--color-text-level-basic);
+}
+
+/* From here two groups stand side by side, per DDR-010. This is the one width a component may
+   write, per DDR-014. */
+@media (min-width: 48em) {
+  .row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: var(--space-large);
+    align-items: start;
+  }
+
+  /* The groups sit beside one another, so the second is not pushed below the first by the rhythm
+     the single column needs. */
+  .group + .group {
+    margin-block-start: 0;
+  }
+}
+
 @media print {
-  /* A skill group is kept whole on paper, as an entry is, per DDR-006. */
+  /* A group is kept whole on paper, as a timeline row is, per DDR-010. */
   .group {
     break-inside: avoid;
+  }
+
+  /* A badge prints its word and drops its tint, per DDR-010. Every tint in the redesign is
+     redundant with the word it holds, so the page reads the same whether or not the browser prints
+     background graphics, and each badge's ink stays dark enough to read on the paper. */
+  .advanced,
+  .proficient,
+  .basic {
+    background-color: var(--color-surface);
   }
 }
