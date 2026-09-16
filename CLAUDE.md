@@ -336,8 +336,9 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001, ADR-002, and ADR-003 are accepted; the next ADR is `004`. DDR-001 to DDR-005 and DDR-007 to
-DDR-010 are accepted, with DDR-007 superseding DDR-001's choice of variable font files, DDR-008
+ADR-001 to ADR-004 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
+separate CV file; the rest of ADR-002 stands. The next ADR is `005`. DDR-001 to DDR-005 and DDR-007
+to DDR-010 are accepted, with DDR-007 superseding DDR-001's choice of variable font files, DDR-008
 superseding DDR-005's acceptance that Firefox can leave a section heading at the foot of a page, and
 DDR-010 superseding DDR-006's career page structure; DDR-006 is `Superseded`. The next DDR is `011`.
 Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
@@ -348,6 +349,13 @@ and DDR-008 all remain `Accepted` and still describe the page as it stands, and 
 its own story on that Epic — #44 for type, colour, spacing and responsive behaviour, and #52 for
 print. Until those land, DDR-010 describes the intended page and the older records describe the
 built one.
+
+ADR-004 is decided but not yet built, for the same reason. It adds a downloadable CV and the site's
+first binary assets, and it is implemented by #47, #48 and #52. Until then there is no `public/`
+directory, no `app/asset.ts`, and no `content/cv.ts`. When those land: every binary file lives in
+`public/`, every reference to one goes through `asset()` so it resolves under `PAGES_BASE_PATH`,
+and the committed CV is a PDF saved from the page's own print output, tied to the content by a
+digest that fails the test suite when the page's facts change and the file does not.
 
 ## Workflow
 

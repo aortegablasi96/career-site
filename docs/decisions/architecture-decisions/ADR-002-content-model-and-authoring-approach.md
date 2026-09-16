@@ -4,6 +4,12 @@ Status: Accepted
 
 Date: 2026-09-09
 
+The part of this record that rules out a separate CV file is `Superseded` by ADR-004, the
+downloadable CV and binary assets, on 2026-09-16. Epic #42 adopts a "Get my CV" download, and ADR-004
+decides what that file is and what keeps it in step with the page. The passages this affects are
+marked below. Everything else in this record stands: content is still authored as typed TypeScript
+modules in `content/`, the page is still the CV, and the print stylesheet is still what produces it.
+
 ## Context
 
 ADR-001 fixed the site's rendering strategy, framework, language, and styling, and stated a
@@ -61,6 +67,10 @@ file-based content pipeline is long-form writing and per-item routing. This site
 **The CV is the page itself.** No separate PDF is maintained or generated. A print stylesheet
 renders the page cleanly for printing and for browser print-to-PDF, so a visitor still leaves
 with a saveable document while only one copy of the facts exists anywhere.
+
+> **Superseded by ADR-004.** The page is still the CV, and the print stylesheet still produces it.
+> But a PDF of that print output is now committed and offered as a download, and a digest over the
+> content modules fails the build when the page's facts change and the file does not.
 
 ### Triggers to revisit this decision
 
@@ -179,6 +189,14 @@ PDF generation dependency and layout work to produce output worth downloading, i
 improve on what browser print already does. If a download button is later judged important,
 this is the option to take, and the content model chosen above supports it without change.
 
+> **Resolved by ADR-004.** A download button was judged important on Epic #42, so both CV
+> alternatives above were reconsidered, and ADR-004 took neither as written. The layout work this
+> paragraph names had since been done by DDR-005, DDR-008 and DDR-009, which made the printed page a
+> designed and verified artefact, so the committed file is a saved copy of that print output rather
+> than a generated one. The drift the paragraph above it names is answered by a digest over the
+> content modules that fails the test suite, instead of by generating the file. Build-time
+> generation is recorded in ADR-004 as the option to take if that proves insufficient.
+
 ## Consequences
 
 Positive:
@@ -213,7 +231,9 @@ Negative:
   seems desirable.
 * Without a separate CV file, print output quality becomes a real requirement rather than an
   afterthought, and the print stylesheet needs testing as part of the work rather than being
-  assumed to work.
+  assumed to work. This consequence outlived the decision that produced it: ADR-004 adds a CV file,
+  and it is a saved copy of that print output, so the requirement is now stronger rather than
+  weaker.
 
 The decision is deliberately easy to leave. Because content is already separated, typed, and
 structured, migrating to Markdown, JSON, or a CMS is a mechanical transformation of a small
@@ -230,3 +250,5 @@ becomes worth doing.
 * GitHub issue #5, which implements this decision as part of scaffolding the application
 * GitHub issue #2, Design Foundation, whose scope now includes print styles as a consequence
   of the CV decision above
+* ADR-004, the downloadable CV and binary assets, which supersedes the part of this record that
+  rules out a separate CV file
