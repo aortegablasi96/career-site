@@ -43,15 +43,26 @@ at the foot of the content column rather than a margin between the rows, so the 
 through it to the next dot; the last role in the section, which `experience.module.css` finds as
 `section > .role:last-child`, drops both. `--timeline-*` in `app/tokens.css` holds its measures.
 
-The other four section components are still DDR-006's until #50 and #51 rebuild them, so they do not
+**The projects section is the redesign's media-and-text row, under #50.** A project is one
+`article`: below the wide breakpoint a single column with its media above the name, and from the
+breakpoint a two-column grid of the media and the text. The text is the name, the technologies as a
+wrapping row of tinted tags, the description, and the labelled links. `--project-media-*` in
+`app/tokens.css` holds the media's width and its 4:3 ratio, and the media is capped to the row so a
+narrow screen with enlarged text wraps rather than scrolls sideways. The media is an `img` or, for a
+project whose content gives it a `Video`, a `video` with its poster, controls and `preload="none"`;
+no project carries a video yet, so the branch is exercised by a test rather than by the page.
+
+The other three section components are still DDR-006's until #51 rebuilds them, so they do not
 yet use the wider column or the wide breakpoint, and the page still reads as left-weighted below the
-experience section on a wide screen. `entry.tsx`, `entry.module.css` and DDR-006's entry anatomy
-survive for projects and credentials alone; experience no longer uses them.
+projects section on a wide screen. `entry.tsx`, `entry.module.css` and DDR-006's entry anatomy
+survive for credentials alone; experience and projects no longer use them.
 
 Two things about the introduction are worth knowing before changing it:
 
-* **The photo is a placeholder.** `public/andreu-ortega-blasi-photo.webp` is a flat tinted square,
-  not the owner's portrait. Every binary asset this site shows is the owner's to produce, and they
+* **The photo is a placeholder**, as the four project pictures are.
+  `public/andreu-ortega-blasi-photo.webp` and the four `public/project-*.webp` files are flat tinted
+  squares and 4:3 rectangles, not the owner's portrait and not pictures of anything.
+  Every binary asset this site shows is the owner's to produce, and they
   have chosen to run on stand-ins meanwhile; #63 replaces them. Replacing the file is the whole of
   the change: the path and the alternative text in `content/introduction.ts` are written for the
   real photo. Do not build anything else on the stand-in, do not draw a monogram or a gradient in
@@ -148,12 +159,15 @@ to be CSS Modules that read the tokens rather than writing literal values. A val
 not provide is a design decision to make, not a number to invent. `app/tokens.test.ts` holds the
 type scale to DDR-011's floors, every colour pairing to the contrast ratio DDR-012 records, the
 spacing scale, rhythm, column and radii to DDR-013, the narrow breakpoint and what it adapts to
-DDR-014, the two photo sizes and the timeline's measures to DDR-010, and the print treatment to
-DDR-005, so changing a token
+DDR-014, the two photo sizes and the timeline's and the projects' measures to DDR-010, and the print
+treatment to DDR-005, so changing a token
 means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
 component stylesheet to the same rules: tokens only, no reordering, and no width media query but
-the wide breakpoint.
+the wide breakpoint. Its tokens-only rule admits `100%` beside `0`, `auto` and `none`, because
+"no wider than the room there is" names the space an element was given rather than a size of its
+own; #50 widened it for the projects' media, which is the first fixed-size box on the site wide
+enough to overflow a 320px screen when text is enlarged.
 
 The styles are mobile-first, per DDR-014. The `:root` values in `app/tokens.css` are for the
 narrowest viewports, and the site has two breakpoints, both in em.
@@ -196,11 +210,11 @@ What exists, to reuse rather than reinvent:
 * **The design system.** Typography (DDR-011), colour (DDR-012), spacing and layout (DDR-013) and
   responsive behaviour (DDR-014) are the redesign's, reworked on #44. Print (DDR-005) is still the
   Design Foundation's, until #52.
-* **The components.** The introduction is DDR-010's, under #48, and the experience timeline is
-  DDR-010's, under #49. The rest still implement DDR-006: its outline, the contents, the entry
-  anatomy now shared by projects and credentials alone, and the labelled list shared by skills and
-  languages. The contents, the section wrapper, the metadata line, the entry, the date range, the
-  labelled list, and the projects, skills, credentials, and languages sections implement it. A
+* **The components.** The introduction is DDR-010's, under #48, the experience timeline under #49,
+  and the projects' media-and-text row under #50. The rest still implement DDR-006: its outline, the
+  contents, the entry anatomy now used by credentials alone, and the labelled list shared by skills
+  and languages. The contents, the section wrapper, the metadata line, the entry, the date range,
+  the labelled list, and the skills, credentials, and languages sections implement it. A
   certification is an entry with no body, showing only the month it was granted. The metadata line
   serves both records: DDR-010 gives the timeline's dates, place and company a line each, which is
   one of these with a single part.
@@ -208,9 +222,10 @@ What exists, to reuse rather than reinvent:
   inline SVG rather than committed files, drawn in `currentColor` and sized in em, and each is
   hidden from assistive technology because it repeats what its control's own text says. Which mark
   a contact takes is a key in `content/`, not something worked out from its address.
-* **The content types.** `content/types.ts` covers the site metadata, an image, the introduction and
-  its contact links, the contents, dates, roles, projects, skills, credentials, languages, and the
-  CV. A credential is a degree or a certification.
+* **The content types.** `content/types.ts` covers the site metadata, an image, a video, the
+  introduction and its contact links, the contents, dates, roles, projects, skills, credentials,
+  languages, and the CV. A credential is a degree or a certification, and a project's media is an
+  image or a video.
 
 The GitHub repository is `aortegablasi96/career-site` (public), with `main` as the default
 branch. Issue templates exist in `.github/ISSUE_TEMPLATE/` (Epic, User Story, Bug), and the
@@ -439,9 +454,16 @@ open until that lands:
   job title, where DDR-010 prints them in the date column. Nothing is lost — the spine is decoration
   and is absent, and no role is split across two sheets — but the printed timeline is not yet the
   one the record draws.
+* The projects print the same way, and #50 left them to #52 for the same reason: the media prints
+  above the text rather than beside it. A project's tags drop their tint on paper, which DDR-010
+  does ask for, and no project is split across two sheets. What #52 still owes the projects is the
+  two-column row on paper, and the rule that prints a video's poster in place of the video element —
+  which nothing needs until #63 supplies a video.
 
-Printed in Firefox and Edge on #48, the page now runs to **four A4 sheets**, where #23 recorded
-five; DDR-011's denser scale is what bought the sheet back. #52 states the final length.
+Printed in Firefox and Edge on #50, the page runs to **five A4 sheets**, with the same breaks in
+both. #48 had it at four, where #23 recorded five; DDR-011's denser scale bought a sheet back and
+the projects' media has now spent it. The stand-ins are the full 4:3 box, so real pictures will not
+shorten it. #52 states the final length.
 
 ADR-004 and ADR-005 together decide the downloadable CV and the site's first binary assets. The CV
 itself has landed, under #56: `public/andreu-ortega-blasi-cv.pdf` is a separately designed document,

@@ -329,6 +329,27 @@ describe('spacing tokens', () => {
       expect(atBreakpoint.has(name), name).toBe(false);
     }
   });
+
+  // DDR-010's project media, at the width the UI Review on #43 measured: a 280px column, at 4:3.
+  // The width is in rem, as the page column, the photo and the timeline are; the ratio is a shape
+  // rather than a length, so it has no unit.
+  it('sizes the projects’ media in rem, at the 4:3 DDR-010 lays it out', () => {
+    expect(token('project-media-width')).toBe('17.5rem');
+    expect(token('project-media-ratio')).toBe('4 / 3');
+  });
+
+  // ADR-004 prepares each file once, by hand, at the size it is shown, so the media is one width
+  // rather than one per breakpoint. It is the widest thing the page places beside running text,
+  // and it still leaves the text column room: at the 1100px page it is about a quarter of it.
+  it('leaves the text room beside the media, which is a quarter of the page column', () => {
+    expect(rem(token('project-media-width')!)).toBeLessThan(rem(token('content-width')!) / 3);
+  });
+
+  it('lays the projects out in the components rather than here, so the wide breakpoint stays theirs', () => {
+    for (const name of ['project-media-width', 'project-media-ratio']) {
+      expect(atBreakpoint.has(name), name).toBe(false);
+    }
+  });
 });
 
 // DDR-014 adapts the scales at the narrow breakpoint, in em, by redefining the role tokens that

@@ -1,5 +1,68 @@
+/*
+ * The projects, per DDR-010.
+ *
+ * A project is one row. Below the wide breakpoint the row is a single column: the media sits above
+ * the name, as wide as the row has space for. From the wide breakpoint the row becomes two columns
+ * — the media and the text — and the media moves beside the name. Nothing is reordered to do it:
+ * the markup order is the visual order at both widths, per DDR-014, which is why the media sits
+ * above the text on a narrow screen rather than being moved there.
+ */
+
+/* Projects in a section are separated by the item step, as roles and skill groups are, per
+   DDR-013. The first project follows the heading inside the block the section keeps whole with it,
+   per DDR-008, so the section's own rules give it its space. */
+.project + .project {
+  margin-block-start: var(--space-item);
+}
+
+/* The media is 4:3 at the one width ADR-004 prepares the file at, and never wider than the space
+   the row has for it, so a narrow screen with enlarged text wraps rather than scrolls sideways.
+   Both dimensions are settled before the file arrives, so the page does not shift when it loads,
+   and a picture that is not 4:3 is cropped rather than distorted.
+
+   This is the img and the video alike: the video is the same box, showing its poster until someone
+   presses play. */
+.media {
+  display: block;
+  inline-size: var(--project-media-width);
+  max-inline-size: 100%;
+  aspect-ratio: var(--project-media-ratio);
+  border-radius: var(--radius-small);
+  object-fit: cover;
+}
+
+/* The text column is a div, which the base styles' flow rule does not reach, so it sets the rhythm
+   between its own blocks. Every step is the flow step, and the one that sits tighter says so
+   below. */
+.content > * + * {
+  margin-block-start: var(--space-flow);
+}
+
+/* The tags describe the name above them rather than opening a block of their own, so they sit as
+   close to it as the metadata line did. They come after the rule above, which they override at the
+   same specificity. */
+.technologies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-x-small);
+  margin-block-start: var(--space-x-small);
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+/* A tag is its own text on a tint that repeats what the text says, so it reads the same in
+   greyscale, on paper and to a screen reader. The accent on the tint is 7.07:1, per DDR-012. */
+.tag {
+  padding-block: var(--space-x-small);
+  padding-inline: var(--space-small);
+  border-radius: var(--radius-small);
+  background-color: var(--color-surface-tag);
+  color: var(--color-text-tag);
+  font-size: var(--font-size-x-small);
+}
+
 /* A row of labelled links that wraps when it runs out of width, so it needs no breakpoint, per
-   DDR-006. The entry sets it below the description at the small step. */
+   DDR-006. The text column sets it below the description at the flow step. */
 .links {
   display: flex;
   flex-wrap: wrap;
@@ -8,7 +71,7 @@
   list-style: none;
 }
 
-/* Every target is at least the minimum in each direction, per DDR-004. */
+/* Every target is at least the minimum in each direction, per DDR-014. */
 .link {
   display: inline-flex;
   align-items: center;
@@ -16,7 +79,31 @@
   min-inline-size: var(--target-size-min);
 }
 
+/* From here the media takes a column of its own beside the text, per DDR-010. This is the one
+   width a component may write, per DDR-014. */
+@media (min-width: 48em) {
+  .project {
+    display: grid;
+    grid-template-columns: var(--project-media-width) 1fr;
+    column-gap: var(--space-large);
+    align-items: start;
+  }
+
+  /* The columns sit beside one another, so the text is not pushed below the media by the rhythm
+     the single column needs. */
+  .project > * + * {
+    margin-block-start: 0;
+  }
+}
+
 @media print {
+  /* A tag prints its text and drops its tint, per DDR-010. Every tint in the redesign is redundant
+     with the word it holds, so the page reads the same whether or not the browser prints
+     background graphics. */
+  .tag {
+    background-color: var(--color-surface);
+  }
+
   /* Nothing is tapped on paper, so the link takes the height of its text, per DDR-006. Its address
      still prints after it, from the base styles, per DDR-005. */
   .link {

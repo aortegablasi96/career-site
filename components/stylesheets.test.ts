@@ -14,8 +14,18 @@ const stylesheets = readdirSync(directory)
     css: readFileSync(new URL(name, directory), 'utf8').replace(/\/\*[\s\S]*?\*\//g, ''),
   }));
 
-/** A value made only of tokens, zero, and keywords, with no literal length. */
-const tokensOnly = /^(?:0|auto|none|var\(--[\w-]+\))(?:\s+(?:0|auto|none|var\(--[\w-]+\)))*$/;
+/**
+ * A value made only of tokens, zero, and keywords, with no literal length.
+ *
+ * `100%` counts as a keyword here rather than a length. It names the space the element has been
+ * given rather than a size of its own, so it decides nothing a token could hold: ADR-001 asks that
+ * a value the tokens do not provide be a design decision rather than a number invented in a
+ * stylesheet, and "no wider than the room there is" is neither. The projects' media is the first
+ * element on the site that needs it, because it is the first fixed-size box wide enough to
+ * overflow a 320px screen when text is enlarged.
+ */
+const tokensOnly =
+  /^(?:0|auto|none|100%|var\(--[\w-]+\))(?:\s+(?:0|auto|none|100%|var\(--[\w-]+\)))*$/;
 
 describe('component stylesheets', () => {
   it('exist', () => {

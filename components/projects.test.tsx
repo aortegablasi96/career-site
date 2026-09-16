@@ -1,48 +1,85 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, statSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { projects } from '@/content/projects';
+import type { Project } from '@/content/types';
 import { Projects } from './projects';
 
-// Rendered with the real content, since what the projects say and link to is what #30 asks for.
+// Rendered with the real content, since what the projects say and link to is what #30 asks for and
+// what they show is what DDR-010 asks for.
 const html = renderToStaticMarkup(<Projects projects={projects.projects} />);
 
 /** The markup's text, as a reader meets it. */
 const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 
-/** Each project's entry, in the order the page shows them. */
-const entries = html.match(/<article[^>]*>.*?<\/article>/g) ?? [];
+/** Each project's row, in the order the page shows them. */
+const rows = html.match(/<article[^>]*>.*?<\/article>/g) ?? [];
 
-/** An entry's links, as the reader meets them. */
-const linksOf = (entry: string) =>
-  [...entry.matchAll(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(([, href, text]) => ({ href, text }));
+/** A row's links, as the reader meets them. */
+const linksOf = (row: string) =>
+  [...row.matchAll(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(([, href, text]) => ({ href, text }));
+
+/** A row's technology tags, in the order it shows them. */
+const tagsOf = (row: string) =>
+  [...(row.match(/<ul class="[^"]*technologies[^"]*">.*?<\/ul>/)?.[0] ?? '').matchAll(
+    /<li[^>]*>([^<]+)<\/li>/g,
+  )].map(([, tag]) => tag);
+
+const source = readFileSync(new URL('./projects.tsx', import.meta.url), 'utf8');
 
 /** The stylesheet without its comments, so a rule is not matched against its explanation. */
 const css = readFileSync(new URL('./projects.module.css', import.meta.url), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
-const print = css.match(/@media print\s*\{([\s\S]*)\}\s*$/)?.[1] ?? '';
+
+/** The body of a media query, so a rule inside it is read separately from the same rule outside. */
+function media(query: string): string {
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  return css.match(new RegExp(`@media\\s*${escaped}\\s*\\{([\\s\\S]*?)\\n\\}`))?.[1] ?? '';
+}
+
+/** The declarations of the rule whose selector is exactly `selector`, inside `within`. */
+function rule(selector: string, within = css): string {
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  return within.match(new RegExp(`(?:^|[{}])\\s*${escaped}\\s*\\{([^}]*)\\}`))?.[1] ?? '';
+}
 
 describe('Projects', () => {
-  it('renders each project as an entry, in the order the content gives', () => {
-    const titles = entries.map((entry) => entry.match(/<h3>([^<]+)<\/h3>/)?.[1]);
+  it('renders each project as a row, in the order the content gives', () => {
+    const titles = rows.map((row) => row.match(/<h3>([^<]+)<\/h3>/)?.[1]);
 
     expect(titles).toEqual(projects.projects.map(({ name }) => name));
   });
 
-  it('gives each project’s technologies in its metadata line, per DDR-006', () => {
-    for (const { technologies } of projects.projects) {
-      expect(text).toContain(technologies.join(' · '));
+  // DDR-010's order: the media, then the name, the tags, the description and the links. The markup
+  // order is the visual order at both widths, per DDR-014, so this is also what a screen reader and
+  // a keyboard meet.
+  it('follows the order DDR-010 sets: media, name, tags, description, links', () => {
+    for (const row of rows) {
+      expect(row).toMatch(
+        /^<article[^>]*><(?:img|video)[^>]*\/?>(?:<\/video>)?<div[^>]*><h3>[^<]+<\/h3><ul class="[^"]*technologies[^"]*">(?:<li[^>]*>[^<]+<\/li>)+<\/ul><p>[^<]+<\/p><ul[^>]*>(?:<li><a [^>]+>[^<]+<\/a><\/li>)+<\/ul><\/div><\/article>$/,
+      );
     }
   });
 
-  it('follows the metadata with the description, then the links as a list, per DDR-006', () => {
-    for (const entry of entries) {
-      expect(entry).toMatch(/<\/p><p>[^<]+<\/p><ul[^>]*>(?:<li><a [^>]+>[^<]+<\/a><\/li>)+<\/ul><\/article>$/);
+  it('shows every technology as a discrete tag, not as a line of prose, per DDR-010', () => {
+    for (const [index, { technologies }] of projects.projects.entries()) {
+      expect(tagsOf(rows[index]!)).toEqual([...technologies]);
+    }
+
+    // DDR-006 ran them together in one metadata line. DDR-010 replaces that here.
+    expect(text).not.toContain('·');
+  });
+
+  it('shows each description exactly as content/ writes it', () => {
+    for (const { description } of projects.projects) {
+      expect(html).toContain(`<p>${description}</p>`);
     }
   });
 
   it('links every project to its public repository on the owner’s GitHub account, first', () => {
-    for (const entry of entries) {
-      expect(linksOf(entry)[0]).toEqual({
+    for (const row of rows) {
+      expect(linksOf(row)[0]).toEqual({
         href: expect.stringMatching(/^https:\/\/github\.com\/aortegablasi96\/[\w.-]+$/),
         text: 'Source code',
       });
@@ -50,15 +87,15 @@ describe('Projects', () => {
   });
 
   it('links NumisBook and the chatbot to the live versions recorded on their repositories', () => {
-    const [numisbook, chatbot, viewer] = entries;
+    const [numisbook, chatbot, viewer] = rows;
 
     expect(linksOf(numisbook!)).toContainEqual({ href: 'https://numisbook.vercel.app', text: 'Live site' });
     expect(linksOf(chatbot!)).toContainEqual({ href: 'https://career-conversation-chatbot.vercel.app', text: 'Live site' });
     expect(linksOf(viewer!).map(({ text }) => text)).not.toContain('Live site');
   });
 
-  it('links this site’s entry to this repository, and to nothing else', () => {
-    expect(linksOf(entries.at(-1)!)).toEqual([
+  it('links this site’s row to this repository, and to nothing else', () => {
+    expect(linksOf(rows.at(-1)!)).toEqual([
       { href: 'https://github.com/aortegablasi96/career-site', text: 'Source code' },
     ]);
   });
@@ -67,21 +104,133 @@ describe('Projects', () => {
     expect(html).not.toMatch(/target=/);
   });
 
-  it('gives every link a target of at least the minimum size on screen, per DDR-004', () => {
-    expect(css).toMatch(/\.link\s*\{[^}]*min-block-size:\s*var\(--target-size-min\);[^}]*min-inline-size:\s*var\(--target-size-min\);/);
+  it('gives every link a target of at least the minimum size on screen, per DDR-014', () => {
+    expect(rule('.link')).toMatch(/min-block-size:\s*var\(--target-size-min\);/);
+    expect(rule('.link')).toMatch(/min-inline-size:\s*var\(--target-size-min\);/);
   });
 });
 
-describe('Projects in print', () => {
-  it('lets every link print its address, since each one leaves the page, per DDR-005', () => {
-    for (const { href } of entries.flatMap(linksOf)) {
-      expect(href).toMatch(/^https:\/\//);
+describe('a project’s media', () => {
+  const images = rows.map((row) => row.match(/<img [^>]*>/)?.[0] ?? '');
+
+  it('shows every project’s media, with the alternative text content/ gives it', () => {
+    for (const [index, { media }] of projects.projects.entries()) {
+      expect('poster' in media).toBe(false);
+      expect(images[index]).toContain(`alt="${'alt' in media ? media.alt : ''}"`);
+      expect(images[index]).toContain(`src="${media.file}"`);
     }
-    expect(css).not.toMatch(/::after|content:/);
+  });
+
+  // The media shows what the words cannot, and says nothing the words do not: every alternative
+  // text names the project beside it, so a reader who never sees the picture still meets the name,
+  // the stack, the description and the links.
+  it('leaves the row reading correctly when the asset fails to load', () => {
+    for (const [index, { name, media }] of projects.projects.entries()) {
+      expect('alt' in media && media.alt.length).toBeGreaterThan(0);
+      expect(text).toContain(name);
+      expect(rows[index]).toMatch(/<p>[^<]+<\/p>/);
+    }
+  });
+
+  it('reaches every file through asset(), so it resolves under the Pages base path', () => {
+    expect(source).toContain('asset(media.file)');
+    expect(source).toContain('asset(media.poster)');
+  });
+
+  it('is a file the site carries, within the budget ADR-004 sets for a still', () => {
+    for (const { media } of projects.projects) {
+      // statSync throws if the path is wrong, so this holds the path to the file that is published.
+      const bytes = statSync(new URL(`../public${media.file}`, import.meta.url)).size;
+
+      expect(bytes).toBeLessThanOrEqual(150 * 1024);
+    }
+  });
+
+  it('fixes both of the media’s dimensions, so the page does not shift when it loads', () => {
+    expect(rule('.media')).toMatch(/inline-size:\s*var\(--project-media-width\);/);
+    expect(rule('.media')).toMatch(/aspect-ratio:\s*var\(--project-media-ratio\);/);
+    expect(rule('.media')).toMatch(/object-fit:\s*cover;/);
+  });
+
+  // DDR-014 forbids a horizontal scrollbar from 320px. The media is the first fixed-size box on
+  // the site wide enough to overflow one when text is enlarged, so it is capped to the row.
+  it('never grows wider than the room the row has for it', () => {
+    expect(rule('.media')).toMatch(/max-inline-size:\s*100%;/);
+  });
+});
+
+// DDR-010 gives the Digital Twin its demo video in place of a still. The file itself is outstanding
+// on #63, so no project carries one yet; this renders one to hold the markup the record asks for,
+// rather than leaving the branch to be written for the first time when the file lands.
+describe('a project whose media is a video', () => {
+  const demo: Project = {
+    ...projects.projects[1]!,
+    media: {
+      file: '/project-digital-twin.mp4',
+      poster: '/project-digital-twin.webp',
+      description: 'The Digital Twin chatbot answering a question',
+    },
+  };
+  const video = renderToStaticMarkup(<Projects projects={[demo]} />).match(/<video[^>]*>/)?.[0] ?? '';
+
+  it('shows the video with controls, per DDR-010', () => {
+    expect(video).toMatch(/\bcontrols\b/);
+  });
+
+  it('neither plays nor repeats by itself, per DDR-010', () => {
+    expect(video).not.toMatch(/\bautoplay\b|\bloop\b/);
+  });
+
+  it('shows its poster and fetches nothing until it is played, per ADR-004', () => {
+    expect(video).toContain('poster="/project-digital-twin.webp"');
+    expect(video).toContain('preload="none"');
+  });
+
+  // The UI Review on #43 makes the video content rather than decoration, so it is not hidden from
+  // assistive technology: it carries an accessible name and a description of what it shows, and
+  // nothing on the page depends on watching it.
+  it('carries an accessible name describing what it shows, and is not hidden', () => {
+    expect(video).toContain('aria-label="The Digital Twin chatbot answering a question"');
+    expect(video).not.toContain('aria-hidden');
+  });
+});
+
+// DDR-010 decides how a project is laid out and what it does on paper. These read the stylesheet as
+// written, so a later edit cannot quietly drop a rule an acceptance criterion rests on.
+describe('project styles', () => {
+  const wide = media('(min-width: 48em)');
+  const paper = media('print');
+
+  it('gives the media a column of its own from the wide breakpoint, per DDR-010', () => {
+    expect(rule('.project', wide)).toMatch(
+      /grid-template-columns:\s*var\(--project-media-width\)\s*1fr;/,
+    );
+  });
+
+  it('separates projects by the item step, as roles and skill groups are, per DDR-013', () => {
+    expect(rule('.project + .project')).toMatch(/margin-block-start:\s*var\(--space-item\);/);
+  });
+
+  it('reads a tag’s tint and its ink from the pairing DDR-012 measures', () => {
+    expect(rule('.tag')).toMatch(/background-color:\s*var\(--color-surface-tag\);/);
+    expect(rule('.tag')).toMatch(/color:\s*var\(--color-text-tag\);/);
+    expect(rule('.tag')).toMatch(/font-size:\s*var\(--font-size-x-small\);/);
+  });
+
+  it('drops a tag’s tint on paper, where the word alone says it, per DDR-010', () => {
+    expect(rule('.tag', paper)).toMatch(/background-color:\s*var\(--color-surface\);/);
   });
 
   it('drops the minimum target size, which nothing on paper needs, per DDR-006', () => {
-    expect(print).toMatch(/\.link\s*\{[^}]*min-block-size:\s*0;[^}]*min-inline-size:\s*0;/);
+    expect(rule('.link', paper)).toMatch(/min-block-size:\s*0;/);
+    expect(rule('.link', paper)).toMatch(/min-inline-size:\s*0;/);
+  });
+
+  it('lets every link print its address, since each one leaves the page, per DDR-005', () => {
+    for (const { href } of rows.flatMap(linksOf)) {
+      expect(href).toMatch(/^https:\/\//);
+    }
+    expect(css).not.toMatch(/::after|content:/);
   });
 });
 

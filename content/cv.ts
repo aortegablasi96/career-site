@@ -14,11 +14,13 @@ import type { Cv } from './types';
  * So this records the content the CV was last *reviewed against*, which is not the same as the two
  * agreeing. They do not: issue #59 lists nine differences, and the owner closed it unresolved
  * rather than reconcile them before #48 shipped the control that offers the file. The digest here
- * moved with #48 because the introduction gained the photo's alternative text, which is not a fact
- * ADR-005 lists as shared; the nine differences are the ones #59 records, unchanged.
+ * moved with #48 because the introduction gained the photo's alternative text, and again with #50
+ * because each project gained its picture and that picture's alternative text. Neither is a fact
+ * ADR-005 lists as shared, so neither moved the CV; the nine differences are the ones #59 records,
+ * unchanged.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '59ad5fbfd3f3ac5869184cc3bb04c63dd5554149c52486b300abdaf2c2fe8638',
+  contentDigest: 'd3a29705b330fcd80f1c37828762ddba70f82f57bd9dded52045acbeafddac38',
 };
