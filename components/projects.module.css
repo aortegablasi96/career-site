@@ -20,14 +20,17 @@
    Both dimensions are settled before the file arrives, so the page does not shift when it loads,
    and a picture that is not 4:3 is cropped rather than distorted.
 
+   It is rounded at the large radius, which DDR-013 gives a language card and a piece of project
+   media alike; the small radius beside it is the tag's and the badge's.
+
    This is the img and the video alike: the video is the same box, showing its poster until someone
-   presses play. */
+   presses play, and the still it prints in its place is the same box again. */
 .media {
   display: block;
   inline-size: var(--project-media-width);
   max-inline-size: 100%;
   aspect-ratio: var(--project-media-ratio);
-  border-radius: var(--radius-small);
+  border-radius: var(--radius-large);
   object-fit: cover;
 }
 
