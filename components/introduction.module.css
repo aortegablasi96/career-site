@@ -13,15 +13,16 @@
  * This is the layout that keeps the reason the record gives.
  */
 
-/* Both dimensions are fixed, so the box is the right size before the image arrives and the page
-   does not shift when it does. A portrait that is not square is cropped rather than distorted.
+/* The width is fixed and the height follows the ratio, so the box is the right size before the
+   image arrives and the page does not shift when it does, as the projects' media is. A portrait
+   that is not the ratio is cropped rather than distorted.
 
    The text runs past the photo rather than sharing a column with it, so that the summary keeps the
    full width of a narrow screen instead of being squeezed into what is left beside a photo. */
 .photo {
   float: inline-start;
-  inline-size: var(--photo-size);
-  block-size: var(--photo-size);
+  inline-size: var(--photo-width);
+  aspect-ratio: var(--photo-ratio);
   margin-inline-end: var(--space-medium);
   margin-block-end: var(--space-small);
   border-radius: var(--radius-large);
@@ -119,7 +120,7 @@
 @media (min-width: 48em) {
   .introduction {
     display: grid;
-    grid-template-columns: var(--photo-size-wide) 1fr;
+    grid-template-columns: var(--photo-width-wide) 1fr;
     gap: var(--space-large);
     align-items: start;
   }
@@ -128,8 +129,7 @@
      the whole of the text sits in the second column. */
   .photo {
     float: none;
-    inline-size: var(--photo-size-wide);
-    block-size: var(--photo-size-wide);
+    inline-size: var(--photo-width-wide);
     margin-inline-end: 0;
     margin-block-end: 0;
   }

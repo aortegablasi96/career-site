@@ -76,7 +76,9 @@ Two things about the introduction are worth knowing before changing it:
 
 * **The photo is a placeholder**, as the four project pictures are.
   `public/andreu-ortega-blasi-photo.webp` and the four `public/project-*.webp` files are flat tinted
-  squares and 4:3 rectangles, not the owner's portrait and not pictures of anything.
+  rectangles — the photo 3:4 and the four media 4:3 — not the owner's portrait and not pictures of
+  anything. The photo's stand-in was recut to 3:4 on #71, which is the ratio #63 crops the real
+  portrait to.
   Every binary asset this site shows is the owner's to produce, and they
   have chosen to run on stand-ins meanwhile; #63 replaces them. Replacing the file is the whole of
   the change: the path and the alternative text in `content/introduction.ts` are written for the
@@ -184,7 +186,8 @@ to be CSS Modules that read the tokens rather than writing literal values. A val
 not provide is a design decision to make, not a number to invent. `app/tokens.test.ts` holds the
 type scale to DDR-011's floors, every colour pairing to the contrast ratio DDR-012 records, the
 spacing scale, rhythm, column and radii to DDR-013, the narrow breakpoint and what it adapts to
-DDR-014, the two photo sizes and the timeline's and the projects' measures to DDR-010, and the print
+DDR-014, the photo's two widths and its ratio to DDR-016, the timeline's and the projects' measures
+to DDR-010, and the print
 treatment to DDR-015 — the 11pt base, every surface dropped and no ink touched, and the 28mm photo
 — so changing a token means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
@@ -470,7 +473,7 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010 to DDR-015. The next DDR is `016`. Status values are `Proposed`,
+The accepted DDRs are DDR-010 to DDR-016. The next DDR is `017`. Status values are `Proposed`,
 `Accepted`, `Superseded`, or `Deprecated`.
 
 `Superseded` are DDR-001 to DDR-009:
@@ -510,6 +513,13 @@ to #78: the photo's shape, the heading rule, letter-spacing, the uppercase label
 bullet markers, elevation, the skills' ink, and one place where the code contradicts DDR-013. #63
 moved onto that epic because #71 settles the shape the real photograph is cropped to.
 
+**#71 has landed, as DDR-016: the photo is 3:4 at `--radius-large`**, not the square it was and not
+the design's oval. `--photo-size` and `--photo-size-wide` are now `--photo-width`,
+`--photo-width-wide` and `--photo-ratio`, following the projects' width-and-ratio pattern, so the
+stylesheet sets one length and a shape rather than two lengths. Measured at the browser's real
+default font size, the taller photo moves the contact controls not at all at 390px, 32px at 320px
+and 64px at 200% text, and it costs no sheet on paper.
+
 Everything the section stories left to #52 has landed. For the record, since the gaps are named in
 those PRs: the timeline prints its date column, the projects print their media beside their text,
 the skill groups print two to a row and the language cards four, the printed photo is 28mm beside
@@ -525,8 +535,9 @@ introduction.** Every break rule behaves identically in both. Firefox simply set
 line longer than Edge does, which pushes the second role past the foot of page 1, and
 `break-inside: avoid` then moves the whole role rather than splitting it. The difference is one line
 wide, so an edit to the summary could move Firefox to four sheets or Edge to five. The stand-ins are
-already the full 4:3 box, so the real pictures on #63 will not change the length. The photograph
-could: #71 may give it a taller ratio than the square it is shown at today.
+already the full box, so the real pictures on #63 will not change the length. Rechecked on #71, after
+the photo went from square to 3:4: still four sheets in Edge and five in Firefox, with no heading
+stranded and no item split in either.
 
 ADR-004 and ADR-005 together decide the downloadable CV and the site's first binary assets. The CV
 itself has landed, under #56: `public/andreu-ortega-blasi-cv.pdf` is a separately designed document,

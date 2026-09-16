@@ -159,8 +159,8 @@ describe('introduction styles', () => {
   const paper = media('print');
 
   it('fixes both of the photo’s dimensions, so the page does not shift when it loads', () => {
-    expect(rule('.photo')).toMatch(/inline-size:\s*var\(--photo-size\);/);
-    expect(rule('.photo')).toMatch(/block-size:\s*var\(--photo-size\);/);
+    expect(rule('.photo')).toMatch(/inline-size:\s*var\(--photo-width\);/);
+    expect(rule('.photo')).toMatch(/aspect-ratio:\s*var\(--photo-ratio\);/);
     expect(rule('.photo')).toMatch(/object-fit:\s*cover;/);
   });
 
@@ -185,9 +185,11 @@ describe('introduction styles', () => {
 
   it('gives the photo a column of its own from the wide breakpoint, per DDR-010', () => {
     expect(rule('.introduction', wide)).toMatch(
-      /grid-template-columns:\s*var\(--photo-size-wide\)\s*1fr;/,
+      /grid-template-columns:\s*var\(--photo-width-wide\)\s*1fr;/,
     );
-    expect(rule('.photo', wide)).toMatch(/inline-size:\s*var\(--photo-size-wide\);/);
+    expect(rule('.photo', wide)).toMatch(/inline-size:\s*var\(--photo-width-wide\);/);
+    // The ratio carries the height at both widths, so the wide rule sets no height of its own.
+    expect(rule('.photo', wide)).not.toMatch(/block-size/);
     // The grid places it, so the text stops running past it and the whole of it takes the second
     // column.
     expect(rule('.photo', wide)).toMatch(/float:\s*none;/);
@@ -220,7 +222,7 @@ describe('introduction styles', () => {
   it('leaves the photo beside the name on paper, by the float rather than a layout of its own', () => {
     expect(paper).not.toMatch(/grid-template-columns|float/);
     expect(rule('.photo')).toMatch(/float:\s*inline-start;/);
-    expect(rule('.photo')).toMatch(/inline-size:\s*var\(--photo-size\);/);
+    expect(rule('.photo')).toMatch(/inline-size:\s*var\(--photo-width\);/);
   });
 
   it('prints a contact address once, as the link’s own text, per DDR-006', () => {

@@ -130,9 +130,15 @@
      measures it, because a target is sized for a finger rather than for the text. */
   --target-size-min: 44px;
 
-  /* The profile photo, square, per DDR-010: 96px below the wide breakpoint and 208px from it. In
-     rem, as --content-width is, so the photo keeps its proportion to the name beside it when text
-     is enlarged.
+  /* The profile photo, per DDR-010 and #71: 96px wide below the wide breakpoint and 208px from it,
+     at 3:4. The width is in rem, as --content-width is, so the photo keeps its proportion to the
+     name beside it when text is enlarged; the ratio is a shape rather than a length and has no
+     unit. This is the projects' media pattern — a width and a ratio rather than two lengths — so
+     the two pieces of media on the page are described the same way.
+
+     The ratio is the design's, settled on #71 before #63 crops the real portrait: a head-and-
+     shoulders photograph is taller than it is wide, and a square crop either cuts the shoulders or
+     leaves headroom above the head.
 
      The UI Review on #43 put the narrow photo at 176px, above the name rather than beside it.
      Measured against the real content on #48, that put the contact controls 60px below the fold of
@@ -145,8 +151,9 @@
      cannot read a custom property. The introduction reads the first and swaps to the second at
      that breakpoint. On paper the wide token is redefined again, to the measure DDR-015 gives the
      printed photo. */
-  --photo-size: 6rem;
-  --photo-size-wide: 13rem;
+  --photo-width: 6rem;
+  --photo-width-wide: 13rem;
+  --photo-ratio: 3 / 4;
 
   /* The timeline's three columns, per DDR-010: the dates, the spine, and the content. The date
      column and the spine are the widths the UI Review on #43 measured, 160px and 28px, and the dot
@@ -265,8 +272,9 @@
        one, per DDR-015: at 28mm the photo is short, so a column of its own would leave three
        quarters of it empty, and what the review asks for is the photo beside the name. It is in mm
        because a photograph on a sheet is a size of the paper rather than a multiple of the type, as
-       the sheet's own margins are. Screen is untouched. */
-    --photo-size: 28mm;
+       the sheet's own margins are. Screen is untouched. It is the photo's width, and its height
+       follows the ratio, so the printed photo is 28mm across and about 37mm tall. */
+    --photo-width: 28mm;
   }
 }
 
