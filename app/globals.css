@@ -29,6 +29,10 @@ body {
   font-size: var(--font-size-medium);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-body);
+  /* No ligatures, per DDR-009. Both families join letter pairs such as ff and ft into one glyph,
+     and Firefox writes that glyph into a saved PDF as U+FFFD, so "Software" cannot be found or
+     read aloud (#40). The joins are worth less than the words. */
+  font-variant-ligatures: none;
   /* Long unbroken strings, such as URLs and email addresses, wrap instead of overflowing when
      text is enlarged or the viewport is narrow. */
   overflow-wrap: break-word;

@@ -8,6 +8,10 @@ DDR-007 supersedes this record's choice of variable font files: each family is n
 static file per weight, because Firefox draws variable fonts as outlines in a saved PDF (#22).
 The rest of this record stands.
 
+DDR-009 adds a rule to this system: the page sets no ligatures, because Firefox writes a ligature
+into a saved PDF as the replacement character (#40). It also drops U+02BB and U+02BC from Source
+Serif 4's subset, for the same reason.
+
 ## Context
 
 Almost everything a visitor sees on this site is text. ADR-002 established a single scrolling

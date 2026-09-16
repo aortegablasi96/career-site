@@ -57,6 +57,10 @@ SemiBold", so a PDF names the fonts it embeds.
 To update a font, take the Fontsource variable file for the Latin subset, pin it to each weight,
 name it, and save it as WOFF2 under the same file name.
 
+DDR-009 adds a step to this recipe for the serif: delete the U+02BB and U+02BC entries from every
+character-map subtable, so Firefox reads the apostrophe in a saved PDF back as the character the
+page is written with (#40).
+
 ### Only the two weights exist
 
 A weight other than 400 or 600 now has no file. A browser asked for one would substitute the
@@ -134,5 +138,7 @@ Risks:
 * GitHub issue #22, which this decision resolves
 * DDR-001, the typographic system, whose choice of variable font files this record supersedes
 * DDR-005, the print stylesheet, which recorded the problem as a risk
+* DDR-009, which turns ligatures off and extends this record's derivation, resolving a second
+  fault in the same PDFs (#40)
 * ADR-001, which set the font performance constraints
 * ADR-002, which made the page the CV
