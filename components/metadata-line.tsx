@@ -6,6 +6,10 @@ import styles from './metadata-line.module.css';
  * dot that assistive technology does not announce; the spaces either side stay readable, so the
  * parts are not run together. A part may be markup, such as dates with their machine-readable
  * value.
+ *
+ * DDR-010 narrows it: where the timeline gives the dates, the place and the company lines of their
+ * own, each is one of these with a single part, so every piece of metadata on the page is set the
+ * same way and no separator is drawn.
  */
 export function MetadataLine({ parts, className }: { parts: readonly ReactNode[]; className?: string }) {
   return (

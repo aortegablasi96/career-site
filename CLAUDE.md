@@ -33,10 +33,20 @@ DM Sans, the seven-step scale, the new palette, the wider page column and the se
 all in place, and DDR-011 to DDR-014 supersede DDR-001 to DDR-004.
 
 **The introduction is the redesign's, under #48**: the photo, the positioning line in the accent,
-and four pill controls — the three contact addresses and the "Get my CV" download. The five section
-components are still DDR-006's until #49 to #51 rebuild them, so they do not yet use the wider
-column or the wide breakpoint, and the page still reads as left-weighted below the introduction on
-a wide screen.
+and four pill controls — the three contact addresses and the "Get my CV" download.
+
+**The experience section is the redesign's timeline, under #49.** A role is one `article`: below the
+wide breakpoint a single column with its dates and place above the job title, and from the
+breakpoint a three-column grid of a date column, a decorative spine, and the content. The spine is
+`aria-hidden` and not rendered at all below the breakpoint. The space between two roles is padding
+at the foot of the content column rather than a margin between the rows, so the spine's line runs
+through it to the next dot; the last role in the section, which `experience.module.css` finds as
+`section > .role:last-child`, drops both. `--timeline-*` in `app/tokens.css` holds its measures.
+
+The other four section components are still DDR-006's until #50 and #51 rebuild them, so they do not
+yet use the wider column or the wide breakpoint, and the page still reads as left-weighted below the
+experience section on a wide screen. `entry.tsx`, `entry.module.css` and DDR-006's entry anatomy
+survive for projects and credentials alone; experience no longer uses them.
 
 Two things about the introduction are worth knowing before changing it:
 
@@ -138,7 +148,8 @@ to be CSS Modules that read the tokens rather than writing literal values. A val
 not provide is a design decision to make, not a number to invent. `app/tokens.test.ts` holds the
 type scale to DDR-011's floors, every colour pairing to the contrast ratio DDR-012 records, the
 spacing scale, rhythm, column and radii to DDR-013, the narrow breakpoint and what it adapts to
-DDR-014, the two photo sizes to DDR-010, and the print treatment to DDR-005, so changing a token
+DDR-014, the two photo sizes and the timeline's measures to DDR-010, and the print treatment to
+DDR-005, so changing a token
 means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
 component stylesheet to the same rules: tokens only, no reordering, and no width media query but
@@ -185,12 +196,14 @@ What exists, to reuse rather than reinvent:
 * **The design system.** Typography (DDR-011), colour (DDR-012), spacing and layout (DDR-013) and
   responsive behaviour (DDR-014) are the redesign's, reworked on #44. Print (DDR-005) is still the
   Design Foundation's, until #52.
-* **The components.** The introduction is DDR-010's, under #48. The rest still implement DDR-006:
-  its outline, the contents, the entry anatomy shared by roles, projects, and credentials, and the
-  labelled list shared by skills and languages. The contents, the section wrapper, the metadata
-  line, the entry, the date range, the labelled list, and the experience, projects, skills,
-  credentials, and languages sections implement it. A certification is an entry with no body,
-  showing only the month it was granted.
+* **The components.** The introduction is DDR-010's, under #48, and the experience timeline is
+  DDR-010's, under #49. The rest still implement DDR-006: its outline, the contents, the entry
+  anatomy now shared by projects and credentials alone, and the labelled list shared by skills and
+  languages. The contents, the section wrapper, the metadata line, the entry, the date range, the
+  labelled list, and the projects, skills, credentials, and languages sections implement it. A
+  certification is an entry with no body, showing only the month it was granted. The metadata line
+  serves both records: DDR-010 gives the timeline's dates, place and company a line each, which is
+  one of these with a single part.
 * **The icons**, in `components/icon.tsx`: one per contact address and one for the CV. They are
   inline SVG rather than committed files, drawn in `currentColor` and sized in em, and each is
   hidden from assistive technology because it repeats what its control's own text says. Which mark
@@ -420,7 +433,12 @@ open until that lands:
   the UI Review on #43 suggested about 28mm, and the CV control does not print at all. The layout
   is written into the print block rather than left to the wide breakpoint, because a sheet of A4
   inside its margins is about 40em and that query does not match on paper — which is worth knowing
-  before #49 to #52 rely on it.
+  before #50 to #52 rely on it.
+* The timeline meets the same thing and #49 left it to #52, which owns the print treatment: on
+  paper the wide query does not match, so a role prints as a single column with its dates above the
+  job title, where DDR-010 prints them in the date column. Nothing is lost — the spine is decoration
+  and is absent, and no role is split across two sheets — but the printed timeline is not yet the
+  one the record draws.
 
 Printed in Firefox and Edge on #48, the page now runs to **four A4 sheets**, where #23 recorded
 five; DDR-011's denser scale is what bought the sheet back. #52 states the final length.
