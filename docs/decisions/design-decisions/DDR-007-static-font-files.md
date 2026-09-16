@@ -1,8 +1,14 @@
 # DDR-007-Static Font Files
 
-Status: Accepted
+Status: Superseded
 
 Date: 2026-09-15
+
+Superseded by DDR-011, the typographic system of the career page redesign. The Source families
+this record prepares are replaced by Lora and DM Sans, so the four files listed below no longer
+exist. The rule itself — one static file per weight, derived by pinning the variable font, because
+Firefox draws a variable font as outlines in a saved PDF (#22) — is carried forward there unchanged,
+and so is the recipe, without the character-map step DDR-009 added.
 
 Supersedes the part of DDR-001 that chose variable font files. The rest of DDR-001 stands.
 

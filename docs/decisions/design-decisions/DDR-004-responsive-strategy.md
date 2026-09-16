@@ -1,8 +1,13 @@
 # DDR-004-Responsive Strategy
 
-Status: Accepted
+Status: Superseded
 
 Date: 2026-09-10
+
+Superseded by DDR-014, the responsive strategy of the career page redesign, which adds a second
+breakpoint at 48em and so gives up this record's one layout at every width. Its mobile-first
+ordering, its markup-order-is-visual-order rule, its 44 by 44 pixel minimum, its hover rule and its
+320px rule are carried forward there unchanged.
 
 ## Context
 

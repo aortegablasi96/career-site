@@ -26,7 +26,15 @@ The application is scaffolded, and its typographic, colour, spacing, responsive,
 are in place. The career page, Epic #25, has its introduction, the frame the sections join, and
 all five of its sections: experience, projects, skills, education and certifications, and
 languages. Its page breaks were rechecked against the finished page for #23, and each section
-now keeps its heading with its first item on paper, per DDR-008. It is a Next.js App Router
+now keeps its heading with its first item on paper, per DDR-008.
+
+**The redesign, Epic #42, is part built.** The token layer is the redesign's, under #44: Lora and
+DM Sans, the seven-step scale, the new palette, the wider page column and the second breakpoint are
+all in place, and DDR-011 to DDR-014 supersede DDR-001 to DDR-004. The components are still
+DDR-006's, until #48 to #51 rebuild them, so the sections do not yet use the wider column or the
+wide breakpoint and the page reads as left-weighted on a wide screen in the meantime.
+
+It is a Next.js App Router
 project in TypeScript, configured for static export, per ADR-001 and ADR-002, and deployed to
 GitHub Pages, per ADR-003.
 
@@ -59,13 +67,15 @@ Tooling notes that are easy to trip over:
   and render components with `react-dom/server`, matching how pages are produced at build time.
   There is no DOM environment or Testing Library; add them only when there is interactive
   behaviour to test. What to test is the Tester's decision.
-* **Fonts** are committed to `app/fonts/`, with their licences, and loaded by
-  `next/font/local` in `app/layout.tsx`, so builds need no network access for fonts. Each
-  family is one static file per weight, not a variable font, per DDR-007: Firefox draws variable
-  fonts as outlines when it saves a PDF, so the printed CV's text could not be selected. The files
-  are derived, not downloaded: DDR-007 pins each weight, and DDR-009 then deletes U+02BB and U+02BC
-  from the serif files' character map, because Firefox otherwise spells the apostrophe in a saved
-  PDF with a character the page does not use. Re-deriving a font means doing both.
+* **Fonts** are Lora for headings and DM Sans for everything else, per DDR-011. They are committed
+  to `app/fonts/`, with their licences, and loaded by `next/font/local` in `app/layout.tsx`, so
+  builds need no network access for fonts. Each is one static file per weight, not a variable
+  font: Firefox draws variable fonts as outlines when it saves a PDF, so the printed CV's text
+  could not be selected (#22). There are four files — DM Sans at 400, 500 and 600, and Lora at 600
+  alone, because nothing but a heading is set in it. They are derived, not downloaded: take the
+  Fontsource variable file for the Latin subset, pin it to the weight with fontTools' instancer,
+  name it, and save it as WOFF2. A weight with no file would be synthesised, so adding one means
+  adding a file and revising DDR-011.
   `next/font` is a compile-time transform whose loaders throw outside the Next.js compiler, so
   a test that imports the root layout mocks `next/font/local`, as `app/layout.test.tsx` does.
 
@@ -105,21 +115,29 @@ Styling follows ADR-001. `app/tokens.css` defines every design token once, as a 
 at `:root`, and `app/globals.css` applies the tokens to plain HTML elements. Component styles are
 to be CSS Modules that read the tokens rather than writing literal values. A value the tokens do
 not provide is a design decision to make, not a number to invent. `app/tokens.test.ts` holds the
-type scale to DDR-001's floors, every colour pairing to the contrast ratio DDR-002 records, the
-spacing scale and rhythm to DDR-003, the breakpoint and what it adapts to DDR-004, and the print
-treatment to DDR-005, so changing a token means revising its decision record too. The spacing and
-print rules in `app/globals.css` are wrapped in `:where()`, so they have no specificity and a CSS
-Module's class overrides them. `components/stylesheets.test.ts` holds every component stylesheet to
-the same rules: tokens only, no width media query, and no reordering.
+type scale to DDR-011's floors, every colour pairing to the contrast ratio DDR-012 records, the
+spacing scale, rhythm, column and radii to DDR-013, the narrow breakpoint and what it adapts to
+DDR-014, and the print treatment to DDR-005, so changing a token means revising its decision record
+too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
+specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
+component stylesheet to the same rules: tokens only, no reordering, and no width media query but
+the wide breakpoint.
 
-The styles are mobile-first, per DDR-004. The `:root` values in `app/tokens.css` are for the
-narrowest viewports. The site's one breakpoint, a `min-width: 20em` media query at the end of that
-file, redefines the few role tokens that adapt: the heading sizes (`--font-size-page-title`,
-`--font-size-section-title`, `--font-size-item-title`) and the page's edges (`--page-gutter`,
-`--page-padding-block`). Styles read those roles rather than the steps behind them, and no other
-stylesheet writes a width media query, because a new breakpoint is a new decision. To check the
-breakpoint in a browser, change the browser's default font size, not the root's CSS font size:
-an em in a media query follows the former and ignores the latter.
+The styles are mobile-first, per DDR-014. The `:root` values in `app/tokens.css` are for the
+narrowest viewports, and the site has two breakpoints, both in em.
+
+The **narrow** one, a `min-width: 20em` media query in that file, is the tokens'. It redefines the
+four role tokens that adapt: the page and section titles (`--font-size-page-title`,
+`--font-size-section-title`) and the page's edges (`--page-gutter`, `--page-padding-block`). Styles
+read those roles rather than the steps behind them. `--font-size-item-title` is body size at every
+width, because there is nothing below body size a title could take.
+
+The **wide** one, `min-width: 48em`, is the components'. It redefines no token — what changes there
+is layout, and a media query cannot read a custom property — so each component that lays out in
+columns writes it in its own CSS Module. That is the one width a component stylesheet may write, and
+the test enforces it. A third breakpoint is a new decision and a new record. To check either in a
+browser, change the browser's default font size, not the root's CSS font size: an em in a media
+query follows the former and ignores the latter.
 
 Print follows DDR-005. ADR-002 makes the page itself the CV, so what a browser prints, or saves
 as a PDF, is designed rather than left to defaults. A `@media print` block in `app/tokens.css`
@@ -133,16 +151,21 @@ hides its own screen-only elements in print, and may drop screen-only sizing suc
 target size, per DDR-006, but adds no print-only content. What DDR-006 keeps whole on paper but
 the base styles do not, because it is not an `article` or list item, such as a skill group or
 the labelled list, is kept whole by its own component. What a PDF says, not only how it
-looks, is part of the design: `app/globals.css` sets `font-variant-ligatures: none`, per DDR-009,
-because Firefox writes a ligature into a saved PDF as the replacement character, which left words
-such as "Software" unsearchable (#40). Check print by saving a PDF in two browsers, read the text
-back out of both, and recheck page breaks when the amount of content changes.
+looks, is part of the design: `app/globals.css` sets `font-variant-ligatures: none` and
+`font-feature-settings: 'calt' 0`, per DDR-011, because Firefox writes a glyph that no character
+maps to into a saved PDF as the replacement character, which left words such as "Software"
+unsearchable (#40). In Lora and DM Sans those are the ligatures and the contextual alternates, and
+with both off a PDF spells every word as the page does. Check print by saving a PDF in two
+browsers, read the text back out of both, and recheck page breaks when the amount of content
+changes.
 
 What exists, to reuse rather than reinvent:
 
-* **The components.** The Design Foundation, Epic #2, is decided and implemented: typography
-  (DDR-001), colour (DDR-002), spacing and layout (DDR-003), responsive behaviour (DDR-004), and
-  print (DDR-005). DDR-006 decides the career page's structure: its outline, the introduction,
+* **The design system.** Typography (DDR-011), colour (DDR-012), spacing and layout (DDR-013) and
+  responsive behaviour (DDR-014) are the redesign's, reworked on #44. Print (DDR-005) is still the
+  Design Foundation's, until #52.
+* **The components.** They still implement DDR-006, not DDR-010. DDR-006 decides the career page's
+  structure as built: its outline, the introduction,
   the contents, the entry anatomy shared by roles, projects, and credentials, and the labelled
   list shared by skills and languages. The introduction, the contents, the section wrapper, the
   metadata line, the entry, the date range, the labelled list, and the experience, projects,
@@ -338,18 +361,33 @@ DDR-001-short-title.md
 
 ADR-001 to ADR-005 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
 separate CV file, and ADR-005 superseding the part of ADR-004 that makes the CV a PDF saved from the
-page's print output; the rest of both records stands. The next ADR is `006`. DDR-001 to DDR-005 and DDR-007
-to DDR-010 are accepted, with DDR-007 superseding DDR-001's choice of variable font files, DDR-008
-superseding DDR-005's acceptance that Firefox can leave a section heading at the foot of a page, and
-DDR-010 superseding DDR-006's career page structure; DDR-006 is `Superseded`. The next DDR is `011`.
-Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+page's print output; the rest of both records stands. The next ADR is `006`.
 
-DDR-010 is the design contract for Epic #42, the career page redesign. It is decided but not yet
-built: the page described under "Current Repository State" is still DDR-006's. DDR-001 to DDR-005
-and DDR-008 all remain `Accepted` and still describe the page as it stands, and each is reworked by
-its own story on that Epic — #44 for type, colour, spacing and responsive behaviour, and #52 for
-print. Until those land, DDR-010 describes the intended page and the older records describe the
-built one.
+The accepted DDRs are DDR-005, DDR-008 and DDR-010 to DDR-014. The next DDR is `015`. Status values
+are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+
+`Superseded` are DDR-001 to DDR-004, DDR-006, DDR-007 and DDR-009:
+
+| Superseded | By      | What changed                                                            |
+| ---------- | ------- | ----------------------------------------------------------------------- |
+| DDR-001    | DDR-011 | New typefaces, seven steps instead of five, three weights, a 13px floor   |
+| DDR-002    | DDR-012 | New surface, three inks, a new accent, and the tinted surfaces           |
+| DDR-003    | DDR-013 | The column stops being the measure; the scale and rhythm are unchanged   |
+| DDR-004    | DDR-014 | A second breakpoint, at 48em, so one layout at every width is given up   |
+| DDR-006    | DDR-010 | The whole career page structure                                          |
+| DDR-007    | DDR-011 | The Source font files it prepares no longer exist; its rule carries over |
+| DDR-009    | DDR-011 | Its PDF guarantee is re-established for the new faces, and widened       |
+
+DDR-008 supersedes DDR-005's acceptance that Firefox can leave a section heading at the foot of a
+page. Each superseded record says at the top what carries forward and what does not; read the new
+one first and the old one for the reasoning behind it.
+
+DDR-010 is the design contract for Epic #42, the career page redesign. Its token layer is built,
+under #44, and its structure is not: the components described under "Current Repository State" are
+still DDR-006's until #48 to #51 rebuild them. **DDR-005 and DDR-008, the print records, still
+describe the page as it stands** and are reworked by #52. Until that lands, DDR-005's own arithmetic
+is out of step with DDR-011's scale, which `app/tokens.test.ts` records rather than hides: DDR-005
+chose its 10pt base so that the smallest text came to 9pt, and the new scale reaches 8.1pt.
 
 ADR-004 and ADR-005 together decide the downloadable CV and the site's first binary assets. The CV
 itself has landed, under #56: `public/andreu-ortega-blasi-cv.pdf` is a separately designed document,

@@ -1,8 +1,14 @@
 # DDR-001-Typographic System
 
-Status: Accepted
+Status: Superseded
 
 Date: 2026-09-10
+
+Superseded by DDR-011, the typographic system of the career page redesign, which adopts Lora and
+DM Sans, a seven-step scale and three weights. This record's rem sizing, its measure, its no-italics
+rule and its wrapping rules are carried forward there. It is kept because it is where the site's
+typographic thinking begins, and because the faults DDR-007 and DDR-009 were written against are
+described here first.
 
 DDR-007 supersedes this record's choice of variable font files: each family is now served as one
 static file per weight, because Firefox draws variable fonts as outlines in a saved PDF (#22).

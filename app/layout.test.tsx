@@ -31,18 +31,29 @@ describe('RootLayout', () => {
   it('defines both font variables on the root element, where the typography tokens read them', () => {
     const html = renderToStaticMarkup(<RootLayout>{null}</RootLayout>);
 
-    expect(html).toMatch(/^<html [^>]*class="--font-source-sans-3 --font-source-serif-4"/);
+    expect(html).toMatch(/^<html [^>]*class="--font-dm-sans --font-lora"/);
   });
 
-  // DDR-007: Firefox draws a variable font as outlines when it saves a PDF, so the printed CV
-  // would lose its text (#22). Each font is one static file for each of DDR-001's two weights.
+  // DDR-011: Firefox draws a variable font as outlines when it saves a PDF, so the printed CV
+  // would lose its text (#22). Each font is one static file per weight, and a weight with no file
+  // would be synthesised, so the files are exactly the weights the page sets: three for the body
+  // face, and semibold alone for the heading face, which nothing but a heading is set in.
   it('loads each font as one static file per weight, which a PDF saved from Firefox keeps as text', () => {
-    expect(fontOptions).toHaveLength(2);
+    expect(fontOptions.map(({ variable }) => variable)).toEqual(['--font-dm-sans', '--font-lora']);
 
     for (const { src, weight } of fontOptions) {
       expect(weight).toBeUndefined();
-      expect(Array.isArray(src) && src.map((file) => file.weight)).toEqual(['400', '600']);
+      expect(Array.isArray(src)).toBe(true);
     }
+
+    const [body, heading] = fontOptions;
+
+    expect(Array.isArray(body.src) && body.src.map((file) => file.weight)).toEqual([
+      '400',
+      '500',
+      '600',
+    ]);
+    expect(Array.isArray(heading.src) && heading.src.map((file) => file.weight)).toEqual(['600']);
   });
 
   it('renders the page inside the document body', () => {

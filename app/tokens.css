@@ -5,55 +5,85 @@
  * use these tokens instead of literal values, and a value missing from here is a decision to
  * make, not a number to invent.
  *
- * DDR-004: the tokens are mobile-first. The values at the root are for the narrowest viewports,
- * and the one breakpoint, at the end of this file, redefines the few that change where there is
- * room.
+ * DDR-014: the tokens are mobile-first. The values at the root are for the narrowest viewports,
+ * and the narrow breakpoint, below, redefines the few that change where there is room. The wide
+ * breakpoint changes no token: it engages the multi-column layouts, which live in the components,
+ * and its width is written here so there is one place to read it from.
  */
 
 :root {
-  /* Typography, per DDR-001. */
+  /* Typography, per DDR-011. */
 
   /* The size every rem is measured from. On screen it is the reader's own browser font-size
      setting, so the scales follow it. DDR-005 sets it for paper. */
   --root-font-size: 100%;
 
   /* The families and their fallback stacks are loaded in app/layout.tsx, which defines
-     --font-source-sans-3 and --font-source-serif-4 on the root element. */
-  --font-family-body: var(--font-source-sans-3);
-  --font-family-heading: var(--font-source-serif-4);
+     --font-dm-sans and --font-lora on the root element. */
+  --font-family-body: var(--font-dm-sans);
+  --font-family-heading: var(--font-lora);
 
-  /* A major third (1.25) from an 18px body size, rounded. In rem, so every step follows the
-     reader's browser font-size setting. The smallest step is the smallest text on the site. */
-  --font-size-small: 0.9rem;
-  --font-size-medium: 1.125rem;
-  --font-size-large: 1.4rem;
-  --font-size-x-large: 1.75rem;
-  --font-size-xx-large: 2.2rem;
+  /* Seven steps, named as CSS names its own absolute sizes, with medium the browser default.
+     They are the sizes the design asks for rather than one ratio applied repeatedly: close
+     together at the bottom, where labels sit, and open at the top, where the name sits. In rem,
+     so every step follows the reader's browser font-size setting. The smallest step is the
+     smallest text on the site. */
+  --font-size-x-small: 0.8125rem;
+  --font-size-small: 0.875rem;
+  --font-size-medium: 1rem;
+  --font-size-large: 1.125rem;
+  --font-size-x-large: 1.375rem;
+  --font-size-xx-large: 2.25rem;
+  --font-size-xxx-large: 3rem;
 
-  /* The step each level of heading uses, named by role, per DDR-004. These are the narrow values,
-     each one step below the full scale, so long words in headings fit a narrow column with
-     enlarged text. The breakpoint restores the full scale. */
-  --font-size-page-title: var(--font-size-x-large);
+  /* The step each level of heading uses, named by role, per DDR-014. The page and section titles
+     are the narrow values here, each one step below the full scale, so long words in headings fit
+     a narrow column with enlarged text; the narrow breakpoint restores the full scale. The item
+     title is body size and does not step down, because there is nothing below body size a title
+     could take. */
+  --font-size-page-title: var(--font-size-xx-large);
   --font-size-section-title: var(--font-size-large);
   --font-size-item-title: var(--font-size-medium);
 
   --font-weight-regular: 400;
+  --font-weight-medium: 500;
   --font-weight-semibold: 600;
 
   --line-height-body: 1.5;
   --line-height-heading: 1.2;
 
   /* The longest line running text may have. In ch, so it follows the font size and holds when
-     text is enlarged; on a narrower viewport, text simply fills the width available. */
+     text is enlarged. The page is wider than this, per DDR-013, so the measure governs running
+     text alone and no longer sets the column. */
   --measure: 65ch;
 
-  /* Colour, per DDR-002. Light only, by decision. DDR-002 records the contrast of every pairing
+  /* Colour, per DDR-012. Light only, by decision. DDR-012 records the contrast of every pairing
      intended for text, and app/tokens.test.ts checks it; any other pairing is unverified. */
-  --color-surface: #fbfaf8;
-  --color-text: #1c1b19;
-  --color-text-secondary: #5e5a54;
-  --color-accent: #1d4e89;
-  --color-border: #8c877f;
+  --color-surface: #f8f7f4;
+  --color-surface-card: #ffffff;
+  --color-text-heading: #0f172a;
+  --color-text: #334155;
+  --color-text-secondary: #475569;
+  --color-accent: #4338ca;
+  --color-on-accent: #ffffff;
+
+  /* The tinted surfaces and the ink each carries. A tag is the accent on its own tint; a level
+     badge is one of three, strongest first. Every tint is redundant with the word it holds, so
+     nothing on the page depends on colour, and print drops them all. */
+  --color-surface-tag: #eef2ff;
+  --color-text-tag: var(--color-accent);
+  --color-surface-level-advanced: #ecfdf5;
+  --color-text-level-advanced: #065f46;
+  --color-surface-level-proficient: #eef2ff;
+  --color-text-level-proficient: #3730a3;
+  --color-surface-level-basic: #f1f5f9;
+  --color-text-level-basic: var(--color-text-secondary);
+
+  /* Hairlines that carry no information: the rule beside a section heading, a card's edge, the
+     timeline's spine and dots. Each is hidden from assistive technology, and removing all of them
+     would lose nothing, so this colour sits below the 3:1 WCAG asks of meaningful non-text. A
+     border that ever carries meaning, such as a control's edge, uses --color-text-secondary. */
+  --color-decoration: #94a3b8;
 
   /* The keyboard focus outline. It is offset so it sits on the surface, and it is an outline
      rather than a shadow so it survives forced-colours modes. */
@@ -61,7 +91,7 @@
   --focus-outline-width: 2px;
   --focus-outline-offset: 2px;
 
-  /* Spacing, per DDR-003. A base unit of 1rem, halved and doubled, so each step is twice the one
+  /* Spacing, per DDR-013. A base unit of 1rem, halved and doubled, so each step is twice the one
      below. In rem, so space follows the reader's browser font-size setting with the text it
      separates. A value not on this scale is a decision to make, not a number to write. */
   --space-x-small: 0.25rem;
@@ -78,22 +108,32 @@
   --space-item: var(--space-large);
   --space-section: var(--space-x-large);
 
-  /* The page is a single column as wide as the measure, with a gutter that keeps text off the
-     edges of a narrow screen, and space above and below the content. These are the narrow
-     values, half the full ones, per DDR-004: the page's edges tighten so a narrow column with
-     enlarged text keeps its width. The breakpoint restores the full values. */
-  --content-width: var(--measure);
+  /* The page is a single centred column, wide enough to place things beside each other, with a
+     gutter that keeps content off the edges of a narrow screen and space above and below. The
+     width is 1100px at the default font size, written in rem so the column grows with the text
+     rather than cramping it. The gutter and the space above and below are the narrow values, half
+     the full ones, per DDR-014; the narrow breakpoint restores them. */
+  --content-width: 68.75rem;
   --page-gutter: var(--space-small);
   --page-padding-block: var(--space-large);
 
-  /* The smallest an interactive target may be in each direction, per DDR-004. In px, as WCAG
+  /* The corner radius of a tinted or bordered surface, per DDR-013. Three values, one for each
+     kind of surface the redesign has, so nothing rounds by an amount of its own: a small radius
+     for the short labels, a larger one for the surfaces that hold a block, and a fully rounded
+     end for the introduction's pill controls. The first two are in rem, so a rounded corner keeps
+     its proportion to the text inside it when text is enlarged. */
+  --radius-small: 0.25rem;
+  --radius-large: 0.75rem;
+  --radius-pill: 9999px;
+
+  /* The smallest an interactive target may be in each direction, per DDR-014. In px, as WCAG
      measures it, because a target is sized for a finger rather than for the text. */
   --target-size-min: 44px;
 }
 
 /*
- * The breakpoint, per DDR-004, and the only one: the page has one layout at every width. From here
- * up, the type and spacing scales apply exactly as DDR-001 and DDR-003 record them.
+ * The narrow breakpoint, per DDR-014. From here up, the page and section titles take the full
+ * scale DDR-011 records and the page's edges open out.
  *
  * It is in em, which in a media query is the browser's default font size, so a narrow screen with
  * enlarged text falls below it just as a narrower screen does. At the default size it is 320px. A
@@ -101,13 +141,21 @@
  */
 @media (min-width: 20em) {
   :root {
-    --font-size-page-title: var(--font-size-xx-large);
+    --font-size-page-title: var(--font-size-xxx-large);
     --font-size-section-title: var(--font-size-x-large);
-    --font-size-item-title: var(--font-size-large);
     --page-gutter: var(--space-medium);
     --page-padding-block: var(--space-section);
   }
 }
+
+/*
+ * The wide breakpoint, per DDR-014, is 48em, and it is the only other one the site has. From it
+ * up, the timeline, the projects, the skills and the languages lay out in columns and the photo
+ * sits beside the name. What changes there is layout rather than a value, so it redefines no
+ * token and is written by the components that lay out: a media query cannot read a custom
+ * property, so there is no way to give it a token either. components/stylesheets.test.ts holds
+ * every component stylesheet to that one width and no other.
+ */
 
 /*
  * Paper, per DDR-005: printing, and saving as a PDF from the browser. The whole type and spacing
