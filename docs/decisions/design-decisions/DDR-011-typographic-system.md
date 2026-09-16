@@ -10,6 +10,11 @@ the redesign replaces, so the files DDR-007 lists and the character-map edit DDR
 longer exist. What each of them decided is carried forward here, restated for Lora and DM Sans and
 re-established by the same kind of inspection.
 
+DDR-017 adds tracking to this system: three values, in em, for the two headings the page sets large
+and the four short labels. This record says nothing about the space between letters, and that gap
+is what DDR-017 fills; everything below stands unchanged, including the PDF guarantee, which
+DDR-017 re-checks because tracking is a way to lose it that has nothing to do with glyph mapping.
+
 DDR-001's rem sizing, its measure, its no-italics rule and its wrapping rules carry forward
 unchanged. DDR-007's rule — one static file per weight, derived by pinning the variable font —
 carries forward unchanged. DDR-009's guarantee carries forward, and is widened: it now covers every

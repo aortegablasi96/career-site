@@ -30,6 +30,13 @@ section > .row {
   margin-block-start: var(--space-x-small);
 }
 
+/* The dates are a label for the row rather than a piece of its prose, so they are opened up, per
+   DDR-017. The place below them is not: it is a proper name, and it reads as the words it is. That
+   is why this is the date line's own class and not the date column's. */
+.dateRange {
+  letter-spacing: var(--letter-spacing-loose);
+}
+
 /* The space to the next row, carried inside this one so the spine can run through it. */
 .content {
   padding-block-end: var(--space-item);

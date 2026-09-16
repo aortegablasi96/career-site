@@ -71,6 +71,7 @@
   background-color: var(--color-surface-tag);
   color: var(--color-text-tag);
   font-size: var(--font-size-x-small);
+  letter-spacing: var(--letter-spacing-loose);
 }
 
 /* A row of labelled links that wraps when it runs out of width, so it needs no breakpoint, per

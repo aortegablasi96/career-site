@@ -264,6 +264,13 @@ describe('project styles', () => {
     expect(rule('.tag')).toMatch(/font-size:\s*var\(--font-size-x-small\);/);
   });
 
+  // DDR-017 opens a tag, which is a label to scan rather than a word to read. The description
+  // under it is prose, so it keeps the spacing DM Sans was drawn with.
+  it('opens a tag to the label tracking, and leaves the text around it alone, per DDR-017', () => {
+    expect(rule('.tag')).toMatch(/letter-spacing:\s*var\(--letter-spacing-loose\);/);
+    expect(rule('.content > * + *')).not.toMatch(/letter-spacing/);
+  });
+
   // The tint is dropped by the token, for every surface on the page at once, per DDR-015, so the
   // tag has no print rule of its own and its padding becomes the space between one technology and
   // the next.

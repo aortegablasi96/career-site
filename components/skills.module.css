@@ -27,6 +27,14 @@
   margin-block-start: var(--space-small);
 }
 
+/* The group's name is a label for the block below it rather than a title over it, so it takes the
+   widest tracking, per DDR-017. It is an h3, as a role's job title is, and this is the one place an
+   item title is set apart from the rest: the name of a group is the only h3 on the page that labels
+   a list instead of naming a thing. */
+.name {
+  letter-spacing: var(--letter-spacing-x-loose);
+}
+
 /* A level's skills are metadata rather than running text, so they sit at the step DDR-011 gives
    dates, places and bullet text. The badge leads the line and the skills follow it, separated by
    middle dots that assistive technology does not announce. */
@@ -44,6 +52,7 @@
   padding-inline: var(--space-small);
   border-radius: var(--radius-small);
   font-size: var(--font-size-x-small);
+  letter-spacing: var(--letter-spacing-x-loose);
 }
 
 /* The three tints, strongest first, each measured against the ink it carries in DDR-012: 7.29:1,

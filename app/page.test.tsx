@@ -61,7 +61,8 @@ describe('HomePage', () => {
   });
 
   it('shows every item once, in the order the content gives', () => {
-    const titles = [...html.matchAll(/<h3>([^<]+)<\/h3>/g)].map(([, title]) => title);
+    // A skill group's name carries a class, per DDR-017, where the other item titles carry none.
+    const titles = [...html.matchAll(/<h3[^>]*>([^<]+)<\/h3>/g)].map(([, title]) => title);
 
     expect(titles).toEqual([
       ...experience.roles.map(({ title }) => title),

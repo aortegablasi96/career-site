@@ -52,6 +52,19 @@
   --line-height-body: 1.5;
   --line-height-heading: 1.2;
 
+  /* Tracking, per DDR-017. Three values, because the page has three densities to set: a heading
+     tightened so its large letters do not drift apart, a short label opened so it reads as a label
+     rather than as a word, and the smallest labels opened further still.
+
+     In em, which is the one place the type system measures from the element rather than the root.
+     Tracking has to keep its proportion to the letters it separates — the page title at 48px and a
+     badge at 13px cannot share an absolute amount — and since every font size is in rem, an em
+     here follows the reader's browser font-size setting too. Text set at neither value is left at
+     the face's own spacing, which is what the two families were drawn with. */
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-loose: 0.025em;
+  --letter-spacing-x-loose: 0.1em;
+
   /* The longest line running text may have. In ch, so it follows the font size and holds when
      text is enlarged. The page is wider than this, per DDR-013, so the measure governs running
      text alone and no longer sets the column. */

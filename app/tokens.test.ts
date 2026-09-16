@@ -114,6 +114,55 @@ describe('type scale tokens', () => {
   });
 });
 
+// DDR-017 adds tracking to DDR-011's system. These read the three values as written, so a change
+// to any of them fails here until the record is revised with it.
+describe('tracking tokens', () => {
+  const tracking = [...root.matchAll(/--letter-spacing-([\w-]+):\s*([^;]+);/g)].map(
+    ([, name, value]) => ({ name, value: value.trim() }),
+  );
+
+  it('defines the three densities DDR-017 sets, and no fourth', () => {
+    expect(tracking.map(({ name }) => name)).toEqual(['tight', 'loose', 'x-loose']);
+  });
+
+  it.each([
+    { role: 'tight', value: '-0.025em' },
+    { role: 'loose', value: '0.025em' },
+    { role: 'x-loose', value: '0.1em' },
+  ])('sets the $role value to $value, as the design measures it', ({ role, value }) => {
+    expect(token(`letter-spacing-${role}`)).toBe(value);
+  });
+
+  // Tracking has to keep its proportion to the letters it separates, so it is measured from the
+  // element rather than from the root: the page title and a level badge cannot share an absolute
+  // amount. Every font size is in rem, so an em here still follows the browser's font-size setting.
+  it('writes every value in em, so tracking scales with the text it separates', () => {
+    for (const { value } of tracking) {
+      expect(value).toMatch(/^-?\d*\.?\d+em$/);
+    }
+  });
+
+  // The tight value pulls letters together, and a large enough negative value would run them into
+  // one another. These are the two directions, held apart, so neither can be edited into the other.
+  it('tightens by less than it opens, and opens by more where the labels are smallest', () => {
+    expect(rem(token('letter-spacing-tight')!)).toBeLessThan(0);
+    expect(rem(token('letter-spacing-loose')!)).toBeGreaterThan(0);
+    expect(rem(token('letter-spacing-x-loose')!)).toBeGreaterThan(
+      rem(token('letter-spacing-loose')!),
+    );
+  });
+
+  // Tracking is not redefined anywhere: it is a proportion of the text, so it needs no narrow
+  // value and no value of its own on paper. The 11pt print base carries it down with the type.
+  it('is the same at every width and on paper, because em already follows the size', () => {
+    for (const { body } of [...breakpoints, ...(print ? [print] : [])]) {
+      expect([...redefined(body).keys()].filter((name) => name.startsWith('letter-spacing'))).toEqual(
+        [],
+      );
+    }
+  });
+});
+
 // DDR-012 records the contrast of every pairing the site uses. These tests measure the tokens as
 // written, so a colour change fails here until the decision record is revised with it.
 const colors = new Map(
