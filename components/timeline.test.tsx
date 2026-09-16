@@ -61,6 +61,16 @@ describe('TimelineRow', () => {
     expect(text(role)).not.toContain('Ponera Group ·');
   });
 
+  // DDR-017 tracks the dates and not the place, and both are metadata lines in the same column, so
+  // the date line is the one that carries a class of its own. A credential has only the date line.
+  it('marks the date line, and not the place beside it, as the one that is tracked', () => {
+    const classes = (html: string) =>
+      [...html.matchAll(/<p class="([^"]*)"/g)].map(([, value]) => value.split(' ').length);
+
+    expect(classes(role).slice(0, 2)).toEqual([2, 1]);
+    expect(classes(credential)[0]).toBe(2);
+  });
+
   it('shows only the dates in the date column when there is no place, as a credential has none', () => {
     expect(text(credential)).toContain('Jun 2024 Project Management Professional (PMP)');
     expect(credential.match(/<p[^>]*>/g)).toHaveLength(2);
@@ -110,6 +120,14 @@ describe('timeline styles', () => {
     expect(rule('.dot')).toMatch(/background-color:\s*var\(--color-decoration\);/);
     expect(rule('.line')).toMatch(/inline-size:\s*var\(--timeline-line-width\);/);
     expect(rule('.line')).toMatch(/background-color:\s*var\(--color-decoration\);/);
+  });
+
+  // DDR-017 opens the dates, which label the row, and leaves the place below them alone, which is
+  // a proper name and reads as the words it is. The two sit in the same column, so the tracking is
+  // the date line's own rather than the column's.
+  it('opens the dates and leaves the place beside them alone, per DDR-017', () => {
+    expect(rule('.dateRange')).toMatch(/letter-spacing:\s*var\(--letter-spacing-loose\);/);
+    expect(rule('.dates')).not.toMatch(/letter-spacing/);
   });
 
   // The space between two rows is carried inside the row, so the line reaches the next dot rather

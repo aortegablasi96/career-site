@@ -51,10 +51,16 @@ const maximum = /^max-(?:inline|block)-size$/;
 /** The two it lets `min-content` through on. */
 const minimum = /^min-(?:inline|block)-size$/;
 
-/** Every size or space declaration in a stylesheet, as its property and its value. */
+/**
+ * Every size, space or tracking declaration in a stylesheet, as its property and its value.
+ *
+ * `letter-spacing` is here because DDR-017 puts tracking in tokens: it is a length like the rest,
+ * measured in em rather than rem, and a component that wrote one would be choosing a density of
+ * its own the way a literal margin would choose a rhythm of its own.
+ */
 function declarations(css: string): readonly { property: string; value: string }[] {
   const pattern =
-    /\b(margin|padding|gap|column-gap|row-gap|font-size|(?:min-|max-)?(?:inline|block)-size|scroll-margin)([\w-]*):\s*([^;]+);/g;
+    /\b(margin|padding|gap|column-gap|row-gap|font-size|letter-spacing|(?:min-|max-)?(?:inline|block)-size|scroll-margin)([\w-]*):\s*([^;]+);/g;
 
   return [...css.matchAll(pattern)].map(([, property, suffix, value]) => ({
     property: `${property}${suffix}`,
@@ -72,7 +78,7 @@ describe('component stylesheets', () => {
       expect(css).not.toMatch(/#[\da-f]{3,8}\b|rgba?\(|hsla?\(/i);
     });
 
-    it('sets sizes and space from tokens only, per ADR-006', () => {
+    it('sets sizes, space and tracking from tokens only, per ADR-006', () => {
       for (const { property, value } of declarations(css)) {
         if (maximum.test(property)) {
           expect(value).toMatch(tokensOrRoom);

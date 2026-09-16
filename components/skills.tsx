@@ -38,7 +38,7 @@ export function Skills({ levels, groups }: { levels: readonly SkillLevelName[]; 
     <div className={styles.row}>
       {groups.map(({ name, skills }) => (
         <section key={name} className={styles.group}>
-          <h3>{name}</h3>
+          <h3 className={styles.name}>{name}</h3>
           {levels.map(({ level, name: label }) => {
             const listed = skills[level] ?? [];
 

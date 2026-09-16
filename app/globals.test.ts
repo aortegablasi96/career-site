@@ -57,6 +57,18 @@ describe('base typography', () => {
   it("sets headings in the heading ink, the darkest of DDR-012's three levels", () => {
     expect(rule(headings)).toMatch(/color:\s*var\(--color-text-heading\);/);
   });
+
+  // DDR-017 tightens the two headings the page sets large, where a face's own spacing, drawn for
+  // text, leaves the letters loose.
+  it.each(['h1', 'h2'])('tightens %s, the text the page sets largest', (heading) => {
+    expect(rule(heading)).toMatch(/letter-spacing:\s*var\(--letter-spacing-tight\);/);
+  });
+
+  // An item title is body size, so it is left at the spacing Lora was drawn with, and so is
+  // everything set in DM Sans that is not one of DDR-017's four labels.
+  it.each(['h3', 'h4,\nh5,\nh6', 'body'])('leaves %s at the spacing the face was drawn with', (selector) => {
+    expect(rule(selector)).not.toMatch(/letter-spacing/);
+  });
 });
 
 // DDR-013 lays the page out from the spacing tokens alone, and relies on the section step, with the

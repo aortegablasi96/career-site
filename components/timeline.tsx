@@ -43,7 +43,7 @@ export function TimelineRow({
   return (
     <article className={styles.row}>
       <div className={styles.dates}>
-        <MetadataLine parts={[dates]} />
+        <MetadataLine parts={[dates]} className={styles.dateRange} />
         {place && <MetadataLine parts={[place]} />}
       </div>
       <div className={styles.spine} aria-hidden="true">

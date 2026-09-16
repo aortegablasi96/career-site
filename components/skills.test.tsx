@@ -38,7 +38,7 @@ const at = (level: SkillLevel) => skills.groups.flatMap((group) => group.skills[
 
 describe('Skills', () => {
   it('renders each group with its name as a heading, in the order the content gives', () => {
-    const names = groups.map((group) => group.match(/^<section[^>]*><h3>([^<]+)<\/h3>/)?.[1]);
+    const names = groups.map((group) => group.match(/^<section[^>]*><h3[^>]*>([^<]+)<\/h3>/)?.[1]);
 
     expect(names).toEqual(skills.groups.map(({ name }) => name));
   });
@@ -115,6 +115,19 @@ describe('skills styles', () => {
   it('sets a badge at the smallest step, which DDR-011 allows for tags and badges alone', () => {
     expect(css).toMatch(/\.badge\s*\{[^}]*font-size:\s*var\(--font-size-x-small\);/);
     expect(css).toMatch(/\.level\s*\{[^}]*font-size:\s*var\(--font-size-small\);/);
+  });
+
+  // DDR-017 gives the group's name and the level badge the widest tracking, which is what marks
+  // them as labels for what follows rather than titles over it.
+  it('opens the group name and the level badge to the widest tracking, per DDR-017', () => {
+    expect(css).toMatch(/\.name\s*\{[^}]*letter-spacing:\s*var\(--letter-spacing-x-loose\);/);
+    expect(css).toMatch(/\.badge\s*\{[^}]*letter-spacing:\s*var\(--letter-spacing-x-loose\);/);
+  });
+
+  // The skills themselves are words to read, so they keep the spacing DM Sans was drawn with. The
+  // tracking belongs to the badge that leads the line, not to the line.
+  it('leaves the skills beside the badge at the spacing the face was drawn with', () => {
+    expect(css).not.toMatch(/\.level\s*\{[^}]*letter-spacing/);
   });
 });
 

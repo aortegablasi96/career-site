@@ -186,12 +186,13 @@ to be CSS Modules that read the tokens rather than writing literal values. A val
 not provide is a design decision to make, not a number to invent. `app/tokens.test.ts` holds the
 type scale to DDR-011's floors, every colour pairing to the contrast ratio DDR-012 records, the
 spacing scale, rhythm, column and radii to DDR-013, the narrow breakpoint and what it adapts to
-DDR-014, the photo's two widths and its ratio to DDR-016, the timeline's and the projects' measures
-to DDR-010, and the print
+DDR-014, the photo's two widths and its ratio to DDR-016, the three tracking values to DDR-017,
+the timeline's and the projects' measures to DDR-010, and the print
 treatment to DDR-015 — the 11pt base, every surface dropped and no ink touched, and the 28mm photo
 — so changing a token means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
-component stylesheet to the same rules: tokens only, no reordering, and no width media query but
+component stylesheet to the same rules: tokens only — sizes, spaces and, since DDR-017, tracking —
+no reordering, and no width media query but
 the wide breakpoint, which DDR-015 lets a component extend to paper as `(min-width: 48em), print`
 and no further. **ADR-006 says which literals it admits**: `0`, `auto` and `none` anywhere,
 `100%` on `max-inline-size` and `max-block-size`, and `min-content` on `min-inline-size` and
@@ -473,7 +474,7 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010 to DDR-016. The next DDR is `017`. Status values are `Proposed`,
+The accepted DDRs are DDR-010 to DDR-017. The next DDR is `018`. Status values are `Proposed`,
 `Accepted`, `Superseded`, or `Deprecated`.
 
 `Superseded` are DDR-001 to DDR-009:
@@ -528,6 +529,20 @@ which only ever happens to "Education and certifications", below about 390px or 
 That is deliberate: giving it a minimum width instead takes the content to 342px in a 320px viewport
 at 200% text, which is a reflow failure. Decoration gives way to the title.
 
+**#74 has landed, as DDR-017: the page has tracking**, which it had nowhere before. Three values in
+em — `--letter-spacing-tight` at −0.025em, `--letter-spacing-loose` at 0.025em and
+`--letter-spacing-x-loose` at 0.1em — and six users: `h1` and `h2` take tight, from
+`app/globals.css`; a technology tag and the timeline's date range take loose; a level badge and a
+skill group's name take x-loose. Everything else is left at the spacing its face was drawn with, so
+there is no `normal` token. **em, not rem**, is deliberate and is the type system's one exception:
+tracking is a proportion of the letters it separates, and a 48px title and a 13px badge cannot share
+an absolute amount. Two classes exist only to carry it, `.name` in skills and `.dateRange` in the
+timeline — the place beside the date range is untracked, and a skill group's name is the one `h3`
+set apart from the other item titles. `components/stylesheets.test.ts` now reads `letter-spacing`
+alongside the sizes and spaces, so a literal tracking value fails the suite. **The `x-loose` pair is
+drawn uppercase in the design and lands here lowercase**; #75 sets the caps, and until it does those
+two labels read airier than intended.
+
 Everything the section stories left to #52 has landed. For the record, since the gaps are named in
 those PRs: the timeline prints its date column, the projects print their media beside their text,
 the skill groups print two to a row and the language cards four, the printed photo is 28mm beside
@@ -536,7 +551,9 @@ the name, the type base is 11pt rather than 10pt, and a video prints its poster 
 **Printed on #52 in Edge 153 and Firefox 155**, to A4 through WebDriver, the page runs to **four
 sheets in Edge and five in Firefox**. #23 recorded five, #48 had it at four, #50 and #51 took it to
 six; the wide layout on paper has taken two sheets back off it. In both browsers no section heading
-is stranded and none of the 18 items is split across two sheets.
+is stranded and none of the 18 items is split across two sheets. Rechecked on #74, after tracking
+landed: still four and five, with no heading stranded, and all 434 distinct words back out of both
+PDFs through both pypdf and pdfium — every word but "Get", from the CV control print hides.
 
 **The two browsers no longer agree on the total, and that is worth knowing before touching the
 introduction.** Every break rule behaves identically in both. Firefox simply sets the summary one
