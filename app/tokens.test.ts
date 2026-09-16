@@ -295,14 +295,16 @@ describe('spacing tokens', () => {
   // swaps between them. In rem, as the column is, so the photo keeps its proportion to the name
   // beside it when text is enlarged.
   it('sizes the profile photo at both widths, in rem, the wider one larger', () => {
-    expect(token('photo-size')).toBe('6rem');
-    expect(token('photo-size-wide')).toBe('13rem');
-    expect(rem(token('photo-size-wide')!)).toBeGreaterThan(rem(token('photo-size')!));
+    expect(token('photo-width')).toBe('6rem');
+    expect(token('photo-width-wide')).toBe('13rem');
+    expect(token('photo-ratio')).toBe('3 / 4');
+    expect(rem(token('photo-width-wide')!)).toBeGreaterThan(rem(token('photo-width')!));
   });
 
   it('adapts the photo in the components rather than here, so the wide breakpoint stays theirs', () => {
-    expect(atBreakpoint.has('photo-size')).toBe(false);
-    expect(atBreakpoint.has('photo-size-wide')).toBe(false);
+    expect(atBreakpoint.has('photo-width')).toBe(false);
+    expect(atBreakpoint.has('photo-width-wide')).toBe(false);
+    expect(atBreakpoint.has('photo-ratio')).toBe(false);
   });
 
   // DDR-010's timeline, at the widths the UI Review on #43 measured: a 160px date column, a 28px
@@ -422,7 +424,7 @@ const forPaper = [
   { name: 'content-width', value: 'none' },
   { name: 'page-gutter', value: '0' },
   { name: 'page-padding-block', value: '0' },
-  { name: 'photo-size', value: '28mm' },
+  { name: 'photo-width', value: '28mm' },
 ];
 
 describe('print tokens', () => {
@@ -456,9 +458,11 @@ describe('print tokens', () => {
   // print redefines. The measure is in mm because a photograph on a sheet is a size of the paper
   // rather than a multiple of the type, as the sheet's own margins are.
   it('prints the photo at 28mm beside the name, in a unit of the paper, per DDR-015', () => {
-    expect(inPrint.get('photo-size')).toBe('28mm');
-    expect(token('photo-size')).toMatch(/rem$/);
-    expect(inPrint.has('photo-size-wide')).toBe(false);
+    expect(inPrint.get('photo-width')).toBe('28mm');
+    expect(token('photo-width')).toMatch(/rem$/);
+    expect(inPrint.has('photo-width-wide')).toBe(false);
+    // The ratio is a shape, so paper keeps the one the screen has: 28mm across, about 37mm tall.
+    expect(inPrint.has('photo-ratio')).toBe(false);
   });
 
   // DDR-005 chose a 10pt base so that the smallest step of DDR-001's scale came to exactly 9pt.
