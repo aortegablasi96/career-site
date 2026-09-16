@@ -289,6 +289,21 @@ describe('spacing tokens', () => {
   ])('rounds a corner by --$name, one of the three DDR-013 defines', ({ name, value }) => {
     expect(token(name)).toBe(value);
   });
+
+  // DDR-010's photo. Two tokens rather than one that adapts, because DDR-014 keeps the wide
+  // breakpoint out of this file and a media query cannot read a custom property; the introduction
+  // swaps between them. In rem, as the column is, so the photo keeps its proportion to the name
+  // beside it when text is enlarged.
+  it('sizes the profile photo at both widths, in rem, the wider one larger', () => {
+    expect(token('photo-size')).toBe('6rem');
+    expect(token('photo-size-wide')).toBe('13rem');
+    expect(rem(token('photo-size-wide')!)).toBeGreaterThan(rem(token('photo-size')!));
+  });
+
+  it('adapts the photo in the components rather than here, so the wide breakpoint stays theirs', () => {
+    expect(atBreakpoint.has('photo-size')).toBe(false);
+    expect(atBreakpoint.has('photo-size-wide')).toBe(false);
+  });
 });
 
 // DDR-014 adapts the scales at the narrow breakpoint, in em, by redefining the role tokens that

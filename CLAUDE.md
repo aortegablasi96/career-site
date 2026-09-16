@@ -30,9 +30,27 @@ now keeps its heading with its first item on paper, per DDR-008.
 
 **The redesign, Epic #42, is part built.** The token layer is the redesign's, under #44: Lora and
 DM Sans, the seven-step scale, the new palette, the wider page column and the second breakpoint are
-all in place, and DDR-011 to DDR-014 supersede DDR-001 to DDR-004. The components are still
-DDR-006's, until #48 to #51 rebuild them, so the sections do not yet use the wider column or the
-wide breakpoint and the page reads as left-weighted on a wide screen in the meantime.
+all in place, and DDR-011 to DDR-014 supersede DDR-001 to DDR-004.
+
+**The introduction is the redesign's, under #48**: the photo, the positioning line in the accent,
+and four pill controls — the three contact addresses and the "Get my CV" download. The five section
+components are still DDR-006's until #49 to #51 rebuild them, so they do not yet use the wider
+column or the wide breakpoint, and the page still reads as left-weighted below the introduction on
+a wide screen.
+
+Two things about the introduction are worth knowing before changing it:
+
+* **The photo is a placeholder.** `public/andreu-ortega-blasi-photo.webp` is a flat tinted square,
+  not the owner's portrait, which is #47's to supply. Replacing the file is the whole of the
+  change: the path and the alternative text in `content/introduction.ts` are written for the real
+  photo. Do not build anything else on the stand-in, and do not draw a monogram or a gradient in
+  its place — DDR-010 rejects both.
+* **The photo sits beside the name at every width**, where DDR-010 and the UI Review on #43 put it
+  above the name below the wide breakpoint. Measured against the real copy on #48, stacking it left
+  the contact controls 2px below the fold of a 390px phone, which is the very thing DDR-010 places
+  the photo beside the name to prevent. The owner chose the deviation on #48; a later design story
+  records it. Below the breakpoint the photo floats and the name takes the width beside it, so the
+  summary returns to the full column underneath.
 
 It is a Next.js App Router
 project in TypeScript, configured for static export, per ADR-001 and ADR-002, and deployed to
@@ -117,8 +135,8 @@ to be CSS Modules that read the tokens rather than writing literal values. A val
 not provide is a design decision to make, not a number to invent. `app/tokens.test.ts` holds the
 type scale to DDR-011's floors, every colour pairing to the contrast ratio DDR-012 records, the
 spacing scale, rhythm, column and radii to DDR-013, the narrow breakpoint and what it adapts to
-DDR-014, and the print treatment to DDR-005, so changing a token means revising its decision record
-too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
+DDR-014, the two photo sizes to DDR-010, and the print treatment to DDR-005, so changing a token
+means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
 component stylesheet to the same rules: tokens only, no reordering, and no width media query but
 the wide breakpoint.
@@ -164,16 +182,19 @@ What exists, to reuse rather than reinvent:
 * **The design system.** Typography (DDR-011), colour (DDR-012), spacing and layout (DDR-013) and
   responsive behaviour (DDR-014) are the redesign's, reworked on #44. Print (DDR-005) is still the
   Design Foundation's, until #52.
-* **The components.** They still implement DDR-006, not DDR-010. DDR-006 decides the career page's
-  structure as built: its outline, the introduction,
-  the contents, the entry anatomy shared by roles, projects, and credentials, and the labelled
-  list shared by skills and languages. The introduction, the contents, the section wrapper, the
-  metadata line, the entry, the date range, the labelled list, and the experience, projects,
-  skills, credentials, and languages sections implement it. A certification is an entry with no
-  body, showing only the month it was granted.
-* **The content types.** `content/types.ts` covers the site metadata, the introduction, the
-  contents, dates, roles, projects, skills, credentials, and languages. A credential is a degree
-  or a certification.
+* **The components.** The introduction is DDR-010's, under #48. The rest still implement DDR-006:
+  its outline, the contents, the entry anatomy shared by roles, projects, and credentials, and the
+  labelled list shared by skills and languages. The contents, the section wrapper, the metadata
+  line, the entry, the date range, the labelled list, and the experience, projects, skills,
+  credentials, and languages sections implement it. A certification is an entry with no body,
+  showing only the month it was granted.
+* **The icons**, in `components/icon.tsx`: one per contact address and one for the CV. They are
+  inline SVG rather than committed files, drawn in `currentColor` and sized in em, and each is
+  hidden from assistive technology because it repeats what its control's own text says. Which mark
+  a contact takes is a key in `content/`, not something worked out from its address.
+* **The content types.** `content/types.ts` covers the site metadata, an image, the introduction and
+  its contact links, the contents, dates, roles, projects, skills, credentials, languages, and the
+  CV. A credential is a degree or a certification.
 
 The GitHub repository is `aortegablasi96/career-site` (public), with `main` as the default
 branch. Issue templates exist in `.github/ISSUE_TEMPLATE/` (Epic, User Story, Bug), and the
@@ -383,11 +404,23 @@ page. Each superseded record says at the top what carries forward and what does 
 one first and the old one for the reasoning behind it.
 
 DDR-010 is the design contract for Epic #42, the career page redesign. Its token layer is built,
-under #44, and its structure is not: the components described under "Current Repository State" are
-still DDR-006's until #48 to #51 rebuild them. **DDR-005 and DDR-008, the print records, still
-describe the page as it stands** and are reworked by #52. Until that lands, DDR-005's own arithmetic
-is out of step with DDR-011's scale, which `app/tokens.test.ts` records rather than hides: DDR-005
-chose its 10pt base so that the smallest text came to 9pt, and the new scale reaches 8.1pt.
+under #44, and its introduction under #48; the five section components described under "Current
+Repository State" are still DDR-006's until #49 to #51 rebuild them. **DDR-005 and DDR-008, the
+print records, still describe most of the page as it stands** and are reworked by #52. Two gaps are
+open until that lands:
+
+* DDR-005's own arithmetic is out of step with DDR-011's scale, which `app/tokens.test.ts` records
+  rather than hides: DDR-005 chose its 10pt base so that the smallest text came to 9pt, and the new
+  scale reaches 8.1pt.
+* DDR-005 predates the photo, so `components/introduction.module.css` carries the introduction's
+  own print rules: the photo prints beside the name at 21mm, where DDR-010 asks for it reduced and
+  the UI Review on #43 suggested about 28mm, and the CV control does not print at all. The layout
+  is written into the print block rather than left to the wide breakpoint, because a sheet of A4
+  inside its margins is about 40em and that query does not match on paper — which is worth knowing
+  before #49 to #52 rely on it.
+
+Printed in Firefox and Edge on #48, the page now runs to **four A4 sheets**, where #23 recorded
+five; DDR-011's denser scale is what bought the sheet back. #52 states the final length.
 
 ADR-004 and ADR-005 together decide the downloadable CV and the site's first binary assets. The CV
 itself has landed, under #56: `public/andreu-ortega-blasi-cv.pdf` is a separately designed document,
@@ -395,9 +428,15 @@ and `content/cv.ts` carries a digest over the content modules that `content/cv.t
 change to any fact on the page fails the test suite until the CV is brought back into step. ADR-005
 lists the facts the two documents must share and makes the site the one that wins when they disagree.
 
-The rest is decided but not yet built: `app/asset.ts`, through which every reference to a binary must
-pass so it resolves under `PAGES_BASE_PATH`, and the CV control itself, are #47's and #48's. Until
-they land nothing on the page links to the CV.
+Both halves of the reference machinery have landed. `app/asset.ts`, under #47, is the one route a
+binary's path takes so that it resolves under `PAGES_BASE_PATH` as well as locally, and
+`components/assets.test.ts` holds every `src`, `poster` and `href` in `components/` and `app/` to
+it: a root-relative path written straight into one of those attributes is correct locally and 404s
+on the live site, so it is checked rather than remembered. The CV control itself landed with the
+introduction, under #48, and the page now offers the file.
+
+`eslint.config.mjs` turns `@next/next/no-img-element` off, because ADR-004 rules `next/image` out
+and the rule would otherwise argue with an accepted decision at every image.
 
 ## Workflow
 
