@@ -3,7 +3,14 @@ import { describe, expect, it } from 'vitest';
 
 // DDR-012 relies on two base styles for accessibility that no component should have to repeat.
 // These tests read the stylesheet as written, so a later edit cannot quietly remove them.
-const globals = readFileSync(new URL('./globals.css', import.meta.url), 'utf8');
+// Line endings are normalised first, as content/cv.test.ts does and for the same reason: Git checks
+// this file out with CRLF on Windows and LF on the Linux runner that deploys the site. `rule()`
+// anchors a selector list on a newline, so without this the two multi-line lists matched nothing,
+// and the tests that read them failed on Windows alone while CI stayed green.
+const globals = readFileSync(new URL('./globals.css', import.meta.url), 'utf8').replace(
+  /\r\n/g,
+  '\n',
+);
 
 /** The stylesheet without its comments, so a rule is not matched against its explanation. */
 const declarations = globals.replace(/\/\*[\s\S]*?\*\//g, '');
