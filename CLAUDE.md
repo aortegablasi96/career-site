@@ -188,11 +188,13 @@ not provide is a design decision to make, not a number to invent. `app/tokens.te
 type scale to DDR-011's floors, every colour pairing to the contrast ratio DDR-012 records, the
 spacing scale, rhythm, column and radii to DDR-013, the narrow breakpoint and what it adapts to
 DDR-014, the photo's two widths and its ratio to DDR-016, the three tracking values to DDR-017,
-the bullet marker's 4.17:1 to DDR-019, the timeline's and the projects' measures to DDR-010, and the print
+the bullet marker's 4.17:1 to DDR-019, the one shadow and its 22% ink to DDR-020, the timeline's and
+the projects' measures to DDR-010, and the print
 treatment to DDR-015 — the 11pt base, every surface dropped and no ink touched, and the 28mm photo
 — so changing a token means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
-component stylesheet to the same rules: tokens only — sizes, spaces and, since DDR-017, tracking —
+component stylesheet to the same rules: tokens only — sizes, spaces, tracking since DDR-017 and
+`box-shadow` since DDR-020 —
 no reordering, and no width media query but
 the wide breakpoint, which DDR-015 lets a component extend to paper as `(min-width: 48em), print`
 and no further. **ADR-006 says which literals it admits**: `0`, `auto` and `none` anywhere,
@@ -235,9 +237,9 @@ layout at all.
 The `@media print` block in `app/tokens.css` sets `--root-font-size` to 11pt, so every rem, type and
 space alike, is measured from a size suited to paper: body text at 11pt and the smallest step, the
 tags and badges, at 8.9pt. It makes **every** surface transparent — the page, the card, the tag and
-the three level tints — and the decoration colour with them, so no component writes a print rule to
-drop its own background and the sheet reads the same whether or not the browser prints background
-graphics. It lets the column fill the sheet, and sets the printed photo to 28mm, in mm because a
+the three level tints — and the decoration colour and the one shadow with them, so no component
+writes a print rule to drop its own background or put out its own light, and the sheet reads the
+same whether or not the browser prints background graphics. It lets the column fill the sheet, and sets the printed photo to 28mm, in mm because a
 photograph on a sheet is a size of the paper. An `@page` rule beside it sets 2cm margins.
 
 The `@media print` block in `app/globals.css` hides `nav`, prints each link's address after it,
@@ -475,7 +477,7 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010 to DDR-019. The next DDR is `020`. Status values are `Proposed`,
+The accepted DDRs are DDR-010 to DDR-020. The next DDR is `021`. Status values are `Proposed`,
 `Accepted`, `Superseded`, or `Deprecated`.
 
 `Superseded` are DDR-001 to DDR-009:
@@ -601,6 +603,29 @@ Three things about it are worth knowing before touching it.
   them today. That is the whole reason the palette gains a colour rather than reusing one, and it is
   why `--color-marker` is absent from the print block that drops every surface.
 
+**#77 has landed, as DDR-020: the site has one elevation, and the design's shadow is darkened to
+reach it.** One token, `--shadow-raised`, and one declaration each in `introduction.module.css` and
+`languages.module.css`, so exactly eight elements are raised off the page: the three contact pills,
+the CV control and the four language cards. Nothing else on the page is, and depth is otherwise
+still a tint, a hairline and a radius.
+
+Three things about it are worth knowing before touching it.
+
+* **The ink is 22% black where the design draws 10%.** The geometry is the design's, unchanged. Its
+  ink is not: at 10% the darkest row the shadow draws is 1.50:1 against the page, fainter than the
+  hairlines DDR-012 calls the lightest that read at all, and at 22% it is 2.45:1 in Chromium and
+  2.47:1 in Gecko — the lightest ink that clears them. The floor is the hairlines' 2.39:1 rather than
+  WCAG's 3:1, because a shadow carries nothing; DDR-020 has the ramp and the argument. The owner
+  chose a shadow that reads over the design's own and over having none at all.
+* **The ink is deliberately not in the palette.** Every colour token is an opaque hex, and this one
+  is translucent black, which is wrong on text, on a border and on a surface. It lives inside
+  `--shadow-raised` rather than beside the colours, and `app/tokens.test.ts` holds the palette opaque
+  so it stays the only translucency in the file.
+* **Paper draws no shadow**, by `--shadow-raised: none` in the print block rather than by a rule in
+  either component — the same mechanism DDR-015 uses for the surfaces. Checked by printing with
+  background graphics on, which is the only way a browser prints a shadow at all: no grey band on any
+  sheet in either browser.
+
 Everything the section stories left to #52 has landed. For the record, since the gaps are named in
 those PRs: the timeline prints its date column, the projects print their media beside their text,
 the skill groups print two to a row and the language cards four, the printed photo is 28mm beside
@@ -618,7 +643,10 @@ single letters anywhere — which is the check that **caught** the badge's track
 it is not a formality. Rechecked on #76, after the bullet marker and its indent: still four and
 five, no heading stranded, no item split, every word back out of both readers in both browsers, and
 the markers themselves drawn on every sheet that carries points — the one thing on the page that
-prints and is neither text nor a surface.
+prints and is neither text nor a surface. Rechecked on #77, after elevation landed, this time with
+background graphics **on**: still four and five, all 472 distinct words back out of both readers in
+both browsers, and no shadow anywhere — the longest run of neutral grey on any sheet is 35px, where a
+card's shadow would be a band about 240px wide.
 
 **The two browsers no longer agree on the total, and that is worth knowing before touching the
 introduction.** Every break rule behaves identically in both. Firefox simply sets the summary one

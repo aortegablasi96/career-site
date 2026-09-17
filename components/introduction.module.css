@@ -85,7 +85,12 @@
 /* A pill. Every target is at least the minimum in each direction, per DDR-014, reached by padding
    rather than by enlarging the text. As a flex container the link no longer wraps with the text
    around it, so an address wider than the column, such as the email address at 320px with text at
-   200%, is let break anywhere rather than overflow the page. */
+   200%, is let break anywhere rather than overflow the page.
+
+   Both kinds of pill are raised off the page by the one shadow the site has, per DDR-020. It is
+   the thing a control shares with a language card and with nothing else, and it is never what
+   identifies a control: the border or the fill below, and the icon, do that, and a forced-colours
+   mode that removes the shadow removes nothing a reader needs. */
 .contact,
 .cv {
   display: inline-flex;
@@ -96,6 +101,7 @@
   padding-block: var(--space-small);
   padding-inline: var(--space-medium);
   border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-raised);
   text-decoration-line: none;
   overflow-wrap: anywhere;
 }

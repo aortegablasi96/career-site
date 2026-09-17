@@ -19,13 +19,17 @@
 
 /* A card is the page's one white surface, per DDR-012, edged with a hairline. The edge carries no
    information — the term and its value are a pair in the markup — so it is drawn in the decoration
-   colour, which may sit below 3:1 for that reason. */
+   colour, which may sit below 3:1 for that reason.
+
+   It is raised off the page by the one shadow the site has, per DDR-020, which is the other half of
+   what makes it a card rather than a box. */
 .card {
   padding-block: var(--space-medium);
   padding-inline: var(--space-medium);
   border: 1px solid var(--color-decoration);
   border-radius: var(--radius-large);
   background-color: var(--color-surface-card);
+  box-shadow: var(--shadow-raised);
 }
 
 /* The language is the term, so it is set apart from its level by weight rather than by size: there
@@ -56,9 +60,9 @@
     break-inside: avoid;
   }
 
-  /* A card prints its text alone, per DDR-010. Its fill and the colour of its edge are dropped by
-     the tokens, per DDR-015; what is left here is the space the box asked for, which a box that is
-     no longer drawn does not need. The border keeps its hairline of width so the four columns stay
+  /* A card prints its text alone, per DDR-010. Its fill, the colour of its edge and its shadow are
+     all dropped by the tokens, per DDR-015 and DDR-020; what is left here is the space the box
+     asked for, which a box that is no longer drawn does not need. The border keeps its hairline of width so the four columns stay
      the widths they were measured at. */
   .card {
     padding-block: 0;

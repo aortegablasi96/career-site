@@ -298,6 +298,44 @@ describe('colour tokens', () => {
   });
 });
 
+// DDR-020 gives the site one elevation: the introduction's four controls and the four language
+// cards are raised, and nothing else is. These read the token as written, so neither the geometry
+// the design drew nor the ink the record measured can drift from it.
+describe('elevation tokens', () => {
+  const shadows = [...root.matchAll(/--shadow-([\w-]+):/g)].map(([, name]) => name);
+
+  it('defines one level, named for what it does, so a second is a decision rather than a number', () => {
+    expect(shadows).toEqual(['raised']);
+  });
+
+  // The two layers and their lengths are the design's, unchanged. The ink is 22% black where the
+  // design draws 10%: at 10% the darkest row the shadow draws is 1.50:1 against the page, below
+  // the 2.39:1 of the hairlines, and at 22% it is 2.45:1, the lightest ink that clears them.
+  it('keeps the design’s two layers and darkens its ink, as DDR-020 measures it', () => {
+    expect(token('shadow-raised')).toBe(
+      '0 1px 1.5px rgba(0, 0, 0, 0.22), 0 1px 1px rgba(0, 0, 0, 0.22)',
+    );
+  });
+
+  // A shadow marks an edge and gains nothing from growing with the reader's text, so its lengths
+  // are in px, as the focus outline's and the timeline's line are.
+  it('draws in px, as the site’s other hairlines do', () => {
+    expect(token('shadow-raised')!.replace(/rgba\([^)]*\)/g, '')).not.toMatch(/\d(?:rem|em|%)/);
+  });
+
+  // The palette above is opaque throughout, and this is why: the shadow's ink is translucent black,
+  // which is wrong on text, on a border and on a surface, so it is held inside the one value that
+  // uses it rather than offered to anything that can read a colour token.
+  it('keeps its translucent ink out of the palette, and is the only translucency at the root', () => {
+    for (const [name, value] of colors) {
+      expect(value, name).not.toMatch(/rgba?\(|#[\da-f]{8}\b/i);
+    }
+
+    expect(token('shadow-raised')!.match(/rgba\(/g)).toHaveLength(2);
+    expect(root.match(/rgba\(/g)).toHaveLength(2);
+  });
+});
+
 // DDR-013 derives the spacing scale from a base unit and names the rhythm the page uses. These
 // tests read the tokens as written, so a value off the scale cannot be added quietly.
 const spaces = new Map(
@@ -485,6 +523,7 @@ const forPaper = [
   { name: 'color-surface-level-proficient', value: 'transparent' },
   { name: 'color-surface-level-basic', value: 'transparent' },
   { name: 'color-decoration', value: 'transparent' },
+  { name: 'shadow-raised', value: 'none' },
   { name: 'content-width', value: 'none' },
   { name: 'page-gutter', value: '0' },
   { name: 'page-padding-block', value: '0' },
@@ -492,7 +531,7 @@ const forPaper = [
 ];
 
 describe('print tokens', () => {
-  it('redefines only the base size, every surface, the decoration, the column and its edges, and the photo', () => {
+  it('redefines only the base size, every surface, the decoration, the shadow, the column and its edges, and the photo', () => {
     expect([...inPrint.keys()]).toEqual(forPaper.map(({ name }) => name));
   });
 
@@ -541,6 +580,13 @@ describe('print tokens', () => {
 
     expect(base * rem(body.value)).toBeCloseTo(11, 5);
     expect(base * smallest).toBeCloseTo(8.94, 2);
+  });
+
+  // DDR-020: a sheet is lit by the room it is read in, and the surfaces the shadow raises are flat
+  // on paper anyway, their fills and edges dropped just above it. Dropping it here rather than in a
+  // component is what keeps a stylesheet from writing a print rule to put out its own light.
+  it('draws no shadow on paper, per DDR-020', () => {
+    expect(inPrint.get('shadow-raised')).toBe('none');
   });
 
   it('gives the sheet margins in a unit of the paper', () => {

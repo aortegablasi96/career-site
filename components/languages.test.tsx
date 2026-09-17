@@ -53,6 +53,12 @@ describe('languages styles', () => {
     expect(css).toMatch(/\.card\s*\{[^}]*border-radius:\s*var\(--radius-large\);/);
   });
 
+  // DDR-020: the card is raised off the page by the one shadow the site has, which is the other
+  // half of what makes it a card rather than a box.
+  it('raises a card off the page, per DDR-020', () => {
+    expect(css).toMatch(/\.card\s*\{[^}]*box-shadow:\s*var\(--shadow-raised\);/);
+  });
+
   it('sets the level in the accent, at 7.90:1 on the card, per DDR-012', () => {
     expect(css).toMatch(/\.level\s*\{[^}]*color:\s*var\(--color-accent\);/);
     expect(css).toMatch(/\.name\s*\{[^}]*font-weight:\s*var\(--font-weight-semibold\);/);
@@ -69,6 +75,8 @@ describe('Languages in print', () => {
   it('drops the space the card asked for, once nothing draws it, per DDR-010', () => {
     expect(print).toMatch(/\.card\s*\{[^}]*padding-block:\s*0;/);
     expect(print).toMatch(/\.card\s*\{[^}]*padding-inline:\s*0;/);
+    // The shadow goes with them, put out by the token rather than by a rule here, per DDR-020.
+    expect(print).not.toMatch(/box-shadow/);
   });
 });
 

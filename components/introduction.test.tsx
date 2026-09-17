@@ -210,6 +210,13 @@ describe('introduction styles', () => {
     expect(rule('.cv')).toMatch(/color:\s*var\(--color-on-accent\);/);
   });
 
+  // DDR-020 raises both kinds of pill by the one shadow the site has. It is never what identifies
+  // a control — the border or the fill above, and the icon, do that — so a forced-colours mode
+  // that drops every shadow drops nothing a reader needs.
+  it('raises both kinds of pill off the page, per DDR-020', () => {
+    expect(rule('.contact,\n.cv')).toMatch(/box-shadow:\s*var\(--shadow-raised\);/);
+  });
+
   it('hides the CV control on paper, where a download is dead and the paper is the CV', () => {
     expect(rule('.cvItem', paper)).toMatch(/display:\s*none;/);
   });
@@ -228,6 +235,12 @@ describe('introduction styles', () => {
   it('prints a contact address once, as the link’s own text, per DDR-006', () => {
     expect(rule('.contact::after', paper)).toMatch(/content:\s*none;/);
     expect(rule('.contact', paper)).toMatch(/border:\s*none;/);
+  });
+
+  // The shadow is put out by the token in print, per DDR-020, as the surfaces are by DDR-015, so
+  // there is nothing here to write.
+  it('writes no rule to put out its own shadow, which the tokens drop', () => {
+    expect(paper).not.toMatch(/box-shadow/);
   });
 });
 
