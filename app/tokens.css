@@ -289,10 +289,6 @@
   --shadow-photo-glow: 0 8px 40px rgba(79, 70, 229, 0.18);
   --shadow-photo-inner: inset 0 4px 4px rgba(0, 0, 0, 0.25);
 
-  /* The smallest an interactive target may be in each direction, per DDR-014. In px, as WCAG
-     measures it, because a target is sized for a finger rather than for the text. */
-  --target-size-min: 44px;
-
   /* The profile photo, per DDR-010, #71 and DDR-021: 96px wide below the wide breakpoint and 208px
      from it, at 3:4, drawn as a capsule by `--radius-pill` and lit by the two shadows above. The width is in rem, as --content-width is, so the photo keeps its proportion to the
      name beside it when text is enlarged; the ratio is a shape rather than a length and has no

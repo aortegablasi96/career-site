@@ -232,11 +232,15 @@ describe('introduction styles', () => {
     expect(rule('.frame', wide)).toMatch(/float:\s*none;/);
   });
 
-  it('gives every control at least the minimum target in each direction, per DDR-014', () => {
+  // DDR-027: a control is the 37px the design draws, which is its padding and its label and no
+  // minimum of its own. A minimum was also measured against the content box, since nothing on the
+  // site sets border-box, so the 44px DDR-014 asked for drew a 62px pill rather than a 44px one.
+  it('gives every control the padding the design draws and no minimum, per DDR-027', () => {
     const pill = rule('.contact,\n.cv');
 
-    expect(pill).toMatch(/min-block-size:\s*var\(--target-size-min\);/);
-    expect(pill).toMatch(/min-inline-size:\s*var\(--target-size-min\);/);
+    expect(pill).toMatch(/padding-block:\s*var\(--space-small\);/);
+    expect(pill).toMatch(/padding-inline:\s*var\(--space-medium\);/);
+    expect(pill).not.toMatch(/min-block-size|min-inline-size/);
   });
 
   it('identifies a control by its border or its fill rather than by an underline, per DDR-010', () => {

@@ -198,7 +198,8 @@ to be CSS Modules that read the tokens rather than writing literal values. A val
 not provide is a design decision to make, not a number to invent. `app/tokens.test.ts` holds the
 type scale step by step and its floor to DDR-022, every colour pairing to the contrast ratio DDR-025 records — including the four that fail, held by name so a fifth cannot join them quietly — the
 spacing scale, rhythm, column and radii to DDR-013, the narrow breakpoint and what it adapts to
-DDR-014, the photo's two widths and its ratio to DDR-021, the three tracking values to DDR-017,
+DDR-014, the **absence** of a target minimum to DDR-027 — the name is held missing, so reinstating
+one moves the record with it — the photo's two widths and its ratio to DDR-021, the three tracking values to DDR-017,
 the bullet marker's 1.86:1 to DDR-019 as DDR-025 amends it, the raised shadow and its 10% ink to DDR-020 as DDR-025 amends it, and the photo's
 two lights to DDR-021, the timeline's and
 the projects' measures to DDR-010, and the print
@@ -259,7 +260,9 @@ The `@media print` block in `app/globals.css` hides `nav`, prints each link's ad
 keeps entries whole, and keeps headings with what follows. Firefox does not honour that last rule,
 so `components/section.tsx` holds each section's heading and first item in one block that print
 keeps whole, per DDR-015. A component hides its own screen-only elements in print, and may drop
-screen-only sizing such as the minimum target size, but adds no print-only content. What the base
+screen-only sizing such as the row gap that holds two links apart for a finger, per DDR-027 — which
+is the projects' one remaining use of that allowance, since DDR-027 took the target minimum it used
+to name — but adds no print-only content. What the base
 styles do not keep whole, because it is not an `article` or list item, such as a skill group or the
 row of language cards, is kept whole by its own component.
 
@@ -282,9 +285,10 @@ back out of both, and recheck page breaks when the amount of content changes.
 What exists, to reuse rather than reinvent:
 
 * **The design system.** Typography (DDR-011), colour (DDR-025, superseding DDR-012), spacing and layout (DDR-013, as DDR-026 amends its section boundary) and
-  responsive behaviour (DDR-014) are the redesign's, reworked on #44, and print (DDR-015) is the
+  responsive behaviour (DDR-014, whose target minimum DDR-027 takes) are the redesign's, reworked on
+  #44, and print (DDR-015) is the
   redesign's too, reworked on #52. The type scale and its floor are DDR-022's since #90, and
-  DDR-011 keeps everything else it decides.
+  DDR-011 keeps everything else it decides. Target sizes are DDR-027's since #95.
 * **The components.** Every section is DDR-010's: the introduction under #48, the timeline that
   experience and education share under #49 and #51, the projects' media-and-text row under #50, and
   the skill groups and language cards under #51. What still carries over from DDR-006 is its
@@ -491,15 +495,20 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-026. The next DDR is
-`027`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-027. The next DDR is
+`028`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Seven accepted records are superseded or amended **in part**, and each says so at the top and again
+Eight accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
   gives each section's `h2`. DDR-026 takes the one sentence that rejects the design's divider
-  between every section, which is now drawn.
+  between every section, which is now drawn. DDR-027 takes its 44 by 44 pixel target and corrects
+  its "about 28px tall" for the design's contents links, which are 20px tall and 28px apart.
+* **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
+  rule and its rule that nothing scrolls horizontally from 320px. DDR-027 takes its 44 by 44 pixel
+  minimum target, and `--target-size-min` with it. The one sentence of that bullet which survives is
+  the one letting a component drop screen-only sizing on paper.
 * **DDR-013** keeps its scale, its rhythm and every value. DDR-026 amends the sentence that makes
   whitespace and a heading the whole section boundary: the boundary now carries a hairline, with
   half the section step above it and half below, so the step itself does not move.
@@ -568,8 +577,8 @@ Two things stay out — the gradient monogram, because #63 supplies a real portr
 "Sections" toggle, because the design has no narrow view to match.
 
 The earlier audit's nine, #71 to #78 plus #63, are all landed but #63, which is the owner's to
-produce rather than the repository's. **#89, #90, #91, #92, #93 and #94 are the rewritten epic's
-first six to land**, as DDR-021 to DDR-026.
+produce rather than the repository's. **#89 to #95 are the rewritten epic's first seven to land**,
+as DDR-021 to DDR-027.
 
 **#71 has landed, as DDR-016: the photo is 3:4**, not the square it was. `--photo-size` and
 `--photo-size-wide` are now `--photo-width`, `--photo-width-wide` and `--photo-ratio`, following the
@@ -793,6 +802,40 @@ a 1px `#e2e8f0` line the full width of the column, 32px, on all five sections, a
 at 320px. One behaviour moved: a contents link now lands on the divider rather than on the heading,
 because the offset is measured from a box that now begins a step higher. DDR-026 records it and
 leaves the value to #98, which replaces the contents row with the design's sticky bar.
+
+**#95 has landed, as DDR-027: a target is the size the design draws it, and the page has no minimum
+at all.** `--target-size-min` is gone, with the six declarations that read it. The three contact
+pills and the CV control keep their 8px and 16px padding and lose their minimum, which is 37.1px —
+the design's own 37.1px. A contents link and a project's labelled links take the line their label
+sets in, 19.5px, against the design's 20px and 19.5px. DDR-027 supersedes DDR-014's 44 by 44 pixel
+minimum and DDR-004's before it, and amends DDR-010 twice.
+
+Five things about it are worth knowing before touching a target anywhere.
+
+* **44 by 44 was never the AA criterion the records cited.** It is WCAG 2.5.5, Level **AAA**. Level
+  AA asks 24 by 24, at 2.5.8, and that has an exception for undersized targets far enough apart. So
+  the page kept an AAA criterion for four stories and gives it up here; DDR-027 has the table of
+  **every** target on the page, one line each, and every one of the eleven meets 2.5.8 — the four
+  controls outright, the seven links by the spacing exception — while none meets 2.5.5.
+* **The minimum was measured against the content box**, since nothing on the site sets `border-box`,
+  so a "44px" contact pill was **61.6px**. DDR-010's three undersized targets were not corrected to
+  44px, they were corrected past it. That is why the page is 219px shorter at 320px, 360px and
+  390px, and why at 390 by 844 the four controls now end 841px down — above the fold of a phone,
+  where they ended 939px down and below it.
+* **Both wrapping rows gained `row-gap: var(--space-small)`**, in `contents.module.css` and
+  `projects.module.css`. It is the one measure here the design does not supply, because its frame is
+  894px wide and neither row wraps in it. It is also not a precaution: measured with the gap off,
+  the contents row **fails 2.5.8 at every viewport from 420px to 490px**, where "Education and
+  certifications" wraps directly under "Experience" and two circles come within 22.5px of 24px.
+* **A link stays `display: inline-flex`** in both, which is the one thing that is not simply
+  removing a minimum. An inline box's hit area is the font's content area, about 17px here; a flex
+  container's is the whole line box, 19.5px. So the flex container is both nearer the design and
+  2.5px more target, for a declaration that was already there.
+* **Paper did not move at all.** The projects' print block drops the row gap — screen-only sizing,
+  which DDR-015 lets a component drop, and not free, since the address printed after each link wraps
+  that row on every sheet and the gap would have cost the printed CV 16px. Measured under print
+  emulation against the tree this branched from, every box on the sheet is identical to the pixel,
+  so #99's recheck is unaffected by this story.
 
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the

@@ -104,9 +104,12 @@ describe('Projects', () => {
     expect(html).not.toMatch(/target=/);
   });
 
-  it('gives every link a target of at least the minimum size on screen, per DDR-014', () => {
-    expect(rule('.link')).toMatch(/min-block-size:\s*var\(--target-size-min\);/);
-    expect(rule('.link')).toMatch(/min-inline-size:\s*var\(--target-size-min\);/);
+  // DDR-027: a link's box is the line its label sets in, as the design draws it, with no minimum
+  // padding it out. A wrapped row needs a gap of its own, though, or two 19.5px links would sit
+  // inside the circles WCAG 2.2's 2.5.8 measures its spacing exception with.
+  it('gives every link the box the design draws and a wrapped row a gap, per DDR-027', () => {
+    expect(rule('.link')).not.toMatch(/min-block-size|min-inline-size/);
+    expect(rule('.links')).toMatch(/row-gap:\s*var\(--space-small\);/);
   });
 });
 
@@ -286,9 +289,11 @@ describe('project styles', () => {
     expect(rule('.tag', paper)).toBe('');
   });
 
-  it('drops the minimum target size, which nothing on paper needs, per DDR-006', () => {
-    expect(rule('.link', paper)).toMatch(/min-block-size:\s*0;/);
-    expect(rule('.link', paper)).toMatch(/min-inline-size:\s*0;/);
+  // A link's own box is already the height of its text on screen, since DDR-027, so what paper
+  // still needs is the display: the address prints as a pseudo-element, and a flex container would
+  // lay that out as an item of its own rather than let it read as part of the line.
+  it('lets a link and the address after it read as one line, per DDR-005', () => {
+    expect(rule('.link', paper)).toMatch(/display:\s*inline;/);
   });
 
   it('lets every link print its address, since each one leaves the page, per DDR-005', () => {

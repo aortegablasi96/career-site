@@ -4,11 +4,16 @@
   margin-block-start: var(--space-large);
 }
 
-/* A row that wraps when it runs out of width, so it needs no breakpoint. */
+/* A row that wraps when it runs out of width, so it needs no breakpoint. The row gap is the one
+   measure here the design does not draw, because its bar is one line at one width: measured with
+   the gap off, two 19.5px links land one above the other and their 24px circles come within 22.5px
+   at every viewport from 420px to 490px, which fails WCAG 2.2's 2.5.8 spacing exception. A step of
+   the scale holds them 30.5px apart there and 38px at 320px, per DDR-027. */
 .list {
   display: flex;
   flex-wrap: wrap;
   column-gap: var(--space-medium);
+  row-gap: var(--space-small);
   padding-inline-start: 0;
   list-style: none;
 }
@@ -16,13 +21,14 @@
 /* A contents link is set as a label, at the step DDR-022 gives every short label the reader acts
    on, and in the muted ink DDR-025 gives it, where every other link on the page is in the accent.
    That is the design's, and it is 4.44:1, which fails WCAG 1.4.3; the underline the base styles
-   give every link is untouched, so the colour is not what says this is a link. Every target is at
-   least the minimum in each direction, per DDR-004. */
+   give every link is untouched, so the colour is not what says this is a link.
+
+   Its box is its text and nothing else, per DDR-027, where DDR-014 padded it to 44px. It stays a
+   flex container so that the box is the whole line the label sets in — 19.5px, which is the
+   design's own 20px — rather than the shorter content area an inline box would give it. */
 .link {
   display: inline-flex;
   align-items: center;
   color: var(--color-text-muted);
   font-size: var(--font-size-x-small);
-  min-block-size: var(--target-size-min);
-  min-inline-size: var(--target-size-min);
 }
