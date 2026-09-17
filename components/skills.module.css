@@ -40,9 +40,16 @@
 }
 
 /* A level's skills are metadata rather than running text, so they sit at the step DDR-011 gives
-   dates, places and bullet text. The badge leads the line and the skills follow it, separated by
-   middle dots that assistive technology does not announce. */
+   dates, places and bullet text, and in the ink DDR-012 gives the same. The badge leads the line
+   and the skills follow it, separated by middle dots that assistive technology does not announce.
+
+   The two declarations are what `metadata-line.module.css` writes, rather than that module reused:
+   this line is not a metadata line. It carries a badge, its parts are skills separated for reading
+   rather than parts of one fact, and the component builds its own dots. What the two share is the
+   role, so they share the pair of tokens that draws it — the secondary ink at 7.07:1 on the page,
+   per DDR-012. The badges keep their own inks, since a declared colour beats an inherited one. */
 .level {
+  color: var(--color-text-secondary);
   font-size: var(--font-size-small);
 }
 
