@@ -112,9 +112,13 @@ describe('skills styles', () => {
     }
   });
 
-  it('sets a badge at the smallest step, which DDR-011 allows for tags and badges alone', () => {
-    expect(css).toMatch(/\.badge\s*\{[^}]*font-size:\s*var\(--font-size-x-small\);/);
-    expect(css).toMatch(/\.level\s*\{[^}]*font-size:\s*var\(--font-size-small\);/);
+  // DDR-022 puts the badge on the smallest step the site has, which it allows for the badge alone,
+  // and the line it leads a step above it. The group's name is smaller than either: it is a label
+  // over the block rather than an item title, and the design draws it at 12.8px.
+  it('sets the badge, its line and the group’s name at the steps DDR-022 gives each', () => {
+    expect(css).toMatch(/\.badge\s*\{[^}]*font-size:\s*var\(--font-size-xxxx-small\);/);
+    expect(css).toMatch(/\.level\s*\{[^}]*font-size:\s*var\(--font-size-x-small\);/);
+    expect(css).toMatch(/\.name\s*\{[^}]*font-size:\s*var\(--font-size-xx-small\);/);
   });
 
   // A level's skills are metadata, so they take the ink DDR-012 gives it as well as the step

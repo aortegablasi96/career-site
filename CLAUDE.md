@@ -31,8 +31,9 @@ now keeps its heading with its first item on paper, per DDR-015.
 **The redesign, Epic #42, is complete.** Every section below is DDR-010's, and its print treatment
 landed under #52. The real media it was still waiting on, #63, moved to Epic #70. The token layer is
 the redesign's, under #44: Lora and
-DM Sans, the seven-step scale, the new palette, the wider page column and the second breakpoint are
-all in place, and DDR-011 to DDR-014 supersede DDR-001 to DDR-004.
+DM Sans, the type scale, the new palette, the wider page column and the second breakpoint are
+all in place, and DDR-011 to DDR-014 supersede DDR-001 to DDR-004. The scale DDR-011 set there is
+DDR-022's since #90, below: ten steps rather than seven.
 
 **The introduction is the redesign's, under #48**: the photo, the positioning line in the accent,
 and four pill controls — the three contact addresses and the "Get my CV" download.
@@ -187,13 +188,13 @@ Styling follows ADR-001. `app/tokens.css` defines every design token once, as a 
 at `:root`, and `app/globals.css` applies the tokens to plain HTML elements. Component styles are
 to be CSS Modules that read the tokens rather than writing literal values. A value the tokens do
 not provide is a design decision to make, not a number to invent. `app/tokens.test.ts` holds the
-type scale to DDR-011's floors, every colour pairing to the contrast ratio DDR-012 records, the
+type scale step by step and its floor to DDR-022, every colour pairing to the contrast ratio DDR-012 records, the
 spacing scale, rhythm, column and radii to DDR-013, the narrow breakpoint and what it adapts to
 DDR-014, the photo's two widths and its ratio to DDR-021, the three tracking values to DDR-017,
 the bullet marker's 4.17:1 to DDR-019, the raised shadow and its 22% ink to DDR-020 and the photo's
 two lights to DDR-021, the timeline's and
 the projects' measures to DDR-010, and the print
-treatment to DDR-015 — the 11pt base, every surface dropped and no ink touched, the 28mm photo, and
+treatment to DDR-015 as DDR-022 amends it — the 12pt base, every surface dropped and no ink touched, the 28mm photo, and
 every shadow put out — so changing a token means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
 component stylesheet to the same rules: tokens only — sizes, spaces, tracking since DDR-017 and
@@ -238,9 +239,9 @@ so a column of its own would leave three quarters of it empty, and the UI Review
 beside the *name* — which is the float the narrow layout already uses. Its print block writes no
 layout at all.
 
-The `@media print` block in `app/tokens.css` sets `--root-font-size` to 11pt, so every rem, type and
-space alike, is measured from a size suited to paper: body text at 11pt and the smallest step, the
-tags and badges, at 8.9pt. It makes **every** surface transparent — the page, the card, the tag and
+The `@media print` block in `app/tokens.css` sets `--root-font-size` to 12pt, which DDR-022 raised
+from DDR-015's 11pt when the scale changed, so every rem, type and space alike, is measured from a
+size suited to paper: body text at 11.25pt and the smallest step, a level badge, at 7.5pt. It makes **every** surface transparent — the page, the card, the tag and
 the three level tints — and the decoration colour and the one shadow with them, so no component
 writes a print rule to drop its own background or put out its own light, and the sheet reads the
 same whether or not the browser prints background graphics. It lets the column fill the sheet, and sets the printed photo to 28mm, in mm because a
@@ -274,7 +275,8 @@ What exists, to reuse rather than reinvent:
 
 * **The design system.** Typography (DDR-011), colour (DDR-012), spacing and layout (DDR-013) and
   responsive behaviour (DDR-014) are the redesign's, reworked on #44, and print (DDR-015) is the
-  redesign's too, reworked on #52.
+  redesign's too, reworked on #52. The type scale and its floor are DDR-022's since #90, and
+  DDR-011 keeps everything else it decides.
 * **The components.** Every section is DDR-010's: the introduction under #48, the timeline that
   experience and education share under #49 and #51, the projects' media-and-text row under #50, and
   the skill groups and language cards under #51. What still carries over from DDR-006 is its
@@ -481,8 +483,13 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010 to DDR-015 and DDR-017 to DDR-021. The next DDR is `022`. Status
+The accepted DDRs are DDR-010 to DDR-015 and DDR-017 to DDR-022. The next DDR is `023`. Status
 values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+
+Two accepted records are superseded **in part**, and both say so at the top and again at the section
+concerned: DDR-022 supersedes DDR-011's type scale and its 13px floor, and amends DDR-015's print
+base from 11pt to 12pt. Everything else those two records decide stands, so each is still the record
+to read for the rest of it.
 
 `Superseded` are DDR-001 to DDR-009, and DDR-016:
 
@@ -525,7 +532,7 @@ Two things stay out — the gradient monogram, because #63 supplies a real portr
 "Sections" toggle, because the design has no narrow view to match.
 
 The earlier audit's nine, #71 to #78 plus #63, are all landed but #63, which is the owner's to
-produce rather than the repository's. **#89 is the first of the rewritten epic's to land.**
+produce rather than the repository's. **#89 and #90 are the rewritten epic's first two to land.**
 
 **#71 has landed, as DDR-016: the photo is 3:4**, not the square it was. `--photo-size` and
 `--photo-size-wide` are now `--photo-width`, `--photo-width-wide` and `--photo-ratio`, following the
@@ -560,6 +567,52 @@ it are worth knowing before touching it.
   it is indigo rather than neutral and differs by hue: 10.8 ΔE at its strongest, against the 2.3 an
   eye can just see. DDR-021 has both tables, and #68's six cases measured identical before and
   after.
+
+**#90 has landed, as DDR-022: the type scale is the design's, and the floor drops to 10px.** Ten
+steps where there were seven, `--font-size-xxxx-small` to `--font-size-xxx-large`, measured node by
+node off the Figma file. Nine of them are the design's own sizes — 10, 11, 12.8, 13, 14, 15, 16,
+20.8 and 51.2px — and `xx-large`, 36px, is the narrow page title, which the design has no view for.
+Every size on the page was read back off the built page and matches the file, and DDR-022 has the
+table.
+
+Five things about it are worth knowing before touching type anywhere.
+
+* **`medium` is body text, not 1rem.** DDR-011 could say both; the design's body is 15px, so the two
+  parted and the name stayed with the body. `body` in `app/globals.css` and
+  `--font-size-item-title` both read it, and a step and the root are no longer the same thing
+  anywhere. An item title is still body size, so it still has no narrow value — and that includes a
+  credential's name, which the file draws 1px smaller than a role's job title and which DDR-022
+  deliberately reads as 15px, because DDR-010 makes a role and a credential one pattern.
+* **The narrow titles are unchanged, and DDR-014 is untouched.** The page title still steps down to
+  2.25rem below the narrow breakpoint and the section title to the step below its own; both role
+  tokens and the breakpoint block are written exactly as they were, because the new scale keeps the
+  same names in the same places. Only the values behind them moved.
+* **Two size rules could not go on an existing selector.** `timeline.module.css` writes `.dates p`,
+  naming the element so it outranks `.metadata` from another module without giving the place a class
+  — which keeps `.dates .dateRange` the one class pair in `components/`. And
+  `components/credentials.module.css` is new, holding a degree's thesis at 13px: it is the sibling
+  of `experience.module.css` that the convention already implied, since a thesis is a paragraph in
+  the same column as an institution and a certification has one of those and no thesis, so no
+  positional selector tells them apart. #91 puts the design's italic there.
+* **Line heights did not move, and that is a known remaining difference.** The design sets its
+  running text at 1.65 to 1.75 and its short lines at 1.5; the page keeps DDR-011's single 1.5, so
+  it now sets prose *tighter* than the file. Two tokens cannot hold six leadings, and #90 scoped
+  them out; DDR-022 records it as an open item for Epic #70's closing pass rather than as a
+  rejection.
+* **Paper is measured from 12pt**, where DDR-015 set 11pt, because body text is 0.9375rem here and
+  an unchanged base would have printed it at 10.3pt and the level badges at 6.9pt. At 12pt body text
+  prints at 11.25pt and the smallest step at 7.5pt. **Nothing about the printed page was measured on
+  this story** — the sheet count, the breaks and what comes back out of a PDF are #99's, and it may
+  move the base again.
+
+Measured at the browser's real default font size and at double it: nothing scrolls horizontally and
+nothing overflows the viewport at 320px, 360px or 390px at either size; the widest date range now
+sets on one line with about 36px of slack in the 160px column, where DDR-018 measured 1.9px; and one
+float case moves — at a 320px viewport with a classic scrollbar, so the breakpoint matched with
+305px of room, the name drops below the photo and takes the full column, because the title grew
+from 48px to 51.2px and its longest word no longer fits beside it. It is three whole words on three
+lines either way, and at a full 320px of content it still sits beside the photo, so #68's own
+measurements stand. DDR-022 has both tables.
 
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the
@@ -610,10 +663,10 @@ Three things about it are worth knowing before touching any of them.
   because `.metadata` sets the secondary ink on the same element from another module at the same
   specificity, and a single class would leave the winner to the order the bundler emits the two
   files in.
-* **The tightest fit on the page is now the date column**: from the wide breakpoint it is a fixed
-  10rem, and the widest range, "Mar 2022 – May 2023", sets at 158.1px in 160px, where it was
-  149.7px. It still sets on one line, and it wraps rather than overflows if it ever stops, but
-  anything that widens a date range should be measured against those 1.9px. Checked at 320px,
+* **The date column was the tightest fit on the page** until #90 took a date range from 14px to
+  11px: from the wide breakpoint it is a fixed 10rem, and the widest range, "Mar 2022 – May 2023",
+  set at 158.1px in 160px here, where it was 149.7px. Measured again on #90 it has about 36px of
+  slack. It still sets on one line, and it wraps rather than overflows if it ever stops. Checked at 320px,
   360px, 390px and 1280px, each at the browser's default font size and at double it: no horizontal
   scrollbar in any of the eight, and no group name gained a line.
 
@@ -685,7 +738,8 @@ Two things about it are worth knowing before touching it.
 Everything the section stories left to #52 has landed. For the record, since the gaps are named in
 those PRs: the timeline prints its date column, the projects print their media beside their text,
 the skill groups print two to a row and the language cards four, the printed photo is 28mm beside
-the name, the type base is 11pt rather than 10pt, and a video prints its poster as an image.
+the name, the type base is 11pt rather than 10pt — 12pt since #90 — and a video prints its poster as
+an image.
 
 **Printed on #52 in Edge 153 and Firefox 155**, to A4 through WebDriver, the page runs to **four
 sheets in Edge and five in Firefox**. #23 recorded five, #48 had it at four, #50 and #51 took it to

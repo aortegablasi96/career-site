@@ -33,8 +33,13 @@
    a list instead of naming a thing. The case that goes with that tracking is DDR-018's, and it is
    drawn here rather than written into `content/`, so a screen reader still announces "Product and
    delivery". It is already semibold, as every heading is, so the weight the other two labels take
-   is nothing to write here. */
+   is nothing to write here.
+
+   It is also the one h3 set at a size of its own rather than at the item title's, per DDR-022: the
+   design draws it smaller than the running text it labels, where a job title and a project's name
+   are the size of it. */
 .name {
+  font-size: var(--font-size-xx-small);
   letter-spacing: var(--letter-spacing-x-loose);
   text-transform: uppercase;
 }
@@ -50,12 +55,12 @@
    per DDR-012. The badges keep their own inks, since a declared colour beats an inherited one. */
 .level {
   color: var(--color-text-secondary);
-  font-size: var(--font-size-small);
+  font-size: var(--font-size-x-small);
 }
 
 /* A badge is its own word on a tint that repeats what the word says, so it reads the same in
    greyscale, on paper and to a screen reader, per DDR-010. It is the smallest step on the site,
-   which DDR-011 allows for tags and badges alone. Inline-block, so it takes its padding while
+   which DDR-022 allows for this badge and nothing else. Inline-block, so it takes its padding while
    sitting on the line with the skills it labels.
 
    Uppercase and a weight above the line it leads, per DDR-018, which is what tells the badge apart
@@ -77,7 +82,7 @@
   padding-block: var(--space-x-small);
   padding-inline: var(--space-small);
   border-radius: var(--radius-small);
-  font-size: var(--font-size-x-small);
+  font-size: var(--font-size-xxxx-small);
   font-weight: var(--font-weight-semibold);
   letter-spacing: var(--letter-spacing-loose);
   text-transform: uppercase;

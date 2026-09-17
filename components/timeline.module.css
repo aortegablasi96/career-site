@@ -49,6 +49,15 @@ section > .row {
   text-transform: uppercase;
 }
 
+/* Both lines in the date column are the smallest metadata on the page, per DDR-022: the design
+   sets a date range and a place at 11px where it sets a company at 14px. The selector names the
+   element rather than adding a class to the place, so it outranks `.metadata`, which sets the step
+   for this element from another module, without making the place carry a class it has nothing else
+   to say with. `.dates .dateRange` above stays the one class pair, and sets no size. */
+.dates p {
+  font-size: var(--font-size-xxx-small);
+}
+
 /* The space to the next row, carried inside this one so the spine can run through it. */
 .content {
   padding-block-end: var(--space-item);

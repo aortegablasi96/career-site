@@ -261,7 +261,15 @@ describe('project styles', () => {
   it('reads a tag’s tint and its ink from the pairing DDR-012 measures', () => {
     expect(rule('.tag')).toMatch(/background-color:\s*var\(--color-surface-tag\);/);
     expect(rule('.tag')).toMatch(/color:\s*var\(--color-text-tag\);/);
-    expect(rule('.tag')).toMatch(/font-size:\s*var\(--font-size-x-small\);/);
+    expect(rule('.tag')).toMatch(/font-size:\s*var\(--font-size-xxx-small\);/);
+  });
+
+  // DDR-022 takes the design's sizes: a tag and a link are labels rather than prose, and a
+  // description is set at the step a role's points take rather than at the introduction's.
+  it('sets a tag, the description and a link at the steps DDR-022 gives each', () => {
+    expect(rule('.tag')).toMatch(/font-size:\s*var\(--font-size-xxx-small\);/);
+    expect(rule('.content > p')).toMatch(/font-size:\s*var\(--font-size-small\);/);
+    expect(rule('.link')).toMatch(/font-size:\s*var\(--font-size-x-small\);/);
   });
 
   // DDR-017 opens a tag, which is a label to scan rather than a word to read. The description

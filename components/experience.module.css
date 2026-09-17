@@ -3,8 +3,8 @@
  * which education shares.
  */
 
-/* Bullet text is the small step, per DDR-011. Consecutive points are set closer than the flow, so
-   the row reads as one item.
+/* Bullet text is the small step, which DDR-022 puts at the design's 14px. Consecutive points are
+   set closer than the flow, so the row reads as one item.
 
    The points are indented by one step of the spacing scale rather than the two the base styles give
    every list, per DDR-019. They are the densest text on the page, in the narrowest column it has,

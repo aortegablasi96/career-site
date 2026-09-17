@@ -1,5 +1,9 @@
-/* Metadata is the smallest step, in the secondary text colour, per DDR-001 and DDR-002. It is set
-   apart by its size and position too, so the colour is not the only signal. */
+/* Metadata is a step below body text, in the secondary text colour, per DDR-012 and DDR-022. It is
+   set apart by its size and position too, so the colour is not the only signal.
+
+   This is the step the design gives a company, an institution and the introduction's location line.
+   The two lines in the timeline's date column are smaller still, and timeline.module.css sets them:
+   this module is the size three of its five users take, not the size the role always has. */
 .metadata {
   color: var(--color-text-secondary);
   font-size: var(--font-size-small);

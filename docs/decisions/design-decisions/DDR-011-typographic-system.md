@@ -10,6 +10,20 @@ the redesign replaces, so the files DDR-007 lists and the character-map edit DDR
 longer exist. What each of them decided is carried forward here, restated for Lora and DM Sans and
 re-established by the same kind of inspection.
 
+**DDR-022 supersedes the type scale and the floor below**, and nothing else here. Read that record
+for the sizes the page sets; read this one for the reasoning behind the seven steps the page had
+between #44 and #90, and for everything else it decides, all of which stands: the two typefaces and
+their fallback stacks, the one-static-file-per-weight recipe, the no-italics rule, the three weights,
+the PDF guarantee, the line heights, the measure and the wrapping rules.
+
+What DDR-022 changes is the numbers and the count — ten steps, the design's own nine plus one for the
+narrow page title — the statement that body text is 16px, which becomes 15px, and the 13px floor,
+which becomes 10px for the level badge alone. What carries forward from the scale itself is its
+shape: the steps are the sizes the design asks for rather than one ratio applied repeatedly, they
+are written in rem, and no font size is written in px. The owner has since decided that the design
+file prevails over the records that stand in its way, which is what turns Option D below from a
+rejection into a superseded one.
+
 DDR-017 adds tracking to this system: three values, in em, for the two headings the page sets large
 and the four short labels. This record says nothing about the space between letters, and that gap
 is what DDR-017 fills; everything below stands unchanged, including the PDF guarantee, which
@@ -169,6 +183,9 @@ distinct tokens the page shows found in both. The apostrophe reads back as U+201
 
 ### Type scale
 
+**Superseded by DDR-022**, which takes the design's own nine sizes and adds a tenth for the narrow
+page title. What follows is the scale the page set between #44 and #90.
+
 Seven steps, named as CSS names its own absolute sizes, with `medium` the browser default.
 
 | Token                   | Size       | At the 16px default | Used for                                |
@@ -196,6 +213,8 @@ Seven steps, named as CSS names its own absolute sizes, with `medium` the browse
   not by size. This is the densest part of the redesign and the reason the page is shorter.
 
 ### The floor is 13px
+
+**Superseded by DDR-022**, which lowers it to 10px and allows it for the level badge alone.
 
 DDR-001 set a 12px floor and never went below 14.4px. The draft goes to 10px. This record puts the
 floor at **13px**, and allows it only for the technology tags and the level badges.

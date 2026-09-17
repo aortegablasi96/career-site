@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-// DDR-011 sets accessibility floors on the type scale. These tests read the tokens as written,
-// so a later edit to the scale cannot quietly go below them.
+// DDR-022 sets the type scale and its floor, where DDR-011 set the scale this one supersedes.
+// These tests read the tokens as written, so a later edit to the scale cannot quietly go below it.
 const tokens = readFileSync(new URL('./tokens.css', import.meta.url), 'utf8');
 
 // DDR-014 makes the tokens mobile-first: the root block holds every token at its value for the
@@ -44,6 +44,9 @@ function redefined(body = ''): Map<string, string> {
 describe('type scale tokens', () => {
   it('defines the scale', () => {
     expect(fontSteps.map(({ name }) => name)).toEqual([
+      'xxxx-small',
+      'xxx-small',
+      'xx-small',
       'x-small',
       'small',
       'medium',
@@ -68,15 +71,32 @@ describe('type scale tokens', () => {
     expect(token('root-font-size')).toBe('100%');
   });
 
-  it('sets body text at 16px, the browser default, which DM Sans reads comfortably at', () => {
-    const body = fontSteps.find(({ name }) => name === 'medium');
-
-    expect(rem(body!.value)).toBe(1);
+  // Nine of the ten are measured node by node off `career-site-design`; `xx-large` is the narrow
+  // page title, which the design has no view for, and DDR-022 keeps it at the 36px DDR-011 gave it.
+  it.each([
+    { step: 'xxxx-small', px: 10 },
+    { step: 'xxx-small', px: 11 },
+    { step: 'xx-small', px: 12.8 },
+    { step: 'x-small', px: 13 },
+    { step: 'small', px: 14 },
+    { step: 'medium', px: 15 },
+    { step: 'large', px: 16 },
+    { step: 'x-large', px: 20.8 },
+    { step: 'xx-large', px: 36 },
+    { step: 'xxx-large', px: 51.2 },
+  ])('sets $step to $px px at the browser default, as DDR-022 measures it', ({ step, px }) => {
+    expect(rem(fontSteps.find(({ name }) => name === step)!.value) * 16).toBeCloseTo(px, 5);
   });
 
-  it('sets no step below 13px, the floor DDR-011 lowers to for tags and level badges alone', () => {
+  it('sets body text at 15px, the size the design sets its running text at', () => {
+    const body = fontSteps.find(({ name }) => name === 'medium');
+
+    expect(rem(body!.value)).toBe(0.9375);
+  });
+
+  it('sets no step below 10px, the floor DDR-022 lowers to for the level badge alone', () => {
     for (const { value } of fontSteps) {
-      expect(rem(value)).toBeGreaterThanOrEqual(0.8125);
+      expect(rem(value)).toBeGreaterThanOrEqual(0.625);
     }
   });
 
@@ -543,7 +563,7 @@ describe('responsive tokens', () => {
 const inPrint = redefined(print?.body);
 
 const forPaper = [
-  { name: 'root-font-size', value: '11pt' },
+  { name: 'root-font-size', value: '12pt' },
   { name: 'color-surface', value: 'transparent' },
   { name: 'color-surface-card', value: 'transparent' },
   { name: 'color-surface-tag', value: 'transparent' },
@@ -599,17 +619,18 @@ describe('print tokens', () => {
   });
 
   // DDR-005 chose a 10pt base so that the smallest step of DDR-001's scale came to exactly 9pt.
-  // DDR-011's scale reaches lower, so at that base the tags and badges printed at 8.1pt, and
-  // DDR-011 handed the question to #52. DDR-015 settles it by raising the base to 11pt, which puts
-  // body text at 11pt and the smallest step back at 9pt, and which was measured to cost no extra
-  // sheet. Either record changing fails here.
-  it('prints body text at 11pt and the smallest step at 9pt, as DDR-015 settles', () => {
+  // DDR-011's scale reached lower, and DDR-015 settled it by raising the base to 11pt, which put
+  // body text — then a 1rem step — at 11pt and the smallest step at 8.94pt. DDR-022 takes the
+  // design's scale, where body text is 0.9375rem, so an unchanged base would print it at 10.3pt
+  // and the level badges at 6.9pt. It amends DDR-015 by raising the base to 12pt, which puts body
+  // text at 11.25pt and the smallest step at 7.5pt. Either record changing fails here.
+  it('prints body text at 11.25pt and the smallest step at 7.5pt, as DDR-022 amends DDR-015', () => {
     const base = Number.parseFloat(inPrint.get('root-font-size')!);
     const body = fontSteps.find(({ name }) => name === 'medium')!;
     const smallest = Math.min(...fontSteps.map(({ value }) => rem(value)));
 
-    expect(base * rem(body.value)).toBeCloseTo(11, 5);
-    expect(base * smallest).toBeCloseTo(8.94, 2);
+    expect(base * rem(body.value)).toBeCloseTo(11.25, 5);
+    expect(base * smallest).toBeCloseTo(7.5, 5);
   });
 
   // DDR-020: a sheet is lit by the room it is read in, and the surfaces the shadow raises are flat

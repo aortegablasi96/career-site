@@ -32,9 +32,11 @@
   box-shadow: var(--shadow-raised);
 }
 
-/* The language is the term, so it is set apart from its level by weight rather than by size: there
-   is no heading here, and nothing below body size a term could take. */
+/* The language is the term, and the weight is what sets it apart: there is no heading in a card, so
+   it is not an item title and does not read the role token. DDR-022 puts it a step below the page's
+   running text and its level a step below that, which is what the design draws. */
 .name {
+  font-size: var(--font-size-small);
   font-weight: var(--font-weight-semibold);
 }
 
@@ -44,6 +46,7 @@
   margin-block-start: var(--space-x-small);
   margin-inline-start: 0;
   color: var(--color-accent);
+  font-size: var(--font-size-x-small);
 }
 
 /* From here the four cards stand in one row, per DDR-010. This is the one width a component may

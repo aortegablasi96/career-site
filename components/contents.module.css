@@ -13,10 +13,12 @@
   list-style: none;
 }
 
-/* Every target is at least the minimum in each direction, per DDR-004. */
+/* A contents link is set as a label, at the step DDR-022 gives every short label the reader acts
+   on. Every target is at least the minimum in each direction, per DDR-004. */
 .link {
   display: inline-flex;
   align-items: center;
+  font-size: var(--font-size-x-small);
   min-block-size: var(--target-size-min);
   min-inline-size: var(--target-size-min);
 }

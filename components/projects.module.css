@@ -70,8 +70,16 @@
   border-radius: var(--radius-small);
   background-color: var(--color-surface-tag);
   color: var(--color-text-tag);
-  font-size: var(--font-size-x-small);
+  font-size: var(--font-size-xxx-small);
   letter-spacing: var(--letter-spacing-loose);
+}
+
+/* The description is the one paragraph in the text column, so the selector names the element
+   rather than adding a class to it. It is a step below the name above it, per DDR-022: the design
+   sets a project's description at the size it sets a role's points, not at the size of the
+   introduction's summary. */
+.content > p {
+  font-size: var(--font-size-small);
 }
 
 /* A row of labelled links that wraps when it runs out of width, so it needs no breakpoint, per
@@ -84,10 +92,13 @@
   list-style: none;
 }
 
-/* Every target is at least the minimum in each direction, per DDR-014. */
+/* A labelled link is set as a label rather than as the prose around it, per DDR-022, which is the
+   step the design gives every short label the reader acts on: these, and the introduction's pills.
+   Every target is at least the minimum in each direction, per DDR-014. */
 .link {
   display: inline-flex;
   align-items: center;
+  font-size: var(--font-size-x-small);
   min-block-size: var(--target-size-min);
   min-inline-size: var(--target-size-min);
 }
