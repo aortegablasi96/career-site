@@ -1,22 +1,48 @@
-/* When the contents move to a section, its heading lands this far below the top of the window
-   rather than against it, per DDR-006. */
+/*
+ * The hairline above every section, per DDR-026, which supersedes DDR-010's rejection of it. The
+ * design draws five of them, one at the top of each section and none below the last (nodes 2:81,
+ * 2:271, 2:458, 2:568 and 2:646), so it is the section's own opening rather than a separator
+ * between two of them: a border here, on the element the line belongs to, and nothing in
+ * section.tsx. It is drawn for the same reason the heading's rule is drawn by this file — a line
+ * that carries no information should never be in the accessibility tree.
+ *
+ * It sits in the middle of the boundary rather than adding to it. DDR-013 separates two sections
+ * by --space-section, which is exactly twice --space-item, so half of it above the line and half
+ * below leaves the boundary the size DDR-013 set it and puts the line where the design puts it,
+ * midway between the last item of one section and the heading of the next. That is why the margin
+ * is written here at all: the base styles' rhythm rule has no specificity, through :where(), so
+ * this splits the step it sets rather than fighting it, and the two halves still read as one step
+ * of the scale.
+ *
+ * Paper draws no divider, and there is no print rule here: DDR-015 makes --color-border
+ * transparent at the token layer, as it does the heading's rule and the timeline's spine. The
+ * space stays, which is the boundary a sheet already had.
+ */
 .section {
+  /* When the contents move to a section, its opening lands this far below the top of the window
+     rather than against it, per DDR-006. The divider and the space below it are inside the
+     section, so what the reader arrives at is the boundary and then the heading. */
   scroll-margin-block-start: var(--space-medium);
+  margin-block-start: var(--space-item);
+  border-block-start: 1px solid var(--color-border);
+  padding-block-start: var(--space-item);
 }
 
 /*
- * The decorative rule beside the heading, per DDR-010. It runs from the title to the right margin,
- * and with the whitespace above it that is the whole boundary between two sections: the same record
- * rejects the draft's divider between every section, because two rules doing one job is clutter.
+ * The decorative rule beside the heading, per DDR-010. It runs from the title to the right margin.
+ * DDR-010 made it the whole boundary between two sections, with the whitespace above it, and
+ * rejected the draft's divider on the grounds that two rules doing one job is clutter; DDR-026
+ * reverses that and the divider above is the design's. The two are not one job: the divider closes
+ * the section before, across the column, and this begins the one below, from the title outward.
  *
  * It is a pseudo-element rather than an element, so it is never in the accessibility tree. The
  * heading names its section, through aria-labelledby, and its accessible name is the title and
  * nothing else.
  *
- * It carries no information — removing every rule on the page would lose nothing — so it is drawn
- * in the decoration colour, which DDR-012 allows to sit below 3:1 for that reason. Paper does not
- * draw it at all and there is no print rule here: DDR-015 makes that colour transparent at the
- * token layer, as it does for the timeline's spine.
+ * It carries no information — removing every line on the page would lose nothing — so it is drawn
+ * in a hairline, which DDR-025 allows to sit below 3:1 for that reason, as it allows the divider
+ * above. Paper does not draw it at all and there is no print rule here: DDR-015 makes every
+ * hairline transparent at the token layer, as it does for the timeline's spine.
  *
  * The rule is a border rather than a filled box, as the language card's edge and the contact pill's
  * are, so its hairline is the width of a border and not a length this file would have to invent.

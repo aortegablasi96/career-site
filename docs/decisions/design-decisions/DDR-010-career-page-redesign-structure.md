@@ -9,6 +9,10 @@ rule, levels-as-words rule and newest-first ordering are carried forward into th
 anatomy and its labelled list are not: both were designed for a single 65ch column, and neither
 survives a page that places content side by side.
 
+**Superseded in part by DDR-026**, which takes the one sentence below that rejects the draft's
+divider between every section. The page now draws all five of them, as the design does, and the
+decorative rule this record gives each `h2` is unchanged and unchallenged. Nothing else here moves.
+
 This record decides the page's **structure and patterns**. The token values the structure reads are
 reworked by #44, the CV download by #45, and the print stylesheet by #52. Where this record names a
 value, such as the accent, it is because the UI Review settled it and those stories implement it
@@ -86,6 +90,17 @@ The page is one `main`, in this order. The outline and heading order are DDR-006
   carries a decorative rule running to the right margin. The draft's additional divider between
   every section is not adopted: the heading rule already marks the boundary, and two rules doing one
   job is clutter.
+
+  **DDR-026 supersedes that last sentence**, and the divider is drawn. Two things decided it: the
+  owner's ruling that the design prevails, and the measurement #72 produced afterwards — the heading
+  rule yields entirely to a title that needs the whole line, so at 320px "Education and
+  certifications" has no rule at all and, without a divider, no line marks its boundary. The two
+  lines are also not the one job this sentence assumed: the divider closes the section above across
+  the full column, and the heading rule opens the one below from the title outward. Everything else
+  in this bullet stands, the decorative rule included.
+
+  DDR-026 changes none of the spacing: it splits DDR-013's section step in half around the line
+  rather than adding to it, so two sections are exactly as far apart as they were.
 
 ### The introduction
 

@@ -150,8 +150,10 @@ main {
   margin-block-start: var(--space-flow);
 }
 
-/* A major section is set apart by the section step, twice the space between items. With its
-   heading, that is the whole boundary: there is no rule between sections and no background. */
+/* A major section is set apart by the section step, twice the space between items. Since DDR-026
+   the boundary also carries the design's hairline, which section.module.css draws: it splits this
+   one step in half around the line rather than adding to it, so the distance between two sections
+   is still the step set here. There is no background either way. */
 :where(main > * + section) {
   margin-block-start: var(--space-section);
 }
