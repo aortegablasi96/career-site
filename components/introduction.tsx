@@ -13,6 +13,12 @@ import styles from './introduction.module.css';
  * name rather than above is what keeps the positioning line and the controls above the fold on a
  * phone.
  *
+ * The photo sits inside a frame, per DDR-021, because the design lights it twice: a glow outside
+ * and a shadow inside its top edge. An inset box-shadow on an `<img>` paints nothing — the
+ * replaced content covers it, in Chromium and Gecko alike — so the frame carries the glow and
+ * draws the inner shadow as a pseudo-element over the image. The frame holds no content and takes
+ * no name: the photo is still the `<img>`, with its own alternative text.
+ *
  * The photo carries no width or height attribute. Both of its dimensions are set in the stylesheet,
  * from tokens, which fixes the box before the image arrives just as the attributes would; it has to
  * be done there because the size is a design value that differs between the breakpoints and on
@@ -34,7 +40,9 @@ export function Introduction({
 
   return (
     <header className={styles.introduction}>
-      <img className={styles.photo} src={asset(photo.file)} alt={photo.alt} />
+      <span className={styles.frame}>
+        <img className={styles.photo} src={asset(photo.file)} alt={photo.alt} />
+      </span>
       <div className={styles.text}>
         <h1>{name}</h1>
         <p className={styles.positioning}>{positioning}</p>

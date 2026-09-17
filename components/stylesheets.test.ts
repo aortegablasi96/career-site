@@ -74,6 +74,19 @@ function declarations(css: string): readonly { property: string; value: string }
   }));
 }
 
+/**
+ * Every rule in a stylesheet, as its selector and its body.
+ *
+ * The pattern matches innermost braces, so a rule inside a media query is read as itself rather
+ * than as part of the query. Comments are already gone, so a selector is only ever a selector.
+ */
+function rules(css: string): readonly { selector: string; body: string }[] {
+  return [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(([, selector, body]) => ({
+    selector: selector.trim(),
+    body,
+  }));
+}
+
 describe('component stylesheets', () => {
   it('exist', () => {
     expect(stylesheets).not.toHaveLength(0);
@@ -114,9 +127,23 @@ describe('component stylesheets', () => {
     });
 
     it('does not reorder content, so the visual order is the markup order', () => {
-      expect(css).not.toMatch(
-        /\border\s*:|-reverse\b|\bgrid-(?:area|row|column)\b|position:\s*(?:absolute|fixed|sticky)/,
-      );
+      expect(css).not.toMatch(/\border\s*:|-reverse\b|\bgrid-(?:area|row|column)\b/);
+    });
+
+    // Taking an element out of the flow is the other way to reorder it, so content stays in it.
+    //
+    // A pseudo-element is the exception, and DDR-021 records why: it is not content, it has no
+    // place in the markup order to disturb, and it is not in the accessibility tree, so lifting
+    // one out of the flow cannot change what a reader meets or the order they meet it in. The
+    // photo's inner shadow needs it — an inset box-shadow on an `<img>` paints nothing, because a
+    // replaced element's content covers it, so the shadow is drawn on a pseudo-element over the
+    // image. Anything that is content, matched by a class or an element, stays in the flow.
+    it('takes nothing but a pseudo-element out of the flow, per DDR-021', () => {
+      for (const { selector, body } of rules(css)) {
+        if (/position:\s*(?:absolute|fixed|sticky)/.test(body)) {
+          expect(selector, selector).toMatch(/::[\w-]+$/);
+        }
+      }
     });
   });
 });

@@ -47,7 +47,7 @@ function media(query: string): string {
 
 describe('Introduction', () => {
   it('is the page header, with the owner’s name as the page title', () => {
-    expect(html).toMatch(/<header class="[^"]*"><img /);
+    expect(html).toMatch(/<header class="[^"]*"><span[^>]*><img /);
     expect(html).toContain(`<h1>${introduction.name}</h1>`);
   });
 
@@ -164,13 +164,50 @@ describe('introduction styles', () => {
     expect(rule('.photo')).toMatch(/object-fit:\s*cover;/);
   });
 
+  // DDR-021: the design draws the photo as a capsule, and a radius larger than half the box is
+  // clamped to half it, so the pill radius on a 3:4 box rounds the top and bottom into semicircles
+  // and leaves the sides straight. It is the radius the introduction's own controls already take,
+  // so the site still has the three DDR-013 gives it.
+  it('draws the photo as the design’s capsule, by the radius DDR-013 already has, per DDR-021', () => {
+    expect(rule('.photo')).toMatch(/border-radius:\s*var\(--radius-pill\);/);
+    expect(rule('.frame')).toMatch(/border-radius:\s*var\(--radius-pill\);/);
+    expect(rule('.frame::after')).toMatch(/border-radius:\s*var\(--radius-pill\);/);
+  });
+
+  // DDR-021 lights the photo twice, and the two are drawn on two elements because an inset
+  // box-shadow on an `<img>` paints nothing: a replaced element's content covers it, measured in
+  // Chromium and Gecko alike. The glow spreads outwards, so it goes on the outermost box; the inner
+  // shadow has to be above the image, so it goes on a pseudo-element over it.
+  it('lights the photo from the frame and over it, per DDR-021', () => {
+    expect(rule('.frame')).toMatch(/box-shadow:\s*var\(--shadow-photo-glow\);/);
+    expect(rule('.frame::after')).toMatch(/box-shadow:\s*var\(--shadow-photo-inner\);/);
+    // The image itself is given neither: an inset on it would draw nothing, and the glow drawn
+    // there would be clipped by the frame's own box in no engine but be a second light in every.
+    expect(rule('.photo')).not.toMatch(/box-shadow/);
+  });
+
+  // The frame holds no content and takes no name, so the photo is still the image and its
+  // accessible name is still the alt text content/ gives it. A pseudo-element is not in the
+  // accessibility tree at all.
+  it('wraps the photo in a frame that adds nothing to the accessibility tree', () => {
+    expect(html).toMatch(/<span class="[^"]*"><img[^>]*alt="[^"]*"\/?><\/span>/);
+
+    // The frame carries a class and nothing else. A role would give it a name of its own, and
+    // aria-hidden would take the photo out of the tree along with it.
+    const frame = html.match(/<span[^>]*_frame[^>]*>/)![0];
+
+    expect(frame).not.toMatch(/\saria-|\srole=/);
+  });
+
   // DDR-010 places the photo beside the name so that it never pushes the positioning line or the
   // contact controls below the fold on a phone. Below the wide breakpoint that is a float, so the
   // summary returns to the full column beneath it rather than sharing a narrow one with it.
   // Measured at 390 by 844 on #48: the name ends at 237 and two controls are above the fold, where
   // stacking the photo above the name left the first control 2px below it.
   it('puts the photo beside the name below the wide breakpoint too, per DDR-010', () => {
-    expect(rule('.photo')).toMatch(/float:\s*inline-start;/);
+    // The frame is what floats since DDR-021, and it shrink-wraps the photo, so it is the photo's
+    // box in every respect the layout cares about.
+    expect(rule('.frame')).toMatch(/float:\s*inline-start;/);
     expect(rule('.text > h1')).toMatch(/display:\s*flow-root;/);
   });
 
@@ -190,9 +227,9 @@ describe('introduction styles', () => {
     expect(rule('.photo', wide)).toMatch(/inline-size:\s*var\(--photo-width-wide\);/);
     // The ratio carries the height at both widths, so the wide rule sets no height of its own.
     expect(rule('.photo', wide)).not.toMatch(/block-size/);
-    // The grid places it, so the text stops running past it and the whole of it takes the second
-    // column.
-    expect(rule('.photo', wide)).toMatch(/float:\s*none;/);
+    // The grid places the frame, so the text stops running past it and the whole of it takes the
+    // second column.
+    expect(rule('.frame', wide)).toMatch(/float:\s*none;/);
   });
 
   it('gives every control at least the minimum target in each direction, per DDR-014', () => {
@@ -228,7 +265,7 @@ describe('introduction styles', () => {
   // from the token print redefines.
   it('leaves the photo beside the name on paper, by the float rather than a layout of its own', () => {
     expect(paper).not.toMatch(/grid-template-columns|float/);
-    expect(rule('.photo')).toMatch(/float:\s*inline-start;/);
+    expect(rule('.frame')).toMatch(/float:\s*inline-start;/);
     expect(rule('.photo')).toMatch(/inline-size:\s*var\(--photo-width\);/);
   });
 
@@ -237,9 +274,9 @@ describe('introduction styles', () => {
     expect(rule('.contact', paper)).toMatch(/border:\s*none;/);
   });
 
-  // The shadow is put out by the token in print, per DDR-020, as the surfaces are by DDR-015, so
-  // there is nothing here to write.
-  it('writes no rule to put out its own shadow, which the tokens drop', () => {
+  // Every shadow here is put out by its token in print — the pills' by DDR-020 and the photo's two
+  // by DDR-021 — as the surfaces are by DDR-015, so there is nothing here to write.
+  it('writes no rule to put out its own shadows, which the tokens drop', () => {
     expect(paper).not.toMatch(/box-shadow/);
   });
 });

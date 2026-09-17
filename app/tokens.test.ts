@@ -299,13 +299,35 @@ describe('colour tokens', () => {
 });
 
 // DDR-020 gives the site one elevation: the introduction's four controls and the four language
-// cards are raised, and nothing else is. These read the token as written, so neither the geometry
-// the design drew nor the ink the record measured can drift from it.
+// cards are raised, and nothing else is. DDR-021 adds the second and last, the profile photo's two
+// lights. These read the tokens as written, so neither the geometry the designs drew nor the ink
+// the records measured can drift from them.
 describe('elevation tokens', () => {
   const shadows = [...root.matchAll(/--shadow-([\w-]+):/g)].map(([, name]) => name);
 
-  it('defines one level, named for what it does, so a second is a decision rather than a number', () => {
-    expect(shadows).toEqual(['raised']);
+  // DDR-020 named its level for what it does rather than numbering it, so that a second would be a
+  // decision to take rather than the next number to reach for. DDR-021 took it, and named the two
+  // for the one element that may read them rather than putting them on a scale above `raised`: the
+  // photo is not raised off the page the way a control or a card is, it is lit.
+  it('names every shadow for what it does, so a third is a decision rather than a number', () => {
+    expect(shadows).toEqual(['raised', 'photo-glow', 'photo-inner']);
+  });
+
+  // The photo's two lights are the design's own, ink and geometry both, per DDR-021. They are two
+  // tokens rather than one value with two layers because they are drawn on two elements: an inset
+  // box-shadow on an `<img>` paints nothing, since the replaced content covers it, so the glow goes
+  // on the frame around the photo and the inner shadow on a pseudo-element over it.
+  it('keeps the photo’s two lights exactly as the design draws them, per DDR-021', () => {
+    expect(token('shadow-photo-glow')).toBe('0 8px 40px rgba(79, 70, 229, 0.18)');
+    expect(token('shadow-photo-inner')).toBe('inset 0 4px 4px rgba(0, 0, 0, 0.25)');
+  });
+
+  // Only the inner one is inset, and only it. The glow spreads outwards from the frame, so an
+  // `inset` on it would draw the light inside the photo instead of around it.
+  it('insets the inner shadow and nothing else', () => {
+    expect(token('shadow-photo-inner')).toMatch(/^inset\b/);
+    expect(token('shadow-photo-glow')).not.toMatch(/\binset\b/);
+    expect(token('shadow-raised')).not.toMatch(/\binset\b/);
   });
 
   // The two layers and their lengths are the design's, unchanged. The ink is 22% black where the
@@ -318,10 +340,13 @@ describe('elevation tokens', () => {
   });
 
   // A shadow marks an edge and gains nothing from growing with the reader's text, so its lengths
-  // are in px, as the focus outline's and the timeline's line are.
-  it('draws in px, as the site’s other hairlines do', () => {
-    expect(token('shadow-raised')!.replace(/rgba\([^)]*\)/g, '')).not.toMatch(/\d(?:rem|em|%)/);
-  });
+  // are in px, as the focus outline's and the timeline's line are. DDR-021's two follow it.
+  it.each(['raised', 'photo-glow', 'photo-inner'])(
+    'draws --shadow-%s in px, as the site’s other hairlines do',
+    (name) => {
+      expect(token(`shadow-${name}`)!.replace(/rgba\([^)]*\)/g, '')).not.toMatch(/\d(?:rem|em|%)/);
+    },
+  );
 
   // The palette above is opaque throughout, and this is why: the shadow's ink is translucent black,
   // which is wrong on text, on a border and on a surface, so it is held inside the one value that
@@ -332,7 +357,10 @@ describe('elevation tokens', () => {
     }
 
     expect(token('shadow-raised')!.match(/rgba\(/g)).toHaveLength(2);
-    expect(root.match(/rgba\(/g)).toHaveLength(2);
+    expect(token('shadow-photo-glow')!.match(/rgba\(/g)).toHaveLength(1);
+    expect(token('shadow-photo-inner')!.match(/rgba\(/g)).toHaveLength(1);
+    // Every translucency at the root belongs to a shadow, and there are four of them.
+    expect(root.match(/rgba\(/g)).toHaveLength(4);
   });
 });
 
@@ -524,6 +552,8 @@ const forPaper = [
   { name: 'color-surface-level-basic', value: 'transparent' },
   { name: 'color-decoration', value: 'transparent' },
   { name: 'shadow-raised', value: 'none' },
+  { name: 'shadow-photo-glow', value: 'none' },
+  { name: 'shadow-photo-inner', value: 'none' },
   { name: 'content-width', value: 'none' },
   { name: 'page-gutter', value: '0' },
   { name: 'page-padding-block', value: '0' },
@@ -531,7 +561,7 @@ const forPaper = [
 ];
 
 describe('print tokens', () => {
-  it('redefines only the base size, every surface, the decoration, the shadow, the column and its edges, and the photo', () => {
+  it('redefines only the base size, every surface, the decoration, the shadows, the column and its edges, and the photo', () => {
     expect([...inPrint.keys()]).toEqual(forPaper.map(({ name }) => name));
   });
 
@@ -585,8 +615,13 @@ describe('print tokens', () => {
   // DDR-020: a sheet is lit by the room it is read in, and the surfaces the shadow raises are flat
   // on paper anyway, their fills and edges dropped just above it. Dropping it here rather than in a
   // component is what keeps a stylesheet from writing a print rule to put out its own light.
-  it('draws no shadow on paper, per DDR-020', () => {
+  // DDR-021's two follow it: the glow spreads 40px of indigo across the sheet and the inner shadow
+  // darkens the top of the portrait, and a reader of paper is missing neither. The photograph keeps
+  // its shape, which is drawn by a radius rather than by a light.
+  it('draws no shadow on paper, per DDR-020 and DDR-021', () => {
     expect(inPrint.get('shadow-raised')).toBe('none');
+    expect(inPrint.get('shadow-photo-glow')).toBe('none');
+    expect(inPrint.get('shadow-photo-inner')).toBe('none');
   });
 
   it('gives the sheet margins in a unit of the paper', () => {

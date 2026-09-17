@@ -11,7 +11,9 @@ describe('HomePage', () => {
 
   it('opens with the introduction, inside the page’s main landmark', () => {
     // React emits a preload link for the photo ahead of the markup, so main is not at index 0.
-    expect(html).toMatch(/<main><header class="[^"]*"><img [^>]*><div[^>]*><h1>Andreu Ortega Blasi<\/h1>/);
+    expect(html).toMatch(
+      /<main><header class="[^"]*"><span[^>]*><img [^>]*><\/span><div[^>]*><h1>Andreu Ortega Blasi<\/h1>/,
+    );
   });
 
   it('has exactly one page title', () => {
