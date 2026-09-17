@@ -15,9 +15,16 @@ decorative rule this record gives each `h2` is unchanged and unchallenged. Nothi
 
 **Superseded in part again by DDR-028**, which takes the one sentence below that says "There is no
 footer". The page now draws the design's footer, and DDR-028 answers the three grounds this record
-rejected it on. The outline above is untouched, because the footer adds no heading, and so is the
-rule that a contact link shows its full address — which the footer is what preserves on paper once
-#97 labels the pills.
+rejected it on. The outline above is untouched, because the footer adds no heading.
+
+**Superseded in part a third time by DDR-029**, which takes the bullet below that makes each contact
+pill's text its address — the one this record calls "not negotiable". The pills now read "Email",
+"LinkedIn" and "GitHub", as the design draws them, and the ground this record rejected that on is
+answered by DDR-028's footer rather than disputed: the addresses are written out there, on screen
+and on paper, so the printed CV still carries all three. The rest of the pill is untouched, icon and
+all, and so is the print exception that follows from the old rule — a contact link still prints no
+address after itself, now so that `mailto:` stays off the sheet. DDR-029 takes DDR-006's rule with
+it.
 
 **Amended in two respects by DDR-027.** Its bullet requiring every target to be at least 44 by 44
 pixels goes, along with DDR-014's: a target is now the size the design draws it. And its figure for
@@ -135,7 +142,9 @@ note; the summary; the availability sentence; then a wrapping row of four contro
   three contact pills outlined, the CV pill filled in the accent with white text. Each carries an
   icon as a redundant cue.
 * **Each contact pill's text is its address**, such as `aortegablasi@gmail.com` and
-  `linkedin.com/in/andreu-ob`. This is DDR-006's rule, carried forward, and it is not negotiable:
+  `linkedin.com/in/andreu-ob`. **Superseded by DDR-029**: the pills now carry the design's short
+  labels, and DDR-028's footer is what carries the addresses the paragraph below is about. This is
+  DDR-006's rule, carried forward, and it is not negotiable:
   the draft labels these "Email", "LinkedIn" and "GitHub" *and* suppresses the printed address after
   a `mailto:` link, which together leave the printed CV with no email address at all. A visitor can
   read the address, copy it and type it whether or not their device opens email links, and on paper
@@ -277,7 +286,7 @@ The page is still the CV. ADR-002 is unchanged.
 | ------------------------- | -------- |
 | Profile photo             | Prints, reduced, beside the name |
 | CV download control       | Hidden. A download control is dead on paper, and the paper is the CV |
-| Contact pills             | Print their text, which is their address. No address repeated, no `mailto:` prefix |
+| Contact pills             | Print their text. No address repeated, no `mailto:` prefix. Since DDR-029 that text is a label, and the footer is what prints the addresses |
 | Contents                  | Hidden, as `nav` already is |
 | Timeline spine and dots   | Hidden |
 | Project media             | One still per project: the screenshot, or the video's poster frame |
@@ -370,6 +379,11 @@ Cons:
 * It is new surface area carrying nothing new.
 
 ### Keep the contact links labelled "Email", "LinkedIn" and "GitHub"
+
+**Taken, by DDR-029.** Both objections below still hold as statements of fact, and that record
+answers each rather than disputing it: the address is now written out in DDR-028's footer, which
+both prints and stays on the page for a visitor whose device opens no mail link, and the pill still
+prints no address after itself, so the `mailto:` prefix never reappears.
 
 Pros:
 * Shorter pills, and a tidier row on a narrow screen.

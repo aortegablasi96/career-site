@@ -36,7 +36,10 @@ all in place, and DDR-011 to DDR-014 supersede DDR-001 to DDR-004. The scale DDR
 DDR-022's since #90, below: ten steps rather than seven.
 
 **The introduction is the redesign's, under #48**: the photo, the positioning line in the accent,
-and four pill controls — the three contact addresses and the "Get my CV" download.
+and four pill controls — the three contact addresses and the "Get my CV" download. Since #97 each
+contact pill reads "Email", "LinkedIn" or "GitHub", per DDR-029, and the address it links to is
+written out in the footer instead. A `ContactLink` therefore carries both strings: `label`, which
+the pill shows, and `text`, which is the address and which only the footer shows.
 
 **The experience and education sections are the redesign's timeline, under #49 and #51.** A role and
 a credential share one pattern, per DDR-010, and `components/timeline.tsx` is it. A row is one
@@ -63,7 +66,8 @@ no project carries a video yet, so the branch is exercised by a test rather than
 **The footer is the design's, under #96.** A `footer` follows `main`, holding the owner's name and
 the three contact addresses above a hairline, inside the page's own column — `components/footer.tsx`
 and `footer.module.css`, per DDR-028, which supersedes DDR-010's "There is no footer". It writes no
-token and no string. Its links are the one place on the site a link is neither underlined nor in the
+token and no string. Since #97 it is the **only** place on the page, and in the printed CV, where an
+address is written out, so removing it or stopping it printing is not a footer change. Its links are the one place on the site a link is neither underlined nor in the
 accent, and what identifies them is in the record.
 
 **The skills and languages sections are the redesign's, under #51.** A skill group is its name as an
@@ -265,7 +269,7 @@ same whether or not the browser prints background graphics. It lets the column f
 photograph on a sheet is a size of the paper. An `@page` rule beside it sets 2cm margins.
 
 The `@media print` block in `app/globals.css` hides `nav` — and only `nav`: the footer prints, per
-DDR-028, because once #97 labels the contact pills it is the only place the printed CV carries an
+DDR-028, because since #97 labelled the contact pills it is the only place the printed CV carries an
 address at all. It prints each link's address after it,
 keeps entries whole, and keeps headings with what follows. Firefox does not honour that last rule,
 so `components/section.tsx` holds each section's heading and first item in one block that print
@@ -505,10 +509,10 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-028. The next DDR is
-`029`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-029. The next DDR is
+`030`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Nine accepted records are superseded or amended **in part**, and each says so at the top and again
+Ten accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -516,8 +520,11 @@ at the section concerned:
   between every section, which is now drawn. DDR-027 takes its 44 by 44 pixel target and corrects
   its "about 28px tall" for the design's contents links, which are 20px tall and 28px apart.
   DDR-028 takes the one sentence that says "There is no footer", and answers the three grounds it
-  rejected one on. Its outline and its contact-address rule are untouched — the footer adds no
-  heading, and it is what keeps that rule workable on paper once #97 labels the pills.
+  rejected one on; the outline is untouched, because the footer adds no heading. DDR-029 then takes
+  the bullet this record calls "not negotiable", which makes each contact pill's text its address:
+  the pills carry the design's labels and DDR-028's footer carries the addresses. The print
+  exception that followed from the old rule survives — a contact link still prints no address after
+  itself.
 * **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
   rule and its rule that nothing scrolls horizontally from 320px. DDR-027 takes its 44 by 44 pixel
   minimum target, and `--target-size-min` with it. The one sentence of that bullet which survives is
@@ -544,6 +551,10 @@ at the section concerned:
   and its reason for being a token of its own that paper does not drop. DDR-025 takes its colour:
   the marker is the design's `#a5b4fc` at 1.86:1, which DDR-019 measured and rejected, and it now
   fails WCAG 1.4.11.
+* **DDR-028** keeps everything it decides. What moved is the ground under it: it recorded DDR-010's
+  contact-address rule as unchanged, and DDR-029 has since taken that rule, so the footer is no
+  longer a repetition of the pills above but the one place an address is written out. The record
+  says so at the top and at the two places it anticipated #97.
 * **DDR-027** keeps its ruling that a target is the size the design draws it, and its argument that
   44 by 44 was an AAA criterion the records had cited as AA. DDR-028 extends its table of every
   target on the page from eleven rows to fourteen: the footer's three addresses are 19.2px tall and
@@ -594,8 +605,8 @@ Two things stay out — the gradient monogram, because #63 supplies a real portr
 "Sections" toggle, because the design has no narrow view to match.
 
 The earlier audit's nine, #71 to #78 plus #63, are all landed but #63, which is the owner's to
-produce rather than the repository's. **#89 to #96 are the rewritten epic's first eight to land**,
-as DDR-021 to DDR-028.
+produce rather than the repository's. **#89 to #97 are the rewritten epic's first nine to land**,
+as DDR-021 to DDR-029.
 
 **#71 has landed, as DDR-016: the photo is 3:4**, not the square it was. `--photo-size` and
 `--photo-size-wide` are now `--photo-width`, `--photo-width-wide` and `--photo-ratio`, following the
@@ -867,8 +878,8 @@ Six things about it are worth knowing before touching it.
   full address on each contact pill "not negotiable" because labelling the pills would leave the
   printed CV with no email address; the footer is the only other place the addresses appear, so it
   is what makes #97 possible. `.link::after { content: none }` keeps `app/globals.css` from printing
-  each address again after itself, which is the same rule the introduction's pills write. **Until
-  #97 lands each address is on the sheet twice**, once from its pill and once from the footer.
+  each address again after itself, which is the same rule the introduction's pills write. **#97 has
+  landed**, so each address is now on the sheet once, from here, where it was on it twice.
 * **The hairline does not print and the stylesheet writes no rule for it.** `--color-border` is
   transparent in the print block, per DDR-015, so the footer's line goes the way the section divider
   and the timeline's spine already go.
@@ -901,6 +912,53 @@ replacement character; the six words the two readers miss are the six they misse
 change. On screen, swept every 10px from 300px to 900px at both text sizes, no pair of targets fails
 WCAG 2.5.8 — the closest two footer addresses come is 27.2px centre to centre — and nothing
 overflows at any width from 300px to 1536px.
+
+**#97 has landed, as DDR-029: the three contact pills read "Email", "LinkedIn" and "GitHub"**, which
+DDR-010 called "not negotiable" and DDR-006 set before it. It adds no token, no component and no
+declaration: `ContactLink` gains a `label` beside its `text`, `content/introduction.ts` carries the
+three words, and `components/introduction.tsx` renders the label where it rendered the address. The
+pill's box, border, fill, radius, shadow, ink and 13px are untouched.
+
+Five things about it are worth knowing before touching a contact anywhere.
+
+* **`label` is what the pill shows and `text` is the address, which only the footer shows.** Both
+  are stated once, so the two places cannot disagree about where a contact leads, per ADR-002.
+  `app/page.test.tsx` holds each address to **exactly one** appearance on the page, so a second copy
+  of one fails the suite.
+* **The footer is now load-bearing rather than a repetition.** DDR-010's objection to the label was
+  never about the label: it was that the draft suppresses the printed address after a `mailto:` link
+  and leaves the printed CV with no way to reach the owner. #96 answered that, and this story is the
+  one place on Epic #70 where the design is free — because another story paid for it. Removing the
+  footer, hiding it, or stopping it printing now costs the printed CV its contact details.
+* **`.contact::after { content: none }` is the declaration DDR-006 already wrote, kept for a new
+  reason.** Before, it stopped an address being printed twice; now it stops
+  `(mailto:aortegablasi@gmail.com)` being printed after "Email". Only the comment changed.
+* **The introduction is 91px shorter at every phone width.** The controls row is 83px where it was
+  174px at 320px, 360px and 390px, because four pills now fit on two rows where they took four; at
+  200% text it is 340px where it was 457px. At 390 by 844 the controls end 751.3px down, where they
+  ended 842.3px down, and the contents row now begins at 783.3px — above the fold, where it began at
+  874.3px and was not on the screen at all.
+* **`overflow-wrap: anywhere` on the pill no longer breaks anything**, since the widest of the four
+  is now "Get my CV". It is kept, and the comment says so; it is the footer that still needs the
+  same declaration to hold the GitHub address inside a 273px column at 200% text.
+
+Printed to A4 in Edge 153 and Firefox 156 with background graphics on, and printed again from the
+tree this branched from: **five sheets in both browsers either way**. `mailto` appears nowhere on
+any sheet; each of the three addresses comes back **once**, from the footer, where it came back
+twice; "Email" and "LinkedIn" are on the sheet as words where they were not; no replacement
+character and the apostrophe still U+2019 — all four readings agreeing, pypdf and pdfium in both
+browsers. Of the 479 distinct words the page shows in print, Edge gives back every one and Firefox
+all but five: the two wrapped at a hyphen and the three level badges pypdf spells out, which are the
+same five missing from the same PDFs before this change. On screen, swept every 10px from 300px to
+900px at both text sizes, no pair of targets fails WCAG 2.5.8 — the pills are 87 by 37.5 at their
+smallest and clear 24 by 24 outright, as they did at 203.2 by 37.5 — and nothing overflows at 320px,
+360px, 390px or 1536px at either text size.
+
+**One gap between the page and the design was found here and deliberately left**: the design sets
+all four pill labels in DM Sans **Medium** (node 2:56 and its siblings) and the page sets the three
+contact pills at 400, the CV control alone at medium. It is a weight rather than a label, so it
+belongs to DDR-023 rather than here, and #97's `Not Included` does not cover it. No issue covers it
+yet.
 
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the
