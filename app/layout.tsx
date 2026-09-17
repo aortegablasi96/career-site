@@ -17,13 +17,12 @@ import './globals.css';
 //
 // A weight or a style with no file is synthesised by the browser, so the list is exactly what the
 // page sets and no more. DM Sans carries four weights, because the design draws its three labels
-// bold, and the one italic a degree's thesis sentence is set in. Lora carries semibold alone,
-// which is the page title and the section titles.
+// bold, and the one italic a degree's thesis sentence is set in. Lora carries semibold, which is
+// the page title and the section titles.
 //
-// `lora-latin-400-normal.woff2` is committed beside them and deliberately not listed. It is the
-// footer's name, and #96 adds the footer; next/font preloads every file it is given, so listing it
-// now would fetch 21 KB on every visit for text the page does not yet show. DDR-023 derives and
-// inspects it here so that the footer story is one line rather than a second derivation.
+// Lora carries regular as well since #96: the footer's name is the one place on the page the serif
+// is neither the page title nor a section title, per DDR-023, and it is the file that record
+// derived, inspected and committed ahead of this story. Every committed file is now loaded.
 const dmSans = localFont({
   src: [
     { path: './fonts/dm-sans-latin-400-normal.woff2', weight: '400', style: 'normal' },
@@ -38,7 +37,10 @@ const dmSans = localFont({
 });
 
 const lora = localFont({
-  src: [{ path: './fonts/lora-latin-600-normal.woff2', weight: '600', style: 'normal' }],
+  src: [
+    { path: './fonts/lora-latin-400-normal.woff2', weight: '400', style: 'normal' },
+    { path: './fonts/lora-latin-600-normal.woff2', weight: '600', style: 'normal' },
+  ],
   variable: '--font-lora',
   adjustFontFallback: 'Times New Roman',
   fallback: ['Georgia', 'serif'],

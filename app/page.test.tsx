@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import HomePage from '@/app/page';
 import { credentials } from '@/content/credentials';
 import { experience } from '@/content/experience';
+import { introduction } from '@/content/introduction';
 import { projects } from '@/content/projects';
 import { skills } from '@/content/skills';
 
@@ -34,6 +35,24 @@ describe('HomePage', () => {
 
     expect(shown).toEqual(['experience', 'projects', 'skills', 'education', 'languages']);
     expect(listed).toEqual(shown);
+  });
+
+  // DDR-028: the footer follows main rather than sitting inside it, so it is the page's
+  // contentinfo landmark, and it shows the introduction's own contact records rather than records
+  // of its own.
+  it('closes with the footer, outside the main landmark', () => {
+    expect(html).toMatch(/<\/main><footer /);
+  });
+
+  it('shows the owner’s name and every contact address in the footer', () => {
+    const footer = html.match(/<footer [\s\S]*<\/footer>/)?.[0] ?? '';
+    const links = [...footer.matchAll(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(([, href, text]) => ({
+      href,
+      text,
+    }));
+
+    expect(footer).toContain(introduction.name);
+    expect(links).toEqual(introduction.contact.map(({ text, href }) => ({ href, text })));
   });
 
   it('never skips a heading level', () => {

@@ -13,6 +13,12 @@ survives a page that places content side by side.
 divider between every section. The page now draws all five of them, as the design does, and the
 decorative rule this record gives each `h2` is unchanged and unchallenged. Nothing else here moves.
 
+**Superseded in part again by DDR-028**, which takes the one sentence below that says "There is no
+footer". The page now draws the design's footer, and DDR-028 answers the three grounds this record
+rejected it on. The outline above is untouched, because the footer adds no heading, and so is the
+rule that a contact link shows its full address — which the footer is what preserves on paper once
+#97 labels the pills.
+
 **Amended in two respects by DDR-027.** Its bullet requiring every target to be at least 44 by 44
 pixels goes, along with DDR-014's: a target is now the size the design draws it. And its figure for
 the draft's contents links, "about 28px tall", is corrected — in `career-site-design` a link's box
@@ -81,6 +87,12 @@ The page is one `main`, in this order. The outline and heading order are DDR-006
 * **The positioning line is not a heading**, and does not join the outline.
 * **Each section is named by its heading**, so it stays a landmark.
 * **There is no footer.**
+
+  **DDR-028 supersedes this sentence**, and the design's footer is drawn: the owner's name and the
+  three contact addresses, above a hairline, below `main`. It adds no heading, so the outline above
+  is untouched; it prints, which is what lets #97 label the contact pills without leaving the
+  printed CV with no email address; and DDR-028 answers the three grounds this record turned it
+  down on, below.
 
 ### The page column
 
@@ -343,6 +355,11 @@ Cons:
 * A wrapping row of five links is always visible and costs two or three lines.
 
 ### Adopt the footer
+
+**Taken, by DDR-028.** All three objections below still hold as statements of fact, and that record
+answers each rather than disputing it: the repetition lasts until #97 labels the pills and then
+becomes the only place the addresses appear, the grey is DDR-025's `--color-text-faint` whose cost
+is already recorded, and the new surface buys the printed CV its contact details.
 
 Pros:
 * The contact addresses stay reachable at the foot of a long page.

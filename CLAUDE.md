@@ -60,6 +60,12 @@ narrow screen with enlarged text wraps rather than scrolls sideways. The media i
 project whose content gives it a `Video`, a `video` with its poster, controls and `preload="none"`;
 no project carries a video yet, so the branch is exercised by a test rather than by the page.
 
+**The footer is the design's, under #96.** A `footer` follows `main`, holding the owner's name and
+the three contact addresses above a hairline, inside the page's own column — `components/footer.tsx`
+and `footer.module.css`, per DDR-028, which supersedes DDR-010's "There is no footer". It writes no
+token and no string. Its links are the one place on the site a link is neither underlined nor in the
+accent, and what identifies them is in the record.
+
 **The skills and languages sections are the redesign's, under #51.** A skill group is its name as an
 `h3` followed by one block per level, strongest first: a level badge — the level as a word in a
 tinted pill — and then that level's skills, separated by middle dots the same way the metadata line
@@ -146,12 +152,12 @@ Tooling notes that are easy to trip over:
   to `app/fonts/`, with their licences, and loaded by `next/font/local` in `app/layout.tsx`, so
   builds need no network access for fonts. Each is one static file per weight and style, not a
   variable font: Firefox draws variable fonts as outlines when it saves a PDF, so the printed CV's
-  text could not be selected (#22). **There are seven files, six of them loaded**, per DDR-023 —
-  DM Sans at 400, 500, 600 and 700 plus a 400 italic, and Lora at 600. The seventh,
-  `lora-latin-400-normal.woff2`, is committed and deliberately **not** listed in `app/layout.tsx`:
-  it is the footer's name and #96 adds the footer, and `next/font` preloads every file it is given,
-  so listing it now would fetch 21 KB for text the page does not show. `app/layout.test.tsx` holds
-  both halves — every listed path exists, and that one file exists and is unlisted.
+  text could not be selected (#22). **There are seven files and all seven are loaded**, per DDR-023
+  as DDR-028 completes it — DM Sans at 400, 500, 600 and 700 plus a 400 italic, and Lora at 400 and
+  600. Lora Regular was committed and deliberately unlisted until #96, because it is the footer's
+  name and `next/font` preloads every file it is given; the footer now draws it.
+  `app/layout.test.tsx` holds the two sets **equal**, so a file committed for a story still to come
+  fails the suite rather than shipping as bytes nobody fetches on purpose.
   They are derived, not downloaded: take the
   Fontsource variable file for the Latin subset, pin it to the weight with fontTools' instancer,
   name it, and save it as WOFF2; the italic comes from the italic variable file, not the upright
@@ -190,7 +196,9 @@ content and passes it to the components as props.
 `app/page.tsx` also holds the page's sections in one ordered list. Each entry renders as a
 section and is listed in the contents, so a section story adds its section in that one place.
 A section is given its items one element each, such as one role, so that it can keep its heading
-with its first item on paper, per DDR-015.
+with its first item on paper, per DDR-015. Since #96 the page returns a fragment rather than a
+single `main`: the footer follows `main` so that it is the page's `contentinfo` landmark, per
+DDR-028, and it is handed the introduction's own name and contact records.
 
 Styling follows ADR-001. `app/tokens.css` defines every design token once, as a custom property
 at `:root`, and `app/globals.css` applies the tokens to plain HTML elements. Component styles are
@@ -256,7 +264,9 @@ writes a print rule to drop its own background or put out its own light, and the
 same whether or not the browser prints background graphics. It lets the column fill the sheet, and sets the printed photo to 28mm, in mm because a
 photograph on a sheet is a size of the paper. An `@page` rule beside it sets 2cm margins.
 
-The `@media print` block in `app/globals.css` hides `nav`, prints each link's address after it,
+The `@media print` block in `app/globals.css` hides `nav` — and only `nav`: the footer prints, per
+DDR-028, because once #97 labels the contact pills it is the only place the printed CV carries an
+address at all. It prints each link's address after it,
 keeps entries whole, and keeps headings with what follows. Firefox does not honour that last rule,
 so `components/section.tsx` holds each section's heading and first item in one block that print
 keeps whole, per DDR-015. A component hides its own screen-only elements in print, and may drop
@@ -291,7 +301,7 @@ What exists, to reuse rather than reinvent:
   DDR-011 keeps everything else it decides. Target sizes are DDR-027's since #95.
 * **The components.** Every section is DDR-010's: the introduction under #48, the timeline that
   experience and education share under #49 and #51, the projects' media-and-text row under #50, and
-  the skill groups and language cards under #51. What still carries over from DDR-006 is its
+  the skill groups and language cards under #51. The footer below them is DDR-028's, under #96. What still carries over from DDR-006 is its
   outline, its contents row, and the metadata line — which DDR-010 narrows to a single part, so the
   timeline's dates, place and company each get a line set the same way. The contents, the section
   wrapper, the metadata line and the date range are shared by the sections that need them.
@@ -495,16 +505,19 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-027. The next DDR is
-`028`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-028. The next DDR is
+`029`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Eight accepted records are superseded or amended **in part**, and each says so at the top and again
+Nine accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
   gives each section's `h2`. DDR-026 takes the one sentence that rejects the design's divider
   between every section, which is now drawn. DDR-027 takes its 44 by 44 pixel target and corrects
   its "about 28px tall" for the design's contents links, which are 20px tall and 28px apart.
+  DDR-028 takes the one sentence that says "There is no footer", and answers the three grounds it
+  rejected one on. Its outline and its contact-address rule are untouched — the footer adds no
+  heading, and it is what keeps that rule workable on paper once #97 labels the pills.
 * **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
   rule and its rule that nothing scrolls horizontally from 320px. DDR-027 takes its 44 by 44 pixel
   minimum target, and `--target-size-min` with it. The one sentence of that bullet which survives is
@@ -531,6 +544,10 @@ at the section concerned:
   and its reason for being a token of its own that paper does not drop. DDR-025 takes its colour:
   the marker is the design's `#a5b4fc` at 1.86:1, which DDR-019 measured and rejected, and it now
   fails WCAG 1.4.11.
+* **DDR-027** keeps its ruling that a target is the size the design draws it, and its argument that
+  44 by 44 was an AAA criterion the records had cited as AA. DDR-028 extends its table of every
+  target on the page from eleven rows to fourteen: the footer's three addresses are 19.2px tall and
+  meet 2.5.8 by the spacing exception, as seven of the eleven already do.
 * **DDR-020** keeps one elevation, its name, its eight elements, the design's geometry and its
   reason for holding a translucent ink inside the shadow. DDR-025 takes its ink back to the design's
   10% black, because the hairlines the 22% was measured against no longer exist.
@@ -577,8 +594,8 @@ Two things stay out — the gradient monogram, because #63 supplies a real portr
 "Sections" toggle, because the design has no narrow view to match.
 
 The earlier audit's nine, #71 to #78 plus #63, are all landed but #63, which is the owner's to
-produce rather than the repository's. **#89 to #95 are the rewritten epic's first seven to land**,
-as DDR-021 to DDR-027.
+produce rather than the repository's. **#89 to #96 are the rewritten epic's first eight to land**,
+as DDR-021 to DDR-028.
 
 **#71 has landed, as DDR-016: the photo is 3:4**, not the square it was. `--photo-size` and
 `--photo-size-wide` are now `--photo-width`, `--photo-width-wide` and `--photo-ratio`, following the
@@ -673,9 +690,9 @@ admission for it.
 
 Five things about it are worth knowing before touching type or a font file.
 
-* **There are seven files and six are loaded**, listed above under Fonts. Lora Regular is derived,
-  inspected and committed for the footer #96 adds, and left out of `app/layout.tsx` until then
-  because `next/font` preloads everything it is given.
+* **There are seven files and, since #96, all seven are loaded**, listed above under Fonts. Lora
+  Regular was derived, inspected and committed here for the footer #96 adds, and left out of
+  `app/layout.tsx` until then because `next/font` preloads everything it is given.
 * **The payload is 46% larger**: 92.3 KiB served, where DDR-011's four files served 63.4 KiB. That
   is the design's price and DDR-023 records it rather than absorbing it.
 * **DDR-011's PDF guarantee was re-established, not assumed.** Each new file's character map is its
@@ -836,6 +853,54 @@ Five things about it are worth knowing before touching a target anywhere.
   that row on every sheet and the gap would have cost the printed CV 16px. Measured under print
   emulation against the tree this branched from, every box on the sheet is identical to the pixel,
   so #99's recheck is unaffected by this story.
+
+**#96 has landed, as DDR-028: the page has the design's footer**, which DDR-010 rejected in a
+sentence. `components/footer.tsx` renders a `footer` after `main` — the owner's name on the left,
+the three contact addresses on the right, above a hairline in `--color-border` — and `app/page.tsx`
+now returns a fragment so the footer can sit outside the main landmark. It adds no token, no content
+module and no string: the introduction's own `name` and `contact` records are handed to it, per
+ADR-002, so the addresses are stated once and shown twice.
+
+Six things about it are worth knowing before touching it.
+
+* **It prints, where `nav` does not, and that is the whole point of the story.** DDR-010 calls the
+  full address on each contact pill "not negotiable" because labelling the pills would leave the
+  printed CV with no email address; the footer is the only other place the addresses appear, so it
+  is what makes #97 possible. `.link::after { content: none }` keeps `app/globals.css` from printing
+  each address again after itself, which is the same rule the introduction's pills write. **Until
+  #97 lands each address is on the sheet twice**, once from its pill and once from the footer.
+* **The hairline does not print and the stylesheet writes no rule for it.** `--color-border` is
+  transparent in the print block, per DDR-015, so the footer's line goes the way the section divider
+  and the timeline's spine already go.
+* **Two of the design's values are off the site's scales and the nearest step was taken.** The
+  design sets the footer at 12px, and DDR-022's ten steps have no 12px — inserting one between 11px
+  and 12.8px would rename every step below `x-small`, so the footer takes `xx-small`, 12.8px. The
+  design holds the addresses 20px apart, which is on no step of DDR-013's doubling scale, so they
+  take `--space-medium`, 16px. DDR-028 has both arguments.
+* **The links are not underlined**, which is the design's and is the one thing about the footer that
+  needed deciding, because DDR-012 makes the underline what identifies a link and the addresses are
+  the *same ink* as the name beside them. DDR-028 records what identifies them instead — each is an
+  address, and each repeats a pill the introduction has already identified — and records that
+  DDR-025 went the other way for the contents links. It is one declaration away from reversal.
+* **The space above the hairline is the page's 64px, not the design's 16px.** `main` ends with
+  `--page-padding-block` and the footer follows it; closing the gap means making the page's bottom
+  padding asymmetric, which is DDR-013's and DDR-014's and guarded by `app/globals.test.ts`. DDR-028
+  records it as an open item for #99 rather than taking a page-level decision inside a footer story.
+  On paper it does not arise: the page padding is 0 there, so the footer's own 24pt is the space.
+* **`overflow-wrap: anywhere` on the link is not decoration.** A flex container is never laid out
+  narrower than its content's min-content width and `break-word` does not enter that calculation;
+  without it the GitHub address is 320px in a 273px column at 320px with text at 200%, and the page
+  scrolls sideways.
+
+Printed to A4 in Edge 153 and Firefox 156 with background graphics on, and printed again from the
+tree this branched from: **five sheets in both browsers either way**, every section heading on the
+same sheet before and after and each followed by its first item, no item split, and no horizontal
+run of ink wider than 3% of any sheet — the check that would find a printed hairline. All three
+addresses come back out of both PDFs through pypdf and pdfium, once each, with no `mailto:` and no
+replacement character; the six words the two readers miss are the six they missed before this
+change. On screen, swept every 10px from 300px to 900px at both text sizes, no pair of targets fails
+WCAG 2.5.8 — the closest two footer addresses come is 27.2px centre to centre — and nothing
+overflows at any width from 300px to 1536px.
 
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the
