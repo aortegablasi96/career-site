@@ -117,6 +117,15 @@ describe('skills styles', () => {
     expect(css).toMatch(/\.level\s*\{[^}]*font-size:\s*var\(--font-size-small\);/);
   });
 
+  // A level's skills are metadata, so they take the ink DDR-012 gives it as well as the step
+  // DDR-011 does — the pair `metadata-line.module.css` writes for the dates, places and companies
+  // around them. `app/tokens.test.ts` holds that pairing to the 7.07:1 DDR-012 records. The badges
+  // are unaffected: each declares its own ink, which beats the one it would inherit.
+  it('sets a level’s skills in the secondary ink, as the metadata around them is, per DDR-012', () => {
+    expect(css).toMatch(/\.level\s*\{[^}]*color:\s*var\(--color-text-secondary\);/);
+    expect(css).not.toMatch(/\.name\s*\{[^}]*color:/);
+  });
+
   // DDR-017 gives the group's name the widest tracking, which is what marks it as a label for what
   // follows rather than a title over it. DDR-018 takes the badge back a step, to the value the tags
   // and the date range take: DM Sans above regular at +0.1em comes out of a PDF spelt letter by
