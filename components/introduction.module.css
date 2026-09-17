@@ -123,8 +123,9 @@
   list-style: none;
 }
 
-/* A pill. Every target is at least the minimum in each direction, per DDR-014, reached by padding
-   rather than by enlarging the text. As a flex container the link no longer wraps with the text
+/* A pill, at the design's size, per DDR-027: 8px above and below a 13px label and 16px either
+   side, which is about 37px tall rather than the 44 DDR-014 required. Its box is its padding and
+   its text, with no minimum of its own. As a flex container the link no longer wraps with the text
    around it, so an address wider than the column, such as the email address at 320px with text at
    200%, is let break anywhere rather than overflow the page.
 
@@ -137,8 +138,6 @@
   display: inline-flex;
   gap: var(--space-small);
   align-items: center;
-  min-block-size: var(--target-size-min);
-  min-inline-size: var(--target-size-min);
   padding-block: var(--space-small);
   padding-inline: var(--space-medium);
   border-radius: var(--radius-pill);
@@ -206,16 +205,14 @@
     display: none;
   }
 
-  /* Nothing is tapped on paper, so a control takes the height of its text and drops the box that
-     gave it a target, per DDR-010. */
+  /* Nothing is tapped on paper, so a control takes the height of its text and drops the padding
+     that gave it a target, per DDR-010. */
   .controls {
     display: block;
   }
 
   .contact {
     display: inline;
-    min-block-size: 0;
-    min-inline-size: 0;
     padding-block: 0;
     padding-inline: 0;
     border: none;

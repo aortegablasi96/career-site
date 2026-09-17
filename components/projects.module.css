@@ -83,24 +83,30 @@
 }
 
 /* A row of labelled links that wraps when it runs out of width, so it needs no breakpoint, per
-   DDR-006. The text column sets it below the description at the flow step. */
+   DDR-006. The text column sets it below the description at the flow step. The row gap is the
+   contents row's, and is here for the same reason, per DDR-027: no width the page was measured at
+   wraps this row today, but two 19.5px links stacked with nothing between them would be inside the
+   circles WCAG 2.2's 2.5.8 measures its spacing exception with, and what wraps it is the content.
+   */
 .links {
   display: flex;
   flex-wrap: wrap;
   column-gap: var(--space-medium);
+  row-gap: var(--space-small);
   padding-inline-start: 0;
   list-style: none;
 }
 
 /* A labelled link is set as a label rather than as the prose around it, per DDR-022, which is the
    step the design gives every short label the reader acts on: these, and the introduction's pills.
-   Every target is at least the minimum in each direction, per DDR-014. */
+
+   Its box is its text and nothing else, per DDR-027, where DDR-014 padded it to 44px. It stays a
+   flex container for the reason a contents link does: the box is then the whole line the label sets
+   in, which is the design's own 19.5px. */
 .link {
   display: inline-flex;
   align-items: center;
   font-size: var(--font-size-x-small);
-  min-block-size: var(--target-size-min);
-  min-inline-size: var(--target-size-min);
 }
 
 /* From here the media takes a column of its own beside the text, per DDR-010. This is the one
@@ -134,11 +140,20 @@
      prints its text, and the padding that surrounded the tint becomes the space that separates one
      technology from the next. The row still wraps and still needs no breakpoint.
 
-     Nothing is tapped on paper, so the link takes the height of its text, per DDR-006. Its address
-     still prints after it, from the base styles, per DDR-005. */
+     A link takes the height of its text on screen too, since DDR-027, so what is left on the link
+     itself is the display: the address that prints after it, from the base styles, per DDR-005, is
+     a pseudo-element, and inside a flex container it would be laid out as an item of its own rather
+     than read as part of the line.
+
+     The row gap goes with it. It exists to keep two wrapped links apart for a finger, and nothing
+     is tapped on paper, which is the screen-only sizing DDR-015 lets a component drop. It is not
+     free either: an address printed after each link wraps this row on every sheet, so the gap would
+     have cost the printed CV 16px. */
+  .links {
+    row-gap: 0;
+  }
+
   .link {
     display: inline;
-    min-block-size: 0;
-    min-inline-size: 0;
   }
 }

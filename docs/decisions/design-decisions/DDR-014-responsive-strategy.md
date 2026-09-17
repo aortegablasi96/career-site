@@ -4,6 +4,12 @@ Status: Accepted
 
 Date: 2026-09-16
 
+**Superseded in part by DDR-027**, which takes the 44 by 44 pixel minimum target below, and
+DDR-004's before it. A target is now the size the design draws it, and `--target-size-min` is gone.
+Everything else here stands, including the two breakpoints, the markup order, hover, and the rule
+that nothing scrolls horizontally from 320px, which DDR-027 re-measured at every width from 300px to
+900px at both text sizes.
+
 Supersedes DDR-004, the responsive strategy. Its mobile-first ordering, its rule that the markup
 order is the visual order at every width, its 44 by 44 pixel minimum target, its rule that nothing
 depends on hover, and its rule that nothing scrolls horizontally from 320px all carry forward
@@ -108,11 +114,18 @@ DDR-004's rule, unchanged, and the redesign is built around it rather than again
 
 All three carry forward from DDR-004 unchanged:
 
-* **Every interactive target is at least 44 by 44 CSS pixels on screen**, reached by padding rather
-  than by enlarging text. `--target-size-min: 44px`, in px because WCAG measures a target in px and
-  a finger is not sized by the text. The draft fails this in three places and each is corrected in
-  DDR-010. On paper nothing is tapped, so a component may drop the minimum and a link takes the
-  height of its text.
+* **Superseded by DDR-027.** **Every interactive target is at least 44 by 44 CSS pixels on screen**,
+  reached by padding rather than by enlarging text. `--target-size-min: 44px`, in px because WCAG
+  measures a target in px and a finger is not sized by the text. The draft fails this in three
+  places and each is corrected in DDR-010. On paper nothing is tapped, so a component may drop the
+  minimum and a link takes the height of its text.
+
+  DDR-027 removes the token and the minimum with it: a target is the size `career-site-design` draws
+  it, which is 37.1px for a control and the line of its text for a link. Two things this record got
+  wrong are corrected there — 44 by 44 is WCAG 2.5.5 at Level AAA and not the AA criterion cited
+  here, and a minimum against the content box made a "44px" pill 61.6px. The last sentence, that a
+  component may drop the minimum on paper, survives as the rule that lets the projects drop their
+  row gap there.
 * **Nothing depends on hover.** No content is revealed by pointing at anything, and hover adds a
   second non-colour cue rather than replacing one.
 * **Nothing scrolls horizontally from 320px**, at any font size.

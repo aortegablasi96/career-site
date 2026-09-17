@@ -38,6 +38,16 @@ describe('Contents', () => {
     expect(styles).not.toMatch(/text-decoration/);
   });
 
+  // DDR-027: a link's box is the line its label sets in — the design's own 20px — where DDR-014
+  // padded it to 44px. The flex container is what makes the box the whole line rather than the
+  // shorter content area an inline box would give it, and the row gap keeps two wrapped links
+  // outside the circles WCAG 2.2's 2.5.8 measures its spacing exception with.
+  it('gives a link the box the design draws and a wrapped row a gap, per DDR-027', () => {
+    expect(styles).toMatch(/\.link\s*\{[^}]*display:\s*inline-flex;/);
+    expect(styles).not.toMatch(/min-block-size|min-inline-size/);
+    expect(styles).toMatch(/\.list\s*\{[^}]*row-gap:\s*var\(--space-small\);/);
+  });
+
   it('renders nothing when there are no sections to list', () => {
     expect(renderToStaticMarkup(<Contents label="Sections" sections={[]} />)).toBe('');
   });

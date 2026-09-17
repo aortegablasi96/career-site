@@ -13,6 +13,11 @@ survives a page that places content side by side.
 divider between every section. The page now draws all five of them, as the design does, and the
 decorative rule this record gives each `h2` is unchanged and unchallenged. Nothing else here moves.
 
+**Amended in two respects by DDR-027.** Its bullet requiring every target to be at least 44 by 44
+pixels goes, along with DDR-014's: a target is now the size the design draws it. And its figure for
+the draft's contents links, "about 28px tall", is corrected — in `career-site-design` a link's box
+is 20px and 28px is the gap between two of them. Both appear below, each marked where it stands.
+
 This record decides the page's **structure and patterns**. The token values the structure reads are
 reworked by #44, the CV download by #45, and the print stylesheet by #52. Where this record names a
 value, such as the accent, it is because the UI Review settled it and those stories implement it
@@ -218,10 +223,12 @@ This replaces DDR-006's labelled list for languages.
   identified by their border or fill together with their icon — two non-colour cues. This is a
   deliberate, limited exception to DDR-002's blanket underline rule, and it extends no further than
   bordered or filled controls.
-* **Every interactive target is at least 44 by 44 CSS pixels on screen**, reached by padding rather
-  than by enlarging text. The draft fails this in three places and each is corrected. On paper
-  nothing is tapped, so a component drops the minimum and a link takes the height of its text, as
-  DDR-006 allows.
+* **Superseded by DDR-027.** **Every interactive target is at least 44 by 44 CSS pixels on screen**,
+  reached by padding rather than by enlarging text. The draft fails this in three places and each is
+  corrected. On paper nothing is tapped, so a component drops the minimum and a link takes the
+  height of its text, as DDR-006 allows. The three places are the contact and CV pills, the contents
+  links and the projects' labelled links; DDR-027 gives all three the size the design draws, and the
+  last sentence is the only part of this bullet that survives.
 * **Links open in the same tab.**
 
 ### One accent, settled
@@ -317,7 +324,8 @@ Cons:
 * It covers content and needs every section offset below it.
 * It needs an opaque or blurred surface, a new surface decision for something carrying no
   information.
-* Its links are about 28px tall and not underlined.
+* Its links are about 28px tall and not underlined. **Corrected by DDR-027**: they are 20px tall,
+  and 28px is the gap between one link and the next.
 * Its scroll-triggered shadow needs a scroll listener, making it a client component in a statically
   exported site.
 * It duplicates the contents row, which already does the job.

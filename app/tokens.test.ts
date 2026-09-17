@@ -596,8 +596,13 @@ describe('responsive tokens', () => {
     expect(atBreakpoint.has('font-size-item-title')).toBe(false);
   });
 
-  it('sets the smallest interactive target at 44 CSS pixels', () => {
-    expect(token('target-size-min')).toBe('44px');
+  // DDR-027 takes DDR-014's 44px minimum away rather than lowering it: a target is the size the
+  // design draws it, which is padding and a label on a control and the line of text on a link, and
+  // there is no length left for a token to hold. The name is held absent so that reinstating a
+  // minimum has to move the record with it.
+  it('holds no interactive target to a minimum size, per DDR-027', () => {
+    expect(token('target-size-min')).toBeUndefined();
+    expect(tokens).not.toMatch(/target-size/);
   });
 });
 
