@@ -1,3 +1,4 @@
+import { readdirSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 import RootLayout, { metadata } from '@/app/layout';
@@ -6,7 +7,8 @@ import { introduction } from '@/content/introduction';
 type FontOptions = {
   variable: string;
   weight?: string;
-  src: string | { path: string; weight?: string }[];
+  style?: string;
+  src: string | { path: string; weight?: string; style?: string }[];
 };
 
 // next/font is a compile-time transform, and outside the Next.js compiler its loaders throw.
@@ -35,25 +37,61 @@ describe('RootLayout', () => {
   });
 
   // DDR-011: Firefox draws a variable font as outlines when it saves a PDF, so the printed CV
-  // would lose its text (#22). Each font is one static file per weight, and a weight with no file
-  // would be synthesised, so the files are exactly the weights the page sets: three for the body
-  // face, and semibold alone for the heading face, which nothing but a heading is set in.
-  it('loads each font as one static file per weight, which a PDF saved from Firefox keeps as text', () => {
+  // would lose its text (#22). Each font is one static file per weight and style, and a weight or
+  // a style with no file would be synthesised, so the files are exactly what the page sets.
+  // DDR-023 lists them: four weights and one italic for the body face, because the design draws
+  // three labels bold and a thesis sentence italic, and semibold alone for the heading face, which
+  // is the page title and the section titles.
+  it('loads each font as one static file per weight and style, which a PDF keeps as text', () => {
     expect(fontOptions.map(({ variable }) => variable)).toEqual(['--font-dm-sans', '--font-lora']);
 
-    for (const { src, weight } of fontOptions) {
+    for (const { src, weight, style } of fontOptions) {
       expect(weight).toBeUndefined();
+      expect(style).toBeUndefined();
       expect(Array.isArray(src)).toBe(true);
     }
 
     const [body, heading] = fontOptions;
 
-    expect(Array.isArray(body.src) && body.src.map((file) => file.weight)).toEqual([
-      '400',
-      '500',
-      '600',
-    ]);
-    expect(Array.isArray(heading.src) && heading.src.map((file) => file.weight)).toEqual(['600']);
+    expect(Array.isArray(body.src) && body.src.map(({ weight, style }) => `${weight} ${style}`))
+      .toEqual(['400 normal', '500 normal', '600 normal', '700 normal', '400 italic']);
+    expect(Array.isArray(heading.src) && heading.src.map(({ weight, style }) => `${weight} ${style}`))
+      .toEqual(['600 normal']);
+  });
+
+  // A listed file that is not there is a face the browser synthesises, which is the whole fault
+  // this arrangement exists to prevent, so the paths are read off the disk rather than trusted.
+  it('lists only files app/fonts/ actually holds, so nothing is synthesised', () => {
+    const committed = readdirSync(new URL('./fonts/', import.meta.url));
+    const declared = fontOptions
+      .flatMap(({ src }) => (Array.isArray(src) ? src : []))
+      .map(({ path }) => path.replace('./fonts/', ''));
+
+    for (const file of declared) {
+      expect(committed).toContain(file);
+    }
+  });
+
+  // The other direction is not an equality, and DDR-023 says why: Lora Regular is derived,
+  // inspected and committed here for the footer #96 adds, and left unlisted until then because
+  // next/font preloads every file it is given and the page would fetch a face it never draws.
+  it('leaves the footer’s face committed and unloaded until the footer exists', () => {
+    const declared = fontOptions
+      .flatMap(({ src }) => (Array.isArray(src) ? src : []))
+      .map(({ path }) => path.replace('./fonts/', ''));
+
+    expect(readdirSync(new URL('./fonts/', import.meta.url))).toContain(
+      'lora-latin-400-normal.woff2',
+    );
+    expect(declared).not.toContain('lora-latin-400-normal.woff2');
+  });
+
+  // Every file is served under a licence the repository has to carry, per DDR-011.
+  it('carries a licence beside the files of each family', () => {
+    const fonts = readdirSync(new URL('./fonts/', import.meta.url));
+
+    expect(fonts).toContain('dm-sans-OFL.txt');
+    expect(fonts).toContain('lora-OFL.txt');
   });
 
   it('renders the page inside the document body', () => {

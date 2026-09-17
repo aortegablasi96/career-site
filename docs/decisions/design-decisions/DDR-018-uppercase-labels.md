@@ -6,9 +6,16 @@ Date: 2026-09-17
 
 Supersedes nothing. It finishes what DDR-017 started, and it amends DDR-011's weights table the way
 DDR-017 amended its type system and DDR-009 amended DDR-001's — by adding a use, not replacing a
-decision. DDR-011's seven sizes, two families, three weights, 13px floor and Lora headings all stand
-unchanged, and so do DDR-012's measured pairings, which this record adds no colour to and takes none
-away from.
+decision. DDR-011's seven sizes, two families, three weights, 13px floor and Lora headings all stood
+unchanged when this was written, and so do DDR-012's measured pairings, which this record adds no
+colour to and takes none away from.
+
+**Two later records reach into this one.** DDR-022 took the sizes and the floor, which moved the
+badge from 13px to 10px. DDR-023 gave all three labels the design's bold, so the "semibold, not
+bold" decision below is superseded, and it re-measured the tracking fault this record turns on:
+at 10px the badge splits in a PDF at **every** weight the site ships, 400 included, so the
+conclusion below that only 400 is safe at +0.1em was true of a 13px badge and is not true of this
+one. Read DDR-023 for the measurement and #92 for what is decided about the tracking.
 
 ## Context
 

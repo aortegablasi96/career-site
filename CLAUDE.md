@@ -140,15 +140,23 @@ Tooling notes that are easy to trip over:
   and render components with `react-dom/server`, matching how pages are produced at build time.
   There is no DOM environment or Testing Library; add them only when there is interactive
   behaviour to test. What to test is the Tester's decision.
-* **Fonts** are Lora for headings and DM Sans for everything else, per DDR-011. They are committed
+* **Fonts** are Lora and DM Sans, per DDR-011, with DDR-023 deciding which elements take which:
+  Lora is `h1` and `h2` alone, and everything else — including `h3` to `h6`, which are the item
+  titles — is DM Sans. They are committed
   to `app/fonts/`, with their licences, and loaded by `next/font/local` in `app/layout.tsx`, so
-  builds need no network access for fonts. Each is one static file per weight, not a variable
-  font: Firefox draws variable fonts as outlines when it saves a PDF, so the printed CV's text
-  could not be selected (#22). There are four files — DM Sans at 400, 500 and 600, and Lora at 600
-  alone, because nothing but a heading is set in it. They are derived, not downloaded: take the
+  builds need no network access for fonts. Each is one static file per weight and style, not a
+  variable font: Firefox draws variable fonts as outlines when it saves a PDF, so the printed CV's
+  text could not be selected (#22). **There are seven files, six of them loaded**, per DDR-023 —
+  DM Sans at 400, 500, 600 and 700 plus a 400 italic, and Lora at 600. The seventh,
+  `lora-latin-400-normal.woff2`, is committed and deliberately **not** listed in `app/layout.tsx`:
+  it is the footer's name and #96 adds the footer, and `next/font` preloads every file it is given,
+  so listing it now would fetch 21 KB for text the page does not show. `app/layout.test.tsx` holds
+  both halves — every listed path exists, and that one file exists and is unlisted.
+  They are derived, not downloaded: take the
   Fontsource variable file for the Latin subset, pin it to the weight with fontTools' instancer,
-  name it, and save it as WOFF2. A weight with no file would be synthesised, so adding one means
-  adding a file and revising DDR-011.
+  name it, and save it as WOFF2; the italic comes from the italic variable file, not the upright
+  one. A weight or a style with no file would be synthesised, so adding one means
+  adding a file and revising DDR-023.
   `next/font` is a compile-time transform whose loaders throw outside the Next.js compiler, so
   a test that imports the root layout mocks `next/font/local`, as `app/layout.test.tsx` does.
 
@@ -483,13 +491,22 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010 to DDR-015 and DDR-017 to DDR-022. The next DDR is `023`. Status
+The accepted DDRs are DDR-010 to DDR-015 and DDR-017 to DDR-023. The next DDR is `024`. Status
 values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Two accepted records are superseded **in part**, and both say so at the top and again at the section
-concerned: DDR-022 supersedes DDR-011's type scale and its 13px floor, and amends DDR-015's print
-base from 11pt to 12pt. Everything else those two records decide stands, so each is still the record
-to read for the rest of it.
+Three accepted records are superseded **in part**, and each says so at the top and again at the
+section concerned:
+
+* **DDR-011** is superseded twice over. DDR-022 takes its type scale and its 13px floor; DDR-023
+  takes which elements each typeface is used on, the three weights, the four files and the
+  no-italics rule. What DDR-011 is still the record to read for is the two faces themselves and
+  their fallback stacks, the one-static-file-per-weight recipe, the PDF guarantee, the line
+  heights, the measure and the wrapping rules.
+* **DDR-015** keeps everything but its print base, which DDR-022 raises from 11pt to 12pt.
+* **DDR-018** keeps its case and its ink. DDR-023 takes its "semibold, not bold" decision, and
+  corrects its measurement of the tracking fault: at the 10px badge DDR-022 left, +0.1em splits the
+  word in a Firefox PDF at **every** weight the site ships, 400 included, where DDR-018 concluded
+  400 was safe. #92 decides what to do about it.
 
 `Superseded` are DDR-001 to DDR-009, and DDR-016:
 
@@ -532,7 +549,8 @@ Two things stay out — the gradient monogram, because #63 supplies a real portr
 "Sections" toggle, because the design has no narrow view to match.
 
 The earlier audit's nine, #71 to #78 plus #63, are all landed but #63, which is the owner's to
-produce rather than the repository's. **#89 and #90 are the rewritten epic's first two to land.**
+produce rather than the repository's. **#89, #90 and #91 are the rewritten epic's first three to
+land.**
 
 **#71 has landed, as DDR-016: the photo is 3:4**, not the square it was. `--photo-size` and
 `--photo-size-wide` are now `--photo-width`, `--photo-width-wide` and `--photo-ratio`, following the
@@ -613,6 +631,45 @@ float case moves — at a 320px viewport with a classic scrollbar, so the breakp
 from 48px to 51.2px and its longest word no longer fits beside it. It is three whole words on three
 lines either way, and at a full 320px of content it still sits beside the photo, so #68's own
 measurements stand. DDR-022 has both tables.
+
+**#91 has landed, as DDR-023: the page is set in the faces, weights and styles the design draws.**
+Lora is now `h1` and `h2` alone — an item title is an `h3` and the design sets it in DM Sans
+SemiBold at the size of the text beneath it, told apart by weight and position rather than by voice,
+so `app/globals.css` writes the family in the `h1` and `h2` rules instead of the rule that styles
+all six levels, and `h3` to `h6` inherit DM Sans from `body`. The three labels DDR-018 sets — the
+timeline's date range, a level badge and a skill-group name — take a new `--font-weight-bold` at
+700, which is the weight DDR-018 wanted and could not have. A degree's thesis sentence is the site's
+one italic, where DDR-011 carried DDR-001's rule that it uses none; `font-style: italic` is a
+keyword rather than a length, as `text-transform: uppercase` is, so the stylesheet test needs no new
+admission for it.
+
+Five things about it are worth knowing before touching type or a font file.
+
+* **There are seven files and six are loaded**, listed above under Fonts. Lora Regular is derived,
+  inspected and committed for the footer #96 adds, and left out of `app/layout.tsx` until then
+  because `next/font` preloads everything it is given.
+* **The payload is 46% larger**: 92.3 KiB served, where DDR-011's four files served 63.4 KiB. That
+  is the design's price and DDR-023 records it rather than absorbing it.
+* **DDR-011's PDF guarantee was re-established, not assumed.** Each new file's character map is its
+  sibling's, tag for tag: 222 characters to 222 glyphs in both DM Sans files and 226 to 226 in Lora
+  Regular, none mapped twice, and the same `liga` and `calt` substitutions that `app/globals.css`
+  already switches off. Printed to A4 in Edge 153 and Firefox 156 with background graphics on and
+  read back through pypdf and pdfium both: no replacement character anywhere, the apostrophe still
+  U+2019, every bold label back as one word and both italic sentences back whole. Of the 478 words
+  the page shows, Edge gives back all but "Get", from the CV control print hides, and Firefox also
+  wraps "Copilot-driven" and "data-driven" at their hyphens, which is its own behaviour and is there
+  before this change too.
+* **The sheet count is five in both browsers, and #90 is where Edge's fourth went.** The same
+  measurement run against the tree this branched from gives five and five as well. "Four in Edge"
+  was last true at #89; #99 owns the print recheck.
+* **DDR-018's tracking fault was re-measured and it is no longer about weight.** Forcing the badge
+  to +0.1em — which is what #92 proposes — still splits it in Firefox through pypdf, but now at 400,
+  600 and 700 alike, because DDR-022 took the badge from 13px to 10px. The skill-group name at
+  +0.1em does not split at any weight in either browser through either reader, which is why moving
+  it into DM Sans Bold cost nothing. The page ships the badge at +0.025em as DDR-018 left it; #92
+  decides the rest. Nothing on the page gained or lost a line: bold costs the widest date range
+  0.9px, leaving 34.9px of slack in the 160px column, and Lora to DM Sans on the item titles leaves
+  every `h3` line count identical at 320px, 390px and 1280px at both text sizes.
 
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the

@@ -10,11 +10,19 @@ the redesign replaces, so the files DDR-007 lists and the character-map edit DDR
 longer exist. What each of them decided is carried forward here, restated for Lora and DM Sans and
 re-established by the same kind of inspection.
 
-**DDR-022 supersedes the type scale and the floor below**, and nothing else here. Read that record
+**DDR-022 supersedes the type scale and the floor below**, and nothing else there. Read that record
 for the sizes the page sets; read this one for the reasoning behind the seven steps the page had
-between #44 and #90, and for everything else it decides, all of which stands: the two typefaces and
-their fallback stacks, the one-static-file-per-weight recipe, the no-italics rule, the three weights,
-the PDF guarantee, the line heights, the measure and the wrapping rules.
+between #44 and #90.
+
+**DDR-023 supersedes four more things here**: which elements each typeface is used on, the three
+weights, the four files, and the no-italics rule. The page sets its item titles in DM Sans rather
+than Lora, ships seven files rather than four, has a fourth weight at 700 and one italic. Read
+DDR-023 for all of that.
+
+What stands, and what this record is still the one to read for: **the two typefaces themselves and
+their fallback stacks**, the **one-static-file-per-weight recipe**, the **PDF guarantee** — which
+DDR-023 re-establishes for its three new files by the same inspection — the **line heights**, the
+**measure** and the **wrapping rules**.
 
 What DDR-022 changes is the numbers and the count — ten steps, the design's own nine plus one for the
 narrow page title — the statement that body text is 16px, which becomes 15px, and the 13px floor,
@@ -82,6 +90,9 @@ The constraints are:
 
 ### Typefaces
 
+**The two faces stand; the roles are superseded by DDR-023**, which keeps Lora for `h1` and `h2` and
+sets `h3` to `h6` in DM Sans, because the design sets an item title in the body face.
+
 | Role                                     | Typeface    | Fallback stack, in order                                    |
 | ---------------------------------------- | ----------- | ----------------------------------------------------------- |
 | Body text, metadata, and everything else | **DM Sans** | Metric-adjusted Arial, then `system-ui`, then `sans-serif`  |
@@ -111,10 +122,14 @@ weight**, committed to `app/fonts/` with its licence and loaded by `next/font/lo
 | `dm-sans-latin-600-normal.woff2` | DM Sans SemiBold  |
 | `lora-latin-600-normal.woff2`    | Lora SemiBold     |
 
+**Superseded by DDR-023**, which adds DM Sans Bold, DM Sans Italic and Lora Regular. The four files
+above are still four of the seven, unchanged; what follows is the reasoning, and DDR-023's table is
+the list.
+
 **Lora exists only at 600**, because headings are the only thing set in it and headings are always
 semibold. A weight with no file would be substituted or synthesised by the browser, so the files
 are exactly the weights the page sets and no more. Adding a weight means adding its file and
-revising this record.
+revising this record — which is what DDR-023 does.
 
 **The recipe**, unchanged from DDR-007 but without its character-map step:
 
@@ -134,7 +149,10 @@ character map. **Neither of these faces needs it**, and the inspection below is 
   symbol subsets Lora publishes, and the Latin Extended subsets both publish, are not loaded.
 * **No italics.** DDR-001's rule stands, and the redesign keeps it: the UI Review sets the draft's
   italic thesis sentence in the secondary ink instead, which saves a file and a derivation.
-* **Payload.** The four files total about 65 KB, down from about 72 KB.
+  **Superseded by DDR-023**, which takes the design's italic for that one sentence and derives the
+  file.
+* **Payload.** The four files total about 65 KB, down from about 72 KB. **DDR-023 takes the six the
+  page now serves to about 92 KB.**
 
 ### A PDF spells every word as the page does
 
@@ -229,6 +247,9 @@ makes the page look edited rather than typed, and a reader who enlarges text is 
 lower base than before.
 
 ### Weights
+
+**Superseded by DDR-023**, which adds 700 for the three labels DDR-018 sets and moves `h3` out of
+Lora. What follows is the three weights the page had between #44 and #91.
 
 Three, where DDR-001 had two.
 

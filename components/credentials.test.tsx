@@ -86,6 +86,19 @@ describe('Credentials', () => {
     expect(styles).toMatch(/\.thesis\s*\{[^}]*font-size:\s*var\(--font-size-x-small\);/);
   });
 
+  // The one italic on the page, per DDR-023, where DDR-011 carried DDR-001's rule that the site
+  // uses none. It is a second set of outlines rather than a second weight of the same ones, so
+  // app/fonts/ carries a file for it and app/layout.test.tsx holds the list; without one the
+  // browser would slant the upright face, which is the synthesis this arrangement exists to avoid.
+  it('sets a degree’s thesis in italic, the one on the page, per DDR-023', () => {
+    expect(styles).toMatch(/\.thesis\s*\{[^}]*font-style:\s*italic;/);
+  });
+
+  // The style belongs to the thesis and to nothing else the component draws.
+  it('leaves the rest of a credential upright', () => {
+    expect(styles.match(/font-style/g) ?? []).toHaveLength(1);
+  });
+
   it('ends a certification at its institution, with one date and no body', () => {
     for (const [index, credential] of credentials.credentials.entries()) {
       if (isCertification(credential)) {
