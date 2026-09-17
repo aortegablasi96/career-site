@@ -15,12 +15,13 @@ import type { Cv } from './types';
  * agreeing. They do not: issue #59 lists nine differences, and the owner closed it unresolved
  * rather than reconcile them before #48 shipped the control that offers the file. The digest here
  * moved with #48 because the introduction gained the photo's alternative text, and again with #50
- * because each project gained its picture and that picture's alternative text. Neither is a fact
- * ADR-005 lists as shared, so neither moved the CV; the nine differences are the ones #59 records,
- * unchanged.
+ * because each project gained its picture and that picture's alternative text, and again with #97
+ * because each contact gained the short label its pill now shows, per DDR-029 — the addresses
+ * themselves did not change. None of the three is a fact ADR-005 lists as shared, so none of them
+ * moved the CV; the nine differences are the ones #59 records, unchanged.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'd3a29705b330fcd80f1c37828762ddba70f82f57bd9dded52045acbeafddac38',
+  contentDigest: 'aa0904f3c017c3f9a8c0caa6f9c98766a083e0d2521b24fa13ab0ae68344d753',
 };

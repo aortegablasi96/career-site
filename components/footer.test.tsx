@@ -6,10 +6,17 @@ import { Footer } from './footer';
 
 const styles = readFileSync(new URL('./footer.module.css', import.meta.url), 'utf8');
 
+// Each record carries the label its pill shows as well as the address, per DDR-029. The footer is
+// the place that shows the address, so the labels here are what it must not show.
 const contact: readonly ContactLink[] = [
-  { text: 'someone@example.com', href: 'mailto:someone@example.com', icon: 'email' },
-  { text: 'linkedin.com/in/someone', href: 'https://www.linkedin.com/in/someone/', icon: 'linkedin' },
-  { text: 'github.com/someone', href: 'https://github.com/someone', icon: 'github' },
+  { label: 'Email', text: 'someone@example.com', href: 'mailto:someone@example.com', icon: 'email' },
+  {
+    label: 'LinkedIn',
+    text: 'linkedin.com/in/someone',
+    href: 'https://www.linkedin.com/in/someone/',
+    icon: 'linkedin',
+  },
+  { label: 'GitHub', text: 'github.com/someone', href: 'https://github.com/someone', icon: 'github' },
 ];
 
 const html = renderToStaticMarkup(<Footer name="Someone" contact={contact} />);
@@ -38,6 +45,14 @@ describe('Footer', () => {
     }));
 
     expect(links).toEqual(contact.map(({ text, href }) => ({ href, text })));
+  });
+
+  // The footer shows the address where the pill shows the label, per DDR-029, and that division is
+  // what leaves the printed CV with contact details at all.
+  it('shows the address rather than the label its pill carries, per DDR-029', () => {
+    for (const { label } of contact) {
+      expect(html).not.toContain(`>${label}<`);
+    }
   });
 
   // DDR-025 sets the whole footer in the faintest of the three inks below the body's, which is the

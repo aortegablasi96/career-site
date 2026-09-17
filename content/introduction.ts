@@ -7,6 +7,11 @@ import type { Introduction } from './types';
  * summary gives no number of years, as the brief requires. The ABB role is current, and the page
  * is public, so availability is an invitation to talk rather than an announced job search.
  *
+ * Each contact carries two strings, per DDR-029: the label the pill shows, which names the service
+ * rather than the address, and the address itself, which the footer shows and which is what the
+ * printed CV carries. The labels are the design's own words, and each names a service a reader
+ * already knows; they say nothing about the owner, so none of them is a claim.
+ *
  * The photo was adopted on Epic #42, reversing the Content Brief's decision against one. The file
  * it names is a plain stand-in until the owner supplies their portrait, and #47 carries what it has
  * to be. Its alternative text is written for the portrait rather than for the stand-in, so that
@@ -24,8 +29,23 @@ export const introduction: Introduction = {
   availability:
     'Alongside my role at ABB, in 2026 I earned the PMI-CPMAI certification and built three AI applications of my own, using RAG, agents, and MCP. I am happy to talk about AI and IoT product roles.',
   contact: [
-    { text: 'aortegablasi@gmail.com', href: 'mailto:aortegablasi@gmail.com', icon: 'email' },
-    { text: 'linkedin.com/in/andreu-ob', href: 'https://www.linkedin.com/in/andreu-ob/', icon: 'linkedin' },
-    { text: 'github.com/aortegablasi96', href: 'https://github.com/aortegablasi96', icon: 'github' },
+    {
+      label: 'Email',
+      text: 'aortegablasi@gmail.com',
+      href: 'mailto:aortegablasi@gmail.com',
+      icon: 'email',
+    },
+    {
+      label: 'LinkedIn',
+      text: 'linkedin.com/in/andreu-ob',
+      href: 'https://www.linkedin.com/in/andreu-ob/',
+      icon: 'linkedin',
+    },
+    {
+      label: 'GitHub',
+      text: 'github.com/aortegablasi96',
+      href: 'https://github.com/aortegablasi96',
+      icon: 'github',
+    },
   ],
 };

@@ -27,6 +27,11 @@ import styles from './introduction.module.css';
  * The four controls are the three contact addresses and the CV download. They are the one place on
  * the page a link is not underlined, per DDR-010, so each is identified by its border or fill
  * together with its mark — two cues, neither of them a colour.
+ *
+ * Each contact pill shows the design's short label — "Email", "LinkedIn", "GitHub" — rather than the
+ * address it links to, per DDR-029. The address is not lost: the footer shows all three, on screen
+ * and on paper alike, which is what makes the label possible at all. So the pill prints its label
+ * and nothing after it, and the printed CV still carries every address once.
  */
 export function Introduction({
   introduction,
@@ -50,11 +55,11 @@ export function Introduction({
         <p>{summary}</p>
         <p>{availability}</p>
         <ul className={styles.controls}>
-          {contact.map(({ text, href, icon }) => (
+          {contact.map(({ label, href, icon }) => (
             <li key={href}>
               <a href={href} className={styles.contact}>
                 <Icon name={icon} />
-                {text}
+                {label}
               </a>
             </li>
           ))}

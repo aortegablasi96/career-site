@@ -11,6 +11,11 @@ What DDR-010 carries forward: the page's outline and heading order, the contents
 a sticky bar was rejected, the rule that each contact link shows its address as its text and the
 print exception that follows from it, levels as words, and newest-first ordering.
 
+Of those, **the contact-address rule is since superseded by DDR-029**, which labels the pills
+"Email", "LinkedIn" and "GitHub". The print exception below survives it: a contact link still prints
+no address after itself, so that `mailto:` stays off the sheet, and DDR-028's footer is what carries
+the addresses the rule was written to protect.
+
 What DDR-010 replaces: the single metadata line and the entry anatomy shared by roles, projects and
 credentials, which become a timeline row and a media-and-text row; and the labelled list, which
 becomes level badges for skills and cards for languages. The single 65ch column it assumed is
@@ -100,7 +105,9 @@ In this order, top to bottom:
 * **Availability is text, not a badge.** A badge would need a filled surface or a new colour
   pairing, and it would carry the one message the page most needs read as decoration.
 * **Each contact link shows its address as its text**, such as the email address, or
-  `linkedin.com/in/…` without the scheme. A visitor can read it, copy it, and type it, whether or
+  `linkedin.com/in/…` without the scheme. **Superseded by DDR-029**, which takes the design's short
+  labels; what follows still holds as the reasoning, and the print exception at the end of it still
+  stands. A visitor can read it, copy it, and type it, whether or
   not their device opens email links. Because the text already is the address, these links do not
   print their address again after themselves. This is the only exception to DDR-005's link rule,
   and it removes that rule's two recorded costs for these links: an address printed twice, and a

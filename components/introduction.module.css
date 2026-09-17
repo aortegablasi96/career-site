@@ -125,9 +125,12 @@
 
 /* A pill, at the design's size, per DDR-027: 8px above and below a 13px label and 16px either
    side, which is about 37px tall rather than the 44 DDR-014 required. Its box is its padding and
-   its text, with no minimum of its own. As a flex container the link no longer wraps with the text
-   around it, so an address wider than the column, such as the email address at 320px with text at
-   200%, is let break anywhere rather than overflow the page.
+   its text, with no minimum of its own. As a flex container the link is never laid out narrower
+   than its own content, so anything wider than the column would overflow the page rather than wrap
+   with the text around it; `anywhere` is what lets it break instead. Since DDR-029 the widest of
+   the four is "Get my CV" and none of them comes near the column, so nothing here breaks today —
+   it is the footer, which still shows the addresses, that needs the same declaration to keep the
+   GitHub address inside the column at a 320px viewport with text at 200%.
 
    Both kinds of pill are raised off the page by the one shadow the site has, per DDR-020. It is
    the thing a control shares with a language card and with nothing else, and it is never what
@@ -218,7 +221,11 @@
     border: none;
   }
 
-  /* The link's text is its address, so the address is not printed again after it, per DDR-006. */
+  /* The pill prints its label and nothing after it, per DDR-029. The base styles print a link's
+     address after it, which here would put `mailto:aortegablasi@gmail.com` on the sheet — the
+     prefix DDR-006 removed. The address itself is not lost: the footer prints all three, which is
+     the whole reason this pill may carry a label. The declaration is the one DDR-006 already
+     wrote; what changed is why. */
   .contact::after {
     content: none;
   }

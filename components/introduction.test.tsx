@@ -60,7 +60,7 @@ describe('Introduction', () => {
       introduction.relocation,
       introduction.summary,
       introduction.availability,
-      introduction.contact[0].text,
+      introduction.contact[0].label,
       cv.label,
     ].map((part) => html.indexOf(part));
 
@@ -77,14 +77,31 @@ describe('Introduction', () => {
     expect(html).toContain(`<p>${introduction.availability}</p>`);
   });
 
-  it('links to each contact address, with the address as the link text', () => {
+  // DDR-029: the pill shows the design's short label and the footer shows the address. The
+  // addresses the pills link to are unchanged, so the two places still agree about where a contact
+  // leads.
+  it('links to each contact address, with the design’s label as the link text', () => {
     expect(links.slice(0, 3).map(({ href, text }) => ({ href, text }))).toEqual(
-      introduction.contact.map(({ href, text }) => ({ href, text })),
+      introduction.contact.map(({ href, label }) => ({ href, text: label })),
     );
   });
 
+  // The whole objection DDR-010 raised against the label, held where it can be seen: with the
+  // pills labelled, the introduction shows no address at all, so the footer is the only thing
+  // standing between the printed CV and no contact details. app/page.test.tsx holds the other end.
+  it('shows no address itself, since the footer is what carries them, per DDR-029', () => {
+    // The addresses are still what the pills link to, so the hrefs are taken out first: what is
+    // checked is what a reader sees, not where a control leads.
+    const shown = html.replace(/ href="[^"]*"/g, '');
+
+    for (const { text } of introduction.contact) {
+      expect(shown).not.toContain(text);
+    }
+  });
+
   // DDR-010 makes the pills the one place a link is not underlined, so each is identified by its
-  // border or fill and by its mark. Both cues survive greyscale, and the text is the address.
+  // border or fill and by its mark. Both cues survive greyscale. Since DDR-029 the mark is also
+  // what names the service beside a label that could be any link's.
   it('gives every control a mark beside its text, hidden from assistive technology', () => {
     expect(links).toHaveLength(introduction.contact.length + 1);
 
@@ -282,7 +299,10 @@ describe('introduction styles', () => {
     expect(rule('.photo')).toMatch(/inline-size:\s*var\(--photo-width\);/);
   });
 
-  it('prints a contact address once, as the link’s own text, per DDR-006', () => {
+  // The pill prints its label and nothing after it, per DDR-029. The base styles would otherwise
+  // print `(mailto:…)` after "Email", which is the prefix DDR-006 removed; the address itself is on
+  // the sheet once, from the footer.
+  it('prints the label with no address after it, per DDR-029', () => {
     expect(rule('.contact::after', paper)).toMatch(/content:\s*none;/);
     expect(rule('.contact', paper)).toMatch(/border:\s*none;/);
   });
@@ -295,10 +315,18 @@ describe('introduction styles', () => {
 });
 
 describe('introduction content', () => {
-  it('gives each contact link its own address as its text, so it is not printed twice', () => {
+  // `text` is the address the footer shows, and it is the address the pill beside it links to, so
+  // a reader who copies it out of the footer reaches the same place the pill does.
+  it('gives each contact link its own address as its text, matching what it links to', () => {
     for (const { text, href } of introduction.contact) {
       expect(href.replace(/^mailto:|^https:\/\/(?:www\.)?/, '').replace(/\/$/, '')).toBe(text);
     }
+  });
+
+  // DDR-029 takes the design's own three words. Each names a service rather than describing the
+  // owner, and each is shorter than the address it replaces, which is the whole point of it.
+  it('labels each contact pill with the service the design names, per DDR-029', () => {
+    expect(introduction.contact.map(({ label }) => label)).toEqual(['Email', 'LinkedIn', 'GitHub']);
   });
 
   it('gives each contact link a mark of its own, so no two controls look alike', () => {

@@ -6,8 +6,14 @@ Date: 2026-09-17
 
 Supersedes **the one sentence of DDR-010** that says "There is no footer", and answers the three
 grounds that record rejected it on. Everything else in DDR-010 stands: its outline is unchanged,
-because the footer adds no heading, and its contact-address rule is unchanged, because the footer is
-what makes that rule survivable once #97 labels the pills.
+because the footer adds no heading, and its contact-address rule was unchanged here, because the
+footer is what makes labelling the pills survivable at all.
+
+**#97 has since landed, as DDR-029**, and taken that rule: the pills read "Email", "LinkedIn" and
+"GitHub", and this footer is now the only place on the page — and in the printed CV — where an
+address is written out. Everything below was written in anticipation of that and none of it changes;
+what changes is that the footer is no longer a repetition, and removing it or stopping it printing
+would now cost the printed CV its contact details outright.
 
 It **adds no token**. The hairline is `--color-border`, the ink is `--color-text-faint` and the
 space is DDR-013's scale — all three already defined, and DDR-025 already names the footer among the
@@ -186,7 +192,8 @@ Two consequences follow and both are decided here:
 
 Until #97 lands, each address is on the sheet **twice** — once from its contact pill and once from
 the footer. That is the transitional state the two stories were split into and it is stated here
-rather than hidden: #97 removes the first of the two.
+rather than hidden: #97 removes the first of the two. **It has: DDR-029 labels the pills, and each
+address is now on the sheet once, from here.**
 
 ### What it measures
 
@@ -353,6 +360,8 @@ Risks:
 * **The footer is the last thing in the tab order and the quietest thing on the page.** A reader who
   never reaches it loses nothing today, because the pills are above; from #97 they lose the
   addresses. #97 should weigh that when it decides what a labelled pill's accessible name says.
+  **DDR-029 did**: a pill's accessible name is now its label, so the address is text in the footer
+  rather than the name of a control above, and that record carries the risk forward.
 * **A second row of footer content would need a layout decision.** The row is `space-between` with
   wrapping and no breakpoint, which works for one name and three addresses and is not a pattern for
   a footer with columns.

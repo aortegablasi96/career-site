@@ -64,18 +64,31 @@ export interface Video {
 export type ProjectMedia = Image | Video;
 
 /**
- * The mark a contact control carries beside its address.
+ * The mark a contact control carries beside its label.
  *
  * DDR-010 gives each control an icon as a second, non-colour cue that it is a control, since the
- * pills are the one place on the page a link is not underlined. Which mark a control takes is
+ * pills are the one place on the page a link is not underlined. Since DDR-029 it is also what tells
+ * a reader which service a short label names before they read it. Which mark a control takes is
  * recorded here, beside the link, rather than worked out from its address: a component should not
  * have to recognise a host to know what to draw. It is a key the component maps to a shape, as
  * `SkillLevel` is a key it maps to a tint, so no prose leaves `content/`.
  */
 export type ContactIcon = 'email' | 'linkedin' | 'github';
 
-/** A contact address in the introduction, shown as a pill control, per DDR-010. */
+/**
+ * A contact address in the introduction, shown as a pill control, per DDR-010, and again in the
+ * footer, per DDR-028.
+ *
+ * It carries two strings because the two places show different ones, per DDR-029: the pill shows
+ * the short `label` the design draws, and the footer shows `text`, which is the address itself.
+ * The address is stated once here and rendered in the one place that shows it, so the two cannot
+ * disagree, per ADR-002.
+ */
 export interface ContactLink extends Link {
+  /** The address, such as `aortegablasi@gmail.com`. The footer shows it; the pill does not. */
+  text: string;
+  /** What the pill shows, per DDR-029: "Email", "LinkedIn" or "GitHub". */
+  label: string;
   icon: ContactIcon;
 }
 
@@ -94,7 +107,11 @@ export interface Introduction {
   relocation: string;
   summary: string;
   availability: string;
-  /** Each link's text is its own address, so it is not printed twice, per DDR-006 and DDR-010. */
+  /**
+   * Each link shows its short label here and its address in the footer, per DDR-029. Neither is
+   * printed twice: the pill prints its label with no address after it, and the footer prints the
+   * address once.
+   */
   contact: readonly ContactLink[];
 }
 

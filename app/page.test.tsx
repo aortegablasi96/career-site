@@ -55,6 +55,18 @@ describe('HomePage', () => {
     expect(links).toEqual(introduction.contact.map(({ text, href }) => ({ href, text })));
   });
 
+  // DDR-029 labels the contact pills, so the footer is the only place on the page — and therefore
+  // on the printed CV — that an address is written out. This is the end of that: each address is
+  // shown once, as text a visitor can read and copy without following the link.
+  it('shows each contact address exactly once, in the footer alone, per DDR-029', () => {
+    // Addresses, not the hrefs that carry them: an href is a target rather than something shown.
+    const shown = html.replace(/<a href="[^"]*"/g, '<a');
+
+    for (const { text } of introduction.contact) {
+      expect(shown.split(text)).toHaveLength(2);
+    }
+  });
+
   it('never skips a heading level', () => {
     const levels = [...html.matchAll(/<h(\d)/g)].map(([, level]) => Number(level));
 
