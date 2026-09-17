@@ -110,15 +110,17 @@ describe('type scale tokens', () => {
     { role: 'regular', weight: '400' },
     { role: 'medium', weight: '500' },
     { role: 'semibold', weight: '600' },
-  ])('defines the $role weight as $weight, one of the three DDR-011 allows', ({ role, weight }) => {
+    { role: 'bold', weight: '700' },
+  ])('defines the $role weight as $weight, one of the four DDR-023 allows', ({ role, weight }) => {
     expect(token(`font-weight-${role}`)).toBe(weight);
   });
 
-  it('defines no weight beyond those three, because each one is a font file to derive', () => {
+  it('defines no weight beyond those four, because each one is a font file to derive', () => {
     expect([...root.matchAll(/--font-weight-([\w-]+):/g)].map(([, name]) => name)).toEqual([
       'regular',
       'medium',
       'semibold',
+      'bold',
     ]);
   });
 

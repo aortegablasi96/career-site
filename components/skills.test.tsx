@@ -147,17 +147,18 @@ describe('skills styles', () => {
     expect(css).not.toMatch(/\.level\s*\{[^}]*letter-spacing/);
   });
 
-  // DDR-018 gives the two the case the tracking was drawn for. The group's name is an h3, which is
-  // already semibold, so only the badge writes a weight.
+  // DDR-018 gives the two the case the tracking was drawn for.
   it('sets the group name and the level badge in uppercase, per DDR-018', () => {
     expect(css).toMatch(/\.name\s*\{[^}]*text-transform:\s*uppercase;/);
     expect(css).toMatch(/\.badge\s*\{[^}]*text-transform:\s*uppercase;/);
   });
 
-  // The group name is an h3 and is semibold already, so it writes no weight at all.
-  it('sets a badge heavier than the skills beside it, at a weight a font file exists for', () => {
-    expect(css).toMatch(/\.badge\s*\{[^}]*font-weight:\s*var\(--font-weight-semibold\);/);
-    expect(css).not.toMatch(/\.name\s*\{[^}]*font-weight/);
+  // Both labels are the design's bold since DDR-023, which is a step above the semibold the
+  // heading rule gives an h3 and the one DDR-018 settled for while no 700 file existed. The name
+  // writes its own weight now because that rule stops at 600.
+  it('sets both labels bold, at a weight app/fonts/ has a file for', () => {
+    expect(css).toMatch(/\.badge\s*\{[^}]*font-weight:\s*var\(--font-weight-bold\);/);
+    expect(css).toMatch(/\.name\s*\{[^}]*font-weight:\s*var\(--font-weight-bold\);/);
   });
 
   // The case belongs to the badge and the name, and to nothing else in the section: the skills

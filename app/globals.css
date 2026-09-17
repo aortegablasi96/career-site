@@ -50,7 +50,6 @@ h5,
 h6 {
   /* Headings are the darkest ink on the page, one level above the body text, per DDR-012. */
   color: var(--color-text-heading);
-  font-family: var(--font-family-heading);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-heading);
   text-wrap: balance;
@@ -61,13 +60,21 @@ h6 {
    size at every width. */
 /* The page and section titles are the only text on the page set large enough to need tightening:
    a face's default spacing is drawn for text, and at 51.2px and 20.8px it leaves the letters loose,
-   per DDR-017. An item title is body size, so it keeps the spacing Lora was drawn with. */
+   per DDR-017. An item title is body size, so it keeps the spacing its face was drawn with.
+
+   They are also the only headings left in the serif, per DDR-023, which is why the family is
+   written here rather than in the rule above: the design sets an item title — a role's job title,
+   a project's name, a credential's name — in the body face at the size of the text beneath it, and
+   tells it apart by weight and position rather than by voice. h3 to h6 inherit DM Sans from `body`,
+   so nothing below has to set a family back. */
 h1 {
+  font-family: var(--font-family-heading);
   font-size: var(--font-size-page-title);
   letter-spacing: var(--letter-spacing-tight);
 }
 
 h2 {
+  font-family: var(--font-family-heading);
   font-size: var(--font-size-section-title);
   letter-spacing: var(--letter-spacing-tight);
 }

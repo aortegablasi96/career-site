@@ -32,14 +32,19 @@
    item title is set apart from the rest: the name of a group is the only h3 on the page that labels
    a list instead of naming a thing. The case that goes with that tracking is DDR-018's, and it is
    drawn here rather than written into `content/`, so a screen reader still announces "Product and
-   delivery". It is already semibold, as every heading is, so the weight the other two labels take
-   is nothing to write here.
+   delivery". The weight is the design's bold, per DDR-023, which is a step above the semibold it
+   took from the heading rule and is written here because that rule does not reach 700.
+
+   It is set in DM Sans, as every h3 now is, which is what makes DDR-018's measurement its problem
+   too: the x-loose tracking above was safe only while the name was Lora. See DDR-023 on what came
+   back out of the printed page, and #92, which decides the tracking.
 
    It is also the one h3 set at a size of its own rather than at the item title's, per DDR-022: the
    design draws it smaller than the running text it labels, where a job title and a project's name
    are the size of it. */
 .name {
   font-size: var(--font-size-xx-small);
+  font-weight: var(--font-weight-bold);
   letter-spacing: var(--letter-spacing-x-loose);
   text-transform: uppercase;
 }
@@ -73,17 +78,26 @@
    between two letters that an extractor reads each one as a word: printed to A4, "PROFICIENT" came
    back out of both browsers as "P R O F I C I E N T", which is the fault DDR-011's guarantee exists
    to prevent. Measured one property at a time, the case has nothing to do with it — sentence case
-   at 500 splits the same way — and no weight the site ships is safe at +0.1em but the 400 the badge
-   had before it was a label. At +0.025em every weight comes back whole from both browsers, so this
-   is the one value that leaves the badge both heavier than its line and readable out of a PDF.
-   DDR-018 records the amendment; the group's name keeps x-loose, because Lora is not affected. */
+   at 500 splits the same way. At +0.025em every weight comes back whole from both browsers, so
+   this is the one value that leaves the badge both heavier than its line and readable out of a PDF.
+   DDR-018 records the amendment.
+
+   **DDR-018 read that as being about weight, and it is not.** Re-measured on DDR-023, now that
+   DDR-022 has taken the badge from 13px to 10px, +0.1em splits it at 400 as readily as at 700 — so
+   the 400 DDR-018 called safe no longer is, and the size is what moved. It is still Firefox through
+   pypdf alone; Edge and pdfium never split it. The group's name keeps x-loose and comes back whole
+   at every weight, which is why DM Sans Bold could be given to it and not to this. #92 decides
+   whether the badge takes +0.1em anyway.
+
+   The weight is the design's bold since DDR-023, a step above the semibold DDR-018 settled for
+   when the site shipped no file for 700. */
 .badge {
   display: inline-block;
   padding-block: var(--space-x-small);
   padding-inline: var(--space-small);
   border-radius: var(--radius-small);
   font-size: var(--font-size-xxxx-small);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-bold);
   letter-spacing: var(--letter-spacing-loose);
   text-transform: uppercase;
 }

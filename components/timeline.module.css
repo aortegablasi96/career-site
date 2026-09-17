@@ -41,10 +41,11 @@ section > .row {
    The selector names the column as well as the line so that the ink is settled here rather than by
    the order the bundler happens to emit two stylesheets in: `.metadata`, in another module, sets
    the secondary ink on the same element at the same specificity. The tracking, which DDR-017 added
-   and nothing else sets, rides along in the same rule. */
+   and nothing else sets, rides along in the same rule. The weight is the design's bold, per
+   DDR-023, where DDR-018 could only reach semibold because the site shipped no file for 700. */
 .dates .dateRange {
   color: var(--color-accent);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-bold);
   letter-spacing: var(--letter-spacing-loose);
   text-transform: uppercase;
 }

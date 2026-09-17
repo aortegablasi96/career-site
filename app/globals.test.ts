@@ -58,6 +58,22 @@ describe('base typography', () => {
     expect(rule(headings)).toMatch(/color:\s*var\(--color-text-heading\);/);
   });
 
+  // DDR-023 narrows the serif to the page title and the section titles. An item title is an h3 and
+  // the design sets it in the body face at the size of the text beneath it, told apart by weight
+  // and position rather than by voice, so h3 to h6 inherit DM Sans from `body` and the rule that
+  // styles every heading no longer names a family at all.
+  it.each(['h1', 'h2'])('sets %s in the serif, per DDR-023', (heading) => {
+    expect(rule(heading)).toMatch(/font-family:\s*var\(--font-family-heading\);/);
+  });
+
+  it('names no family in the rule that styles every heading, so the rest inherit the body face', () => {
+    expect(rule(headings)).not.toMatch(/font-family/);
+  });
+
+  it.each(['h3', 'h4,\nh5,\nh6'])('leaves %s in the body face, which it inherits', (selector) => {
+    expect(rule(selector)).not.toMatch(/font-family/);
+  });
+
   // DDR-017 tightens the two headings the page sets large, where a face's own spacing, drawn for
   // text, leaves the letters loose.
   it.each(['h1', 'h2'])('tightens %s, the text the page sets largest', (heading) => {

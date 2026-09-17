@@ -19,7 +19,13 @@
   --root-font-size: 100%;
 
   /* The families and their fallback stacks are loaded in app/layout.tsx, which defines
-     --font-dm-sans and --font-lora on the root element. */
+     --font-dm-sans and --font-lora on the root element.
+
+     The heading family is narrower than its name suggests since DDR-023: it is the page title and
+     the section titles, which are the headings the design keeps in the serif, and from #96 the
+     footer's name. An item title is an h3 and the design sets it in the body face, so it takes
+     that one, and the two names are left as they are because renaming them would say the serif
+     belongs to titles alone, which the footer is about to disprove. */
   --font-family-body: var(--font-dm-sans);
   --font-family-heading: var(--font-lora);
 
@@ -71,9 +77,14 @@
   --font-size-section-title: var(--font-size-large);
   --font-size-item-title: var(--font-size-medium);
 
+  /* Four, per DDR-023, where DDR-011 had three. Bold is the design's weight for the three labels
+     — the timeline's date range, a level badge and a skill-group name — which DDR-018 could only
+     set semibold because the site shipped no file for 700. Each one is a file in app/fonts/, so a
+     fifth weight is a fifth file and a decision of its own. */
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
+  --font-weight-bold: 700;
 
   --line-height-body: 1.5;
   --line-height-heading: 1.2;

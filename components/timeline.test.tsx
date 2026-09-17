@@ -148,11 +148,13 @@ describe('timeline styles', () => {
     expect(rule('.dates')).not.toMatch(/letter-spacing/);
   });
 
-  it('sets the dates in uppercase, semibold and the accent, per DDR-018', () => {
+  // DDR-018's case and accent, and DDR-023's weight: the design draws the range bold, which
+  // DDR-018 could not reach because the site shipped no file for 700.
+  it('sets the dates in uppercase, bold and the accent, per DDR-018 and DDR-023', () => {
     const dateRange = rule('.dates .dateRange');
 
     expect(dateRange).toMatch(/text-transform:\s*uppercase;/);
-    expect(dateRange).toMatch(/font-weight:\s*var\(--font-weight-semibold\);/);
+    expect(dateRange).toMatch(/font-weight:\s*var\(--font-weight-bold\);/);
     expect(dateRange).toMatch(/color:\s*var\(--color-accent\);/);
   });
 
