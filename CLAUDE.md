@@ -281,7 +281,7 @@ back out of both, and recheck page breaks when the amount of content changes.
 
 What exists, to reuse rather than reinvent:
 
-* **The design system.** Typography (DDR-011), colour (DDR-025, superseding DDR-012), spacing and layout (DDR-013) and
+* **The design system.** Typography (DDR-011), colour (DDR-025, superseding DDR-012), spacing and layout (DDR-013, as DDR-026 amends its section boundary) and
   responsive behaviour (DDR-014) are the redesign's, reworked on #44, and print (DDR-015) is the
   redesign's too, reworked on #52. The type scale and its floor are DDR-022's since #90, and
   DDR-011 keeps everything else it decides.
@@ -491,11 +491,18 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-025. The next DDR is
-`026`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-026. The next DDR is
+`027`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Five accepted records are superseded or amended **in part**, and each says so at the top and again at
-the section concerned:
+Seven accepted records are superseded or amended **in part**, and each says so at the top and again
+at the section concerned:
+
+* **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
+  gives each section's `h2`. DDR-026 takes the one sentence that rejects the design's divider
+  between every section, which is now drawn.
+* **DDR-013** keeps its scale, its rhythm and every value. DDR-026 amends the sentence that makes
+  whitespace and a heading the whole section boundary: the boundary now carries a hairline, with
+  half the section step above it and half below, so the step itself does not move.
 
 * **DDR-011** is superseded twice over. DDR-022 takes its type scale and its 13px floor; DDR-023
   takes which elements each typeface is used on, the three weights, the four files and the
@@ -504,7 +511,8 @@ the section concerned:
   heights, the measure and the wrapping rules.
 * **DDR-015** keeps everything but its print base, which DDR-022 raises from 11pt to 12pt. DDR-025
   splits the one `--color-decoration` it drops on paper into three tokens; all three are dropped in
-  the same block, for the same reason.
+  the same block, for the same reason, and since DDR-026 one of them draws the section divider,
+  which therefore prints as nothing at all.
 * **DDR-018** keeps its case and its ink. DDR-023 takes its "semibold, not bold" decision, and
   corrects its measurement of the tracking fault: at the 10px badge DDR-022 left, +0.1em splits the
   word in a Firefox PDF at **every** weight the site ships, 400 included, where DDR-018 concluded
@@ -560,8 +568,8 @@ Two things stay out — the gradient monogram, because #63 supplies a real portr
 "Sections" toggle, because the design has no narrow view to match.
 
 The earlier audit's nine, #71 to #78 plus #63, are all landed but #63, which is the owner's to
-produce rather than the repository's. **#89, #90, #91, #92 and #93 are the rewritten epic's first
-five to land**, as DDR-021, DDR-022, DDR-023, DDR-024 and DDR-025.
+produce rather than the repository's. **#89, #90, #91, #92, #93 and #94 are the rewritten epic's
+first six to land**, as DDR-021 to DDR-026.
 
 **#71 has landed, as DDR-016: the photo is 3:4**, not the square it was. `--photo-size` and
 `--photo-size-wide` are now `--photo-width`, `--photo-width-wide` and `--photo-ratio`, following the
@@ -746,6 +754,45 @@ Six things about it are worth knowing before touching colour anywhere.
 Measured on the built page at 1536px and 320px: every value above matches the design node for node,
 the focus outline is the accent at 5.87:1 on the page, and nothing overflows at 320px. No geometry
 changed, so no layout was disturbed — the pill's border is still 1px and a fill takes no space.
+
+**#94 has landed, as DDR-026: a hairline opens every section**, which DDR-010 rejected in a
+sentence. Three declarations in `components/section.module.css` and nothing else: the divider is a
+`border-block-start` on `.section` in `--color-border`, and the section step is **split in half
+around it** — `margin-block-start: var(--space-item)` above, `padding-block-start: var(--space-item)`
+below — because `--space-section` is exactly twice `--space-item`. So the distance between two
+sections is the distance DDR-013 already set, and the line falls midway, which is the design's own
+56px and 56px.
+
+Four things about it are worth knowing before touching a section boundary.
+
+* **It is a border on the section, not an element between two of them.** The design draws five
+  lines, one at the top of each section and none below the last (nodes 2:81, 2:271, 2:458, 2:568,
+  2:646), so it belongs to the section it opens. `section.tsx` renders nothing new, and an `<hr>`
+  was turned down for the reason #72 turned one down: it is a thematic break in the accessibility
+  tree, announced immediately before a landmark named by the heading that follows it.
+* **DDR-010 was not wrong on its own terms, and the measurement that settles it is #72's.** Its
+  objection was that two rules doing one job is clutter. The heading rule grows from a basis of zero
+  and yields entirely to a title that needs the whole line, so at 320px "Education and
+  certifications" has a **0px** rule while its divider is the full 272.8px column — at that width
+  the heading rule marks nothing. The two are also different lines: the divider closes the section
+  above across the column at 1.15:1, the rule opens the one below from the title outward at 1.39:1.
+* **Paper draws no divider and needs no print rule.** `--color-border` is transparent in the print
+  block, per DDR-015, so the hairline goes the way the heading rule and the spine already go, and
+  the space stays. That is also why it can never be stranded at the foot of a sheet: it is not
+  drawn there at all.
+* **The spacing is now stated in two places.** `app/globals.css` names `--space-section` and
+  `section.module.css` splits it, so the distance between two sections is two halves rather than one
+  value. Both halves are held to `--space-item` by `components/section.test.tsx`.
+
+Printed to A4 in Edge 153 and Firefox 156 with background graphics on, and printed again from the
+tree this branched from: **five sheets in both browsers either way**, every section heading on the
+same sheet before and after and each followed by its first item, all 13 articles whole on one sheet,
+no replacement character through pypdf or pdfium, and **no horizontal run of ink wider than 55% of
+any sheet** — the check that would find a divider that printed. On screen at 1536px and 320px: 32px,
+a 1px `#e2e8f0` line the full width of the column, 32px, on all five sections, and nothing overflows
+at 320px. One behaviour moved: a contents link now lands on the divider rather than on the heading,
+because the offset is measured from a box that now begins a step higher. DDR-026 records it and
+leaves the value to #98, which replaces the contents row with the design's sticky bar.
 
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the

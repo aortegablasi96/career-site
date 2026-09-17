@@ -4,6 +4,11 @@ Status: Accepted
 
 Date: 2026-09-16
 
+**Amended by DDR-026** in one respect: sections are no longer separated by whitespace and a heading
+alone, because the design's divider is now drawn between them. The scale, the rhythm and every value
+below are untouched — DDR-026 splits the section step in half around the line rather than adding to
+it, so two sections are exactly as far apart as this record sets them.
+
 Supersedes DDR-003, spacing and layout. Its **spacing scale and its three-level rhythm carry
 forward unchanged**, and so does its decision to separate sections by whitespace and a heading
 rather than by a rule. Its **layout does not**: the single column as wide as the measure becomes a
@@ -68,6 +73,13 @@ the second asks for and margins never collapse into a value that is not on the s
 decorative rule running to the right margin, which DDR-012 colours and DDR-010 places. The draft's
 additional `<Divider>` between every section is not adopted: the heading rule already marks the
 boundary, and two rules doing one job is clutter.
+
+**DDR-026 adopts the divider**, following DDR-010's own reversal, and the boundary is now a hairline
+with half the section step above it and half below. The step itself does not move: `--space-section`
+is exactly twice `--space-item`, so the two halves are one step of this scale and the distance
+between two sections is the distance this record sets. What is no longer true is the sentence above
+and the claim under the table that a section boundary is plain from whitespace and its heading — it
+is now plain from whitespace, a heading and a line.
 
 ### The page column
 

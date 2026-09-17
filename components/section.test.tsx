@@ -53,6 +53,29 @@ describe('Section', () => {
     expect(print).not.toMatch(/\.heading/);
   });
 
+  // DDR-026 supersedes DDR-010's rejection of the design's divider. It is a border on the section
+  // it opens, so it is never in the accessibility tree and section.tsx renders nothing for it —
+  // which the landmark test above already holds, by refusing an <hr>.
+  it('draws the divider above the section as a border, per DDR-026', () => {
+    expect(css).toMatch(/\.section\s*\{[^}]*border-block-start:[^;]*var\(--color-border\);/);
+  });
+
+  // The boundary DDR-013 sets is --space-section, which is twice --space-item. Half above the line
+  // and half below leaves it that size and puts the line in the middle of it, where the design
+  // draws it. A section that took the whole step and then padded itself would open a boundary half
+  // as wide again as every other space on the page.
+  it('splits the section boundary around the divider rather than adding to it, per DDR-026', () => {
+    expect(css).toMatch(/\.section\s*\{[^}]*margin-block-start:\s*var\(--space-item\);/);
+    expect(css).toMatch(/\.section\s*\{[^}]*padding-block-start:\s*var\(--space-item\);/);
+  });
+
+  // The divider is a hairline, so paper drops it at the token layer with no print rule here, as
+  // the heading's rule is dropped. Only the space is left, which is the boundary a sheet had
+  // before the divider existed — so it can never be stranded at the foot of one.
+  it('leaves the divider to the token layer on paper, per DDR-015', () => {
+    expect(print).not.toMatch(/\.section/);
+  });
+
   it('keeps the spacing a section has without the block, per DDR-003', () => {
     expect(css).toMatch(/\.opening > \* \+ \*\s*\{\s*margin-block-start:\s*var\(--space-flow\);\s*\}/);
     expect(css).toMatch(/\.opening \+ \*\s*\{\s*margin-block-start:\s*var\(--space-item\);\s*\}/);
