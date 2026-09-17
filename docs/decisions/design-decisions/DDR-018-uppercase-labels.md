@@ -10,12 +10,19 @@ decision. DDR-011's seven sizes, two families, three weights, 13px floor and Lor
 unchanged when this was written, and so do DDR-012's measured pairings, which this record adds no
 colour to and takes none away from.
 
-**Two later records reach into this one.** DDR-022 took the sizes and the floor, which moved the
+**Three later records reach into this one.** DDR-022 took the sizes and the floor, which moved the
 badge from 13px to 10px. DDR-023 gave all three labels the design's bold, so the "semibold, not
 bold" decision below is superseded, and it re-measured the tracking fault this record turns on:
 at 10px the badge splits in a PDF at **every** weight the site ships, 400 included, so the
 conclusion below that only 400 is safe at +0.1em was true of a 13px badge and is not true of this
-one. Read DDR-023 for the measurement and #92 for what is decided about the tracking.
+one. **DDR-024 then supersedes the tracking amendment below outright**: the badge goes back to
+`x-loose`, +0.1em, which is what DDR-017 gave it and what the design draws, and the three badge
+words are given up as searchable terms in a Firefox PDF. So the section *The badge's tracking* is
+history rather than the rule, and the row it amended in DDR-017's table is restored. Read DDR-024
+for that decision and the measurement behind it.
+
+Everything else here stands: the case, the accent on the date range, where the rules live, and the
+reason the case is drawn in the stylesheet rather than written into `content/`.
 
 ## Context
 
