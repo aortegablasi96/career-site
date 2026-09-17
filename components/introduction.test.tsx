@@ -284,6 +284,15 @@ describe('introduction styles', () => {
     expect(rule('.contact,\n.cv')).toMatch(/box-shadow:\s*var\(--shadow-raised\);/);
   });
 
+  // DDR-030 adds the four controls to DDR-023's medium row. The weight sits on the shared rule
+  // rather than on each kind of pill, because it belongs to a control's label and every control has
+  // one; the CV pill, which carried it alone, therefore writes none of its own any more.
+  it('sets all four control labels in medium, per DDR-030', () => {
+    expect(rule('.contact,\n.cv')).toMatch(/font-weight:\s*var\(--font-weight-medium\);/);
+    expect(rule('.cv')).not.toMatch(/font-weight/);
+    expect(rule('.contact')).not.toMatch(/font-weight/);
+  });
+
   it('hides the CV control on paper, where a download is dead and the paper is the CV', () => {
     expect(rule('.cvItem', paper)).toMatch(/display:\s*none;/);
   });

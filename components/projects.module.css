@@ -63,7 +63,12 @@
 }
 
 /* A tag is its own text on a tint that repeats what the text says, so it reads the same in
-   greyscale, on paper and to a screen reader. The accent on the tint is 7.07:1, per DDR-012. */
+   greyscale, on paper and to a screen reader. The accent on the tint is 7.07:1, per DDR-012.
+
+   Medium, which is the weight DDR-023's table has always named for a tag and which no rule wrote
+   until DDR-030. It is the smallest text on the page, at 11px, and the one that most needs the
+   extra stroke; it is also the only tracked text this weight reaches, at +0.025em, which is well
+   below the +0.1em DDR-024 measures as the point a Firefox PDF spells a word out. */
 .tag {
   padding-block: var(--space-x-small);
   padding-inline: var(--space-small);
@@ -71,6 +76,7 @@
   background-color: var(--color-surface-tag);
   color: var(--color-text-tag);
   font-size: var(--font-size-xxx-small);
+  font-weight: var(--font-weight-medium);
   letter-spacing: var(--letter-spacing-loose);
 }
 

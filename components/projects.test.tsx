@@ -261,6 +261,12 @@ describe('project styles', () => {
     expect(rule('.project + .project')).toMatch(/margin-block-start:\s*var\(--space-item\);/);
   });
 
+  // DDR-030 writes the weight DDR-023's table has always named for a tag and which no rule ever
+  // wrote. It is the smallest text on the page, and the one an extra stroke helps most.
+  it('sets a tag in medium, per DDR-030', () => {
+    expect(rule('.tag')).toMatch(/font-weight:\s*var\(--font-weight-medium\);/);
+  });
+
   it('reads a tag’s tint and its ink from the pairing DDR-012 measures', () => {
     expect(rule('.tag')).toMatch(/background-color:\s*var\(--color-surface-tag\);/);
     expect(rule('.tag')).toMatch(/color:\s*var\(--color-text-tag\);/);
