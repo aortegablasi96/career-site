@@ -17,16 +17,16 @@
   gap: var(--space-medium);
 }
 
-/* A card is the page's one white surface, per DDR-012, edged with a hairline. The edge carries no
-   information — the term and its value are a pair in the markup — so it is drawn in the decoration
-   colour, which may sit below 3:1 for that reason.
+/* A card is the page's one white surface, per DDR-025, edged with a hairline. The edge carries no
+   information — the term and its value are a pair in the markup — so it is drawn in the hairline
+   the design gives an edge, at 1.23:1 on the card, which may sit below 3:1 for that reason.
 
    It is raised off the page by the one shadow the site has, per DDR-020, which is the other half of
    what makes it a card rather than a box. */
 .card {
   padding-block: var(--space-medium);
   padding-inline: var(--space-medium);
-  border: 1px solid var(--color-decoration);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-large);
   background-color: var(--color-surface-card);
   box-shadow: var(--shadow-raised);
@@ -40,7 +40,7 @@
   font-weight: var(--font-weight-semibold);
 }
 
-/* The level in the accent, at 7.90:1 on the card, per DDR-012. The browser indents a value by 40px,
+/* The level in the accent, at 6.29:1 on the card, per DDR-025. The browser indents a value by 40px,
    which is not on the scale; here it sits under its term. */
 .level {
   margin-block-start: var(--space-x-small);

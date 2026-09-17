@@ -14,10 +14,14 @@
 }
 
 /* A contents link is set as a label, at the step DDR-022 gives every short label the reader acts
-   on. Every target is at least the minimum in each direction, per DDR-004. */
+   on, and in the muted ink DDR-025 gives it, where every other link on the page is in the accent.
+   That is the design's, and it is 4.44:1, which fails WCAG 1.4.3; the underline the base styles
+   give every link is untouched, so the colour is not what says this is a link. Every target is at
+   least the minimum in each direction, per DDR-004. */
 .link {
   display: inline-flex;
   align-items: center;
+  color: var(--color-text-muted);
   font-size: var(--font-size-x-small);
   min-block-size: var(--target-size-min);
   min-inline-size: var(--target-size-min);

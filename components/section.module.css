@@ -42,7 +42,7 @@
 .heading::after {
   content: '';
   flex: 1;
-  border-block-start: 1px solid var(--color-decoration);
+  border-block-start: 1px solid var(--color-rule);
 }
 
 /* The heading and the first item share one block, per DDR-008. It keeps the spacing a section has

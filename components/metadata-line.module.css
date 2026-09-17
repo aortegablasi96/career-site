@@ -1,10 +1,14 @@
-/* Metadata is a step below body text, in the secondary text colour, per DDR-012 and DDR-022. It is
-   set apart by its size and position too, so the colour is not the only signal.
+/* Metadata is a step below body text, in the muted ink, per DDR-025 and DDR-022. It is set apart by
+   its size and position too, so the colour is not the only signal — which matters more here than
+   anywhere, because the ink is 4.44:1 and fails WCAG 1.4.3.
 
-   This is the step the design gives a company, an institution and the introduction's location line.
-   The two lines in the timeline's date column are smaller still, and timeline.module.css sets them:
-   this module is the size three of its five users take, not the size the role always has. */
+   This is the step the design gives a company, an institution and the introduction's location line,
+   and the ink it gives the first two. The other two lines this module reaches are fainter still and
+   say so where they are set: the introduction's location, and the place in the timeline's date
+   column, both take --color-text-faint. The two lines in that column are smaller too, and
+   timeline.module.css sets their step: this module is the size three of its five users take, not
+   the size the role always has. */
 .metadata {
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   font-size: var(--font-size-small);
 }

@@ -7,6 +7,15 @@ Date: 2026-09-17
 Refines DDR-013, which gives the redesign three corner radii and no elevation, by adding one token
 beside them. DDR-013 stands in every other respect.
 
+**Amended by DDR-025**, which takes the shadow's ink back to the design's 10% black. This record
+darkened it to 22% because at 10% its darkest row is 1.50:1 against the page, fainter than the
+hairlines DDR-012 called the lightest at which a line reads at all. DDR-025 replaces those hairlines
+with three that are all fainter than 1.50:1, so the floor the darkening cleared no longer exists.
+Everything else here stands: one elevation, named for what it does, the eight elements that read it,
+the design's geometry, the argument for measuring a shadow against the page, and the reason its
+translucent ink is held inside the shadow rather than offered to the palette. The ramp below is
+still the measurement DDR-025 reverses.
+
 **Amended by DDR-021**, which takes the second level this record left open: the profile photo's
 outer glow and inner shadow. Everything here stands — `--shadow-raised`, its 22% ink, the eight
 elements that read it, and the argument for measuring a shadow against the page. What DDR-021 adds

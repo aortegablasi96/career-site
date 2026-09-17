@@ -196,10 +196,10 @@ Styling follows ADR-001. `app/tokens.css` defines every design token once, as a 
 at `:root`, and `app/globals.css` applies the tokens to plain HTML elements. Component styles are
 to be CSS Modules that read the tokens rather than writing literal values. A value the tokens do
 not provide is a design decision to make, not a number to invent. `app/tokens.test.ts` holds the
-type scale step by step and its floor to DDR-022, every colour pairing to the contrast ratio DDR-012 records, the
+type scale step by step and its floor to DDR-022, every colour pairing to the contrast ratio DDR-025 records — including the four that fail, held by name so a fifth cannot join them quietly — the
 spacing scale, rhythm, column and radii to DDR-013, the narrow breakpoint and what it adapts to
 DDR-014, the photo's two widths and its ratio to DDR-021, the three tracking values to DDR-017,
-the bullet marker's 4.17:1 to DDR-019, the raised shadow and its 22% ink to DDR-020 and the photo's
+the bullet marker's 1.86:1 to DDR-019 as DDR-025 amends it, the raised shadow and its 10% ink to DDR-020 as DDR-025 amends it, and the photo's
 two lights to DDR-021, the timeline's and
 the projects' measures to DDR-010, and the print
 treatment to DDR-015 as DDR-022 amends it — the 12pt base, every surface dropped and no ink touched, the 28mm photo, and
@@ -250,7 +250,7 @@ layout at all.
 The `@media print` block in `app/tokens.css` sets `--root-font-size` to 12pt, which DDR-022 raised
 from DDR-015's 11pt when the scale changed, so every rem, type and space alike, is measured from a
 size suited to paper: body text at 11.25pt and the smallest step, a level badge, at 7.5pt. It makes **every** surface transparent — the page, the card, the tag and
-the three level tints — and the decoration colour and the one shadow with them, so no component
+the three level tints — and all three hairline colours and the one shadow with them, so no component
 writes a print rule to drop its own background or put out its own light, and the sheet reads the
 same whether or not the browser prints background graphics. It lets the column fill the sheet, and sets the printed photo to 28mm, in mm because a
 photograph on a sheet is a size of the paper. An `@page` rule beside it sets 2cm margins.
@@ -281,7 +281,7 @@ back out of both, and recheck page breaks when the amount of content changes.
 
 What exists, to reuse rather than reinvent:
 
-* **The design system.** Typography (DDR-011), colour (DDR-012), spacing and layout (DDR-013) and
+* **The design system.** Typography (DDR-011), colour (DDR-025, superseding DDR-012), spacing and layout (DDR-013) and
   responsive behaviour (DDR-014) are the redesign's, reworked on #44, and print (DDR-015) is the
   redesign's too, reworked on #52. The type scale and its floor are DDR-022's since #90, and
   DDR-011 keeps everything else it decides.
@@ -491,25 +491,34 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010 to DDR-015 and DDR-017 to DDR-024. The next DDR is `025`. Status
-values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-025. The next DDR is
+`026`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Three accepted records are superseded **in part**, and each says so at the top and again at the
-section concerned:
+Five accepted records are superseded or amended **in part**, and each says so at the top and again at
+the section concerned:
 
 * **DDR-011** is superseded twice over. DDR-022 takes its type scale and its 13px floor; DDR-023
   takes which elements each typeface is used on, the three weights, the four files and the
   no-italics rule. What DDR-011 is still the record to read for is the two faces themselves and
   their fallback stacks, the one-static-file-per-weight recipe, the PDF guarantee, the line
   heights, the measure and the wrapping rules.
-* **DDR-015** keeps everything but its print base, which DDR-022 raises from 11pt to 12pt.
+* **DDR-015** keeps everything but its print base, which DDR-022 raises from 11pt to 12pt. DDR-025
+  splits the one `--color-decoration` it drops on paper into three tokens; all three are dropped in
+  the same block, for the same reason.
 * **DDR-018** keeps its case and its ink. DDR-023 takes its "semibold, not bold" decision, and
   corrects its measurement of the tracking fault: at the 10px badge DDR-022 left, +0.1em splits the
   word in a Firefox PDF at **every** weight the site ships, 400 included, where DDR-018 concluded
   400 was safe. **DDR-024 then takes its tracking amendment outright**, putting the badge back at
   +0.1em and restoring the row of DDR-017's table DDR-018 had changed.
+* **DDR-019** keeps its indent, its recoloured `::marker`, its three reasons against a drawn dot,
+  and its reason for being a token of its own that paper does not drop. DDR-025 takes its colour:
+  the marker is the design's `#a5b4fc` at 1.86:1, which DDR-019 measured and rejected, and it now
+  fails WCAG 1.4.11.
+* **DDR-020** keeps one elevation, its name, its eight elements, the design's geometry and its
+  reason for holding a translucent ink inside the shadow. DDR-025 takes its ink back to the design's
+  10% black, because the hairlines the 22% was measured against no longer exist.
 
-`Superseded` are DDR-001 to DDR-009, and DDR-016:
+`Superseded` are DDR-001 to DDR-009, DDR-012, and DDR-016:
 
 | Superseded | By      | What changed                                                            |
 | ---------- | ------- | ----------------------------------------------------------------------- |
@@ -523,6 +532,7 @@ section concerned:
 | DDR-008    | DDR-015 | Its block survives; its claim that both browsers break alike does not    |
 | DDR-009    | DDR-011 | Its PDF guarantee is re-established for the new faces, and widened       |
 | DDR-016    | DDR-021 | The photo’s corner radius and its two lights; the ratio and widths carry over |
+| DDR-012    | DDR-025 | The design's palette entire: three inks below the body's, a new accent, three hairlines, and four pairings that fail WCAG |
 
 DDR-008 had superseded DDR-005's acceptance that Firefox can leave a section heading at the foot of
 a page, before DDR-015 superseded both. Each superseded record says at the top what carries forward
@@ -550,8 +560,8 @@ Two things stay out — the gradient monogram, because #63 supplies a real portr
 "Sections" toggle, because the design has no narrow view to match.
 
 The earlier audit's nine, #71 to #78 plus #63, are all landed but #63, which is the owner's to
-produce rather than the repository's. **#89, #90 and #91 are the rewritten epic's first three to
-land.**
+produce rather than the repository's. **#89, #90, #91, #92 and #93 are the rewritten epic's first
+five to land**, as DDR-021, DDR-022, DDR-023, DDR-024 and DDR-025.
 
 **#71 has landed, as DDR-016: the photo is 3:4**, not the square it was. `--photo-size` and
 `--photo-size-wide` are now `--photo-width`, `--photo-width-wide` and `--photo-ratio`, following the
@@ -672,10 +682,76 @@ Five things about it are worth knowing before touching type or a font file.
   0.9px, leaving 34.9px of slack in the 160px column, and Lora to DM Sans on the item titles leaves
   every `h3` line count identical at 320px, 390px and 1280px at both text sizes.
 
+**#93 has landed, as DDR-025: the page's colours are the design's, and four pairings now fail
+WCAG.** It supersedes DDR-012 and amends DDR-019's marker and DDR-020's shadow ink. This is the
+story on Epic #70 with a real cost to real readers, and the record says so rather than absorbing it;
+`app/tokens.test.ts` holds every pairing to its measured ratio rather than to a floor, and holds the
+four failures **by name**, so a fifth cannot join them quietly and none of the four can be quietly
+improved without the record moving with it.
+
+Twenty-two colour tokens where DDR-012 had eighteen. What moved:
+
+| Role                                                 | Was                   | Now                       |
+| ---------------------------------------------------- | --------------------- | ------------------------- |
+| The accent                                           | `#4338ca` (7.38:1)    | `#4f46e5` (5.87:1, AA)    |
+| A company, an institution, a thesis, a contents link | `#475569` (7.07:1)    | `--color-text-muted`, `#64748b` (**4.44:1, fails 1.4.3**) |
+| The location, a role's place, the footer             | `#475569` (7.07:1)    | `--color-text-faint`, `#94a3b8` (**2.39:1, fails 1.4.3**) |
+| A technology tag's ink                               | `var(--color-accent)` | `#4338ca`, written out    |
+| The rule beside a section heading                    | `--color-decoration`  | `--color-rule`, `#cbd5e1` (1.39:1) |
+| A card's edge; from #94 and #96 a divider and the footer's border | `--color-decoration` | `--color-border`, `#e2e8f0` (1.15:1) |
+| A contact pill's border; the timeline's spine and dots | `--color-text-secondary` / `--color-decoration` | `--color-border-accent`, `#c7d2fe` (**1.49:1 on the pill, fails 1.4.11**) |
+| A role's bullet marker                               | `#6366f1` (4.17:1)    | `#a5b4fc` (**1.86:1, fails 1.4.11**) |
+| The raised shadow's ink                              | 22% black             | 10% black, the design's   |
+
+`--color-surface`, `--color-surface-card`, `--color-text-heading`, `--color-text`,
+`--color-text-secondary`, the four tinted surfaces and their inks are untouched: the design and
+DDR-012 already agreed on them. `--color-decoration` is gone.
+
+Six things about it are worth knowing before touching colour anywhere.
+
+* **There is no longer a border colour that carries meaning, and that is why `--color-decoration` is
+  gone.** DDR-012 kept a control's edge at `--color-text-secondary` and named the hairline
+  `decoration` "so that reaching for it for a control's edge is a visible mistake rather than an
+  easy one". The design draws the contact pill's border in an indigo tint at 1.49:1, so the rule has
+  nothing left to guard and the three hairlines are named for what they draw. **What identifies a
+  contact pill now is its icon, its shape and its fill** — the design puts each pill on white, and
+  `introduction.module.css` now does too, which is both the design's and the surface the 1.49:1 is
+  measured on.
+* **The tag's ink is the one place `#4338ca` survives.** The design sets a technology tag in it and
+  everything else in `#4f46e5`, so `--color-text-tag` stops being a reference to the accent and is
+  written out. The test holds the two apart.
+* **Three inks below the body's, and which module carries which.** `metadata-line.module.css` has
+  the muted ink, because a company and an institution are its commonest users. The two that are
+  fainter override it on rules that already existed: `.location` in the introduction, and `.dates p`
+  in the timeline, which DDR-022 added there for the size. The date range above the place is in the
+  accent at a specificity neither can reach.
+* **The contents links keep their underline**, which the design does not draw. At 4.44:1 the colour
+  is the last thing that should have to say a link is a link, and it is the one place DDR-025 does
+  not follow the file.
+* **Print is unchanged in mechanism and the markers still print.** Three hairline tokens drop at the
+  token layer where one did; no component writes a print rule of its own; `--color-marker` is
+  deliberately not in that block. Verified in the browser under print emulation: every hairline
+  transparent, every shadow `none`, the marker still `#a5b4fc`, no ink touched. **The sheet itself
+  was not measured on this story** — the count, the breaks and what comes back out of a PDF are
+  #99's.
+* **Four measured values are not in the issue's table**, because DDR-012 folded them into one token
+  and the design does not: a card's edge is `#e2e8f0` (node 2:654), the timeline's spine is
+  `#c7d2fe` (node 2:576), a contact pill sits on white (node 2:51), and a tag's ink is `#4338ca`
+  (node 2:296). Three differences found on this story are **structure rather than colour and stay**:
+  the design's timeline dot is a `#4f46e5` core in a `#c7d2fe` ring on the page's own surface
+  (node 2:637) where the page draws one disc; the design draws **no spine at all** in the experience
+  section (node 2:99 is empty) where the page draws it in both; and the contents bar's border is
+  transparent in the design (node 2:6), not the `#e2e8f0` the issue gives it — the bar is #98's.
+
+Measured on the built page at 1536px and 320px: every value above matches the design node for node,
+the focus outline is the accent at 5.87:1 on the page, and nothing overflows at 320px. No geometry
+changed, so no layout was disturbed — the pill's border is still 1px and a fill takes no space.
+
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the
 accessibility tree and cannot reach the accessible name the section takes from its heading. It is a
-border in `--color-decoration`, so paper drops it at the token layer with no print rule of its own.
+border in `--color-rule`, since #93 — `--color-decoration` before it — so paper drops it at the
+token layer with no print rule of its own.
 The rule grows from a basis of zero and **yields to nothing when the title needs the whole line** —
 which only ever happens to "Education and certifications", below about 390px or with enlarged text.
 That is deliberate: giving it a minimum width instead takes the content to 342px in a 320px viewport
@@ -703,7 +779,7 @@ element keeps its value, and `content/cv.ts`'s digest does not move. **Semibold,
 bold**, because the site ships files for 400, 500 and 600 only and DDR-011 makes a fifth file a
 decision of its own; the group name was already semibold, as every heading is, so only two rules
 write a weight. The technology tags are deliberately **not** part of it: they are proper names, and
-`NEXT.JS` is not one. The accent adds no pairing — DDR-012 already measures it at 7.38:1 on the page
+`NEXT.JS` is not one. The accent adds no pairing — DDR-012 already measured it at 7.38:1 on the page, and DDR-025 measures its successor at 5.87:1
 — and the place below the date range is untouched.
 
 Three things about it are worth knowing before touching any of them.
@@ -741,29 +817,31 @@ Three things about it are worth knowing before touching it.
   a size proportional to the text: about 4.8px beside the 14px points in Chromium, which is the
   design's 4px without a length. `components/experience.test.tsx` fails if either `list-style` or
   `content` appears in that stylesheet.
-* **`--color-marker` is `#6366f1`, not the design's `#a5b4fc`.** The design's value is 1.86:1 on the
-  page — fainter than the hairlines DDR-012 calls the lightest that read at all — so DDR-019 takes
-  the lightest of the ramp that clears the 3:1 WCAG asks of meaningful non-text, at 4.17:1. The
-  owner chose it on #76 over reusing `--color-accent`.
-* **It is deliberately not `--color-decoration`.** DDR-015 makes decoration transparent at the token
-  layer, so a marker drawn in it would leave the printed CV with no markers at all, where it has
+* **`--color-marker` was `#6366f1` and is the design's `#a5b4fc` since #93.** DDR-019 measured the
+  design's value at 1.86:1 — fainter than the hairlines DDR-012 called the lightest that read at all
+  — and took the lightest of the ramp that clears the 3:1 WCAG asks of meaningful non-text, at
+  4.17:1; the owner chose it on #76 over reusing `--color-accent`. **DDR-025 reverses that**, and
+  records the marker as failing WCAG 1.4.11.
+* **It is deliberately not a hairline.** DDR-015 makes every hairline transparent at the token
+  layer, so a marker drawn in one would leave the printed CV with no markers at all, where it has
   them today. That is the whole reason the palette gains a colour rather than reusing one, and it is
-  why `--color-marker` is absent from the print block that drops every surface.
+  why `--color-marker` is absent from the print block that drops every surface — which DDR-025 does
+  not change, so the marker still prints.
 
-**#77 has landed, as DDR-020: the site has one elevation, and the design's shadow is darkened to
-reach it.** One token, `--shadow-raised`, and one declaration each in `introduction.module.css` and
+**#77 has landed, as DDR-020: the site has one elevation.** One token, `--shadow-raised`, and one declaration each in `introduction.module.css` and
 `languages.module.css`, so exactly eight elements are raised off the page: the three contact pills,
 the CV control and the four language cards. Nothing else on the page is, and depth is otherwise
 still a tint, a hairline and a radius.
 
 Three things about it are worth knowing before touching it.
 
-* **The ink is 22% black where the design draws 10%.** The geometry is the design's, unchanged. Its
-  ink is not: at 10% the darkest row the shadow draws is 1.50:1 against the page, fainter than the
-  hairlines DDR-012 calls the lightest that read at all, and at 22% it is 2.45:1 in Chromium and
-  2.47:1 in Gecko — the lightest ink that clears them. The floor is the hairlines' 2.39:1 rather than
-  WCAG's 3:1, because a shadow carries nothing; DDR-020 has the ramp and the argument. The owner
-  chose a shadow that reads over the design's own and over having none at all.
+* **The ink was 22% black and is the design's 10% since #93.** The geometry is the design's and
+  always was. DDR-020 darkened the ink because at 10% the darkest row the shadow draws is 1.50:1
+  against the page, fainter than the hairlines DDR-012 called the lightest that read at all, where
+  at 22% it is 2.45:1 in Chromium and 2.47:1 in Gecko. Its floor was the hairlines' 2.39:1 rather
+  than WCAG's 3:1, because a shadow carries nothing; DDR-020 has the ramp and the argument.
+  **DDR-025 reverses that**, because its three hairlines are all fainter than 1.50:1, so the floor
+  the darkening cleared no longer exists.
 * **The ink is deliberately not in the palette.** Every colour token is an opaque hex, and this one
   is translucent black, which is wrong on text, on a border and on a surface. It lives inside
   `--shadow-raised` rather than beside the colours, and `app/tokens.test.ts` holds the palette opaque

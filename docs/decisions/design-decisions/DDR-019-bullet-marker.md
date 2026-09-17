@@ -4,6 +4,14 @@ Status: Accepted
 
 Date: 2026-09-17
 
+**Amended by DDR-025**, which takes the marker's colour. This record measured the design's own
+`#a5b4fc` at 1.86:1, called it fainter than anything else the page draws, and chose `#6366f1` at
+4.17:1 instead; the owner decided on 2026-09-17 that the design prevails, so the marker is
+`#a5b4fc` and fails WCAG 1.4.11. Everything else here stands: the one-step indent, the recoloured
+`::marker` and the three reasons a drawn dot was rejected, the reason the marker is a token of its
+own rather than a hairline, and the reason it is not dropped on paper. The ramp below is still the
+measurement DDR-025 reverses.
+
 Refines DDR-010, which gives a role its bullet points but says nothing about how they are marked or
 how far they are indented. DDR-010 stands in every other respect.
 

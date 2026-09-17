@@ -59,7 +59,8 @@
    this line is not a metadata line. It carries a badge, its parts are skills separated for reading
    rather than parts of one fact, and the component builds its own dots. What the two share is the
    role, so they share the pair of tokens that draws it — the secondary ink at 7.07:1 on the page,
-   per DDR-012. The badges keep their own inks, since a declared colour beats an inherited one. */
+   per DDR-025, which is the one ink below the body's that the design and the records already
+   agreed on. The badges keep their own inks, since a declared colour beats an inherited one. */
 .level {
   color: var(--color-text-secondary);
   font-size: var(--font-size-x-small);

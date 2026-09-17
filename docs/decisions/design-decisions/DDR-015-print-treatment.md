@@ -118,7 +118,10 @@ writes no layout for it at all — only the size of the photo.
 
 The redesign has six surfaces where DDR-002 had one. In print, **every one of them becomes
 `transparent`**: the page, the white card, the tag's tint, and the three level tints. So does
-`--color-decoration`, which is the timeline's dot and line and the language card's edge.
+`--color-decoration`, which is the rule beside a section heading, the timeline's dot and line, and
+the language card's edge. DDR-025 splits that one token into three — `--color-rule`,
+`--color-border` and `--color-border-accent` — and paper drops all three, in the same block and for
+the same reason. Nothing else here moves.
 
 * **No component writes a print rule to drop its own background.** Before this record, three of them
   did, and a seventh surface would have needed a fourth. The statement "paper drops every tint" is
