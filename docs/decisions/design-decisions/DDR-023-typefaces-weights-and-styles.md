@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-17
 
+**Amended in one respect by DDR-030**, which corrects the weight table's medium row and writes the
+two declarations that row always implied. No face, no weight, no file and no italic moves; what
+moves is which elements take medium, and the table below says so where it stands.
+
 Supersedes, **in part**, DDR-011, the typographic system: the elements each typeface is used on, the
 weights the site ships, the files in `app/fonts/`, and the no-italics rule it carried forward from
 DDR-001. Everything else DDR-011 decides stands and it is still the record to read for it — the two
@@ -76,9 +80,16 @@ footer's name is not a title either. The token names the face's role in the page
 | Token                    | Weight | Used for                                                          |
 | ------------------------ | ------ | ----------------------------------------------------------------- |
 | `--font-weight-regular`  | 400    | Body text, and the thesis sentence's italic                       |
-| `--font-weight-medium`   | 500    | The positioning line, the contents links, technology tags          |
+| `--font-weight-medium`   | 500    | The positioning line, the four pill controls, technology tags      |
 | `--font-weight-semibold` | 600    | `h1` to `h6`, `b` and `strong`                                     |
 | `--font-weight-bold`     | 700    | The date range, a level badge, a skill-group name                  |
+
+**The medium row above is DDR-030's, and this record's was wrong.** As written here it named the
+contents links and the technology tags and left out the CV control, which has carried medium since
+#48; on the page, neither the contents links nor the tags were ever given the weight, and the three
+contact pills were at 400 where the design draws them Medium. DDR-030 sets the four controls and the
+tags, corrects the row to what it now describes, and leaves the contents links to #98, which
+replaces that component. Everything else in this table stands as written.
 
 700 is the one addition, and it is the design's weight for the three labels DDR-018 sets as labels.
 DDR-018 had to settle for semibold there, and said so plainly: the site shipped no file for 700 and

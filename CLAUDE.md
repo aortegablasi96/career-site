@@ -152,7 +152,9 @@ Tooling notes that are easy to trip over:
   behaviour to test. What to test is the Tester's decision.
 * **Fonts** are Lora and DM Sans, per DDR-011, with DDR-023 deciding which elements take which:
   Lora is `h1` and `h2` alone, and everything else — including `h3` to `h6`, which are the item
-  titles — is DM Sans. They are committed
+  titles — is DM Sans. Which elements take **medium** is DDR-030's since #109: the positioning line,
+  the four pill controls and the technology tags. The contents links are the one element the design
+  draws in medium that the page does not, and #98 takes them with the rest of that component. They are committed
   to `app/fonts/`, with their licences, and loaded by `next/font/local` in `app/layout.tsx`, so
   builds need no network access for fonts. Each is one static file per weight and style, not a
   variable font: Firefox draws variable fonts as outlines when it saves a PDF, so the printed CV's
@@ -509,10 +511,10 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-029. The next DDR is
-`030`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-030. The next DDR is
+`031`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Ten accepted records are superseded or amended **in part**, and each says so at the top and again
+Eleven accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -533,6 +535,11 @@ at the section concerned:
   whitespace and a heading the whole section boundary: the boundary now carries a hairline, with
   half the section step above it and half below, so the step itself does not move.
 
+* **DDR-023** keeps its two faces, its four weights, its one italic, its seven files and its rule
+  about which elements take which face. DDR-030 corrects the one row of its weight table that was
+  wrong in both directions: the medium row named the contents links and the tags, neither of which
+  had the weight, and left out the CV control, which did. It now names the positioning line, the
+  four pill controls and the tags; the contents links are #98's.
 * **DDR-011** is superseded twice over. DDR-022 takes its type scale and its 13px floor; DDR-023
   takes which elements each typeface is used on, the three weights, the four files and the
   no-italics rule. What DDR-011 is still the record to read for is the two faces themselves and
@@ -954,11 +961,34 @@ same five missing from the same PDFs before this change. On screen, swept every 
 smallest and clear 24 by 24 outright, as they did at 203.2 by 37.5 — and nothing overflows at 320px,
 360px, 390px or 1536px at either text size.
 
-**One gap between the page and the design was found here and deliberately left**: the design sets
-all four pill labels in DM Sans **Medium** (node 2:56 and its siblings) and the page sets the three
-contact pills at 400, the CV control alone at medium. It is a weight rather than a label, so it
-belongs to DDR-023 rather than here, and #97's `Not Included` does not cover it. No issue covers it
-yet.
+**The weight gap #97 found is closed by #109**, below.
+
+**#109 has landed, as DDR-030: the pill controls and the technology tags are set in medium.** Two
+declarations and no token. `introduction.module.css` moves `font-weight: var(--font-weight-medium)`
+out of `.cv` and into the `.contact, .cv` rule the two kinds of pill share, so all four controls are
+one weight and neither kind writes its own; `projects.module.css` adds the same to `.tag`.
+
+Three things about it are worth knowing before touching a weight.
+
+* **DDR-023's medium row was wrong in both directions and DDR-030 corrects it.** It named the
+  contents links and the technology tags, neither of which had ever been given the weight, and left
+  out the CV control, which has carried it since #48. Nothing here was a new decision: the design
+  and DDR-023 already agreed, and the declaration was missing.
+* **The contents links are still at 400, deliberately.** The design draws them medium at node 2:10,
+  and #98 replaces `contents.module.css` with the design's sticky bar, so the weight goes with that
+  story rather than into a file it rewrites. DDR-030 names it so it is not forgotten.
+* **A tag row gains a line at six of the 61 widths swept**, because a tag is about 1–1.5px wider:
+  at 360px at the default text size, and at 310, 420, 570, 690 and 710px at 200%. Every other width
+  from 300px to 900px is unchanged at both sizes, including 320px, 390px and 1536px, and nothing but
+  a tag row moves — no paragraph, heading or list item reflows anywhere. The pills grow by under
+  2px each and the controls row does not change height at any width.
+
+Printed to A4 in Edge 153 and Firefox 156 with background graphics on, and printed again from the
+tree this branched from: **five sheets in both browsers either way**, and every reading identical
+through pypdf and pdfium both. No new word splits, which is the check this change needed most:
+DDR-018 blamed a weight above 400 for a split word, DDR-024 showed tracking was the cause, and a tag
+is the only tracked text this touches — at +0.025em, well below the +0.1em where the badge splits.
+Swept every 10px from 300px to 900px at both text sizes, no pair of targets fails WCAG 2.5.8.
 
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the
