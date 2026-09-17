@@ -1,8 +1,21 @@
 # DDR-016-profile-photo-shape
 
-Status: Accepted
+Status: Superseded
 
 Date: 2026-09-16
+
+**Superseded by DDR-021**, which adopts the design's shape and its two lights. Read that record
+first; this one for the reasoning behind the shape the page had between #71 and #89.
+
+**What carries forward**: the 3:4 ratio, the two widths, `--photo-width`, `--photo-width-wide` and
+`--photo-ratio` and the reason they are a width and a shape rather than two lengths, the crop #63
+exports, `object-fit: cover`, the 28mm on paper, and ADR-004's unchanged size budget.
+
+**What does not**: the corner radius. This record puts the photo at `--radius-large` and rejects the
+design's rounding as "Option B: 3:4 as an oval". Two of the three reasons it gives do not survive
+reading the design file closely — what the file draws is a capsule, not an ellipse, and a capsule is
+`--radius-pill` clamped, so it adds no radius at all. DDR-021 has the measurements. The owner has
+also since decided that the design file prevails over the records that stand in its way.
 
 Refines DDR-010, which adopted the profile photo and placed it beside the name but fixed neither its
 aspect ratio nor its corner radius. DDR-010 stands in every other respect. It also supersedes the

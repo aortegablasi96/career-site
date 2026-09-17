@@ -144,8 +144,14 @@
   /* The corner radius of a tinted or bordered surface, per DDR-013. Three values, one for each
      kind of surface the redesign has, so nothing rounds by an amount of its own: a small radius
      for the short labels, a larger one for the surfaces that hold a block, and a fully rounded
-     end for the introduction's pill controls. The first two are in rem, so a rounded corner keeps
-     its proportion to the text inside it when text is enlarged. */
+     end for the introduction's pill controls and, since DDR-021, for the profile photo. The first
+     two are in rem, so a rounded corner keeps its proportion to the text inside it when text is
+     enlarged.
+
+     The third is what draws the photo's shape, and it is still three values rather than four. A
+     radius larger than half the box is clamped to half it, so `--radius-pill` on the photo's 3:4
+     box rounds the top and bottom into semicircles and leaves the sides straight — which is the
+     capsule the design draws, measured off it. DDR-021 has the measurement. */
   --radius-small: 0.25rem;
   --radius-large: 0.75rem;
   --radius-pill: 9999px;
@@ -169,12 +175,43 @@
      rather than the next number to reach for. */
   --shadow-raised: 0 1px 1.5px rgba(0, 0, 0, 0.22), 0 1px 1px rgba(0, 0, 0, 0.22);
 
+  /* The profile photo's two lights, per DDR-021. They are the design's own, ink and geometry both:
+     an indigo glow spreading 40px below the photo, and a short dark shadow inside its top edge.
+
+     They are a second elevation, which is what this record amends in DDR-020. That record names one
+     level and says a second is "a decision to take rather than the next number to reach for"; this
+     is that decision. The photo is not raised the way a control or a card is — it does not sit a
+     little off the page, it is lit — so the two are named for the photo rather than numbered above
+     `raised`, and nothing but the photo may read them.
+
+     The ink is the design's unchanged, including the indigo `#4f46e5` that DDR-012 turned down for
+     the accent. It does not meet the floor DDR-020 set for the raised shadow, and DDR-021 records
+     that rather than darkening it: measured on the built page, the glow's strongest pixel is
+     `#e5e4f2`, which is 1.17:1 against the surface — below even the 1.50:1 that record rejected.
+
+     What it has instead is hue. The raised shadow is neutral grey on a warm off-white, so luminance
+     is the only thing it can differ by; this is indigo on the same off-white, and it differs by
+     colour. The same pixel is 10.8 ΔE from the page, where 2.3 is the difference an eye can just
+     see, and it fades to 0.6 ΔE by 40px out. So it is visible, and it is measured, and what DDR-020
+     would have asked of it is the wrong question for a coloured light.
+
+     Written as two tokens rather than one value with two layers because they are drawn on two
+     elements: an inset shadow on an `<img>` paints nothing, since the replaced content covers it.
+     Measured in Chromium and Gecko alike, the top rows of the image are identical with the inset
+     declared and without it. So the glow is drawn on the frame around the photo and the inner
+     shadow on a pseudo-element over it, and each needs a value of its own.
+
+     Their lengths are in px, as `--shadow-raised`'s are and for the same reason: a light on an edge
+     gains nothing from growing with the reader's text. */
+  --shadow-photo-glow: 0 8px 40px rgba(79, 70, 229, 0.18);
+  --shadow-photo-inner: inset 0 4px 4px rgba(0, 0, 0, 0.25);
+
   /* The smallest an interactive target may be in each direction, per DDR-014. In px, as WCAG
      measures it, because a target is sized for a finger rather than for the text. */
   --target-size-min: 44px;
 
-  /* The profile photo, per DDR-010 and #71: 96px wide below the wide breakpoint and 208px from it,
-     at 3:4. The width is in rem, as --content-width is, so the photo keeps its proportion to the
+  /* The profile photo, per DDR-010, #71 and DDR-021: 96px wide below the wide breakpoint and 208px
+     from it, at 3:4, drawn as a capsule by `--radius-pill` and lit by the two shadows above. The width is in rem, as --content-width is, so the photo keeps its proportion to the
      name beside it when text is enlarged; the ratio is a shape rather than a length and has no
      unit. This is the projects' media pattern — a width and a ratio rather than two lengths — so
      the two pieces of media on the page are described the same way.
@@ -311,6 +348,13 @@
        edges are dropped just above. Like those, it is dropped here rather than in a component, so
        no stylesheet writes a print rule to put out its own light. */
     --shadow-raised: none;
+
+    /* Nor is the photo lit, per DDR-021. The glow spreads 40px of indigo across the sheet and the
+       inner shadow darkens the top of the portrait, and neither is anything a reader of paper is
+       missing: the photograph keeps its shape, which is drawn by a radius rather than by a light.
+       Dropped here rather than in the component, as every other surface and light is. */
+    --shadow-photo-glow: none;
+    --shadow-photo-inner: none;
 
     --content-width: none;
     --page-gutter: 0;

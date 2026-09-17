@@ -80,7 +80,8 @@ Two things about the introduction are worth knowing before changing it:
   `public/andreu-ortega-blasi-photo.webp` and the four `public/project-*.webp` files are flat tinted
   rectangles — the photo 3:4 and the four media 4:3 — not the owner's portrait and not pictures of
   anything. The photo's stand-in was recut to 3:4 on #71, which is the ratio #63 crops the real
-  portrait to.
+  portrait to; since #89 the stylesheet clips that rectangle to a capsule, so the file #63 exports
+  is still 3:4 but its corners are cropped away on the page.
   Every binary asset this site shows is the owner's to produce, and they
   have chosen to run on stand-ins meanwhile; #63 replaces them. Replacing the file is the whole of
   the change: the path and the alternative text in `content/introduction.ts` are written for the
@@ -188,15 +189,17 @@ to be CSS Modules that read the tokens rather than writing literal values. A val
 not provide is a design decision to make, not a number to invent. `app/tokens.test.ts` holds the
 type scale to DDR-011's floors, every colour pairing to the contrast ratio DDR-012 records, the
 spacing scale, rhythm, column and radii to DDR-013, the narrow breakpoint and what it adapts to
-DDR-014, the photo's two widths and its ratio to DDR-016, the three tracking values to DDR-017,
-the bullet marker's 4.17:1 to DDR-019, the one shadow and its 22% ink to DDR-020, the timeline's and
+DDR-014, the photo's two widths and its ratio to DDR-021, the three tracking values to DDR-017,
+the bullet marker's 4.17:1 to DDR-019, the raised shadow and its 22% ink to DDR-020 and the photo's
+two lights to DDR-021, the timeline's and
 the projects' measures to DDR-010, and the print
-treatment to DDR-015 — the 11pt base, every surface dropped and no ink touched, and the 28mm photo
-— so changing a token means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
+treatment to DDR-015 — the 11pt base, every surface dropped and no ink touched, the 28mm photo, and
+every shadow put out — so changing a token means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
 component stylesheet to the same rules: tokens only — sizes, spaces, tracking since DDR-017 and
 `box-shadow` since DDR-020 —
-no reordering, and no width media query but
+no reordering, nothing but a pseudo-element taken out of the flow since DDR-021, and no width media
+query but
 the wide breakpoint, which DDR-015 lets a component extend to paper as `(min-width: 48em), print`
 and no further. **ADR-006 says which literals it admits**: `0`, `auto` and `none` anywhere,
 `100%` on `max-inline-size` and `max-block-size`, and `min-content` on `min-inline-size` and
@@ -478,10 +481,10 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010 to DDR-020. The next DDR is `021`. Status values are `Proposed`,
-`Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010 to DDR-015 and DDR-017 to DDR-021. The next DDR is `022`. Status
+values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-`Superseded` are DDR-001 to DDR-009:
+`Superseded` are DDR-001 to DDR-009, and DDR-016:
 
 | Superseded | By      | What changed                                                            |
 | ---------- | ------- | ----------------------------------------------------------------------- |
@@ -494,6 +497,7 @@ The accepted DDRs are DDR-010 to DDR-020. The next DDR is `021`. Status values a
 | DDR-005    | DDR-015 | An 11pt base, every tint dropped at the token layer, and paper takes the wide layout |
 | DDR-008    | DDR-015 | Its block survives; its claim that both browsers break alike does not    |
 | DDR-009    | DDR-011 | Its PDF guarantee is re-established for the new faces, and widened       |
+| DDR-016    | DDR-021 | The photo’s corner radius and its two lights; the ratio and widths carry over |
 
 DDR-008 had superseded DDR-005's acceptance that Firefox can leave a section heading at the foot of
 a page, before DDR-015 superseded both. Each superseded record says at the top what carries forward
@@ -512,19 +516,50 @@ can read, unlike the Make file. **It is the same draft DDR-010 was written again
 between it and the page is usually a recorded rejection rather than a defect: DDR-010 rejects the
 sticky bar, the footer, the divider between sections and the gradient monogram; DDR-011 the 10–11px
 text and the 15px body; DDR-012 the accent `#4f46e5` and the greys `#94a3b8` and `#64748b`; DDR-014
-the 37px targets. Audited in full on #70, what genuinely differed with no record either way is #71
-to #78: the photo's shape, the heading rule, letter-spacing, the uppercase label treatment, the
-bullet markers, elevation, the skills' ink, and one place where the code contradicts DDR-013. #63
-moved onto that epic because #71 settles the shape the real photograph is cropped to. **Eight of the
-nine have landed; #63 is the one left**, and it is the owner's to produce rather than the
-repository's.
+the 37px targets. **That is no longer how to read a difference.** On 2026-09-17 the owner decided
+the design prevails everywhere, including over the records written to protect WCAG conformance, and
+Epic #70 was rewritten around that: #89 to #99 are its children, and DDR-010 to DDR-012, DDR-014 and
+DDR-016 to DDR-020 are each to be superseded rather than defended. The owner knows what it costs and
+chose it over two narrower options; a value that fails something is recorded as failing and shipped.
+Two things stay out — the gradient monogram, because #63 supplies a real portrait, and the mobile
+"Sections" toggle, because the design has no narrow view to match.
 
-**#71 has landed, as DDR-016: the photo is 3:4 at `--radius-large`**, not the square it was and not
-the design's oval. `--photo-size` and `--photo-size-wide` are now `--photo-width`,
-`--photo-width-wide` and `--photo-ratio`, following the projects' width-and-ratio pattern, so the
-stylesheet sets one length and a shape rather than two lengths. Measured at the browser's real
-default font size, the taller photo moves the contact controls not at all at 390px, 32px at 320px
-and 64px at 200% text, and it costs no sheet on paper.
+The earlier audit's nine, #71 to #78 plus #63, are all landed but #63, which is the owner's to
+produce rather than the repository's. **#89 is the first of the rewritten epic's to land.**
+
+**#71 has landed, as DDR-016: the photo is 3:4**, not the square it was. `--photo-size` and
+`--photo-size-wide` are now `--photo-width`, `--photo-width-wide` and `--photo-ratio`, following the
+projects' width-and-ratio pattern, so the stylesheet sets one length and a shape rather than two
+lengths. Measured at the browser's real default font size, the taller photo moves the contact
+controls not at all at 390px, 32px at 320px and 64px at 200% text, and it costs no sheet on paper.
+**DDR-016's corner radius is superseded by DDR-021**, below; its ratio and its two widths are not.
+
+**#89 has landed, as DDR-021: the photo is the design's capsule, and it is lit.** Three things about
+it are worth knowing before touching it.
+
+* **The design's shape is a capsule, not an ellipse, and `--radius-pill` draws it exactly.** The
+  file's `rounded-[113.536px]` is more than half the frame's 196.762 width, and CSS and Figma both
+  clamp a radius that large to half the box — so the top and bottom become semicircles and the sides
+  stay straight. Measured against the rendered frame and against the built page, it tracks a capsule
+  to within 1.7px and is up to 9.3px from an ellipse. So DDR-013 keeps its three radii and gains no
+  fourth, which is the objection DDR-016 turned the shape down on. **#63's crop does not change**:
+  the capsule is drawn by the stylesheet, so the exported file is still a 3:4 rectangle — but its
+  corners are cropped away on the page, which is a constraint on how the portrait is framed.
+* **An inset `box-shadow` on an `<img>` paints nothing**, in Chromium and Gecko alike: an inner
+  shadow is painted below the border and a replaced element's content is painted above it, so the
+  image covers it. Measured on #89, the image's top rows are identical with the inset declared and
+  without it. So the photo is wrapped in a `<span class={styles.frame}>` that floats, shrink-wraps
+  it, and carries `--shadow-photo-glow` and the radius, while `.frame::after` carries
+  `--shadow-photo-inner` over the image. The frame holds no content and takes no role and no
+  `aria-hidden` — the photo's accessible name is still its `alt`.
+* **`components/stylesheets.test.ts` now admits `position: absolute` on a pseudo-element and refuses
+  it everywhere else.** The rule it narrows is DDR-014's "the visual order is the markup order",
+  which is about content; a pseudo-element has no place in the markup order and is not in the
+  accessibility tree. It is used once, here. The glow is also the first value on the site adopted
+  **below** a floor a record set — 1.17:1 against the page, where DDR-020 rejected 1.50:1 — because
+  it is indigo rather than neutral and differs by hue: 10.8 ΔE at its strongest, against the 2.3 an
+  eye can just see. DDR-021 has both tables, and #68's six cases measured identical before and
+  after.
 
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the
@@ -679,7 +714,12 @@ line longer than Edge does, which pushes the second role past the foot of page 1
 wide, so an edit to the summary could move Firefox to four sheets or Edge to five. The stand-ins are
 already the full box, so the real pictures on #63 will not change the length. Rechecked on #71, after
 the photo went from square to 3:4: still four sheets in Edge and five in Firefox, with no heading
-stranded and no item split in either.
+stranded and no item split in either. Rechecked on #89, after the photo became a lit capsule, with
+background graphics **on**: still four and five, 483 distinct words back out of both PDFs through
+both readers, and neither light drawn — not one pixel in the 18px band beside the printed photo is
+anything but paper white in either browser. The capsule itself does print. Worth knowing:
+**Firefox prints the photo at 28.11mm and Edge at 24.55mm**, because Edge scales the whole sheet by
+about 0.877; Edge printed the DDR-016 photo at 24.55mm too, so that is not #89's doing.
 
 ADR-004 and ADR-005 together decide the downloadable CV and the site's first binary assets. The CV
 itself has landed, under #56: `public/andreu-ortega-blasi-cv.pdf` is a separately designed document,

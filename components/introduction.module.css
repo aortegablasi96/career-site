@@ -13,19 +13,56 @@
  * This is the layout that keeps the reason the record gives.
  */
 
+/* The frame is what floats, and it shrink-wraps the photo inside it, so it is the photo's box in
+   every respect the layout cares about. It exists because the design lights the photo twice and the
+   second light cannot be drawn on the image itself, per DDR-021.
+
+   It carries the glow, because a shadow spreading outwards belongs on the outermost box, and the
+   capsule radius, because a shadow follows the border radius of the box it is drawn on.
+
+   The text runs past the photo rather than sharing a column with it, so that the summary keeps the
+   full width of a narrow screen instead of being squeezed into what is left beside a photo. */
+.frame {
+  position: relative;
+  float: inline-start;
+  margin-inline-end: var(--space-medium);
+  margin-block-end: var(--space-small);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-photo-glow);
+}
+
+/* The inner shadow, drawn over the photo rather than under it. An inset box-shadow declared on the
+   `<img>` itself paints nothing at all: an inner shadow is painted above the element's background
+   and below its border, and a replaced element's content is painted above both, so the image covers
+   it. Measured in Chromium and Gecko on #89, the top rows of the image are pixel-identical with the
+   inset declared and without it, while the same declaration on a box that is not replaced darkens
+   twelve rows plainly.
+
+   A pseudo-element has no place in the markup order, so lifting it out of the flow reorders
+   nothing — which is the reason components/stylesheets.test.ts admits absolute positioning here and
+   on nothing that is content. It is not in the accessibility tree either, so the photo's accessible
+   name is still the `alt` on the image and nothing else. */
+.frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-photo-inner);
+}
+
 /* The width is fixed and the height follows the ratio, so the box is the right size before the
    image arrives and the page does not shift when it does, as the projects' media is. A portrait
    that is not the ratio is cropped rather than distorted.
 
-   The text runs past the photo rather than sharing a column with it, so that the summary keeps the
-   full width of a narrow screen instead of being squeezed into what is left beside a photo. */
+   The radius is the pill, per DDR-021, which on a 3:4 box is clamped to half the width and so draws
+   the design's capsule: semicircular top and bottom, straight sides. Block display rather than
+   inline, so the frame is exactly the photo's height and the inner shadow lands on its edge rather
+   than on a line box's descender space below it. */
 .photo {
-  float: inline-start;
+  display: block;
   inline-size: var(--photo-width);
   aspect-ratio: var(--photo-ratio);
-  margin-inline-end: var(--space-medium);
-  margin-block-end: var(--space-small);
-  border-radius: var(--radius-large);
+  border-radius: var(--radius-pill);
   object-fit: cover;
 }
 
@@ -131,13 +168,16 @@
     align-items: start;
   }
 
-  /* The grid places the photo, so it stops floating and the text no longer runs past it: from here
+  /* The grid places the frame, so it stops floating and the text no longer runs past it: from here
      the whole of the text sits in the second column. */
-  .photo {
+  .frame {
     float: none;
-    inline-size: var(--photo-width-wide);
     margin-inline-end: 0;
     margin-block-end: 0;
+  }
+
+  .photo {
+    inline-size: var(--photo-width-wide);
   }
 }
 

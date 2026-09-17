@@ -7,6 +7,13 @@ Date: 2026-09-17
 Refines DDR-013, which gives the redesign three corner radii and no elevation, by adding one token
 beside them. DDR-013 stands in every other respect.
 
+**Amended by DDR-021**, which takes the second level this record left open: the profile photo's
+outer glow and inner shadow. Everything here stands — `--shadow-raised`, its 22% ink, the eight
+elements that read it, and the argument for measuring a shadow against the page. What DDR-021 adds
+beside it is a light that is coloured rather than neutral, and it says why the floor measured below
+is the wrong instrument for one. This record's own claim that "the photo's glow is the photo's
+question, which #77 excludes and DDR-016 has already answered without one" is what DDR-021 answers.
+
 It **adds no colour to DDR-012's palette**, and says why: the shadow's ink is translucent black,
 which is a value only a shadow may hold, so it is written inside the shadow rather than offered to
 anything that can read a colour token. Nothing in either record is superseded.
