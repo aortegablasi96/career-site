@@ -62,7 +62,8 @@ no project carries a video yet, so the branch is exercised by a test rather than
 **The skills and languages sections are the redesign's, under #51.** A skill group is its name as an
 `h3` followed by one block per level, strongest first: a level badge — the level as a word in a
 tinted pill — and then that level's skills, separated by middle dots the same way the metadata line
-separates its parts. Groups stand two to a row from the wide breakpoint and one below. The *row* is
+separates its parts, and, since #78, in the same ink and at the same size as one. Groups stand two
+to a row from the wide breakpoint and one below. The *row* is
 what `app/page.tsx` hands the section, not the group, because the two columns have to be one grid
 and a grid needs one parent: `skillRows` in `components/skills.tsx` splits them, and it holds the
 count that `skills.module.css` draws. A language is a card — the language as its term, the CEFR
@@ -514,7 +515,9 @@ text and the 15px body; DDR-012 the accent `#4f46e5` and the greys `#94a3b8` and
 the 37px targets. Audited in full on #70, what genuinely differed with no record either way is #71
 to #78: the photo's shape, the heading rule, letter-spacing, the uppercase label treatment, the
 bullet markers, elevation, the skills' ink, and one place where the code contradicts DDR-013. #63
-moved onto that epic because #71 settles the shape the real photograph is cropped to.
+moved onto that epic because #71 settles the shape the real photograph is cropped to. **Eight of the
+nine have landed; #63 is the one left**, and it is the owner's to produce rather than the
+repository's.
 
 **#71 has landed, as DDR-016: the photo is 3:4 at `--radius-large`**, not the square it was and not
 the design's oval. `--photo-size` and `--photo-size-wide` are now `--photo-width`,
@@ -626,6 +629,24 @@ Three things about it are worth knowing before touching it.
   background graphics on, which is the only way a browser prints a shadow at all: no grey band on any
   sheet in either browser.
 
+**#78 has landed: a level's skills are set in the secondary ink.** One declaration,
+`color: var(--color-text-secondary)` on `.level` in `components/skills.module.css`, which had set
+the metadata *size* since #51 and left the metadata ink behind, so the skills were the one piece of
+metadata on the page as dark as running text. It writes no new token and no new decision: the ink is
+DDR-012's, already measured at 7.07:1 on the page surface and already held there by
+`app/tokens.test.ts`, and the design's `#475569` is that token's own value — the records and the
+design agreed and the page was the outlier.
+
+Two things about it are worth knowing before touching it.
+
+* **It writes the pair `metadata-line.module.css` writes, rather than reusing that module**, because
+  a level's line is not a metadata line: it carries a badge, its parts are skills separated for
+  reading rather than parts of one fact, and `skills.tsx` draws its own dots. What the two share is
+  the role, so they share the two tokens that draw it.
+* **The badges keep their own inks** without a rule to protect them, since a declared colour beats an
+  inherited one. `.basic` was already the secondary ink by way of `--color-text-level-basic`, so
+  what changed there is the line around it, not the badge.
+
 Everything the section stories left to #52 has landed. For the record, since the gaps are named in
 those PRs: the timeline prints its date column, the projects print their media beside their text,
 the skill groups print two to a row and the language cards four, the printed photo is 28mm beside
@@ -646,7 +667,10 @@ the markers themselves drawn on every sheet that carries points — the one thin
 prints and is neither text nor a surface. Rechecked on #77, after elevation landed, this time with
 background graphics **on**: still four and five, all 472 distinct words back out of both readers in
 both browsers, and no shadow anywhere — the longest run of neutral grey on any sheet is 35px, where a
-card's shadow would be a band about 240px wide.
+card's shadow would be a band about 240px wide. Rechecked on #78, after the skills' ink: still four
+and five, no heading stranded, each skill group still whole on one sheet with the section breaking
+between its two rows, and no replacement character in either PDF — the only words the two readers
+disagree on are the ones wrapped at a hyphen, which is pdfium's own behaviour rather than a fault.
 
 **The two browsers no longer agree on the total, and that is worth knowing before touching the
 introduction.** Every break rule behaves identically in both. Firefox simply sets the summary one
