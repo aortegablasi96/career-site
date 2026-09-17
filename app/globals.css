@@ -60,7 +60,7 @@ h6 {
    on the narrowest viewports, per DDR-014; an item title is already body size. h4 to h6 are body
    size at every width. */
 /* The page and section titles are the only text on the page set large enough to need tightening:
-   a face's default spacing is drawn for text, and at 48px and 22px it leaves the letters loose,
+   a face's default spacing is drawn for text, and at 51.2px and 20.8px it leaves the letters loose,
    per DDR-017. An item title is body size, so it keeps the spacing Lora was drawn with. */
 h1 {
   font-size: var(--font-size-page-title);

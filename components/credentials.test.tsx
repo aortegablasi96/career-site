@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { credentials } from '@/content/credentials';
@@ -13,6 +14,15 @@ const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 
 /** Each credential's row, in the order the page shows them. */
 const rows = html.match(/<article[^>]*>.*?<\/article>/g) ?? [];
+
+// Only what is a credential's alone is here. The row itself is the shared timeline, per DDR-010,
+// and components/timeline.test.tsx holds its stylesheet.
+const styles = readFileSync(new URL('./credentials.module.css', import.meta.url), 'utf8')
+  .replace(/\r\n/g, '\n')
+  .replace(/\/\*[\s\S]*?\*\//g, '');
+
+/** A content string as a literal inside a regular expression. */
+const literal = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 const isCertification = (credential: Credential): credential is Certification => 'granted' in credential;
 const isDegree = (credential: Credential): credential is Degree => 'thesis' in credential;
@@ -56,9 +66,24 @@ describe('Credentials', () => {
   it('follows a degree’s institution with its thesis, as a paragraph', () => {
     for (const [index, credential] of credentials.credentials.entries()) {
       if (isDegree(credential)) {
-        expect(rows[index]!.endsWith(`</p><p>${credential.thesis}</p></div></article>`)).toBe(true);
+        expect(rows[index]).toMatch(
+          new RegExp(`</p><p[^>]*>${literal(credential.thesis)}</p></div></article>$`),
+        );
       }
     }
+  });
+
+  // DDR-022 sets a thesis sentence two steps below the credential's name and one below the
+  // institution above it, which makes it the quietest line in the row. It is the one thing a degree
+  // has of its own, as a role's points are the one thing a role has, so it carries a class of its
+  // own and this component's stylesheet sets it: the institution is a paragraph in the same column,
+  // and a certification has one of those and no thesis, so position cannot tell the two apart.
+  it('sets a degree’s thesis at the step DDR-022 gives it, from a class of its own', () => {
+    for (const { thesis } of degrees) {
+      expect(html).toMatch(new RegExp(`<p class="[^"]+">${literal(thesis)}</p>`));
+    }
+
+    expect(styles).toMatch(/\.thesis\s*\{[^}]*font-size:\s*var\(--font-size-x-small\);/);
   });
 
   it('ends a certification at its institution, with one date and no body', () => {

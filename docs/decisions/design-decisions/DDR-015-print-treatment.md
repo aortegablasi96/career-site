@@ -6,6 +6,12 @@ Date: 2026-09-16
 
 Supersedes DDR-005, the print stylesheet, and DDR-008, section openings in print.
 
+**Amended by DDR-022 in one number**: the 11pt base below is now 12pt. This record chose 11pt so
+that body text, then a 1rem step, printed at 11pt. DDR-022 takes the design's scale, where body text
+is 0.9375rem, so the base had to move for that decision to keep its meaning; at 12pt body text
+prints at 11.25pt and the smallest step at 7.5pt. Everything else this record decides is untouched,
+and #99 prints the page for Epic #70 and may move the base again.
+
 **What carries forward from DDR-005**, unchanged in substance: paper is a medium rather than a
 layout, so the tokens express the change wherever they can and the base styles add only what a token
 cannot; the sheet's 2cm margins in a unit of the paper; the column filling the sheet and starting at

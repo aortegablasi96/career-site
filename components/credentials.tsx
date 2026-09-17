@@ -1,4 +1,5 @@
 import type { Credential, DateLabels } from '@/content/types';
+import styles from './credentials.module.css';
 import { DateRange, MonthDate } from './date-range';
 import { TimelineRow } from './timeline';
 
@@ -28,7 +29,7 @@ export function Credentials({
             title={credential.name}
             subtitle={credential.institution}
           >
-            <p>{credential.thesis}</p>
+            <p className={styles.thesis}>{credential.thesis}</p>
           </TimelineRow>
         ) : (
           <TimelineRow

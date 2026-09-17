@@ -139,6 +139,7 @@
   padding-inline: var(--space-medium);
   border-radius: var(--radius-pill);
   box-shadow: var(--shadow-raised);
+  font-size: var(--font-size-x-small);
   text-decoration-line: none;
   overflow-wrap: anywhere;
 }

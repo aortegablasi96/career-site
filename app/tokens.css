@@ -12,10 +12,10 @@
  */
 
 :root {
-  /* Typography, per DDR-011. */
+  /* Typography, per DDR-011, whose scale and floor DDR-022 supersedes. */
 
   /* The size every rem is measured from. On screen it is the reader's own browser font-size
-     setting, so the scales follow it. DDR-005 sets it for paper. */
+     setting, so the scales follow it. DDR-015 sets it for paper. */
   --root-font-size: 100%;
 
   /* The families and their fallback stacks are loaded in app/layout.tsx, which defines
@@ -23,24 +23,50 @@
   --font-family-body: var(--font-dm-sans);
   --font-family-heading: var(--font-lora);
 
-  /* Seven steps, named as CSS names its own absolute sizes, with medium the browser default.
-     They are the sizes the design asks for rather than one ratio applied repeatedly: close
-     together at the bottom, where labels sit, and open at the top, where the name sits. In rem,
-     so every step follows the reader's browser font-size setting. The smallest step is the
-     smallest text on the site. */
+  /* Ten steps, per DDR-022, named as CSS names its own absolute sizes and extended by one at each
+     end, because the design draws nine sizes and the narrow page title needs a tenth. They are
+     measured node by node off `career-site-design` rather than generated from a ratio: four of
+     them sit within 2px of one another at the bottom, where the labels are, and the top two are
+     more than twice apart, where the name is. In rem, so every step follows the reader's browser
+     font-size setting.
+
+     `medium` is the size the page's running text is set at, which is what `body` reads in
+     app/globals.css. It is 15px rather than the browser's 16px default, so it is no longer 1rem:
+     the design's steps are not centred on the browser default, and DDR-022 keeps medium on the
+     body rather than on the number. The px column below is the step at the 16px default.
+
+       xxxx-small  10px    a level badge — the smallest text on the site
+       xxx-small   11px    a date range, a place, a technology tag
+       xx-small    12.8px  a skill group's name
+       x-small     13px    a level's skills, a thesis, a pill's label, a link's label
+       small       14px    a role's points, a company, an institution, a description
+       medium      15px    body text, and an item title
+       large       16px    the positioning line
+       x-large     20.8px  a section title
+       xx-large    36px    the page title, below the narrow breakpoint
+       xxx-large   51.2px  the page title */
+  --font-size-xxxx-small: 0.625rem;
+  --font-size-xxx-small: 0.6875rem;
+  --font-size-xx-small: 0.8rem;
   --font-size-x-small: 0.8125rem;
   --font-size-small: 0.875rem;
-  --font-size-medium: 1rem;
-  --font-size-large: 1.125rem;
-  --font-size-x-large: 1.375rem;
+  --font-size-medium: 0.9375rem;
+  --font-size-large: 1rem;
+  --font-size-x-large: 1.3rem;
   --font-size-xx-large: 2.25rem;
-  --font-size-xxx-large: 3rem;
+  --font-size-xxx-large: 3.2rem;
 
   /* The step each level of heading uses, named by role, per DDR-014. The page and section titles
      are the narrow values here, each one step below the full scale, so long words in headings fit
      a narrow column with enlarged text; the narrow breakpoint restores the full scale. The item
      title is body size and does not step down, because there is nothing below body size a title
-     could take. */
+     could take.
+
+     `xx-large` is the one step the design does not draw, and it is here for the narrow page title
+     alone, per DDR-022: the design is a single 894px frame with no narrow view, and the step below
+     `xxx-large` in the design's own sizes is the section title's, which would leave the name and a
+     section heading the same size on a phone. It keeps the 36px DDR-011 gave it, which is three
+     quarters of the full size as it was before. */
   --font-size-page-title: var(--font-size-xx-large);
   --font-size-section-title: var(--font-size-large);
   --font-size-item-title: var(--font-size-medium);
@@ -57,8 +83,8 @@
      rather than as a word, and the smallest labels opened further still.
 
      In em, which is the one place the type system measures from the element rather than the root.
-     Tracking has to keep its proportion to the letters it separates — the page title at 48px and a
-     badge at 13px cannot share an absolute amount — and since every font size is in rem, an em
+     Tracking has to keep its proportion to the letters it separates — the page title at 51.2px and
+     a badge at 10px cannot share an absolute amount — and since every font size is in rem, an em
      here follows the reader's browser font-size setting too. Text set at neither value is left at
      the face's own spacing, which is what the two families were drawn with. */
   --letter-spacing-tight: -0.025em;
@@ -284,7 +310,7 @@
 
 /*
  * The narrow breakpoint, per DDR-014. From here up, the page and section titles take the full
- * scale DDR-011 records, the page's edges open out, and the language cards stand two to a row.
+ * scale DDR-022 records, the page's edges open out, and the language cards stand two to a row.
  *
  * It is in em, which in a media query is the browser's default font size, so a narrow screen with
  * enlarged text falls below it just as a narrower screen does. At the default size it is 320px. A
@@ -316,14 +342,20 @@
  */
 
 /*
- * Paper, per DDR-005: printing, and saving as a PDF from the browser. The whole type and spacing
- * system is set from a 10pt base, so its proportions hold at a size suited to paper. The column
- * fills the sheet between its margins, and the surface is the paper itself, so the page reads the
- * same whether or not the browser prints backgrounds.
+ * Paper, per DDR-015: printing, and saving as a PDF from the browser. The whole type and spacing
+ * system is set from a base suited to paper, so its proportions hold there. The column fills the
+ * sheet between its margins, and the surface is the paper itself, so the page reads the same
+ * whether or not the browser prints backgrounds.
  */
 @media print {
   :root {
-    --root-font-size: 11pt;
+    /* DDR-015 set this to 11pt so that body text, then a 1rem step, printed at 11pt. DDR-022 takes
+       the design's scale, where body text is 0.9375rem, and an unchanged base would print it at
+       10.3pt and the level badges at 6.9pt — smaller than anything the printed CV has shown. 12pt
+       restores body text to 11.25pt and puts the smallest step at 7.5pt. It is a round number, as
+       DDR-005's 10pt and DDR-015's 11pt were, and DDR-022 amends DDR-015 to say so. #99 prints the
+       page and may move it again. */
+    --root-font-size: 12pt;
 
     /* Every surface is the paper. The page's own tint, the white card, the tag's tint and the three
        level tints all drop, so the sheet reads the same whether or not the browser prints
