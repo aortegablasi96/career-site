@@ -130,15 +130,15 @@ describe('skills styles', () => {
     expect(css).not.toMatch(/\.name\s*\{[^}]*color:/);
   });
 
-  // DDR-017 gives the group's name the widest tracking, which is what marks it as a label for what
-  // follows rather than a title over it. DDR-018 takes the badge back a step, to the value the tags
-  // and the date range take: DM Sans above regular at +0.1em comes out of a PDF spelt letter by
-  // letter, and a badge that is now semibold cannot stay there. Lora is unaffected, so the group's
-  // name does not move.
-  it('opens the group name widest and the badge one step less, per DDR-017 and DDR-018', () => {
+  // DDR-017 gives both labels the widest tracking, which is what marks each as a label for what
+  // follows rather than a title over it. DDR-018 took it off the badge to keep the badge's words
+  // searchable in a saved PDF; DDR-024 gives it back, accepting that Firefox writes the run as
+  // separate words, because the design draws both at +0.1em. So the two move together again, and
+  // the assertion that the badge is one step less is exactly what this record reverses.
+  it('opens the group name and the badge at the widest tracking, per DDR-017 and DDR-024', () => {
     expect(css).toMatch(/\.name\s*\{[^}]*letter-spacing:\s*var\(--letter-spacing-x-loose\);/);
-    expect(css).toMatch(/\.badge\s*\{[^}]*letter-spacing:\s*var\(--letter-spacing-loose\);/);
-    expect(css).not.toMatch(/\.badge\s*\{[^}]*letter-spacing:\s*var\(--letter-spacing-x-loose\);/);
+    expect(css).toMatch(/\.badge\s*\{[^}]*letter-spacing:\s*var\(--letter-spacing-x-loose\);/);
+    expect(css).not.toMatch(/\.badge\s*\{[^}]*letter-spacing:\s*var\(--letter-spacing-loose\);/);
   });
 
   // The skills themselves are words to read, so they keep the spacing DM Sans was drawn with. The

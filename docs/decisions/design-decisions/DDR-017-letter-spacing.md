@@ -16,6 +16,16 @@ recorded under Consequences as the visible cost of separating tracking from case
 two, and the timeline's date range, in capitals. Every value here stands; what changes is the text
 they are measured against, so the reflow and PDF checks below were both repeated there.
 
+**DDR-018 also took `x-loose` off the badge, and DDR-024 puts it back.** For one story and one
+record the table below had a row that was not true of the page: the badge was set at `loose`,
+because at +0.1em a saved PDF spelled its word out letter by letter. DDR-024 restores the row and
+accepts the cost, because the design draws the badge at +0.1em and the owner has decided the design
+prevails. **So the table below is the page again**, in every row, and the risk this record named —
+that tracking can make an extractor read `ADVANCED` as `A D V A N C E D` — is now a known,
+deliberate cost rather than a thing to watch for. DDR-024 measures exactly which words it takes and
+from which reader. Nothing else here moves: the three values, the em unit, and all six users are as
+written.
+
 ## Context
 
 DDR-011 settled seven sizes, two families and three weights, and said nothing about the space

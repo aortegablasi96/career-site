@@ -491,7 +491,7 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010 to DDR-015 and DDR-017 to DDR-023. The next DDR is `024`. Status
+The accepted DDRs are DDR-010 to DDR-015 and DDR-017 to DDR-024. The next DDR is `025`. Status
 values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Three accepted records are superseded **in part**, and each says so at the top and again at the
@@ -506,7 +506,8 @@ section concerned:
 * **DDR-018** keeps its case and its ink. DDR-023 takes its "semibold, not bold" decision, and
   corrects its measurement of the tracking fault: at the 10px badge DDR-022 left, +0.1em splits the
   word in a Firefox PDF at **every** weight the site ships, 400 included, where DDR-018 concluded
-  400 was safe. #92 decides what to do about it.
+  400 was safe. **DDR-024 then takes its tracking amendment outright**, putting the badge back at
+  +0.1em and restoring the row of DDR-017's table DDR-018 had changed.
 
 `Superseded` are DDR-001 to DDR-009, and DDR-016:
 
@@ -683,8 +684,8 @@ at 200% text, which is a reflow failure. Decoration gives way to the title.
 **#74 has landed, as DDR-017: the page has tracking**, which it had nowhere before. Three values in
 em — `--letter-spacing-tight` at −0.025em, `--letter-spacing-loose` at 0.025em and
 `--letter-spacing-x-loose` at 0.1em — and six users: `h1` and `h2` take tight, from
-`app/globals.css`; a technology tag, the timeline's date range and, since #75, a level badge take
-loose; a skill group's name takes x-loose. Everything else is left at the spacing its face was drawn with, so
+`app/globals.css`; a technology tag and the timeline's date range take loose; a skill group's name
+and, since #92, a level badge take x-loose. Everything else is left at the spacing its face was drawn with, so
 there is no `normal` token. **em, not rem**, is deliberate and is the type system's one exception:
 tracking is a proportion of the letters it separates, and a 48px title and a 13px badge cannot share
 an absolute amount. Two classes exist only to carry it, `.name` in skills and `.dateRange` in the
@@ -707,15 +708,13 @@ write a weight. The technology tags are deliberately **not** part of it: they ar
 
 Three things about it are worth knowing before touching any of them.
 
-* **A level badge's tracking dropped from x-loose to loose, and DDR-018 amends DDR-017 to say so.**
-  It is not a preference: **DM Sans above regular at +0.1em does not survive being saved as a PDF**.
-  A semibold badge printed to A4 came back out of both browsers as `P R O F I C I E N T`, which is
-  exactly the failure DDR-017 named as tracking's risk and checked for. Measured one property at a
-  time in both browsers, the case has nothing to do with it — sentence case at 600 splits the same
-  way — and no weight but the original 400 is safe at +0.1em, so the tracking is what had to give.
-  At +0.025em every weight comes back whole. A skill group's name keeps x-loose because it is
-  **Lora**, which is unaffected, and it is now that token's only user. Give x-loose to DM Sans again
-  and the page has to be printed and read back before it can ship.
+* **A level badge's tracking dropped from x-loose to loose, and DDR-018 amended DDR-017 to say so.**
+  It was not a preference: a semibold badge at +0.1em printed to A4 came back out of both browsers
+  as `P R O F I C I E N T`, which is exactly the failure DDR-017 named as tracking's risk and
+  checked for. Measured one property at a time in both browsers, the case had nothing to do with it,
+  and DDR-018 concluded the weight was what crossed the line. **#90 showed that was the wrong
+  reading and #92 has reversed the amendment** — see DDR-024 below. What still stands here is the
+  case, the ink and the selectors.
 * `timeline.module.css` writes `.dates .dateRange`, the one **two-class selector** in `components/`,
   because `.metadata` sets the secondary ink on the same element from another module at the same
   specificity, and a single class would leave the winner to the order the bundler emits the two
