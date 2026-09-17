@@ -47,9 +47,9 @@ describe('languages styles', () => {
     expect(wide).toMatch(/\.cards\s*\{\s*grid-template-columns:\s*repeat\(4, 1fr\);/);
   });
 
-  it('draws a card as the white surface with a hairline edge, per DDR-012', () => {
+  it('draws a card as the white surface with a hairline edge, per DDR-025', () => {
     expect(css).toMatch(/\.card\s*\{[^}]*background-color:\s*var\(--color-surface-card\);/);
-    expect(css).toMatch(/\.card\s*\{[^}]*border:\s*1px solid var\(--color-decoration\);/);
+    expect(css).toMatch(/\.card\s*\{[^}]*border:\s*1px solid var\(--color-border\);/);
     expect(css).toMatch(/\.card\s*\{[^}]*border-radius:\s*var\(--radius-large\);/);
   });
 
@@ -59,7 +59,7 @@ describe('languages styles', () => {
     expect(css).toMatch(/\.card\s*\{[^}]*box-shadow:\s*var\(--shadow-raised\);/);
   });
 
-  it('sets the level in the accent, at 7.90:1 on the card, per DDR-012', () => {
+  it('sets the level in the accent, at 6.29:1 on the card, per DDR-025', () => {
     expect(css).toMatch(/\.level\s*\{[^}]*color:\s*var\(--color-accent\);/);
     expect(css).toMatch(/\.name\s*\{[^}]*font-weight:\s*var\(--font-weight-semibold\);/);
   });

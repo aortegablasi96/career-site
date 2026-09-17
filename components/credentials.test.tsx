@@ -86,6 +86,13 @@ describe('Credentials', () => {
     expect(styles).toMatch(/\.thesis\s*\{[^}]*font-size:\s*var\(--font-size-x-small\);/);
   });
 
+  // DDR-025: the design sets a thesis in the institution's own #64748b rather than the body ink a
+  // paragraph inherits. It is running text at 4.44:1, which fails WCAG 1.4.3, and the record says
+  // so.
+  it('sets a degree’s thesis in the muted ink, per DDR-025', () => {
+    expect(styles).toMatch(/\.thesis\s*\{[^}]*color:\s*var\(--color-text-muted\);/);
+  });
+
   // The one italic on the page, per DDR-023, where DDR-011 carried DDR-001's rule that the site
   // uses none. It is a second set of outlines rather than a second weight of the same ones, so
   // app/fonts/ carries a file for it and app/layout.test.tsx holds the list; without one the

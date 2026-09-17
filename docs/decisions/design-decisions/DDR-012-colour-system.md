@@ -1,8 +1,21 @@
 # DDR-012-Colour System
 
-Status: Accepted
+Status: Superseded
 
 Date: 2026-09-16
+
+**Superseded by DDR-025**, which takes the design's palette entire after the owner decided on
+2026-09-17 that `career-site-design` prevails over the records written to protect WCAG conformance.
+What carries forward is this record's focus indicator, its underline rule, its "colour is never the
+only signal" rule, its decision against a dark mode, and its rule that only a measured and recorded
+pairing may be used. What does not is the palette: one ink below the body's becomes three, the
+accent becomes the `#4f46e5` measured and rejected below, the tag's ink stops following the accent,
+`--color-decoration` becomes three hairlines, and the rule that a border carrying meaning must reach
+3:1 is given up. Four of DDR-025's pairings fail WCAG 2.2 AA, and that record lists them.
+
+Read DDR-025 first, and this one for the measurements behind what it reverses: the ramp that chose
+`#4338ca`, the argument for holding all text to 4.5:1 whatever its size, and the reason
+`--color-decoration` was named as it was.
 
 Supersedes DDR-002, the colour system. Its focus indicator, its underline rule, its
 "colour is never the only signal" rule and its decision against a dark mode carry forward

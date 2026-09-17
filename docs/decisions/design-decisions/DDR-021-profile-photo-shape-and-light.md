@@ -4,6 +4,12 @@ Status: Accepted
 
 Date: 2026-09-17
 
+**Touched by DDR-025 in one place.** This record justifies the glow partly by noting that its indigo
+`#4f46e5` is a colour DDR-012 turned down for the accent. DDR-025 adopts that indigo as the accent,
+so the glow is now the accent's own hue rather than a near neighbour of it. Every measurement here
+stands, including the glow's 1.17:1 and its 10.8 ΔE, and so does the argument for measuring a
+coloured light by hue rather than by luminance.
+
 **Supersedes DDR-016**, the profile photo's shape, which settled the photo at 3:4 at
 `--radius-large` and rejected the design's rounding outright. The ratio and the two widths DDR-016
 sets carry forward unchanged, and so does everything it says about cropping, about `object-fit` and

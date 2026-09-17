@@ -132,11 +132,18 @@ describe('timeline styles', () => {
     expect(rule('.spine', wide)).toMatch(/display:\s*flex;/);
   });
 
-  it('draws the spine in the decoration colour, which may carry no information, per DDR-012', () => {
+  it('draws the spine in the indigo hairline, which may carry no information, per DDR-025', () => {
     expect(rule('.dot')).toMatch(/inline-size:\s*var\(--timeline-dot-size\);/);
-    expect(rule('.dot')).toMatch(/background-color:\s*var\(--color-decoration\);/);
+    expect(rule('.dot')).toMatch(/background-color:\s*var\(--color-border-accent\);/);
     expect(rule('.line')).toMatch(/inline-size:\s*var\(--timeline-line-width\);/);
-    expect(rule('.line')).toMatch(/background-color:\s*var\(--color-decoration\);/);
+    expect(rule('.line')).toMatch(/background-color:\s*var\(--color-border-accent\);/);
+  });
+
+  // DDR-025: the design sets a place in #94a3b8 where it sets a company in #64748b, so the place
+  // is the one line in the column the faint ink reaches — the date range above it is in the accent,
+  // at a specificity this rule cannot reach.
+  it('sets the date column in the faintest ink, and the date range above it in the accent', () => {
+    expect(rule('.dates p')).toMatch(/color:\s*var\(--color-text-faint\);/);
   });
 
   // DDR-017 opens the dates, which label the row, and leaves the place below them alone, which is

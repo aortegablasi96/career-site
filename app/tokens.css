@@ -107,21 +107,47 @@
      text alone and no longer sets the column. */
   --measure: 65ch;
 
-  /* Colour, per DDR-012. Light only, by decision. DDR-012 records the contrast of every pairing
-     intended for text, and app/tokens.test.ts checks it; any other pairing is unverified. */
+  /* Colour, per DDR-025, which supersedes DDR-012. Light only, by decision. Every value here is
+     the one `career-site-design` draws, node by node, including the eight DDR-012, DDR-019 and
+     DDR-020 measured and replaced because they fail WCAG. The owner decided on 2026-09-17 that the
+     design prevails over the records, and DDR-025 lists, line by line, every pairing that now fails
+     and what it costs. app/tokens.test.ts holds each pairing to the ratio that record states, so a
+     colour cannot change without the record changing; any pairing not in it is unverified. */
   --color-surface: #f8f7f4;
   --color-surface-card: #ffffff;
   --color-text-heading: #0f172a;
   --color-text: #334155;
+
+  /* Three inks below the body ink, where DDR-012 had one, because the design draws three and gives
+     each a job: the secondary ink sets a level's skills and the Basic badge, the muted ink sets a
+     company, an institution, a thesis and a contents link, and the faint ink sets the introduction's
+     location, a role's place and, from #96, the footer.
+
+     Only the first meets WCAG 1.4.3. The muted ink is 4.44:1 and the faint ink 2.39:1 on the page,
+     and both are text. That is the largest cost on this page and DDR-025 records it as a failure
+     rather than absorbing it. */
   --color-text-secondary: #475569;
-  --color-accent: #4338ca;
+  --color-text-muted: #64748b;
+  --color-text-faint: #94a3b8;
+
+  /* The design's indigo, which DDR-012 turned down at 5.87:1 in favour of #4338ca at 7.38:1. It is
+     the positioning line, a date range, a CEFR level, a contact pill's text and icon, the CV pill's
+     fill and a project's links, and it clears AA both as text on the page and under white text —
+     6.29:1 — which is what the filled CV control needs. It reaches AAA neither way, where the
+     colour it replaces reached it both. */
+  --color-accent: #4f46e5;
   --color-on-accent: #ffffff;
 
-  /* The tinted surfaces and the ink each carries. A tag is the accent on its own tint; a level
-     badge is one of three, strongest first. Every tint is redundant with the word it holds, so
-     nothing on the page depends on colour, and print drops them all. */
+  /* The tinted surfaces and the ink each carries. A level badge is one of three, strongest first.
+     Every tint is redundant with the word it holds, so nothing on the page depends on colour, and
+     print drops them all.
+
+     A technology tag is the one ink here that is written out rather than pointed at the accent, and
+     it is the only place #4338ca survives DDR-025: the design sets a tag in it and everything else
+     in #4f46e5, so the two parted when the accent moved and the tag kept the darker of them. It is
+     7.07:1 on its tint, where the accent would be 5.63:1. */
   --color-surface-tag: #eef2ff;
-  --color-text-tag: var(--color-accent);
+  --color-text-tag: #4338ca;
   --color-surface-level-advanced: #ecfdf5;
   --color-text-level-advanced: #065f46;
   --color-surface-level-proficient: #eef2ff;
@@ -129,25 +155,42 @@
   --color-surface-level-basic: #f1f5f9;
   --color-text-level-basic: var(--color-text-secondary);
 
-  /* Hairlines that carry no information: the rule beside a section heading, a card's edge, the
-     timeline's spine and dots. Each is hidden from assistive technology, and removing all of them
-     would lose nothing, so this colour sits below the 3:1 WCAG asks of meaningful non-text. A
-     border that ever carries meaning, such as a control's edge, uses --color-text-secondary. */
-  --color-decoration: #94a3b8;
+  /* The three hairlines, where DDR-012 had one. Each is the value the design draws, each is hidden
+     from assistive technology, and all three sit below the 3:1 WCAG 1.4.11 asks of meaningful
+     non-text — below, now, the 2.39:1 DDR-012 called the lightest at which a line reads at all.
 
-  /* The marker on a role's bullet points, per DDR-019. It is an indigo lighter than the accent, so
-     the dot reads as quieter than the text it marks while staying visible.
+       rule           1.39:1  the rule beside a section heading
+       border         1.15:1  a language card's edge, and from #94 and #96 a section divider and
+                              the footer's border
+       border-accent  1.39:1  a contact pill's border, and the timeline's spine and dots
 
-     It is not decoration, and that is why it is a colour of its own rather than the one above. It
-     is the only thing that tells a point from a paragraph once the indent is a single step, and it
-     is drawn on paper, where decoration is not. So it is held to the 3:1 WCAG 1.4.11 asks of
-     meaningful non-text — 4.17:1 on the page — where the hairlines above sit below it. The design's
-     own `#a5b4fc` is 1.86:1, fainter than anything else this page draws; DDR-019 measures the
-     ramp. */
-  --color-marker: #6366f1;
+     DDR-012 kept a border that carries meaning at --color-text-secondary and named this family
+     `decoration` so that reaching for it for a control's edge would be a visible mistake. The
+     design ends that distinction: it draws the contact pill's border in an indigo tint at 1.49:1 on
+     the pill's own white, so there is no longer a border colour on the site that carries meaning,
+     and the name that guarded the rule has nothing left to guard. What identifies a contact pill
+     now is its icon, its fill and its shape, per DDR-025. */
+  --color-rule: #cbd5e1;
+  --color-border: #e2e8f0;
+  --color-border-accent: #c7d2fe;
+
+  /* The marker on a role's bullet points, per DDR-019 as DDR-025 amends it. It is the design's own
+     `#a5b4fc`, at 1.86:1 on the page, where DDR-019 measured that value, called it fainter than
+     anything else the page draws, and took the lightest indigo of the ramp that clears 3:1 instead.
+
+     It stays a colour of its own rather than joining the three above, and for the reason DDR-019
+     gave: it is the only thing that tells a point from a paragraph once the indent is a single
+     step, and it is drawn on paper, where the hairlines are not. The print block below drops those
+     three and leaves this one, so the printed CV keeps its markers. What has changed is only that
+     a mark held to 3:1 is now held to nothing. */
+  --color-marker: #a5b4fc;
 
   /* The keyboard focus outline. It is offset so it sits on the surface, and it is an outline
-     rather than a shadow so it survives forced-colours modes. */
+     rather than a shadow so it survives forced-colours modes. It follows the accent, so it is
+     5.87:1 on the page and 6.29:1 on a card where DDR-012 measured 7.38:1 and 7.90:1 — still above
+     the 3:1 WCAG 2.4.11 asks, and the one pairing DDR-025 moves that does not fall below its
+     floor. The contents bar #98 adds and the footer #96 adds are both the page's own surface in the
+     design, so neither adds a pairing. */
   --color-focus: var(--color-accent);
   --focus-outline-width: 2px;
   --focus-outline-offset: 2px;
@@ -197,11 +240,13 @@
      language cards are raised a little off the page; nothing else on it is, and depth is otherwise
      drawn with a tint, a hairline and a radius.
 
-     The geometry is the design's own two-layer shadow, unchanged. The ink is not: at the design's
-     10% black the darkest row it draws is 1.50:1 against the page, fainter than the hairlines
-     DDR-012 calls the lightest value at which a line reads at all, and fainter than the marker
-     DDR-019 turned down for the same reason. At 22% it measures 2.45:1 in Chromium and 2.47:1 in
-     Gecko, which is the lightest ink that clears those hairlines. DDR-020 has the ramp.
+     The geometry and the ink are both the design's own, per DDR-025, which amends DDR-020. That
+     record kept the geometry and darkened the ink to 22% black, because at the design's 10% the
+     darkest row the shadow draws is 1.50:1 against the page — fainter than the hairlines DDR-012
+     called the lightest value at which a line reads at all, and fainter than the marker DDR-019
+     turned down for the same reason. Both of those comparisons are gone: every hairline above is
+     now lighter than 1.50:1, and so is the marker. At 10% the shadow is no longer the faintest
+     thing on the page, and DDR-020's own floor no longer exists to clear.
 
      Its ink is written here rather than in the palette above because it is not a colour anything
      else may reach for: every colour up there is opaque, and translucent black is wrong on text, on
@@ -210,7 +255,7 @@
 
      One level, named for what it does rather than numbered, so a second is a decision to make
      rather than the next number to reach for. */
-  --shadow-raised: 0 1px 1.5px rgba(0, 0, 0, 0.22), 0 1px 1px rgba(0, 0, 0, 0.22);
+  --shadow-raised: 0 1px 1.5px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(0, 0, 0, 0.1);
 
   /* The profile photo's two lights, per DDR-021. They are the design's own, ink and geometry both:
      an indigo glow spreading 40px below the photo, and a short dark shadow inside its top edge.
@@ -222,9 +267,10 @@
      `raised`, and nothing but the photo may read them.
 
      The ink is the design's unchanged, including the indigo `#4f46e5` that DDR-012 turned down for
-     the accent. It does not meet the floor DDR-020 set for the raised shadow, and DDR-021 records
-     that rather than darkening it: measured on the built page, the glow's strongest pixel is
-     `#e5e4f2`, which is 1.17:1 against the surface — below even the 1.50:1 that record rejected.
+     the accent and DDR-025 has since adopted. It did not meet the floor DDR-020 set for the raised
+     shadow, and DDR-021 recorded that rather than darkening it: measured on the built page, the
+     glow's strongest pixel is `#e5e4f2`, which is 1.17:1 against the surface — below even the
+     1.50:1 that record rejected and has since been given.
 
      What it has instead is hue. The raised shadow is neutral grey on a warm off-white, so luminance
      is the only thing it can differ by; this is indigo on the same off-white, and it differs by
@@ -380,11 +426,15 @@
     --color-surface-level-proficient: transparent;
     --color-surface-level-basic: transparent;
 
-    /* Decoration does not print. This is the whole of it: the timeline's dot and line, and the
-       language card's edge. Each carries no information, so paper simply does not draw it. The
-       spine keeps its column rather than being removed from the grid, so the date column stays
-       where the reader of a screen would expect it. */
-    --color-decoration: transparent;
+    /* No hairline prints. This is the whole of it: the rule beside a section heading, the language
+       card's edge, and the timeline's dot and line. Each carries no information, so paper simply
+       does not draw it. The spine keeps its column rather than being removed from the grid, so the
+       date column stays where the reader of a screen would expect it. The bullet marker is
+       deliberately not here, per DDR-019: it is the one mark on the page that carries something,
+       and the printed CV keeps it. */
+    --color-rule: transparent;
+    --color-border: transparent;
+    --color-border-accent: transparent;
 
     /* Nor is the page's one shadow drawn, per DDR-020. A sheet is lit by the room it is read in,
        and the surfaces it raises are flat on paper anyway: their fills and the colour of their

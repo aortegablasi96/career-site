@@ -45,10 +45,11 @@ describe('Section', () => {
     expect(css).toMatch(/\.heading::after\s*\{[^}]*flex:\s*1;/);
   });
 
-  // The rule carries no information, so it is the decoration colour rather than an ink, per
-  // DDR-012 — and paper therefore drops it at the token layer, with no print rule of its own.
-  it('draws the rule in the decoration colour, so paper drops it without a rule here', () => {
-    expect(css).toMatch(/\.heading::after\s*\{[^}]*border-block-start:[^;]*var\(--color-decoration\);/);
+  // The rule carries no information, so it is a hairline rather than an ink, per DDR-025 — and
+  // paper therefore drops it at the token layer, with no print rule of its own. It is the one
+  // hairline of the three that is drawn nowhere else.
+  it('draws the rule in the hairline the design gives it, so paper drops it without a rule here', () => {
+    expect(css).toMatch(/\.heading::after\s*\{[^}]*border-block-start:[^;]*var\(--color-rule\);/);
     expect(print).not.toMatch(/\.heading/);
   });
 

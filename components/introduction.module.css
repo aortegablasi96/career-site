@@ -106,8 +106,12 @@
   font-weight: var(--font-weight-medium);
 }
 
+/* The faintest line on the page, at 2.39:1, which fails WCAG 1.4.3. It is the design's, per
+   DDR-025, and it is the one place the introduction's text drops below the ink `.metadata` gives
+   every other line it sets. */
 .location {
   margin-block-start: var(--space-x-small);
+  color: var(--color-text-faint);
 }
 
 /* The four controls wrap onto as many rows as they need, rather than being cut off or scrolled. */
@@ -144,14 +148,22 @@
   overflow-wrap: anywhere;
 }
 
-/* The contact pills are outlined. The edge of a control carries meaning, so it is drawn in the
-   secondary ink at 7.07:1 rather than in the decoration colour, per DDR-012. */
+/* The contact pills are outlined on white, both the design's, per DDR-025. The fill is the card
+   surface, which is the only other place the page uses it, and it is what carries the border's
+   1.49:1 — on the page's own surface the same hairline is 1.39:1, and the record measures it where
+   it sits.
+
+   DDR-012 drew this border in the secondary ink at 7.07:1, on the rule that the edge of a control
+   carries meaning and so must reach 3:1. The design's tint cannot, and DDR-025 accepts that rather
+   than defending the rule: what identifies a contact pill is its icon, its shape and the white it
+   sits on, and the border now reinforces those rather than carrying them. */
 .contact {
-  border: 1px solid var(--color-text-secondary);
+  border: 1px solid var(--color-border-accent);
+  background-color: var(--color-surface-card);
 }
 
 /* The CV pill is filled, which sets it apart from the three addresses. White on the accent is
-   7.90:1, per DDR-012. Its border matches its fill, so both kinds of pill are the same size. */
+   6.29:1, per DDR-025. Its border matches its fill, so both kinds of pill are the same size. */
 .cv {
   border: 1px solid var(--color-accent);
   background-color: var(--color-accent);

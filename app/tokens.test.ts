@@ -185,8 +185,12 @@ describe('tracking tokens', () => {
   });
 });
 
-// DDR-012 records the contrast of every pairing the site uses. These tests measure the tokens as
-// written, so a colour change fails here until the decision record is revised with it.
+// DDR-025 records the contrast of every pairing the site uses, and it is the first colour record
+// that has failures to record: the owner decided on 2026-09-17 that `career-site-design` prevails
+// over the records written to protect WCAG conformance, so five pairings the page draws now sit
+// below what WCAG 2.2 AA asks. These tests measure the tokens as written and hold each pairing to
+// the ratio the record states rather than to a floor, so a colour still cannot change without the
+// record changing — and a pairing cannot quietly get better or worse either.
 const colors = new Map(
   [...root.matchAll(/--color-([\w-]+):\s*([^;]+);/g)].map(([, name, value]) => [
     name,
@@ -228,6 +232,8 @@ describe('colour tokens', () => {
       'text-heading',
       'text',
       'text-secondary',
+      'text-muted',
+      'text-faint',
       'accent',
       'on-accent',
       'surface-tag',
@@ -238,7 +244,9 @@ describe('colour tokens', () => {
       'text-level-proficient',
       'surface-level-basic',
       'text-level-basic',
-      'decoration',
+      'rule',
+      'border',
+      'border-accent',
       'marker',
       'focus',
     ]);
@@ -250,72 +258,103 @@ describe('colour tokens', () => {
     }
   });
 
-  it.each([
-    // Text: WCAG 2.2 AA asks 4.5:1, and DDR-012 holds all text to it, whatever its size. Every
-    // pairing is measured on the page and, where the text can sit on one, on a white card.
-    { foreground: 'text-heading', background: 'surface', required: 4.5, recorded: 16.66 },
-    { foreground: 'text-heading', background: 'surface-card', required: 4.5, recorded: 17.85 },
-    { foreground: 'text', background: 'surface', required: 4.5, recorded: 9.67 },
-    { foreground: 'text', background: 'surface-card', required: 4.5, recorded: 10.35 },
-    { foreground: 'text-secondary', background: 'surface', required: 4.5, recorded: 7.07 },
-    { foreground: 'text-secondary', background: 'surface-card', required: 4.5, recorded: 7.58 },
-    { foreground: 'accent', background: 'surface', required: 4.5, recorded: 7.38 },
-    { foreground: 'accent', background: 'surface-card', required: 4.5, recorded: 7.9 },
-    { foreground: 'on-accent', background: 'accent', required: 4.5, recorded: 7.9 },
-    // The tinted surfaces, each with the ink it carries.
-    { foreground: 'text-tag', background: 'surface-tag', required: 4.5, recorded: 7.07 },
-    {
-      foreground: 'text-level-advanced',
-      background: 'surface-level-advanced',
-      required: 4.5,
-      recorded: 7.29,
-    },
-    {
-      foreground: 'text-level-proficient',
-      background: 'surface-level-proficient',
-      required: 4.5,
-      recorded: 8.88,
-    },
-    {
-      foreground: 'text-level-basic',
-      background: 'surface-level-basic',
-      required: 4.5,
-      recorded: 6.92,
-    },
-    // Non-text elements that carry meaning: WCAG 2.2 AA asks 3:1. The bullet marker is one of
-    // them, per DDR-019: it prints, and once the indent is a single step it is what tells a point
-    // from a paragraph. It sits on the page and never on a card, so that is the one pairing.
-    { foreground: 'focus', background: 'surface', required: 3, recorded: 7.38 },
-    { foreground: 'marker', background: 'surface', required: 3, recorded: 4.17 },
-  ])(
-    '$foreground on $background meets $required:1, at the $recorded:1 DDR-012 records',
-    ({ foreground, background, required, recorded }) => {
-      const ratio = contrast(color(foreground), color(background));
+  // Every pairing the page draws, with the ratio DDR-025 measures, the Success Criterion that
+  // applies to it, and whether it is met. A pairing that is not here is unverified and is not to be
+  // used, which is DDR-012's rule carried forward.
+  //
+  // `asked` is 4.5 for text, per WCAG 2.2 AA 1.4.3, whatever its size; 3 for non-text that carries
+  // meaning, per 1.4.11; and 0 for a hairline that carries nothing, which neither criterion
+  // reaches. `meets` is what the record states, not what the page ought to do — four rows below
+  // say `false`, and they are the cost of the design prevailing.
+  const pairings = [
+    { foreground: 'text-heading', background: 'surface', asked: 4.5, recorded: 16.66, meets: true },
+    { foreground: 'text-heading', background: 'surface-card', asked: 4.5, recorded: 17.85, meets: true },
+    { foreground: 'text', background: 'surface', asked: 4.5, recorded: 9.67, meets: true },
+    { foreground: 'text-secondary', background: 'surface', asked: 4.5, recorded: 7.07, meets: true },
+    // A company, an institution, a thesis and a contents link. Running text, below 4.5:1.
+    { foreground: 'text-muted', background: 'surface', asked: 4.5, recorded: 4.44, meets: false },
+    // The introduction's location, a role's place, and from #96 the footer. Below half of it.
+    { foreground: 'text-faint', background: 'surface', asked: 4.5, recorded: 2.39, meets: false },
+    { foreground: 'accent', background: 'surface', asked: 4.5, recorded: 5.87, meets: true },
+    { foreground: 'accent', background: 'surface-card', asked: 4.5, recorded: 6.29, meets: true },
+    { foreground: 'on-accent', background: 'accent', asked: 4.5, recorded: 6.29, meets: true },
+    // The tinted surfaces, each with the ink it carries. The design and the records agree on all
+    // four, which is why none of them moves here.
+    { foreground: 'text-tag', background: 'surface-tag', asked: 4.5, recorded: 7.07, meets: true },
+    { foreground: 'text-level-advanced', background: 'surface-level-advanced', asked: 4.5, recorded: 7.29, meets: true },
+    { foreground: 'text-level-proficient', background: 'surface-level-proficient', asked: 4.5, recorded: 8.88, meets: true },
+    { foreground: 'text-level-basic', background: 'surface-level-basic', asked: 4.5, recorded: 6.92, meets: true },
+    // Non-text that carries meaning. The focus outline is offset onto the page, so that is the one
+    // surface it is measured against, and it still clears 3:1 with the accent two steps lighter.
+    { foreground: 'focus', background: 'surface', asked: 3, recorded: 5.87, meets: true },
+    // The bullet marker, which DDR-019 held to 3:1 because it prints and because it is what tells
+    // a point from a paragraph. The design's own value is not a fifth of the way there.
+    { foreground: 'marker', background: 'surface', asked: 3, recorded: 1.86, meets: false },
+    // A contact pill's border, on the white the design fills the pill with. DDR-012 held a
+    // control's edge to 3:1 on the ground that it carries meaning; DDR-025 gives that up and says
+    // what identifies the control instead.
+    { foreground: 'border-accent', background: 'surface-card', asked: 3, recorded: 1.49, meets: false },
+    // Hairlines that carry nothing, so neither criterion reaches them: the rule beside a section
+    // heading, a card's edge against the page it sits on and the white it encloses, and the
+    // timeline's spine and dots.
+    { foreground: 'rule', background: 'surface', asked: 0, recorded: 1.39, meets: true },
+    { foreground: 'border', background: 'surface', asked: 0, recorded: 1.15, meets: true },
+    { foreground: 'border', background: 'surface-card', asked: 0, recorded: 1.23, meets: true },
+    { foreground: 'border-accent', background: 'surface', asked: 0, recorded: 1.39, meets: true },
+  ] as const;
 
-      expect(ratio).toBeGreaterThanOrEqual(required);
-      expect(ratio).toBeCloseTo(recorded, 2);
+  it.each(pairings)(
+    '$foreground on $background measures the $recorded:1 DDR-025 records',
+    ({ foreground, background, recorded }) => {
+      expect(contrast(color(foreground), color(background))).toBeCloseTo(recorded, 2);
     },
   );
 
-  // DDR-012 lets the hairlines sit below 3:1 only because none of them carries information: each
-  // is hidden from assistive technology, and removing all of them would lose nothing. This test
-  // holds the value to what the record measured, so it cannot drift into carrying meaning.
-  it('draws decoration at the 2.39:1 DDR-012 records, which is why it may carry no information', () => {
-    expect(contrast(color('decoration'), color('surface'))).toBeCloseTo(2.39, 2);
+  // The measurement above says what a pairing is, not whether it is enough. This says which rows
+  // the record admits are failures, by name, so a fifth cannot join them quietly and none of the
+  // four can be quietly improved without the record being revised with it.
+  it('fails exactly the four pairings DDR-025 records as failures, and no others', () => {
+    for (const { foreground, background, asked, recorded, meets } of pairings) {
+      expect(recorded >= asked, `${foreground} on ${background}`).toBe(meets);
+    }
+
+    expect(pairings.filter(({ meets }) => !meets).map(({ foreground }) => foreground)).toEqual([
+      'text-muted',
+      'text-faint',
+      'marker',
+      'border-accent',
+    ]);
   });
 
-  // DDR-019 measures the design's own `#a5b4fc` at 1.86:1, below even the hairlines, and takes
-  // the lightest indigo of the ramp that clears 3:1 instead. This holds the marker apart from the
-  // decoration above it: a colour that may carry meaning cannot quietly drift down to one that may
-  // not.
-  it('draws the bullet marker lighter than the accent and darker than decoration, per DDR-019', () => {
-    const marker = contrast(color('marker'), color('surface'));
-
-    expect(marker).toBeGreaterThan(contrast(color('decoration'), color('surface')));
-    expect(marker).toBeLessThan(contrast(color('accent'), color('surface')));
+  // DDR-025 takes the design's #4f46e5, which DDR-012 measured at 5.87:1 and turned down in favour
+  // of #4338ca at 7.38:1 because the filled CV control carries white text at 13px. It still clears
+  // AA both ways and reaches AAA neither way, where the colour it replaces reached AAA both.
+  it('keeps the accent above AA as text and under white text, though no longer above AAA', () => {
+    expect(contrast(color('accent'), color('surface'))).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(color('on-accent'), color('accent'))).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(color('accent'), color('surface'))).toBeLessThan(7);
   });
 
-  it('keeps the focus outline in the accent, per DDR-012', () => {
+  // The one ink the design draws that is not the accent. DDR-012 made the tag's ink a reference to
+  // the accent because the draft set both in #4338ca; the design sets a tag in #4338ca and
+  // everything else in #4f46e5, so the two part here and the tag keeps the darker value.
+  it('writes the tag’s ink out rather than following the accent, per DDR-025', () => {
+    expect(colors.get('text-tag')).toBe('#4338ca');
+    expect(color('text-tag')).not.toBe(color('accent'));
+  });
+
+  // Every hairline is now fainter than the 2.39:1 DDR-012 called the lightest value at which a line
+  // reads at all — which is, exactly, the ratio the faint ink now sets text at. This holds the two
+  // apart: a hairline may not climb into the inks, and an ink may not sink into the hairlines.
+  it('draws every hairline below the value DDR-012 called the lightest that reads', () => {
+    const faintest = contrast(color('text-faint'), color('surface'));
+
+    for (const name of ['rule', 'border', 'border-accent']) {
+      expect(contrast(color(name), color('surface')), name).toBeLessThan(faintest);
+    }
+  });
+
+  it('keeps the focus outline in the accent, per DDR-025', () => {
     expect(colors.get('focus')).toBe('var(--color-accent)');
   });
 });
@@ -352,12 +391,14 @@ describe('elevation tokens', () => {
     expect(token('shadow-raised')).not.toMatch(/\binset\b/);
   });
 
-  // The two layers and their lengths are the design's, unchanged. The ink is 22% black where the
-  // design draws 10%: at 10% the darkest row the shadow draws is 1.50:1 against the page, below
-  // the 2.39:1 of the hairlines, and at 22% it is 2.45:1, the lightest ink that clears them.
-  it('keeps the design’s two layers and darkens its ink, as DDR-020 measures it', () => {
+  // The two layers, their lengths and their ink are all the design's now, per DDR-025, which amends
+  // DDR-020. That record kept the geometry and took the ink from 10% black to 22%, because at 10%
+  // the darkest row the shadow draws is 1.50:1 against the page — below the 2.39:1 of the hairlines
+  // it was measured against. Those hairlines are gone: every one of the three DDR-025 draws is
+  // fainter than 1.50:1, so the floor the darkening cleared no longer exists.
+  it('keeps the design’s two layers and its own ink, as DDR-025 amends DDR-020', () => {
     expect(token('shadow-raised')).toBe(
-      '0 1px 1.5px rgba(0, 0, 0, 0.22), 0 1px 1px rgba(0, 0, 0, 0.22)',
+      '0 1px 1.5px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(0, 0, 0, 0.1)',
     );
   });
 
@@ -572,7 +613,9 @@ const forPaper = [
   { name: 'color-surface-level-advanced', value: 'transparent' },
   { name: 'color-surface-level-proficient', value: 'transparent' },
   { name: 'color-surface-level-basic', value: 'transparent' },
-  { name: 'color-decoration', value: 'transparent' },
+  { name: 'color-rule', value: 'transparent' },
+  { name: 'color-border', value: 'transparent' },
+  { name: 'color-border-accent', value: 'transparent' },
   { name: 'shadow-raised', value: 'none' },
   { name: 'shadow-photo-glow', value: 'none' },
   { name: 'shadow-photo-inner', value: 'none' },
@@ -583,7 +626,7 @@ const forPaper = [
 ];
 
 describe('print tokens', () => {
-  it('redefines only the base size, every surface, the decoration, the shadows, the column and its edges, and the photo', () => {
+  it('redefines only the base size, every surface, every hairline, the shadows, the column and its edges, and the photo', () => {
     expect([...inPrint.keys()]).toEqual(forPaper.map(({ name }) => name));
   });
 
@@ -592,18 +635,22 @@ describe('print tokens', () => {
   });
 
   // DDR-015: every tint on the page is dropped on paper, so the sheet reads the same whether or not
-  // the browser prints background graphics, and the decoration is not drawn at all. The inks the
-  // tints carried are untouched: each is darker on white paper than on the surface it was measured
-  // against, so no pairing DDR-012 records gets worse.
-  it('drops every surface and the decoration, and touches no ink, per DDR-015', () => {
+  // the browser prints background graphics, and no hairline is drawn at all. The inks the tints
+  // carried are untouched: each is darker on white paper than on the surface it was measured
+  // against, so no pairing DDR-025 records gets worse.
+  //
+  // DDR-025 splits DDR-012's one `--color-decoration` into three, so what paper drops is three
+  // tokens rather than one. The bullet marker stays drawn, per DDR-019, and this holds it out of
+  // the list: it is the one mark on the page that carries something a reader of paper needs.
+  it('drops every surface and every hairline, and touches no ink or marker, per DDR-015', () => {
     const dropped = [...inPrint.keys()].filter((name) => inPrint.get(name) === 'transparent');
-    const surfaces = [...root.matchAll(/--(color-surface[\w-]*|color-decoration):/g)].map(
-      ([, name]) => name,
-    );
+    const droppable = [
+      ...root.matchAll(/--(color-surface[\w-]*|color-rule|color-border[\w-]*):/g),
+    ].map(([, name]) => name);
 
-    expect(dropped.sort()).toEqual(surfaces.sort());
+    expect(dropped.sort()).toEqual(droppable.sort());
     for (const name of inPrint.keys()) {
-      expect(name).not.toMatch(/^color-text/);
+      expect(name).not.toMatch(/^color-text|^color-marker$/);
     }
   });
 

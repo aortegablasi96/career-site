@@ -241,10 +241,19 @@ describe('introduction styles', () => {
 
   it('identifies a control by its border or its fill rather than by an underline, per DDR-010', () => {
     expect(rule('.contact,\n.cv')).toMatch(/text-decoration-line:\s*none;/);
-    // A control's edge carries meaning, so it is the secondary ink rather than the decoration one.
-    expect(rule('.contact')).toMatch(/border:\s*1px solid var\(--color-text-secondary\);/);
+    // DDR-025 gives the border the design's indigo tint, which cannot carry meaning at 1.49:1, and
+    // the white the design fills the pill with. What identifies the control is its icon, its shape
+    // and that fill; the border reinforces them.
+    expect(rule('.contact')).toMatch(/border:\s*1px solid var\(--color-border-accent\);/);
+    expect(rule('.contact')).toMatch(/background-color:\s*var\(--color-surface-card\);/);
     expect(rule('.cv')).toMatch(/background-color:\s*var\(--color-accent\);/);
     expect(rule('.cv')).toMatch(/color:\s*var\(--color-on-accent\);/);
+  });
+
+  // DDR-025: the design sets the location line in #94a3b8, the one ink on the page fainter than
+  // the muted grey `.metadata` carries. It is 2.39:1 and fails WCAG 1.4.3.
+  it('sets the location line in the faintest ink, per DDR-025', () => {
+    expect(rule('.location')).toMatch(/color:\s*var\(--color-text-faint\);/);
   });
 
   // DDR-020 raises both kinds of pill by the one shadow the site has. It is never what identifies
