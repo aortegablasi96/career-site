@@ -1,0 +1,98 @@
+/*
+ * The footer, per DDR-028, which supersedes DDR-010's "There is no footer".
+ *
+ * The design draws it as a full-width band carrying a hairline along its top edge, with the name
+ * and the addresses inside the page's own column (node 2:687, and its container 2:688). So the
+ * line is on the footer, which spans the viewport as the design's spans its frame, and the column
+ * is on the container inside it — the same two tokens `main` reads in app/globals.css, so the
+ * footer lines up with the page above it at every width and on paper.
+ *
+ * Paper draws no hairline and this file writes no rule for that: --color-border is transparent
+ * inside the print block in app/tokens.css, per DDR-015, so the footer's line goes the way the
+ * section divider and the timeline's spine already go. The space stays.
+ */
+.footer {
+  border-block-start: 1px solid var(--color-border);
+  padding-block: var(--space-large);
+  /* The faintest ink on the page, at 2.39:1, which fails WCAG 1.4.3. It is the design's, per
+     DDR-025, which already names the footer among this token's users. Set here rather than on each
+     part, because the design sets the whole footer in it — the name and the three addresses
+     alike. */
+  color: var(--color-text-faint);
+  /* The design sets the footer at 12px and the scale has no 12px step. This is the nearest, 12.8px,
+     and DDR-028 says why an eleventh step is not worth 0.8px: the steps are named for CSS's own
+     absolute sizes and one inserted between 11px and 12.8px would rename every step below
+     `x-small`, per DDR-022. */
+  font-size: var(--font-size-xx-small);
+}
+
+/* The page's column, so the name starts where the page's text starts and the last address ends
+   where it ends. A row that wraps when it runs out of width, so it needs no breakpoint: below about
+   540px the addresses drop under the name, and below about 340px they stand one to a line. The
+   column gap is what holds them apart when they do not, and the row gap is what keeps two wrapped
+   addresses outside the circles WCAG 2.2's 2.5.8 measures its spacing exception with, as the
+   contents row's does, per DDR-027. */
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: var(--space-medium);
+  row-gap: var(--space-small);
+  max-inline-size: var(--content-width);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+/* The one place on the page the serif is neither the page title nor a section title, per DDR-023,
+   and the only text on the site set in Lora Regular — which is why app/layout.tsx loads that file
+   from this story and not before. It is a paragraph rather than a heading, so it takes the regular
+   weight from `body` and joins no outline. */
+.name {
+  font-family: var(--font-family-heading);
+}
+
+/* The three addresses, in the order the introduction gives them. The design holds them 20px apart;
+   this is a step of DDR-013's scale, 16px, because a 20px gap is on no step of it and DDR-028
+   weighs 4px against the scale. */
+.addresses {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-medium);
+  row-gap: var(--space-small);
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+/* The design does not underline a footer address and this follows it, per DDR-028. What identifies
+   these links is that each is an address and each repeats a control the introduction has already
+   identified; the record has the argument and what it costs.
+
+   The ink is written out rather than inherited so that the base styles' `a { color: var(--color-accent) }`
+   is answered here rather than by accident, and so this rule says which of the three inks below the
+   body's the addresses take.
+
+   A flex container rather than an inline box, as a contents link and a project's link are, per
+   DDR-027: the target is then the whole line the address sets in, 19.2px, rather than the shorter
+   content area an inline box would give it.
+
+   `anywhere` rather than the `break-word` the base styles give every word, and for the reason the
+   introduction's pills need it: a flex container is never laid out narrower than its content's
+   min-content width, and `break-word` does not enter that calculation where `anywhere` does. Without
+   it the GitHub address is 320px in a 273px column at 320px with text at 200%, and the page scrolls
+   sideways, which DDR-014 forbids at any text size. */
+.link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-text-faint);
+  text-decoration-line: none;
+  overflow-wrap: anywhere;
+}
+
+@media print {
+  /* The link's text is its address, so the address is not printed after it again — the same rule
+     the introduction's pills write, per DDR-006, and what keeps `mailto:` off the sheet. */
+  .link::after {
+    content: none;
+  }
+}

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Contents } from '@/components/contents';
 import { Credentials } from '@/components/credentials';
 import { Experience } from '@/components/experience';
+import { Footer } from '@/components/footer';
 import { Introduction } from '@/components/introduction';
 import { Languages } from '@/components/languages';
 import { Projects } from '@/components/projects';
@@ -72,12 +73,18 @@ const sections: readonly PageSection[] = [
 
 export default function HomePage() {
   return (
-    <main>
-      <Introduction introduction={introduction} cv={cv} />
-      <Contents label={contents.label} sections={sections} />
-      {sections.map(({ id, title, items }) => (
-        <Section key={id} id={id} title={title} items={items} />
-      ))}
-    </main>
+    <>
+      <main>
+        <Introduction introduction={introduction} cv={cv} />
+        <Contents label={contents.label} sections={sections} />
+        {sections.map(({ id, title, items }) => (
+          <Section key={id} id={id} title={title} items={items} />
+        ))}
+      </main>
+      {/* The footer follows main rather than sitting inside it, so it is the page's contentinfo
+          landmark, per DDR-028. It takes the introduction's own name and contact records: the
+          addresses are stated once in content/ and shown in two places. */}
+      <Footer name={introduction.name} contact={introduction.contact} />
+    </>
   );
 }
