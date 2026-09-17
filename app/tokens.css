@@ -150,6 +150,25 @@
   --radius-large: 0.75rem;
   --radius-pill: 9999px;
 
+  /* The one elevation the site has, per DDR-020. The introduction's four controls and the four
+     language cards are raised a little off the page; nothing else on it is, and depth is otherwise
+     drawn with a tint, a hairline and a radius.
+
+     The geometry is the design's own two-layer shadow, unchanged. The ink is not: at the design's
+     10% black the darkest row it draws is 1.50:1 against the page, fainter than the hairlines
+     DDR-012 calls the lightest value at which a line reads at all, and fainter than the marker
+     DDR-019 turned down for the same reason. At 22% it measures 2.45:1 in Chromium and 2.47:1 in
+     Gecko, which is the lightest ink that clears those hairlines. DDR-020 has the ramp.
+
+     Its ink is written here rather than in the palette above because it is not a colour anything
+     else may reach for: every colour up there is opaque, and translucent black is wrong on text, on
+     a border and on a surface. Its lengths are in px, as the focus outline's and the timeline's
+     line are: a shadow marks an edge and gains nothing from growing with the reader's text.
+
+     One level, named for what it does rather than numbered, so a second is a decision to make
+     rather than the next number to reach for. */
+  --shadow-raised: 0 1px 1.5px rgba(0, 0, 0, 0.22), 0 1px 1px rgba(0, 0, 0, 0.22);
+
   /* The smallest an interactive target may be in each direction, per DDR-014. In px, as WCAG
      measures it, because a target is sized for a finger rather than for the text. */
   --target-size-min: 44px;
@@ -286,6 +305,12 @@
        spine keeps its column rather than being removed from the grid, so the date column stays
        where the reader of a screen would expect it. */
     --color-decoration: transparent;
+
+    /* Nor is the page's one shadow drawn, per DDR-020. A sheet is lit by the room it is read in,
+       and the surfaces it raises are flat on paper anyway: their fills and the colour of their
+       edges are dropped just above. Like those, it is dropped here rather than in a component, so
+       no stylesheet writes a print rule to put out its own light. */
+    --shadow-raised: none;
 
     --content-width: none;
     --page-gutter: 0;
