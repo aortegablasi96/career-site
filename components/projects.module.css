@@ -113,6 +113,19 @@
   display: inline-flex;
   align-items: center;
   font-size: var(--font-size-x-small);
+  /* The underline the base styles give every link, drawn as the design draws it, per DDR-035: in a
+     pale indigo, 2px below the letters. It is still what says this is a link, and at 1.86:1 it
+     says so more quietly than it did in the accent; DDR-035 records it as failing WCAG 1.4.11. */
+  text-decoration-color: var(--color-underline);
+  text-underline-offset: var(--underline-offset);
+}
+
+/* Under the pointer and on keyboard focus the text darkens and the underline strengthens, to
+   4.17:1, per DDR-035. The darker ink is 7.38:1 on the page. */
+.link:hover,
+.link:focus-visible {
+  color: var(--color-accent-hover);
+  text-decoration-color: var(--color-underline-hover);
 }
 
 /* From here the media takes a column of its own beside the text, per DDR-010. This is the one
@@ -159,7 +172,12 @@
     row-gap: 0;
   }
 
+  /* The pale underline and its offset are the screen's, per DDR-035, so paper takes the underline
+     it had before them: in the link's own ink, where the browser puts it. A pale line under a link
+     on a sheet is a mark nobody can follow, and the printed CV does not change. */
   .link {
     display: inline;
+    text-decoration-color: currentColor;
+    text-underline-offset: auto;
   }
 }

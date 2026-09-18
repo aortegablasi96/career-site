@@ -271,6 +271,20 @@ describe('introduction styles', () => {
     expect(rule('.cv')).toMatch(/color:\s*var\(--color-on-accent\);/);
   });
 
+  // DDR-035: under the pointer a contact pill takes the tag's pale indigo and a stronger border, and
+  // the CV pill darkens its fill and its border together, so neither changes size. Keyboard focus
+  // draws the same, so it is never less visible than hover.
+  it('answers the pointer and keyboard focus with the design’s colours, per DDR-035', () => {
+    const contact = rule('.contact:hover,\n.contact:focus-visible');
+    const cv = rule('.cv:hover,\n.cv:focus-visible');
+
+    expect(contact).toMatch(/border-color:\s*var\(--color-border-accent-hover\);/);
+    expect(contact).toMatch(/background-color:\s*var\(--color-surface-hover\);/);
+    expect(cv).toMatch(/border-color:\s*var\(--color-accent-hover\);/);
+    expect(cv).toMatch(/background-color:\s*var\(--color-accent-hover\);/);
+    expect(`${contact}${cv}`).not.toMatch(/(?:^|[^-])(?:border|padding|box-shadow):/);
+  });
+
   // DDR-025: the design sets the location line in #94a3b8, the one ink on the page fainter than
   // the muted grey `.metadata` carries. It is 2.39:1 and fails WCAG 1.4.3.
   it('sets the location line in the faintest ink, per DDR-025', () => {

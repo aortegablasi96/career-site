@@ -176,6 +176,27 @@
   color: var(--color-on-accent);
 }
 
+/* Under the pointer, per DDR-035, a contact pill takes the tag's pale indigo and its border
+   strengthens, and the CV pill darkens, fill and border together so it stays the same size. Keyboard
+   focus draws the same colours as well as the outline, so it is never less visible than hover.
+   Nothing is revealed: the label, the icon and the address the pill leads to are there at rest, per
+   DDR-014.
+
+   The strengthened border is 1.78:1 on the hover fill, which is stronger than the resting 1.49:1 and
+   still below the 3:1 WCAG 1.4.11 asks; DDR-035 records it as failing. The accent on the fill is
+   5.62:1, and white on the darker fill is 7.90:1. */
+.contact:hover,
+.contact:focus-visible {
+  border-color: var(--color-border-accent-hover);
+  background-color: var(--color-surface-hover);
+}
+
+.cv:hover,
+.cv:focus-visible {
+  border-color: var(--color-accent-hover);
+  background-color: var(--color-accent-hover);
+}
+
 /* From here the photo sits beside the text, per DDR-010. This is the one width a component may
    write, per DDR-014. */
 @media (min-width: 48em) {

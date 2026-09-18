@@ -513,8 +513,8 @@ nothing either: it is the first time ADR-001's "`'use client'` requires a reason
 records the reason — the contents bar has to know how far the page has scrolled — and is not a
 precedent for the next one. The next ADR is `008`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-034. The next DDR is
-`035`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-035. The next DDR is
+`036`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Thirteen accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -528,7 +528,8 @@ at the section concerned:
   the bullet this record calls "not negotiable", which makes each contact pill's text its address:
   the pills carry the design's labels and DDR-028's footer carries the addresses. The print
   exception that followed from the old rule survives — a contact link still prints no address after
-  itself. DDR-031 takes its "It is not sticky": the contents are the design's pinned bar, and
+  itself. DDR-035 takes its "Hover thickens the underline": hover changes colour instead.
+  DDR-031 takes its "It is not sticky": the contents are the design's pinned bar, and
   DDR-031 also amends DDR-021's out-of-flow rule, DDR-025's opaque palette and DDR-030's open item.
 * **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
   rule and its rule that nothing scrolls horizontally from 320px. DDR-027 takes its 44 by 44 pixel
@@ -574,7 +575,8 @@ at the section concerned:
   reason for holding a translucent ink inside the shadow. DDR-025 takes its ink back to the design's
   10% black, because the hairlines the 22% was measured against no longer exist.
 * **DDR-025** keeps everything but one bullet: DDR-033 takes its ruling that the contents links keep
-  their underline. Every other link still has one.
+  their underline. Every other link still has one. DDR-035 amends it too: five hover and underline
+  colours join the palette, and its four failing pairings become six.
 * **DDR-031** keeps everything but its links' underline, which DDR-033 takes, per #113, and its
   declined scroll-triggered edge, which DDR-034 adopts, per #114, with its hairline row and its
   shadow row.
@@ -1054,6 +1056,23 @@ Four things about it are worth knowing before touching it.
 * **Check it against a server that sends `charset=utf-8`.** Python's `http.server` sends JavaScript
   without one, Firefox then decodes the chunks wrongly and never hydrates, and the bar never gains
   its edge. GitHub Pages sends the charset. This is a local artefact, not a fault in the site.
+
+**#115 has landed, as DDR-035: every link and control answers the pointer.** A contact pill takes
+`--color-surface-hover` and `--color-border-accent-hover`, the CV control darkens to
+`--color-accent-hover`, the contents links and the footer's addresses take the accent, and a project
+link darkens and its underline strengthens. Its resting underline is the design's pale
+`--color-underline`, `--underline-offset` below the text.
+
+Four things about it are worth knowing before touching a link.
+
+* **Every hover rule is written `:hover, :focus-visible`**, so keyboard focus draws everything the
+  pointer does and the outline besides. Only colours change; no box moves.
+* **The transition is written once**, on `a` in `app/globals.css`, over `--hover-transition` (150ms)
+  inside `prefers-reduced-motion: no-preference`. A new link inherits it but needs its own hover rule.
+* **Two more pairings fail WCAG 1.4.11**: the pill's hover border at 1.78:1 and the project link's
+  resting underline at 1.86:1. `app/tokens.test.ts` holds six failures by name now.
+* **Paper is unchanged.** The hover fill and border drop at the token layer, and the projects' print
+  block puts the underline back in the link's own ink with the browser's offset.
 
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the

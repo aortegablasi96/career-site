@@ -51,7 +51,9 @@ contact pills, the CV control and the footer's addresses were already drawn with
   offset, is unchanged. Measured in the browser, the outline falls wholly inside the bar, and the
   accent is **5.42:1** against the worst blend the bar can show — 96% surface over the heading ink,
   `#efeeec` — where it is 5.87:1 on the page. Both clear the 3:1 WCAG 1.4.11 asks of it.
-* **Its hover state**, once #115 lands. It is not part of this record.
+* **Its hover state**, once #115 lands. It is not part of this record. **#115 has landed, as
+  DDR-035**: under the pointer and on keyboard focus the link takes the accent, 5.87:1 on the page
+  and 5.42:1 on the bar's worst blend.
 
 ### What does not identify it
 

@@ -32,6 +32,11 @@ The contents are now the design's bar, pinned to the top of the window, and DDR-
 grounds one at a time. It declines the scroll-triggered shadow, which `career-site-design` does not
 draw, so the fourth ground never arises. Everything else this record says about the contents stands.
 
+**Superseded in part a fifth time by DDR-035**, which takes the sentence under "Links and controls"
+that says hover thickens the underline rather than changing the colour. That hover was never built;
+every link and control now changes colour under the pointer and on keyboard focus, as the design
+draws it. The rest of that bullet stands.
+
 **Amended in two respects by DDR-027.** Its bullet requiring every target to be at least 44 by 44
 pixels goes, along with DDR-014's: a target is now the size the design draws it. And its figure for
 the draft's contents links, "about 28px tall", is corrected — in `career-site-design` a link's box
@@ -246,7 +251,8 @@ This replaces DDR-006's labelled list for languages.
 
 * **Every link stands on its own**, as ADR-002 requires.
 * **Links are underlined.** Hover thickens the underline rather than changing the colour, so no
-  state depends on hue. Focus keeps DDR-002's 2px outline at 2px offset.
+  state depends on hue. Focus keeps DDR-002's 2px outline at 2px offset. **Superseded by DDR-035**
+  for the hover: it changes colour, as the design draws it, and focus draws the same colours.
 * **Bordered and filled controls are not underlined.** The three contact pills and the CV pill are
   identified by their border or fill together with their icon — two non-colour cues. This is a
   deliberate, limited exception to DDR-002's blanket underline rule, and it extends no further than

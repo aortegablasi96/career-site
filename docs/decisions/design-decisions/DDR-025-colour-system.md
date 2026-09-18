@@ -16,6 +16,12 @@ surface, not an ink, and every ink stays opaque. The contents link on it is meas
 blend the page can put behind it: 4.10:1, where this record gives 4.44:1 on the page. Both fail,
 and this record already counts that ink among its failures.
 
+**Amended by DDR-035 in two respects**: the palette gains five colours for hover and for a project
+link's underline — `--color-surface-hover`, `--color-accent-hover`, `--color-border-accent-hover`,
+`--color-underline` and `--color-underline-hover` — and the pairings that fail WCAG go from four to
+six: a contact pill's hover border at 1.78:1 and a project link's resting underline at 1.86:1, both
+below the 3:1 of 1.4.11. The four below are unchanged.
+
 **Superseded in part by DDR-033**: the contents links are no longer underlined, as the design draws
 them. That is the one bullet under "Colour is never the only signal" that DDR-033 takes; every other
 link keeps its underline.
