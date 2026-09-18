@@ -151,9 +151,9 @@ describe('Introduction', () => {
     expect(links.slice(0, 3).map(({ text }) => text)).toEqual(['Email', 'LinkedIn', 'GitHub']);
   });
 
-  // DDR-044: the three contact marks are one set of solid shapes in the pill's ink, where the
-  // download beside them is still a line drawing. None carries a colour of its own.
-  it('draws the three contact marks as one solid set in the pill’s ink, per DDR-044', () => {
+  // DDR-044: the three contact marks are solid shapes, where the download beside them is still a
+  // line drawing. None is given a class: its colour is its pill's, or for Gmail, its own.
+  it('draws the three contact marks as solid shapes in their pill’s ink, per DDR-044', () => {
     for (const { label } of introduction.contact) {
       const svg = links.find(({ text }) => text === label)!.markup.match(/<svg[^>]*>/)![0];
 
@@ -354,6 +354,57 @@ describe('introduction styles', () => {
     expect(cv).toMatch(/border-color:\s*var\(--color-accent-hover\);/);
     expect(cv).toMatch(/background-color:\s*var\(--color-accent-hover\);/);
     expect(`${contact}${cv}`).not.toMatch(/(?:^|[^-])(?:border|padding|box-shadow):/);
+  });
+
+  // DDR-044: the LinkedIn and GitHub pills are each service's own button — its colour behind a white
+  // mark and label — and under the pointer only the fill darkens, so no mark is ever recoloured.
+  it('makes every contact pill its service’s own button, per DDR-044', () => {
+    for (const brand of ['linkedin', 'github']) {
+      const rest = rule(`.${brand}`);
+      const hover = rule(`.${brand}:hover,\n.${brand}:focus-visible`);
+
+      expect(rest).toContain(`background-color: var(--color-surface-${brand});`);
+      expect(rest).toContain(`border-color: var(--color-surface-${brand});`);
+      expect(rest).toMatch(/(?:^|[^-])color: var\(--color-on-brand\);/);
+      expect(hover).toContain(`background-color: var(--color-surface-${brand}-hover);`);
+      expect(hover).not.toMatch(/(?:^|[^-])color:/);
+    }
+
+    const anchors = [...html.matchAll(/<a [^>]*>/g)].map(([tag]) => tag);
+    const classes = (href: string) =>
+      anchors.find((tag) => tag.includes(`href="${href}"`))!.match(/class="([^"]+)"/)![1];
+
+    for (const { href } of introduction.contact) {
+      expect(classes(href).split(' ')).toHaveLength(2);
+    }
+
+    // The email pill is Gmail's light button: white, with Google's grey edge and near-black label,
+    // and Google's grey state layer under the pointer.
+    expect(rule('.gmail')).toContain('border-color: var(--color-google-border);');
+    expect(rule('.gmail')).toMatch(/(?:^|[^-])color: var\(--color-google-ink\);/);
+    expect(rule('.gmail:hover,\n.gmail:focus-visible')).toContain(
+      'background-color: var(--color-surface-google-hover);',
+    );
+  });
+
+  // DDR-044: Gmail's M is drawn in its own four colours, which are the mark, and nothing on the pill
+  // sets them; the other two marks have one colour each, which their pill decides.
+  it('draws Gmail’s M in its own colours, and the other marks in their pill’s ink, per DDR-044', () => {
+    const gmail = links.find(({ text }) => text === 'Email')!.markup;
+
+    for (const colour of ['#4285f4', '#34a853', '#fbbc04', '#ea4335']) {
+      expect(gmail).toContain(`fill="${colour}"`);
+    }
+    for (const label of ['LinkedIn', 'GitHub']) {
+      expect(links.find(({ text }) => text === label)!.markup).not.toMatch(/fill="#/);
+    }
+  });
+
+  // DDR-044: no fill prints, so on paper each brand's mark and label take the brand's own colour,
+  // which is its mark on white, rather than a white that would vanish.
+  it('prints the LinkedIn and GitHub marks in their own brand colours, per DDR-044', () => {
+    expect(rule('.linkedin', paper)).toMatch(/color:\s*var\(--color-linkedin\);/);
+    expect(rule('.github', paper)).toMatch(/color:\s*var\(--color-github\);/);
   });
 
   // DDR-025: the design sets the location line in #94a3b8, the one ink on the page fainter than

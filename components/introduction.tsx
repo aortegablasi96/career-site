@@ -1,5 +1,5 @@
 import { asset } from '@/app/asset';
-import type { Cv, Introduction as IntroductionContent } from '@/content/types';
+import type { ContactIcon, Cv, Introduction as IntroductionContent } from '@/content/types';
 import { Icon } from './icon';
 import { MetadataLine } from './metadata-line';
 import styles from './introduction.module.css';
@@ -36,7 +36,20 @@ import styles from './introduction.module.css';
  * The LinkedIn and GitHub pills open a new tab, per DDR-043. Since DDR-044 nothing on the pill
  * shows it: the link's accessible name says so instead, so assistive technology still announces it
  * before the pill is chosen. The email pill opens the mail client and says nothing of a tab.
+ *
+ * Each contact pill is its service's own button, per DDR-044: Gmail's white button with its
+ * four-colour M, and LinkedIn's and GitHub's filled in the brand's colour with a white mark.
  */
+/**
+ * The class that makes each contact pill its service's own button, per DDR-044: Gmail's, since the
+ * address is on gmail.com, LinkedIn's and GitHub's.
+ */
+const brandButton: Record<ContactIcon, string> = {
+  gmail: styles.gmail,
+  linkedin: styles.linkedin,
+  github: styles.github,
+};
+
 export function Introduction({
   introduction,
   cv,
@@ -80,7 +93,7 @@ export function Introduction({
             <li key={href}>
               <a
                 href={href}
-                className={styles.contact}
+                className={`${styles.contact} ${brandButton[icon]}`}
                 {...(opensNewTab && {
                   target: '_blank',
                   rel: 'noopener',

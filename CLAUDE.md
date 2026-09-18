@@ -319,11 +319,12 @@ What exists, to reuse rather than reinvent:
   timeline's dates, place and company each get a line set the same way. The contents, the section
   wrapper, the metadata line and the date range are shared by the sections that need them.
 * **The icons**, in `components/icon.tsx`: one per contact address and one for the CV. They are
-  inline SVG rather than committed files, drawn in `currentColor` and sized in em. Since #135 the
-  three contact marks are one solid set, per DDR-044 — a filled envelope, LinkedIn's [in] and
-  GitHub's mark — and the download is still a line drawing. Each is hidden from assistive technology
-  because it repeats what its control's own text says. Which mark a contact takes is a key in
-  `content/`, not something worked out from its address.
+  inline SVG rather than committed files, sized in em. Since #135 the three contact marks are the
+  services' own, per DDR-044: Gmail's M in its own four colours, and LinkedIn's [in] and GitHub's
+  Invertocat in `currentColor`, which the stylesheet only ever sets to a colour the brand
+  publishes. The download is still a line drawing in `currentColor`. Each is hidden from assistive
+  technology because it repeats what its control's own text says. Which mark a contact takes is a
+  key in `content/` — `gmail`, `linkedin`, `github` — not something worked out from its address.
 * **The content types.** `content/types.ts` covers the site metadata, an image, a video, the
   introduction and its contact links, the contents, dates, roles, projects, skills, credentials,
   languages, and the CV. A credential is a degree or a certification, and a project's media is an
@@ -606,7 +607,8 @@ at the section concerned:
   10% black, because the hairlines the 22% was measured against no longer exist.
 * **DDR-025** keeps everything but one bullet: DDR-033 takes its ruling that the contents links keep
   their underline. Every other link still has one. DDR-035 amends it too: five hover and underline
-  colours join the palette, and its four failing pairings become six. DDR-036 adopts the ringed
+  colours join the palette, and its four failing pairings become six. DDR-044 adds the three
+  services' colours for the contact pills, all passing. DDR-036 adopts the ringed
   timeline dot it kept as structure, and withdraws its claim that the design has no experience
   spine, which misread the file.
 * **DDR-031** keeps everything but its links' underline, which DDR-033 takes, per #113, and its
@@ -1154,21 +1156,27 @@ Three things about it are worth knowing before touching it.
 * **The footer's LinkedIn and GitHub still open in the same tab**, so one address behaves two ways.
   DDR-043 records it as a decision for another story.
 
-**#135 has landed, as DDR-044: the contact pills carry one solid set of marks, and no arrow.**
-A filled envelope, LinkedIn's [in] and GitHub's mark, on one 24 unit grid and in the pill's own
-ink, which is the form these links take on most sites; the owner chose it over each brand's own
-colours. The new-tab arrow is gone, and the tab is announced in the accessible name instead.
+**#135 has landed, as DDR-044: each contact pill is its service's own button, and the new-tab
+arrow is gone.** LinkedIn's is filled in LinkedIn blue and GitHub's in GitHub's Process Black, each
+with the brand's white mark and a white label. Email's is Gmail's light button: white, Google's grey
+edge and near-black label, and Gmail's M in its own colours. The owner reviewed three versions on
+#135 and chose this one because it recolours no brand's mark.
 
-Three things about it are worth knowing before touching it.
+Four things about it are worth knowing before touching it.
 
-* **The marks are recoloured, which both brands' guidelines forbid.** LinkedIn allows blue, black
-  or white and GitHub black or white. The owner chose the pill's indigo knowingly, after seeing the
-  brand-coloured version. DDR-044 records it.
+* **No mark may be recoloured.** LinkedIn's and GitHub's marks are `currentColor`, and every rule
+  that sets it uses a colour the brand publishes: white on the fill, the brand's colour on paper.
+  Gmail's M carries its own fills in `components/icon.tsx`, which are the mark's, not the palette's.
+* **Paper sets each brand's colour as the pill's ink**, in the introduction's print block, because
+  the fills are surfaces and drop at the token layer, and a white mark would vanish.
+* **Each pill's class comes from `brandButton`**, keyed by the contact's `icon`, rather than from
+  `styles[icon]`, because Vitest's CSS-module stub returns a class for any key.
 * **A sighted visitor is no longer told a profile opens a new tab**; only assistive technology is,
-  through `aria-label`. The label comes first, per WCAG 2.5.3, and `introduction.test.tsx` holds it.
-* **No row gained a line and paper moved only in the marks**: swept every 10px from 300px to 900px
-  and at 1280px and 1536px at both text sizes, the controls row never takes more rows than before
-  #135 and nothing scrolls sideways. The CV is six sheets in Edge and Firefox with identical text.
+  through `aria-label`, with the visible label first, per WCAG 2.5.3.
+
+Measured against the tree before: the controls row never takes more rows at any width from 300px to
+900px or at 1280px and 1536px at either text size, and nothing scrolls sideways. The CV is six
+sheets in Edge and Firefox with identical text; the three marks print in their brands' colours.
 
 **#115 has landed, as DDR-035: every link and control answers the pointer.** A contact pill takes
 `--color-surface-hover` and `--color-border-accent-hover`, the CV control darkens to

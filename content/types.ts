@@ -73,7 +73,7 @@ export type ProjectMedia = Image | Video;
  * have to recognise a host to know what to draw. It is a key the component maps to a shape, as
  * `SkillLevel` is a key it maps to a tint, so no prose leaves `content/`.
  */
-export type ContactIcon = 'email' | 'linkedin' | 'github';
+export type ContactIcon = 'gmail' | 'linkedin' | 'github';
 
 /**
  * A contact address in the introduction, shown as a pill control, per DDR-010, and again in the

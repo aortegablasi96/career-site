@@ -14,7 +14,7 @@ const contact: readonly ContactLink[] = [
     label: 'Email',
     text: 'someone@example.com',
     href: 'mailto:someone@example.com',
-    icon: 'email',
+    icon: 'gmail',
     newTab: false,
   },
   {

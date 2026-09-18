@@ -35,7 +35,7 @@ export const introduction: Introduction = {
       label: 'Email',
       text: 'aortegablasi@gmail.com',
       href: 'mailto:aortegablasi@gmail.com',
-      icon: 'email',
+      icon: 'gmail',
       newTab: false,
     },
     {

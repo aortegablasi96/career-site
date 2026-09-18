@@ -222,6 +222,49 @@
   background-color: var(--color-accent-hover);
 }
 
+/* The LinkedIn and GitHub pills are each service's own button, per DDR-044: filled and bordered in
+   the brand's colour, with the mark and the label in white, which is a colour both brands publish
+   their mark in. Under the pointer and on focus only the fill darkens, as the CV pill's does, so the
+   mark is never recoloured. These follow the `.contact` rules above and match their specificity, so
+   they win by order, in this one file. */
+.linkedin {
+  border-color: var(--color-surface-linkedin);
+  background-color: var(--color-surface-linkedin);
+  color: var(--color-on-brand);
+}
+
+.linkedin:hover,
+.linkedin:focus-visible {
+  border-color: var(--color-surface-linkedin-hover);
+  background-color: var(--color-surface-linkedin-hover);
+}
+
+.github {
+  border-color: var(--color-surface-github);
+  background-color: var(--color-surface-github);
+  color: var(--color-on-brand);
+}
+
+.github:hover,
+.github:focus-visible {
+  border-color: var(--color-surface-github-hover);
+  background-color: var(--color-surface-github-hover);
+}
+
+/* The email pill is Gmail's own button, per DDR-044: Google's light button, white with a grey edge
+   and near-black text, carrying Gmail's M in its own colours. Under the pointer and on focus it
+   takes Google's grey state layer; the mark, whose colours are its own, never changes. */
+.gmail {
+  border-color: var(--color-google-border);
+  color: var(--color-google-ink);
+}
+
+.gmail:hover,
+.gmail:focus-visible {
+  border-color: var(--color-google-border);
+  background-color: var(--color-surface-google-hover);
+}
+
 /* From here the photo sits beside the text, per DDR-010. This is the one width a component may
    write, per DDR-014. */
 @media (min-width: 48em) {
@@ -280,5 +323,15 @@
      wrote; what changed is why. */
   .contact::after {
     content: none;
+  }
+
+  /* No fill prints, per DDR-015, so a white mark and label would vanish. On paper each takes its
+     brand's own colour instead, which is the brand's mark on white, per DDR-044. */
+  .linkedin {
+    color: var(--color-linkedin);
+  }
+
+  .github {
+    color: var(--color-github);
   }
 }

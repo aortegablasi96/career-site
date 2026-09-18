@@ -22,6 +22,11 @@ link's underline — `--color-surface-hover`, `--color-accent-hover`, `--color-b
 six: a contact pill's hover border at 1.78:1 and a project link's resting underline at 1.86:1, both
 below the 3:1 of 1.4.11. The four below are unchanged.
 
+**Amended by DDR-044**: the palette gains the three services' colours for the contact pills, which
+are now each service's own button: LinkedIn's blue and GitHub's black as fills, white on them, and
+Google's light-button ink, edge and hover grey. Every new pairing passes, so the failures below are
+unchanged. The accent no longer sets a contact pill's label or icon.
+
 **Amended and corrected by DDR-036**: of the three differences kept below as structure, the
 ringed timeline dot is now adopted, and the second — that the design draws no spine in the
 experience section — was a misreading and is withdrawn. Node 2:99 is the row's empty spine column;
