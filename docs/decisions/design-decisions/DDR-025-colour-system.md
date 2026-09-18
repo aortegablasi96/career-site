@@ -22,6 +22,11 @@ link's underline — `--color-surface-hover`, `--color-accent-hover`, `--color-b
 six: a contact pill's hover border at 1.78:1 and a project link's resting underline at 1.86:1, both
 below the 3:1 of 1.4.11. The four below are unchanged.
 
+**Amended and corrected by DDR-036**: of the three differences kept below as structure, the
+ringed timeline dot is now adopted, and the second — that the design draws no spine in the
+experience section — was a misreading and is withdrawn. Node 2:99 is the row's empty spine column;
+the experience spine is its own node, 2:89. No colour here moves.
+
 **Superseded in part by DDR-033**: the contents links are no longer underlined, as the design draws
 them. That is the one bullet under "Colour is never the only signal" that DDR-033 takes; every other
 link keeps its underline.
@@ -75,9 +80,11 @@ Three differences were measured on this story and are structure rather than colo
 * **The design's timeline dot is not one disc.** It is a 6px `#4f46e5` core inside a 12px circle
   filled with the page's own surface, ringed by 3px of `#c7d2fe` (node 2:637). The page draws one
   12px disc, and this record gives that disc the ring's colour. The shape is DDR-010's.
+  *DDR-036 has since adopted the ringed dot.*
 * **The design draws no spine in the experience section at all** — node 2:99 is an empty 28px
   container, where the education section has the line and the dots. The page draws the spine in
-  both, per DDR-010, and keeps doing so.
+  both, per DDR-010, and keeps doing so. *Corrected by DDR-036: this misread the file. The
+  experience spine is node 2:89, a sibling of the rows rather than a child of one.*
 * **The contents bar's border is transparent in the design** (node 2:6), not the `#e2e8f0` the
   issue's table gives it. The bar is #98's, and this record leaves it the token rather than the
   value.

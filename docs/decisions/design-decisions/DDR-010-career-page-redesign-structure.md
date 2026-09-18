@@ -42,6 +42,11 @@ pixels goes, along with DDR-014's: a target is now the size the design draws it.
 the draft's contents links, "about 28px tall", is corrected — in `career-site-design` a link's box
 is 20px and 28px is the gap between two of them. Both appear below, each marked where it stands.
 
+**Amended by DDR-036** in its spine. The dot is the design's ringed marker — a 12px circle in the
+page's surface, a 3px ring of the line's tint and a 6px accent core — and the line runs unbroken
+from the first dot to the last, meeting each ring rather than stopping short of it. The rest of the
+timeline stands, including the rule that the line does not run past the last row. Marked below.
+
 This record decides the page's **structure and patterns**. The token values the structure reads are
 reworked by #44, the CV download by #45, and the print stylesheet by #52. Where this record names a
 value, such as the accent, it is because the UI Review settled it and those stories implement it
@@ -193,6 +198,8 @@ Above the wide breakpoint, three columns: a date column, a narrow spine column, 
 2. **The spine column**: a dot at the top of each row, and a vertical line running from it to the
    next row. The line does not run past the last row. The whole column is decorative and is hidden
    from assistive technology.
+   *Amended by DDR-036*: the dot is a ringed marker with an accent core, level with the title's
+   first line, and the line is one unbroken line from the first dot to the last.
 3. **The content column**: the title (`h3`) — the job title or the credential's name; the company or
    institution on its own line; then the bullet points for a role, or the thesis sentence for a
    degree.
