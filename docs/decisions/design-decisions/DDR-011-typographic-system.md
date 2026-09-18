@@ -19,9 +19,12 @@ weights, the four files, and the no-italics rule. The page sets its item titles 
 than Lora, ships seven files rather than four, has a fourth weight at 700 and one italic. Read
 DDR-023 for all of that.
 
+**DDR-038 supersedes the line heights.** The 1.5 and 1.2 below stand, and running text gains two
+looser leadings, 1.72 and 1.65, taken from the design. Read DDR-038 for those.
+
 What stands, and what this record is still the one to read for: **the two typefaces themselves and
 their fallback stacks**, the **one-static-file-per-weight recipe**, the **PDF guarantee** — which
-DDR-023 re-establishes for its three new files by the same inspection — the **line heights**, the
+DDR-023 re-establishes for its three new files by the same inspection — the **short-line and heading leadings**, the
 **measure** and the **wrapping rules**.
 
 What DDR-022 changes is the numbers and the count — ten steps, the design's own nine plus one for the
@@ -266,7 +269,8 @@ heading, and without it those elements would have to reach for 600, which belong
 
 Unchanged from DDR-001, which is why they are listed rather than argued:
 
-* `--line-height-body: 1.5` and `--line-height-heading: 1.2`, both unitless.
+* `--line-height-body: 1.5` and `--line-height-heading: 1.2`, both unitless. **DDR-038 adds two
+  leadings for running text** and keeps these two.
 * `--measure: 65ch`, applied to `p` and `li`. What changes is that the measure no longer sets the
   page's column: DDR-013 makes the column wider, and the measure now governs running text alone.
 * `text-wrap: balance` on headings, `text-wrap: pretty` on paragraphs and list items,

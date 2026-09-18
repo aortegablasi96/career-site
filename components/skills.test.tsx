@@ -102,6 +102,13 @@ describe('skills styles', () => {
 
   // DDR-037: a badge stands on its own line and its skills start on the next, flush with the group's
   // edge. The markup keeps the badge first, so this is layout and not reading order.
+  // DDR-038: the skills take the small prose leading, and the badge's line keeps the body's, so the
+  // leading is on the skills rather than on the level's whole paragraph.
+  it('sets a level’s skills at the small prose leading and leaves the badge’s line alone, per DDR-038', () => {
+    expect(css).toMatch(/\.skills\s*\{[^}]*line-height:\s*var\(--line-height-prose-small\);/);
+    expect(css).not.toMatch(/\.level\s*\{[^}]*line-height/);
+  });
+
   it('starts each level’s skills on the line below its badge, per DDR-037', () => {
     expect(css).toMatch(/\.skills\s*\{[^}]*display:\s*block;[^}]*margin-block-start:\s*var\(--space-small\);/);
     expect(css).toMatch(/\.badge\s*\{[^}]*display:\s*inline-block;/);

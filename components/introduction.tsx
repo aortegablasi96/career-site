@@ -52,8 +52,8 @@ export function Introduction({
         <h1>{name}</h1>
         <p className={styles.positioning}>{positioning}</p>
         <MetadataLine parts={[location, relocation]} className={styles.location} />
-        <p>{summary}</p>
-        <p>{availability}</p>
+        <p className={styles.summary}>{summary}</p>
+        <p className={styles.summary}>{availability}</p>
         <ul className={styles.controls}>
           {contact.map(({ label, href, icon }) => (
             <li key={href}>

@@ -169,6 +169,9 @@ so the final pass over the file on Epic #70 finds a decision rather than a defec
 
 ### Line heights do not change, and that leaves a difference behind
 
+**Closed by DDR-038**, on #118: running text now takes the design's leading on screen, through two
+tokens within half a pixel a line of the file, and paper keeps 1.5.
+
 `--line-height-body: 1.5` and `--line-height-heading: 1.2` stand, as DDR-011 sets them.
 
 **The design's leading is looser than the page's**, and this record does not adopt it: it sets the

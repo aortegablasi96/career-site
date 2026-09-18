@@ -95,6 +95,11 @@ describe('experience styles', () => {
 
   // DDR-019: one step of the scale rather than the two the base styles give every list, which is
   // half the width back in the narrowest column the page has.
+  // DDR-038: the points are running text, and the design sets them looser than a short line.
+  it('sets the points at the prose leading, per DDR-038', () => {
+    expect(rule('.points')).toMatch(/line-height:\s*var\(--line-height-prose\);/);
+  });
+
   it('indents the points by a single step, as DDR-019 records', () => {
     expect(rule('.points')).toMatch(/padding-inline-start:\s*var\(--space-medium\);/);
   });

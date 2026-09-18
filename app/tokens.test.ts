@@ -136,6 +136,56 @@ describe('type scale tokens', () => {
   });
 });
 
+// DDR-038 sets four leadings where DDR-011 set two: short lines, two for running text, and
+// headings. These hold each running-text block to the design's own leading within half a pixel a
+// line, at the design's sizes, so a change to a leading or a size fails here until the record moves.
+describe('leading tokens', () => {
+  const leadings = [...root.matchAll(/--line-height-([\w-]+):\s*([^;]+);/g)].map(([, name, value]) => ({
+    name,
+    value: value.trim(),
+  }));
+
+  it('defines the four DDR-038 sets, unitless, and no fifth', () => {
+    expect(Object.fromEntries(leadings.map(({ name, value }) => [name, value]))).toEqual({
+      body: '1.5',
+      prose: '1.72',
+      'prose-small': '1.65',
+      heading: '1.2',
+    });
+  });
+
+  it.each([
+    { block: 'the summary', step: 'medium', leading: 'prose', design: 1.75 },
+    { block: 'a role’s points', step: 'small', leading: 'prose', design: 1.7 },
+    { block: 'a project’s description', step: 'small', leading: 'prose', design: 1.72 },
+    { block: 'a level’s skills', step: 'x-small', leading: 'prose-small', design: 1.65 },
+    { block: 'a thesis sentence', step: 'x-small', leading: 'prose-small', design: 1.625 },
+  ])('sets $block within half a pixel a line of the design', ({ step, leading, design }) => {
+    const size = rem(token(`font-size-${step}`)!) * 16;
+    const line = Number(token(`line-height-${leading}`)) * size;
+
+    expect(Math.abs(line - design * size)).toBeLessThan(0.5);
+  });
+
+  it('is the same at every width, because a unitless leading follows the size', () => {
+    for (const { body } of breakpoints) {
+      expect([...redefined(body).keys()].filter((name) => name.startsWith('line-height'))).toEqual([]);
+    }
+  });
+
+  // Paper sets running text at the body's leading, per DDR-038: the design's leading prints a
+  // seventh sheet and puts the two browsers' breaks out of step. Headings and short lines are
+  // already at their own leading, so nothing else is redefined.
+  it('sets running text at the body’s leading on paper, and leaves the rest alone, per DDR-038', () => {
+    const leadingsInPrint = [...redefined(print?.body).entries()].filter(([name]) => name.startsWith('line-height'));
+
+    expect(leadingsInPrint).toEqual([
+      ['line-height-prose', 'var(--line-height-body)'],
+      ['line-height-prose-small', 'var(--line-height-body)'],
+    ]);
+  });
+});
+
 // DDR-017 adds tracking to DDR-011's system. These read the three values as written, so a change
 // to any of them fails here until the record is revised with it.
 describe('tracking tokens', () => {
@@ -715,6 +765,8 @@ const inPrint = redefined(print?.body);
 
 const forPaper = [
   { name: 'root-font-size', value: '12pt' },
+  { name: 'line-height-prose', value: 'var(--line-height-body)' },
+  { name: 'line-height-prose-small', value: 'var(--line-height-body)' },
   { name: 'color-surface', value: 'transparent' },
   { name: 'color-surface-card', value: 'transparent' },
   { name: 'color-surface-bar', value: 'transparent' },
@@ -738,7 +790,7 @@ const forPaper = [
 ];
 
 describe('print tokens', () => {
-  it('redefines only the base size, every surface, every hairline, the shadows, the column and its edges, and the photo', () => {
+  it('redefines only the base size, the running-text leading, every surface, every hairline, the shadows, the column and its edges, and the photo', () => {
     expect([...inPrint.keys()]).toEqual(forPaper.map(({ name }) => name));
   });
 
