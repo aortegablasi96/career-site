@@ -67,8 +67,9 @@
 }
 
 /* The text column is a div, which the base styles' flow rule does not reach, so it sets the rhythm
-   between its own blocks. Every step is the flow step, and the two that sit tighter say so below.
-   It adds no space above itself, so the name starts level with the top of the photo. */
+   between its own blocks. Every step is the flow step, and the two that sit tighter and the two
+   that stand further apart say so below. It adds no space above itself, so the name starts level
+   with the top of the photo. */
 .text {
   margin-block-start: 0;
 }
@@ -118,9 +119,24 @@
    leading, per DDR-038. The design sets them at 1.75, and 1.72 is within 0.45px a line of it; a
    leading of their own would be a third running-text value for one block. They are a class rather
    than `.text > p` because the positioning line and the location are paragraphs too, and those are
-   short lines the design sets at the body's leading. */
+   short lines the design sets at the body's leading.
+
+   The summary is held to the design's 680px rather than to the measure every other paragraph
+   takes, per DDR-040, and the space above it and below it are the design's, which set the name, the
+   positioning line and the location apart from what the owner says about their work, and the
+   controls apart from both. The two paragraphs of the summary keep the flow step between them,
+   which is the design's 16px. */
 .summary {
+  max-inline-size: var(--measure-summary);
   line-height: var(--line-height-prose);
+}
+
+.location + .summary {
+  margin-block-start: var(--space-summary);
+}
+
+.summary + .controls {
+  margin-block-start: var(--space-controls);
 }
 
 /* The four controls wrap onto as many rows as they need, rather than being cut off or scrolled. */
@@ -212,7 +228,10 @@
   .introduction {
     display: grid;
     grid-template-columns: var(--photo-width-wide) 1fr;
-    gap: var(--space-large);
+    /* The design's 64px between the photo and the text, per DDR-040, which is the largest step of
+       the scale. It is a gap between two columns rather than a space between blocks, so it takes
+       the scale as it is rather than the rhythm's factor, which is 1 from here anyway. */
+    gap: var(--space-x-large);
     align-items: start;
   }
 

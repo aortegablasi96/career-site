@@ -10,6 +10,10 @@ so the glow is now the accent's own hue rather than a near neighbour of it. Ever
 stands, including the glow's 1.17:1 and its 10.8 ΔE, and so does the argument for measuring a
 coloured light by hue rather than by luminance.
 
+**Amended by DDR-040 in one respect**: `--photo-width-wide` is no longer `13rem`. It is the Make
+file's `clamp(180px, 22vw, 300px)`, written as `clamp(11.25rem, 22vw, 18.75rem)`, which is the
+design's 196.8px at 894px. The narrow width, the ratio, the capsule and both lights stand.
+
 **Amended by DDR-031 in one respect**: the stylesheet rule this record narrowed, which lets nothing
 but a pseudo-element leave the flow, now admits `position: sticky` once, on the contents bar. A
 sticky element keeps its box and its place in the markup order, so it reorders nothing. `absolute`
