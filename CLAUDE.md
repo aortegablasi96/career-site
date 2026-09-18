@@ -1112,9 +1112,12 @@ Three things about it are worth knowing before touching it.
 `currentSection` in `components/contents-bar.tsx` finds the last section whose top has reached the
 root's `scroll-padding-block-start`, the line a contents link scrolls a section to, or the last
 section once the page is at its foot. `ContentsBar` gives that link `aria-current="location"`, and
-`.link[aria-current]` in `contents.module.css` underlines it at `--underline-offset` in the accent.
+`.link[aria-current]` in `contents.module.css` underlines it at `--underline-offset`, in the link's
+own ink: the owner asked on 2026-09-19 that the colour not change. Choosing a contents link moves
+the mark straight to it and `holdDestination` keeps it there until the page has not scrolled for
+100ms, so a glide does not mark every section it passes, per DDR-042's revision.
 
-Three things about it are worth knowing before touching it.
+Four things about it are worth knowing before touching it.
 
 * **`ContentsBar` renders the links now**, where under ADR-007 it was handed them as `children`,
   because only what renders a link can mark it. `Contents` strips each section to `{ id, link }`
@@ -1123,6 +1126,9 @@ Three things about it are worth knowing before touching it.
 * **The stylesheet draws the attribute, not a class**, so the mark a sighted reader sees is exactly
   what assistive technology announces. Nothing in the rule takes space, and the weight is not
   changed, because semibold would move every link after it.
+* **Test a glide with a real pointer, not Playwright's `click()`.** That scrolls its target into
+  view first, and with the sticky bar it jumps the page up about 440px before the glide starts,
+  which looks like a fault in the mark. Click at the link's coordinates with `page.mouse.click`.
 * **Nothing is marked in the introduction or without script**, and the static HTML carries no
   `aria-current`. Swept every 37px of scroll at 320px, 390px and 1536px at both text sizes, and every
   53px in Firefox at 1280px, the mark matched the rule at every position; clicks, `#fragment` loads,

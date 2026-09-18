@@ -3,8 +3,11 @@ import {
   currentSection,
   glide,
   glideStartTimeout,
+  holdDestination,
   isScrolled,
+  markedSection,
   scrolledThreshold,
+  settleTimeout,
   subscribe,
 } from './contents-bar';
 
@@ -246,5 +249,151 @@ describe('currentSection', () => {
     stubPage({ scrollY: 900, tops: {} });
 
     expect(currentSection(ids)).toBeNull();
+  });
+});
+
+// DDR-042: a contents link moves the mark straight to its section, and holds it there while the
+// page glides past the sections in between, until the page comes to rest. There is no DOM, so the
+// window, the clicked link and the page `currentSection` measures are stubbed.
+describe('holdDestination', () => {
+  const ids = ['experience', 'projects', 'skills', 'education', 'languages'];
+
+  class StubElement {
+    constructor(private readonly href: string | null) {}
+
+    closest(selector: string) {
+      return this.href !== null && selector === 'a[href^="#"]' ? this : null;
+    }
+
+    getAttribute(name: string) {
+      return name === 'href' ? this.href : null;
+    }
+  }
+
+  // The page is at rest in Experience: its top is at the clearance, and every other section below.
+  function stubPage() {
+    let nextTimeout = 0;
+    const window = {
+      scrollY: 900,
+      innerHeight: 800,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      setTimeout: vi.fn(() => ++nextTimeout),
+      clearTimeout: vi.fn(),
+      getComputedStyle: () => ({ scrollPaddingBlockStart: '64px' }),
+    };
+
+    vi.stubGlobal('window', window);
+    vi.stubGlobal('Element', StubElement);
+    vi.stubGlobal('document', {
+      documentElement: { scrollHeight: 6000 },
+      getElementById: (id: string) => ({
+        getBoundingClientRect: () => ({ top: 64 + ids.indexOf(id) * 1000 }),
+      }),
+    });
+
+    return window;
+  }
+
+  function choose(href: string | null) {
+    holdDestination({ target: new StubElement(href) as unknown as EventTarget });
+  }
+
+  /** The scroll listener and the latest timeout the last journey registered. */
+  function journey(window: ReturnType<typeof stubPage>) {
+    const scroll = window.addEventListener.mock.calls.findLast(
+      ([event]) => event === 'scroll',
+    ) as unknown as [string, () => void];
+    const timeout = window.setTimeout.mock.calls.at(-1) as unknown as [() => void, number];
+
+    return { scroll: scroll[1], release: timeout[0], delay: timeout[1] };
+  }
+
+  it('marks the chosen section at once, and tells the bar', () => {
+    const window = stubPage();
+    const onChange = vi.fn();
+    const unsubscribe = subscribe(onChange);
+
+    expect(markedSection(ids)).toBe('experience');
+
+    choose('#languages');
+
+    expect(markedSection(ids)).toBe('languages');
+    expect(onChange).toHaveBeenCalledTimes(1);
+
+    journey(window).release();
+    unsubscribe();
+  });
+
+  // The glide scrolls on every frame, so each scroll restarts the wait, and the page is taken to
+  // have come to rest once it has not scrolled for `settleTimeout`.
+  it('holds the mark while the page is scrolling, and lets it go once the page comes to rest', () => {
+    const window = stubPage();
+    const onChange = vi.fn();
+    const unsubscribe = subscribe(onChange);
+
+    choose('#languages');
+
+    const { scroll } = journey(window);
+
+    scroll();
+    scroll();
+
+    expect(markedSection(ids)).toBe('languages');
+
+    const { release, delay } = journey(window);
+
+    expect(delay).toBe(settleTimeout);
+
+    release();
+
+    expect(markedSection(ids)).toBe('experience');
+    expect(onChange).toHaveBeenCalledTimes(2);
+    expect(window.removeEventListener).toHaveBeenCalledWith('scroll', scroll);
+
+    unsubscribe();
+  });
+
+  // A link chosen when its section is already in place scrolls nothing, so no scroll comes to
+  // restart the wait; it is let go after the same wait `glide` gives it.
+  it('lets the mark go after a short wait if the page never scrolls', () => {
+    const window = stubPage();
+
+    choose('#experience');
+
+    const { release, delay } = journey(window);
+
+    expect(delay).toBe(glideStartTimeout);
+
+    release();
+
+    expect(markedSection(ids)).toBe('experience');
+  });
+
+  it('lets a second link chosen on the way take over the journey', () => {
+    const window = stubPage();
+
+    choose('#languages');
+
+    const first = journey(window);
+
+    choose('#skills');
+
+    expect(markedSection(ids)).toBe('skills');
+    expect(window.removeEventListener).toHaveBeenCalledWith('scroll', first.scroll);
+
+    journey(window).release();
+
+    expect(markedSection(ids)).toBe('experience');
+  });
+
+  it('does nothing for a click on the bar that is not on a link', () => {
+    const window = stubPage();
+
+    choose(null);
+
+    expect(markedSection(ids)).toBe('experience');
+    expect(window.addEventListener).not.toHaveBeenCalled();
+    expect(window.setTimeout).not.toHaveBeenCalled();
   });
 });

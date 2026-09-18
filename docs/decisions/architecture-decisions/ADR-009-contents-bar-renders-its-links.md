@@ -43,6 +43,12 @@ links. It marks the current one with `aria-current`.**
 * **What becomes client code is the list's markup**, a `ul` with one `li` and `a` per section. The
   words were already in the RSC payload as rendered children under ADR-007; now they are there as
   props. No content module is imported into client code.
+* **The click handler also holds the destination**, since the 2026-09-19 revision of DDR-042.
+  `ContentsBar`'s `onClick` calls `glide`, per ADR-008, and `holdDestination`, which keeps the chosen
+  section marked until the page has stopped scrolling. The destination lives in module state beside
+  the store, and a module-level set of listeners lets it tell the bar when it lets go, since that
+  happens when nothing scrolls. The bar reads `markedSection`, which is the destination if one is
+  held and `currentSection` otherwise.
 * **Still tested in Node.** `currentSection` is a plain function that reads `window` and
   `document`, so it is tested with both stubbed, as ADR-007's and ADR-008's functions are. No DOM
   environment is added.
