@@ -15,6 +15,10 @@ about the bar stands.
 
 It is one declaration and no token.
 
+**Amended by DDR-042 in one respect**: the link of the section the reader is in is underlined, as a
+state. Every other contents link is still drawn without an underline at rest, and what identifies a
+contents link is still what this record says.
+
 ## Context
 
 Epic #70 closes the gaps between the page and `career-site-design`. On 2026-09-17 the owner decided

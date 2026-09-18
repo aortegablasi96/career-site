@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import type { ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { Contents } from './contents';
@@ -116,7 +117,39 @@ describe('Contents', () => {
   // outline. Only the link rule takes the underline away, so no other link on the page loses it.
   it('draws no underline on a contents link, per DDR-033', () => {
     expect(rule('.link')).toMatch(/text-decoration-line:\s*none;/);
-    expect(styles.match(/text-decoration/g)).toHaveLength(1);
+    expect(styles.match(/text-decoration/g)).toHaveLength(2);
+  });
+
+  // DDR-042: the static HTML marks no section, so a reader without script gets the bar as it was,
+  // and a reader with script gets the mark once the scroll position has been read.
+  it('marks no link as current until script has read the scroll position, per DDR-042', () => {
+    const html = renderToStaticMarkup(<Contents label="Sections" sections={sections} />);
+
+    expect(html).not.toMatch(/aria-current/);
+  });
+
+  // DDR-042, amending DDR-033: the current section's link is underlined, as a state, and takes the
+  // accent. The rule is keyed on `aria-current`, so what is drawn is what assistive technology is
+  // told, and it is the one rule besides DDR-033's that touches the underline. Nothing in it takes
+  // space, so marking a link moves nothing.
+  it('underlines the current section’s link in the accent, and nothing else, per DDR-042', () => {
+    const current = rule('.link[aria-current]');
+
+    expect(current).toMatch(/color:\s*var\(--color-accent\);/);
+    expect(current).toMatch(/text-decoration-line:\s*underline;/);
+    expect(current).toMatch(/text-underline-offset:\s*var\(--underline-offset\);/);
+    expect(current).not.toMatch(/font-weight|padding|margin|border|size/);
+  });
+
+  // Each section's items are server-rendered elements. Only its id and its word may reach the
+  // Client Component, per ADR-009, or the items would be sent again as client props.
+  it('hands the bar each section’s id and word and nothing else, per ADR-009', () => {
+    const withItems = sections.map((section) => ({ ...section, items: [<p key="x">Item</p>] }));
+    const bar = Contents({ label: 'Sections', sections: withItems }) as ReactElement<{
+      sections: unknown;
+    }>;
+
+    expect(bar.props.sections).toEqual(sections);
   });
 
   // DDR-035: the design takes a contents link to the accent under the pointer and on keyboard

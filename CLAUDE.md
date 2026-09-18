@@ -511,7 +511,7 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001 to ADR-008 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
+ADR-001 to ADR-009 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
 separate CV file, and ADR-005 superseding the part of ADR-004 that makes the CV a PDF saved from the
 page's print output; the rest of both records stands. ADR-006 supersedes nothing: it refines
 ADR-001's styling boundary by saying which literal values a component stylesheet may write: `0`,
@@ -519,13 +519,15 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 nothing either: it is the first time ADR-001's "`'use client'` requires a reason" is met, and it
 records the reason — the contents bar has to know how far the page has scrolled — and is not a
 precedent for the next one. ADR-008 amends ADR-007 in one respect: the same component also handles
-a click on its own links, so that a contents link's scroll is smooth, per DDR-041. It is still the
-one Client Component. The next ADR is `009`.
+a click on its own links, so that a contents link's scroll is smooth, per DDR-041. ADR-009 amends
+ADR-007 again, in its boundary: the component renders the contents links itself, from each
+section's id and word, so that it can mark the current section's, per DDR-042. It is still the one
+Client Component. The next ADR is `010`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-041. The next DDR is
-`042`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-042. The next DDR is
+`043`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Fifteen accepted records are superseded or amended **in part**, and each says so at the top and again
+Sixteen accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -541,7 +543,8 @@ at the section concerned:
   DDR-031 takes its "It is not sticky": the contents are the design's pinned bar, and
   DDR-031 also amends DDR-021's out-of-flow rule, DDR-025's opaque palette and DDR-030's open item.
   DDR-036 amends its spine: a ringed dot on one unbroken line. DDR-037 amends its skills pattern:
-  a level's badge stands above its skills.
+  a level's badge stands above its skills. DDR-042 takes the half of "It has no current-section
+  state and does not animate" that rules out the state: the bar marks the current section's link.
 * **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
   rule and its rule that nothing scrolls horizontally from 320px. DDR-039 lets the wide breakpoint
   redefine one token, `--rhythm-scale`. DDR-040 takes `--page-padding-block` off the narrow
@@ -605,7 +608,9 @@ at the section concerned:
   spine, which misread the file.
 * **DDR-031** keeps everything but its links' underline, which DDR-033 takes, per #113, and its
   declined scroll-triggered edge, which DDR-034 adopts, per #114, with its hairline row and its
-  shadow row.
+  shadow row. DDR-042 takes the "no current-section state" it carried forward from DDR-010.
+* **DDR-033** keeps every contents link at rest without an underline. DDR-042 underlines the one
+  link of the section the reader is in, as a state rather than as what identifies a link, per #133.
 
 `Superseded` are DDR-001 to DDR-009, DDR-012, and DDR-016:
 
@@ -1073,8 +1078,10 @@ Four things about it are worth knowing before touching it.
 
 * **`components/contents-bar.tsx` is the site's only Client Component**, per ADR-007. It renders the
   `nav` and reads `window.scrollY` through `useSyncExternalStore` with a passive listener. Since
-  #132 it also handles its links' clicks, per ADR-008, below. `Contents` stays a Server Component and hands it the list as `children`. Its two
-  functions are tested in Node against a stubbed `window`, so there is still no DOM environment.
+  #132 it also handles its links' clicks, per ADR-008, and since #133 it renders the links and marks
+  the current one, per ADR-009, both below. `Contents` stays a Server Component and hands it each
+  section's id and word. Its functions are tested in Node against a stubbed `window`, so there is
+  still no DOM environment.
 * **Only the hairline's colour changes, never its width**, so the bar is 49px in both states and
   nothing below it moves. The transition is written inside `prefers-reduced-motion: no-preference`.
 * **With script off, `@media (scripting: none)` keeps the hairline drawn all the time.** Before
@@ -1100,6 +1107,27 @@ Three things about it are worth knowing before touching it.
   position matched in both browsers at 320px and 1280px.
 * **Do not replace the scroll listener with a timer or a frame count.** Firefox starts the scroll a
   frame or two after the click, and one frame lost the glide in one click in three.
+
+**#133 has landed, as DDR-042 and ADR-009: the contents bar marks the section the reader is in.**
+`currentSection` in `components/contents-bar.tsx` finds the last section whose top has reached the
+root's `scroll-padding-block-start`, the line a contents link scrolls a section to, or the last
+section once the page is at its foot. `ContentsBar` gives that link `aria-current="location"`, and
+`.link[aria-current]` in `contents.module.css` underlines it at `--underline-offset` in the accent.
+
+Three things about it are worth knowing before touching it.
+
+* **`ContentsBar` renders the links now**, where under ADR-007 it was handed them as `children`,
+  because only what renders a link can mark it. `Contents` strips each section to `{ id, link }`
+  first: the page's section records also carry their items, which are server-rendered elements and
+  must not be sent again as client props. `contents.test.tsx` holds that.
+* **The stylesheet draws the attribute, not a class**, so the mark a sighted reader sees is exactly
+  what assistive technology announces. Nothing in the rule takes space, and the weight is not
+  changed, because semibold would move every link after it.
+* **Nothing is marked in the introduction or without script**, and the static HTML carries no
+  `aria-current`. Swept every 37px of scroll at 320px, 390px and 1536px at both text sizes, and every
+  53px in Firefox at 1280px, the mark matched the rule at every position; clicks, `#fragment` loads,
+  PageDown, End, Home and the wheel all settled on the right link, and the bar and its links never
+  moved. The bar does not print, so paper is untouched.
 
 **#115 has landed, as DDR-035: every link and control answers the pointer.** A contact pill takes
 `--color-surface-hover` and `--color-border-accent-hover`, the CV control darkens to

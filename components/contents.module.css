@@ -128,7 +128,8 @@
    it kept the underline the base styles give every link. What says this is a link is where it is —
    a row of section names inside the one `nav` on the page, pinned above everything else — its
    weight, and the focus outline; the record has the argument and what it costs. It is one
-   declaration away from reversal, as the footer's is.
+   declaration away from reversal, as the footer's is. The one link that is underlined is the
+   current section's, as a state, per DDR-042, below.
 
    Its box is its text and nothing else, per DDR-027. It stays a flex container so that the box is
    the whole line the label sets in — 19.5px, which is the design's own 20px — rather than the
@@ -147,4 +148,21 @@
 .link:hover,
 .link:focus-visible {
   color: var(--color-accent);
+}
+
+/* The link of the section the reader is in, per DDR-042, which amends DDR-033: the underline comes
+   back as a state rather than as what identifies a link. `ContentsBar` marks the link with
+   `aria-current`, and this rule draws exactly what assistive technology is told, so the two cannot
+   disagree.
+
+   The underline is the cue that is not colour, in the link's own ink at the offset a project link's
+   underline takes. The accent is the second cue, the one a pointed-at link already takes, which
+   lifts the current link to 5.87:1 on the page, clearing WCAG 1.4.3 where the muted ink does not.
+   Neither takes space, so marking a link moves nothing: the bar keeps its height and no link
+   shifts. No weight change, for that reason: medium to semibold would widen the word and move every
+   link after it. */
+.link[aria-current] {
+  color: var(--color-accent);
+  text-decoration-line: underline;
+  text-underline-offset: var(--underline-offset);
 }

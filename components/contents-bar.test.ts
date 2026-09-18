@@ -1,5 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { glide, glideStartTimeout, isScrolled, scrolledThreshold, subscribe } from './contents-bar';
+import {
+  currentSection,
+  glide,
+  glideStartTimeout,
+  isScrolled,
+  scrolledThreshold,
+  subscribe,
+} from './contents-bar';
 
 // The tests run in Node, with no DOM, so `window` is stubbed with only what the bar reads: the
 // scroll position and the two listener methods.
@@ -39,17 +46,20 @@ describe('ContentsBar', () => {
   });
 
   // A passive listener cannot delay scrolling, which is the one thing a scroll listener must not do.
-  it('listens to scrolling passively, and stops when it is told to', () => {
+  // A resize is listened to as well, because it moves the sections without scrolling, per DDR-042.
+  it('listens to scrolling and resizing passively, and stops when it is told to', () => {
     const window = stubWindow(0);
     const onChange = () => {};
 
     const unsubscribe = subscribe(onChange);
 
     expect(window.addEventListener).toHaveBeenCalledWith('scroll', onChange, { passive: true });
+    expect(window.addEventListener).toHaveBeenCalledWith('resize', onChange, { passive: true });
 
     unsubscribe();
 
     expect(window.removeEventListener).toHaveBeenCalledWith('scroll', onChange);
+    expect(window.removeEventListener).toHaveBeenCalledWith('resize', onChange);
   });
 });
 
@@ -123,5 +133,118 @@ describe('glide', () => {
     expect(root.setAttribute).not.toHaveBeenCalled();
     expect(window.addEventListener).not.toHaveBeenCalled();
     expect(window.setTimeout).not.toHaveBeenCalled();
+  });
+});
+
+// DDR-042: the section the reader is in is the last whose top has reached the bar's clearance, and
+// the last section at the foot of the page. There is no DOM, so the page is stubbed with what
+// `currentSection` reads: the scroll position, the window's and the page's heights, the root's
+// scroll padding and each section's top.
+describe('currentSection', () => {
+  const ids = ['experience', 'projects', 'skills', 'education', 'languages'];
+  const clearance = 73;
+
+  function stubPage({
+    scrollY,
+    tops,
+    innerHeight = 800,
+    scrollHeight = 6000,
+    scrollPadding = `${clearance}px`,
+  }: {
+    scrollY: number;
+    tops: Record<string, number>;
+    innerHeight?: number;
+    scrollHeight?: number;
+    scrollPadding?: string;
+  }) {
+    vi.stubGlobal('window', {
+      scrollY,
+      innerHeight,
+      getComputedStyle: () => ({ scrollPaddingBlockStart: scrollPadding }),
+    });
+    vi.stubGlobal('document', {
+      documentElement: { scrollHeight },
+      getElementById: (id: string) =>
+        id in tops ? { getBoundingClientRect: () => ({ top: tops[id] }) } : null,
+    });
+  }
+
+  // Each section 1000px below the last, the first starting 900px down the page.
+  function topsAt(scrollY: number): Record<string, number> {
+    return Object.fromEntries(ids.map((id, index) => [id, 900 + index * 1000 - scrollY]));
+  }
+
+  it('marks nothing while the reader is still in the introduction', () => {
+    stubPage({ scrollY: 0, tops: topsAt(0) });
+
+    expect(currentSection(ids)).toBeNull();
+  });
+
+  it('marks nothing until the first section’s top reaches the clearance', () => {
+    stubPage({ scrollY: 900 - clearance - 2, tops: topsAt(900 - clearance - 2) });
+
+    expect(currentSection(ids)).toBeNull();
+  });
+
+  // A contents link scrolls its section's top to the clearance, so choosing one marks it, even when
+  // the section comes to rest a fraction of a pixel below the line.
+  it.each([
+    { id: 'experience', offset: 0 },
+    { id: 'projects', offset: 0.5 },
+    { id: 'skills', offset: -0.5 },
+  ])('marks $id once its top is at the clearance, $offset px either way', ({ id, offset }) => {
+    const scrollY = 900 + ids.indexOf(id) * 1000 - clearance - offset;
+
+    stubPage({ scrollY, tops: topsAt(scrollY) });
+
+    expect(currentSection(ids)).toBe(id);
+  });
+
+  it('keeps a section marked while the reader is anywhere inside it', () => {
+    const scrollY = 900 + 1000 + 600;
+
+    stubPage({ scrollY, tops: topsAt(scrollY) });
+
+    expect(currentSection(ids)).toBe('projects');
+  });
+
+  // The last section can be too short to reach the clearance; at the foot of the page it is still
+  // where the reader is.
+  it('marks the last section at the foot of the page, even before its top reaches the clearance', () => {
+    const scrollY = 5200;
+
+    stubPage({
+      scrollY,
+      tops: { ...topsAt(scrollY), languages: 400 },
+      innerHeight: 800,
+      scrollHeight: 6000.4,
+    });
+
+    expect(currentSection(ids)).toBe('languages');
+  });
+
+  it('does not mark the last section a little above the foot of the page', () => {
+    const scrollY = 5190;
+
+    stubPage({
+      scrollY,
+      tops: { ...topsAt(scrollY), languages: 410 },
+      innerHeight: 800,
+      scrollHeight: 6000,
+    });
+
+    expect(currentSection(ids)).toBe('education');
+  });
+
+  it('measures from the top of the window when the root has no scroll padding', () => {
+    stubPage({ scrollY: 900, tops: topsAt(900), scrollPadding: 'auto' });
+
+    expect(currentSection(ids)).toBe('experience');
+  });
+
+  it('marks nothing when no section is on the page', () => {
+    stubPage({ scrollY: 900, tops: {} });
+
+    expect(currentSection(ids)).toBeNull();
   });
 });

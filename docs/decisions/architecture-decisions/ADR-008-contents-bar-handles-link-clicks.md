@@ -10,6 +10,10 @@ The rest of ADR-007 stands: it is still the site's one Client Component, `Conten
 Server Component that passes it the links as children, no library is added, and the page still
 works without script.
 
+**Amended by ADR-009** in one bullet: "The links stay server-rendered" no longer holds, because
+`ContentsBar` now renders the links itself so that it can mark the current one, per DDR-042. The
+click handler recorded here is unchanged.
+
 ## Context
 
 DDR-041 makes the scroll a contents link starts smooth, and only that scroll (#132). CSS can make

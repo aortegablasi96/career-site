@@ -12,6 +12,10 @@ added, and the site stays a static export.
 else". It also handles a click on its own links, so that a contents link's scroll is smooth, per
 DDR-041. It is still the one Client Component, and everything else here stands.
 
+**Amended in part again by ADR-009**: the client boundary. `Contents` no longer passes the links in
+as `children`; it passes each section's id and word, and `ContentsBar` renders the list, so that it
+can mark the current section's link, per DDR-042. It is still the one Client Component.
+
 ## Context
 
 Issue #114 adopts the design's scroll-triggered edge on the contents bar: while the reader is at the
