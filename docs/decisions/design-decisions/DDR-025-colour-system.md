@@ -14,8 +14,11 @@ meaning must reach 3:1 is given up.
 surface, `--color-surface-bar`, is the page's own off-white at 96%, as the design draws it. It is a
 surface, not an ink, and every ink stays opaque. The contents link on it is measured on the worst
 blend the page can put behind it: 4.10:1, where this record gives 4.44:1 on the page. Both fail,
-and this record already counts that ink among its failures. The underline this record kept on the
-contents links is untouched.
+and this record already counts that ink among its failures.
+
+**Superseded in part by DDR-033**: the contents links are no longer underlined, as the design draws
+them. That is the one bullet under "Colour is never the only signal" that DDR-033 takes; every other
+link keeps its underline.
 
 It **amends DDR-019**, which stands in every other respect — the indent, the recoloured `::marker`,
 the reason the marker is a token of its own and the reason it is not dropped on paper. What changes
@@ -256,7 +259,8 @@ DDR-012's rule, carried forward, and now doing more work than it was:
 
 * **Links are underlined**, including the contents links, which the design draws without an
   underline. The underline stays: at 4.44:1 the colour is the last thing that should have to say a
-  link is a link, and it is the one place this record does not follow the file.
+  link is a link, and it is the one place this record does not follow the file. **Superseded by
+  DDR-033**, which drops it on the contents links and says what identifies them instead.
 * **A level badge contains its level as a word**, and a tag is text.
 * **Metadata is smaller and elsewhere.** The three inks below the body's are told apart by size and
   position before colour, which is what carries the two failing ones.

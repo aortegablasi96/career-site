@@ -511,10 +511,10 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-032. The next DDR is
-`033`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-033. The next DDR is
+`034`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Eleven accepted records are superseded or amended **in part**, and each says so at the top and again
+Thirteen accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -571,6 +571,9 @@ at the section concerned:
 * **DDR-020** keeps one elevation, its name, its eight elements, the design's geometry and its
   reason for holding a translucent ink inside the shadow. DDR-025 takes its ink back to the design's
   10% black, because the hairlines the 22% was measured against no longer exist.
+* **DDR-025** keeps everything but one bullet: DDR-033 takes its ruling that the contents links keep
+  their underline. Every other link still has one.
+* **DDR-031** keeps everything but its links' underline, which DDR-033 takes, per #113.
 
 `Superseded` are DDR-001 to DDR-009, DDR-012, and DDR-016:
 
@@ -779,9 +782,9 @@ Six things about it are worth knowing before touching colour anywhere.
   fainter override it on rules that already existed: `.location` in the introduction, and `.dates p`
   in the timeline, which DDR-022 added there for the size. The date range above the place is in the
   accent at a specificity neither can reach.
-* **The contents links keep their underline**, which the design does not draw. At 4.44:1 the colour
-  is the last thing that should have to say a link is a link, and it is the one place DDR-025 does
-  not follow the file.
+* **The contents links kept their underline**, which the design does not draw, on the ground that at
+  4.44:1 the colour is the last thing that should have to say a link is a link. **DDR-033 has since
+  dropped it**, per #113.
 * **Print is unchanged in mechanism and the markers still print.** Three hairline tokens drop at the
   token layer where one did; no component writes a print rule of its own; `--color-marker` is
   deliberately not in that block. Verified in the browser under print emulation: every hairline
@@ -1013,8 +1016,11 @@ Five things about it are worth knowing before touching it.
   With 32px at 320px and 200% text, the links take four rows, the bar is 229px and headings end up
   behind it. The font size is set on the list rather than on the link, so each row is 19.5px and two
   rows fit the 48px bar. Any new label or section changes the wrapping, so rerun DDR-031's sweep.
-* **The links keep their underline**, which DDR-025 decided and DDR-031 does not reopen. Their ink is
-  4.44:1 on the page and as low as 4.10:1 on the bar.
+* **The links are not underlined**, since #113, per DDR-033, which supersedes DDR-025's ruling that
+  kept the underline. What identifies one is its place in the bar, its medium weight and its focus
+  outline, which is 5.42:1 on the bar's worst blend. Their ink is 4.44:1 on the page and as low as
+  4.10:1 on the bar, both failing 1.4.3. It is one declaration, `text-decoration-line: none` on
+  `.link`, and `contents.test.tsx` holds it there and nowhere else.
 * **`z-index: 1` is the site's only z-index.** Without it, the photo's positioned inner shadow would
   paint over the bar.
 
