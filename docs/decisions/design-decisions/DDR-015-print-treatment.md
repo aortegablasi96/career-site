@@ -6,6 +6,11 @@ Date: 2026-09-16
 
 Supersedes DDR-005, the print stylesheet, and DDR-008, section openings in print.
 
+**Amended by DDR-038 in one respect**: the screen sets running text at the design's looser leading,
+and paper keeps 1.5, which the print block restores through the two prose tokens. With the screen's
+leading the CV printed seven sheets and the browsers broke differently. With 1.5 each sheet is
+pixel-identical to what it was.
+
 **Amended by DDR-022 in one number**: the 11pt base below is now 12pt. This record chose 11pt so
 that body text, then a 1rem step, printed at 11pt. DDR-022 takes the design's scale, where body text
 is 0.9375rem, so the base had to move for that decision to keep its meaning; at 12pt body text

@@ -114,6 +114,15 @@
   color: var(--color-text-faint);
 }
 
+/* The summary is the page's longest running text, and both of its paragraphs take the prose
+   leading, per DDR-038. The design sets them at 1.75, and 1.72 is within 0.45px a line of it; a
+   leading of their own would be a third running-text value for one block. They are a class rather
+   than `.text > p` because the positioning line and the location are paragraphs too, and those are
+   short lines the design sets at the body's leading. */
+.summary {
+  line-height: var(--line-height-prose);
+}
+
 /* The four controls wrap onto as many rows as they need, rather than being cut off or scrolled. */
 .controls {
   display: flex;

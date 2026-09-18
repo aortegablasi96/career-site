@@ -72,11 +72,15 @@
    the lists align with one another and the badges read down the column. The badge stays first in
    the paragraph, so a screen reader still meets the level and then its skills; this only moves
    the skills onto a line of their own. The design holds the badge 6px above them, which is on no
-   step; 4px and 8px are equally far from it as boxes, and 8px is the nearer as ink, because the
-   design sets the skills with a taller line than the page does until #118. */
+   step, and 4px and 8px are equally far from it. #119 owns the spacing scale and decides it.
+
+   The skills are running text where they wrap, and they take the small prose leading, which is the
+   design's own 1.65 for them, per DDR-038. It is written here rather than on `.level` so that the
+   badge's line keeps the body's leading, as the design's short lines do. */
 .skills {
   display: block;
   margin-block-start: var(--space-small);
+  line-height: var(--line-height-prose-small);
 }
 
 /* A badge is its own word on a tint that repeats what the word says, so it reads the same in

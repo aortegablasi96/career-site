@@ -55,6 +55,9 @@ const minimum = /^min-(?:inline|block)-size$/;
  * Every size, space, tracking or elevation declaration in a stylesheet, as its property and its
  * value.
  *
+ * `line-height` is here because DDR-038 puts leading in tokens: a component that wrote its own
+ * would be setting its text at a density the design does not draw.
+ *
  * `letter-spacing` is here because DDR-017 puts tracking in tokens: it is a length like the rest,
  * measured in em rather than rem, and a component that wrote one would be choosing a density of
  * its own the way a literal margin would choose a rhythm of its own.
@@ -70,7 +73,7 @@ const minimum = /^min-(?:inline|block)-size$/;
  */
 function declarations(css: string): readonly { property: string; value: string }[] {
   const pattern =
-    /\b(margin|padding|gap|column-gap|row-gap|font-size|letter-spacing|box-shadow|text-underline-offset|text-decoration-thickness|(?:min-|max-)?(?:inline|block)-size|scroll-margin)([\w-]*):\s*([^;]+);/g;
+    /\b(margin|padding|gap|column-gap|row-gap|font-size|line-height|letter-spacing|box-shadow|text-underline-offset|text-decoration-thickness|(?:min-|max-)?(?:inline|block)-size|scroll-margin)([\w-]*):\s*([^;]+);/g;
 
   return [...css.matchAll(pattern)].map(([, property, suffix, value]) => ({
     property: `${property}${suffix}`,

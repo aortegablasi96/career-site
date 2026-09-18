@@ -282,6 +282,11 @@ describe('project styles', () => {
     expect(rule('.onPaper', paper)).toMatch(/display:\s*block;/);
   });
 
+  // DDR-038: the description is running text, and the design sets it at 1.72.
+  it('sets the description at the prose leading, per DDR-038', () => {
+    expect(rule('.content > p')).toMatch(/line-height:\s*var\(--line-height-prose\);/);
+  });
+
   it('separates projects by the item step, as roles and skill groups are, per DDR-013', () => {
     expect(rule('.project + .project')).toMatch(/margin-block-start:\s*var\(--space-item\);/);
   });

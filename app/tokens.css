@@ -86,7 +86,22 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
+  /* Leading, per DDR-038, which supersedes DDR-011's single body leading. Four values, named for
+     what they set.
+
+     The body's 1.5 is every short line — a date, a place, a company, a pill, a link, a language —
+     and it is what the design sets them at too. Running text is set looser, as the design sets it,
+     and at two leadings because the design tightens it as it gets smaller: 1.75 on the 15px
+     summary, 1.72 on a 14px description and 1.7 on a 14px point, but 1.65 on the 13px skills and
+     about 1.625 on a 13px thesis. No single value is within half a pixel a line of both the summary
+     and the skills, so two is the fewest that reproduce the file; each is the design's own number
+     for one of the blocks it sets, and every block is within 0.45px a line of its drawing.
+
+     Unitless, so each follows the size of the text it sets. Paper sets running text at the body's
+     leading, in the print block below. */
   --line-height-body: 1.5;
+  --line-height-prose: 1.72;
+  --line-height-prose-small: 1.65;
   --line-height-heading: 1.2;
 
   /* Tracking, per DDR-017. Three values, because the page has three densities to set: a heading
@@ -514,6 +529,14 @@
        finished page and kept it, per DDR-032: 11pt saves no sheet in either browser, and 12.8pt,
        which would put the smallest step at 8pt, costs two. */
     --root-font-size: 12pt;
+
+    /* Running text prints at the body's leading, per DDR-038, as it did before the screen took the
+       design's. The design has no sheet to match, and its leading on paper was measured and priced:
+       it costs the printed CV a seventh sheet in both browsers, leaves the introduction alone on the
+       first, and puts Edge and Firefox's breaks back out of step, which DDR-032 had brought
+       together. At 1.5 every sheet breaks exactly where it did. */
+    --line-height-prose: var(--line-height-body);
+    --line-height-prose-small: var(--line-height-body);
 
     /* Every surface is the paper. The page's own tint, the white card, the contents bar's, the tag's
        tint and the three level tints all drop, so the sheet reads the same whether or not the browser prints

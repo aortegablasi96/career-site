@@ -9,10 +9,14 @@
    The points are indented by one step of the spacing scale rather than the two the base styles give
    every list, per DDR-019. They are the densest text on the page, in the narrowest column it has,
    and the step the base styles use was chosen for a list in a full-width column. The marker hangs
-   in the step, as a marker does. */
+   in the step, as a marker does.
+
+   They are running text, so they take the prose leading rather than the body's, per DDR-038: the
+   design sets them at 1.7, and 1.72 is within 0.3px a line of it. */
 .points {
   padding-inline-start: var(--space-medium);
   font-size: var(--font-size-small);
+  line-height: var(--line-height-prose);
 }
 
 /* The marker is the browser's own disc, drawn in the marker ink instead of the text's, per DDR-019.

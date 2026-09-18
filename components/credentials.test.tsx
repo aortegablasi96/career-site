@@ -97,6 +97,11 @@ describe('Credentials', () => {
   // uses none. It is a second set of outlines rather than a second weight of the same ones, so
   // app/fonts/ carries a file for it and app/layout.test.tsx holds the list; without one the
   // browser would slant the upright face, which is the synthesis this arrangement exists to avoid.
+  // DDR-038: a thesis is running text at 13px, which the design sets tighter than at 14px or 15px.
+  it('sets a degree’s thesis at the small prose leading, per DDR-038', () => {
+    expect(styles).toMatch(/\.thesis\s*\{[^}]*line-height:\s*var\(--line-height-prose-small\);/);
+  });
+
   it('sets a degree’s thesis in italic, the one on the page, per DDR-023', () => {
     expect(styles).toMatch(/\.thesis\s*\{[^}]*font-style:\s*italic;/);
   });

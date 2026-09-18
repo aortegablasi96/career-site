@@ -215,15 +215,15 @@ not provide is a design decision to make, not a number to invent. `app/tokens.te
 type scale step by step and its floor to DDR-022, every colour pairing to the contrast ratio DDR-025 records — including the four that fail, held by name so a fifth cannot join them quietly — the
 spacing scale, rhythm, column and radii to DDR-013, the narrow breakpoint and what it adapts to
 DDR-014, the **absence** of a target minimum to DDR-027 — the name is held missing, so reinstating
-one moves the record with it — the photo's two widths and its ratio to DDR-021, the three tracking values to DDR-017,
+one moves the record with it — the photo's two widths and its ratio to DDR-021, the three tracking values to DDR-017, the four leadings — each running-text block within half a pixel a line of the design, and 1.5 on paper — to DDR-038,
 the bullet marker's 1.86:1 to DDR-019 as DDR-025 amends it, the raised shadow and its 10% ink to DDR-020 as DDR-025 amends it, and the photo's
 two lights to DDR-021, the timeline's and
 the projects' measures to DDR-010, and the print
 treatment to DDR-015 as DDR-022 amends it — the 12pt base, every surface dropped and no ink touched, the 28mm photo, and
 every shadow put out — so changing a token means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
-component stylesheet to the same rules: tokens only — sizes, spaces, tracking since DDR-017 and
-`box-shadow` since DDR-020 —
+component stylesheet to the same rules: tokens only — sizes, spaces, tracking since DDR-017,
+`box-shadow` since DDR-020 and leading since DDR-038 —
 no reordering, nothing but a pseudo-element taken out of the flow since DDR-021, `position: sticky`
 on the contents bar alone since DDR-031, and no width media
 query but
@@ -516,8 +516,8 @@ nothing either: it is the first time ADR-001's "`'use client'` requires a reason
 records the reason — the contents bar has to know how far the page has scrolled — and is not a
 precedent for the next one. The next ADR is `008`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-037. The next DDR is
-`038`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-038. The next DDR is
+`039`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Thirteen accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -549,16 +549,18 @@ at the section concerned:
   wrong in both directions: the medium row named the contents links and the tags, neither of which
   had the weight, and left out the CV control, which did. It now names the positioning line, the
   four pill controls and the tags. DDR-031 adds the contents links, which were #98's.
-* **DDR-011** is superseded twice over. DDR-022 takes its type scale and its 13px floor; DDR-023
+* **DDR-011** is superseded three times over. DDR-022 takes its type scale and its 13px floor; DDR-023
   takes which elements each typeface is used on, the three weights, the four files and the
-  no-italics rule. What DDR-011 is still the record to read for is the two faces themselves and
-  their fallback stacks, the one-static-file-per-weight recipe, the PDF guarantee, the line
-  heights, the measure and the wrapping rules.
+  no-italics rule; DDR-038 adds two running-text leadings to its 1.5 and 1.2, which stand. What
+  DDR-011 is still the record to read for is the two faces themselves and their fallback stacks,
+  the one-static-file-per-weight recipe, the PDF guarantee, the short-line and heading leadings,
+  the measure and the wrapping rules.
 * **DDR-015** keeps everything but its print base, which DDR-022 raises from 11pt to 12pt. DDR-025
   splits the one `--color-decoration` it drops on paper into three tokens; all three are dropped in
   the same block, for the same reason, and since DDR-026 one of them draws the section divider,
   which therefore prints as nothing at all. DDR-032 keeps the 12pt base, lets a printed address break
-  anywhere, and replaces its page-break measurements: five sheets in both browsers.
+  anywhere, and replaces its page-break measurements: five sheets in both browsers. DDR-038 keeps
+  running text at 1.5 on paper, where the screen now sets it looser.
 * **DDR-018** keeps its case and its ink. DDR-023 takes its "semibold, not bold" decision, and
   corrects its measurement of the tracking fault: at the 10px badge DDR-022 left, +0.1em splits the
   word in a Firefox PDF at **every** weight the site ships, 400 included, where DDR-018 concluded
@@ -693,11 +695,8 @@ Five things about it are worth knowing before touching type anywhere.
   of `experience.module.css` that the convention already implied, since a thesis is a paragraph in
   the same column as an institution and a certification has one of those and no thesis, so no
   positional selector tells them apart. #91 puts the design's italic there.
-* **Line heights did not move, and that is a known remaining difference.** The design sets its
-  running text at 1.65 to 1.75 and its short lines at 1.5; the page keeps DDR-011's single 1.5, so
-  it now sets prose *tighter* than the file. Two tokens cannot hold six leadings, and #90 scoped
-  them out; DDR-022 records it as an open item for Epic #70's closing pass rather than as a
-  rejection.
+* **Line heights did not move on #90**, and DDR-022 left the difference as an open item. **#118
+  closed it, as DDR-038**, below.
 * **Paper is measured from 12pt**, where DDR-015 set 11pt, because body text is 0.9375rem here and
   an unchanged base would have printed it at 10.3pt and the level badges at 6.9pt. At 12pt body text
   prints at 11.25pt and the smallest step at 7.5pt. **Nothing about the printed page was measured on
@@ -1108,6 +1107,27 @@ between two rows of groups is left to #119, which owns the spacing scale. **The 
 sheets in both browsers since this story**: the skills section grows by 177.5px on paper and the
 footer — the only place the printed CV carries an address — now stands alone on sheet 6. Every
 section heading and every skill group is on the sheet it was on before.
+
+**#118 has landed, as DDR-038: running text is set with the design's leading.** Two tokens join
+DDR-011's two: `--line-height-prose`, 1.72, on the summary, a role's points and a project's
+description, and `--line-height-prose-small`, 1.65, on a level's skills and a thesis. Two is the
+fewest that keep every block within half a pixel a line of the file, and `app/tokens.test.ts`
+computes that from the tokens. Short lines stay at 1.5 and headings at 1.2.
+
+Three things about it are worth knowing before touching leading.
+
+* **Paper keeps 1.5**, by setting both prose tokens to `var(--line-height-body)` in the print block.
+  The owner chose it on #118. With the screen's leading the CV printed seven sheets, sheet 1 held
+  only the introduction, and Edge and Firefox broke in different places again. As shipped, every
+  sheet is pixel-identical to the tree before, in both browsers, with background graphics on and
+  off. Removing the override looks harmless and costs a sheet.
+* **The summary is a class**, `.summary`, on both of its paragraphs, because the positioning line
+  and the location are paragraphs in the same column and are short lines. The skills' leading is on
+  `.skills`, not on `.level`, so the badge's line stays at 1.5.
+* **The page is longer on every screen**: 180px at the design's 894px, 307px at 390px, and 1706px at
+  320px with 200% text. Nothing scrolls sideways at any width or text size checked, and the name
+  beside the photo (#68) behaves exactly as before in every case, since no heading, photo or float
+  changed.
 
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the

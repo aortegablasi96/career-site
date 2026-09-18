@@ -83,9 +83,11 @@
 /* The description is the one paragraph in the text column, so the selector names the element
    rather than adding a class to it. It is a step below the name above it, per DDR-022: the design
    sets a project's description at the size it sets a role's points, not at the size of the
-   introduction's summary. */
+   introduction's summary. It is running text, so it takes the prose leading, which is the design's
+   own 1.72 for a description, per DDR-038. */
 .content > p {
   font-size: var(--font-size-small);
+  line-height: var(--line-height-prose);
 }
 
 /* A row of labelled links that wraps when it runs out of width, so it needs no breakpoint, per

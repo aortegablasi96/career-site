@@ -38,6 +38,9 @@ function rule(selector: string, within = styles): string {
   return within.match(new RegExp(`(?:^|[{}])\\s*${escaped}\\s*\\{([^}]*)\\}`))?.[1] ?? '';
 }
 
+/** A content string as a literal inside a regular expression. */
+const literal = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 /** The body of a media query, so a rule inside it is read separately from the same rule outside. */
 function media(query: string): string {
   const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -73,8 +76,8 @@ describe('Introduction', () => {
   });
 
   it('shows the summary and the availability exactly as content/ writes them', () => {
-    expect(html).toContain(`<p>${introduction.summary}</p>`);
-    expect(html).toContain(`<p>${introduction.availability}</p>`);
+    expect(html).toMatch(new RegExp(`<p class="[^"]+">${literal(introduction.summary)}</p>`));
+    expect(html).toMatch(new RegExp(`<p class="[^"]+">${literal(introduction.availability)}</p>`));
   });
 
   // DDR-029: the pill shows the design's short label and the footer shows the address. The
@@ -174,6 +177,13 @@ describe('the CV control', () => {
 describe('introduction styles', () => {
   const wide = media('(min-width: 48em)');
   const paper = media('print');
+
+  // DDR-038: the summary is running text and takes the prose leading. The positioning line and the
+  // location are paragraphs in the same column and are short lines, so the leading is a class.
+  it('sets the summary at the prose leading, and no other line of the introduction, per DDR-038', () => {
+    expect(rule('.summary')).toMatch(/line-height:\s*var\(--line-height-prose\);/);
+    expect(styles.match(/line-height:/g)).toHaveLength(1);
+  });
 
   it('fixes both of the photo’s dimensions, so the page does not shift when it loads', () => {
     expect(rule('.photo')).toMatch(/inline-size:\s*var\(--photo-width\);/);
