@@ -63,10 +63,14 @@ const minimum = /^min-(?:inline|block)-size$/;
  * an ink, and a component that wrote its own would be deciding both how far off the page a surface
  * sits and how dark the page goes under it. The literal-colour rule above already catches the ink;
  * this catches a shadow drawn at lengths of its own in a colour that is already a token.
+ *
+ * The underline's offset and thickness are here because DDR-035 puts the one offset the design
+ * draws in a token: a component that wrote its own would be deciding how far a link's line sits
+ * from its letters.
  */
 function declarations(css: string): readonly { property: string; value: string }[] {
   const pattern =
-    /\b(margin|padding|gap|column-gap|row-gap|font-size|letter-spacing|box-shadow|(?:min-|max-)?(?:inline|block)-size|scroll-margin)([\w-]*):\s*([^;]+);/g;
+    /\b(margin|padding|gap|column-gap|row-gap|font-size|letter-spacing|box-shadow|text-underline-offset|text-decoration-thickness|(?:min-|max-)?(?:inline|block)-size|scroll-margin)([\w-]*):\s*([^;]+);/g;
 
   return [...css.matchAll(pattern)].map(([, property, suffix, value]) => ({
     property: `${property}${suffix}`,

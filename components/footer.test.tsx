@@ -70,6 +70,14 @@ describe('Footer', () => {
     expect(styles).toMatch(/\.link\s*\{[^}]*text-decoration-line:\s*none;/);
   });
 
+  // DDR-035: an address takes the accent under the pointer and on keyboard focus, as the design
+  // draws it, and nothing else about it changes — it is still not underlined.
+  it('takes the accent under the pointer and on keyboard focus, per DDR-035', () => {
+    expect(styles).toMatch(
+      /\.link:hover,\s*\.link:focus-visible\s*\{\s*color:\s*var\(--color-accent\);\s*\}/,
+    );
+  });
+
   // DDR-023 narrows the serif to the page title and the section titles. The footer's name is the
   // one place outside them, and the one thing on the site set in Lora Regular.
   it('sets the name in the serif, per DDR-023', () => {

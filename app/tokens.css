@@ -200,6 +200,37 @@
      a mark held to 3:1 is now held to nothing. */
   --color-marker: #a5b4fc;
 
+  /* A link or a control under the pointer, and the one link on the page still underlined, per
+     DDR-035. Each is the value the design's Figma Make file draws, and each is written out rather
+     than pointed at a token that happens to share its value, as the tag's ink is: a pill's hover
+     fill is the tag's tint and its hover border is the marker's indigo, but neither is the same role,
+     and a change to one should not move the other.
+
+       surface-hover        a contact pill's fill; the accent on it is 5.62:1
+       accent-hover         the CV pill's fill, 7.90:1 under white, and a project link's ink, 7.38:1
+       border-accent-hover  a contact pill's border, 1.78:1 on its hover fill, which fails 1.4.11
+       underline            a project link's underline at rest, 1.86:1, which fails 1.4.11
+       underline-hover      the same underline under the pointer, 4.17:1
+
+     Every hover repeats a keyboard focus, which draws the same colours and the outline besides, so
+     nothing a pointer shows is withheld from the keyboard. The page on paper is never pointed at, so
+     the hover surface and border drop with the others in the print block below, and a project link
+     prints its underline in its own ink, as it did before these existed. */
+  --color-surface-hover: #eef2ff;
+  --color-accent-hover: #4338ca;
+  --color-border-accent-hover: #a5b4fc;
+  --color-underline: #a5b4fc;
+  --color-underline-hover: #6366f1;
+
+  /* How long a link or a control takes to change colour, per DDR-035: the design's
+     `transition-colors`, which is 150ms. Not read at all when the reader prefers reduced motion. */
+  --hover-transition: 150ms;
+
+  /* How far below the text a project link's underline is drawn: the design's `underline-offset-2`.
+     In px, as the focus outline's offset is: it separates a line from the letters and gains nothing
+     from growing with them. */
+  --underline-offset: 2px;
+
   /* The keyboard focus outline. It is offset so it sits on the surface, and it is an outline
      rather than a shadow so it survives forced-colours modes. It follows the accent, so it is
      5.87:1 on the page and 6.29:1 on a card where DDR-012 measured 7.38:1 and 7.90:1 — still above
@@ -407,7 +438,7 @@
   --contents-bar-height: 3rem;
   --contents-bar-blur: 12px;
   /* How long the bar takes to gain or lose its edge, per DDR-034: the design's 200ms. It is a time,
-     the site's only one, and it is not read at all when the reader prefers reduced motion. */
+     as `--hover-transition` is, and it is not read at all when the reader prefers reduced motion. */
   --contents-bar-transition: 200ms;
   --contents-bar-clearance: calc(var(--contents-bar-height) + var(--space-flow));
 }
@@ -474,6 +505,9 @@
     --color-surface-level-advanced: transparent;
     --color-surface-level-proficient: transparent;
     --color-surface-level-basic: transparent;
+    /* Nothing on paper is pointed at, so a contact pill's hover fill is dropped with the rest, per
+       DDR-035, and so is its hover border below. */
+    --color-surface-hover: transparent;
 
     /* No hairline prints. This is the whole of it: the rule beside a section heading, the language
        card's edge, and the timeline's dot and line. Each carries no information, so paper simply
@@ -484,6 +518,7 @@
     --color-rule: transparent;
     --color-border: transparent;
     --color-border-accent: transparent;
+    --color-border-accent-hover: transparent;
 
     /* Nor is the page's one shadow drawn, per DDR-020. A sheet is lit by the room it is read in,
        and the surfaces it raises are flat on paper anyway: their fills and the colour of their

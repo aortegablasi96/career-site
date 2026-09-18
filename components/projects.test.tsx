@@ -111,6 +111,31 @@ describe('Projects', () => {
     expect(rule('.link')).not.toMatch(/min-block-size|min-inline-size/);
     expect(rule('.links')).toMatch(/row-gap:\s*var\(--space-small\);/);
   });
+
+  // DDR-035: the one link on the page still underlined draws the design's pale underline, 2px below
+  // the text. It keeps the base styles' underline rather than drawing one of its own, so it writes
+  // the colour and the offset and never the line.
+  it('underlines every link in the design’s pale indigo, 2px below the text, per DDR-035', () => {
+    expect(rule('.link')).toMatch(/text-decoration-color:\s*var\(--color-underline\);/);
+    expect(rule('.link')).toMatch(/text-underline-offset:\s*var\(--underline-offset\);/);
+    expect(css).not.toMatch(/text-decoration-line/);
+  });
+
+  it('darkens the text and strengthens the underline under the pointer and on focus, per DDR-035', () => {
+    const hovered = css.match(/\.link:hover,\s*\.link:focus-visible\s*\{([^}]*)\}/)?.[1] ?? '';
+
+    expect(hovered).toMatch(/color:\s*var\(--color-accent-hover\);/);
+    expect(hovered).toMatch(/text-decoration-color:\s*var\(--color-underline-hover\);/);
+  });
+
+  // The pale underline is the screen's. Paper prints the underline it printed before DDR-035, in
+  // the link's own ink where the browser places it, so the printed CV does not change.
+  it('prints the underline in the link’s own ink, where the browser places it, per DDR-035', () => {
+    const printed = rule('.link', media('print'));
+
+    expect(printed).toMatch(/text-decoration-color:\s*currentColor;/);
+    expect(printed).toMatch(/text-underline-offset:\s*auto;/);
+  });
 });
 
 describe('a project’s media', () => {

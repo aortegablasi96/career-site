@@ -249,6 +249,11 @@ describe('colour tokens', () => {
       'border',
       'border-accent',
       'marker',
+      'surface-hover',
+      'accent-hover',
+      'border-accent-hover',
+      'underline',
+      'underline-hover',
       'focus',
     ]);
   });
@@ -281,6 +286,8 @@ describe('colour tokens', () => {
     expect(alpha).toBe(0.96);
     expect(contrast(color('text-muted'), blend)).toBeCloseTo(4.1, 1);
     expect(contrast(color('text-muted'), blend)).toBeLessThan(4.5);
+    // DDR-035: under the pointer or on focus the link takes the accent, which clears 4.5:1 there.
+    expect(contrast(color('accent'), blend)).toBeCloseTo(5.42, 2);
   });
 
   // Every pairing the page draws, with the ratio DDR-025 measures, the Success Criterion that
@@ -319,6 +326,17 @@ describe('colour tokens', () => {
     // control's edge to 3:1 on the ground that it carries meaning; DDR-025 gives that up and says
     // what identifies the control instead.
     { foreground: 'border-accent', background: 'surface-card', asked: 3, recorded: 1.49, meets: false },
+    // Under the pointer and on keyboard focus, per DDR-035. A contact pill's text on its hover fill,
+    // and its border on the same fill: stronger than at rest and still below 3:1. The CV pill's
+    // darker fill under white, and a project link's darker ink on the page.
+    { foreground: 'accent', background: 'surface-hover', asked: 4.5, recorded: 5.62, meets: true },
+    { foreground: 'border-accent-hover', background: 'surface-hover', asked: 3, recorded: 1.78, meets: false },
+    { foreground: 'on-accent', background: 'accent-hover', asked: 4.5, recorded: 7.9, meets: true },
+    { foreground: 'accent-hover', background: 'surface', asked: 4.5, recorded: 7.38, meets: true },
+    // A project link's underline, which DDR-012 made what identifies a link: the design's pale
+    // indigo at rest, and the stronger one under the pointer.
+    { foreground: 'underline', background: 'surface', asked: 3, recorded: 1.86, meets: false },
+    { foreground: 'underline-hover', background: 'surface', asked: 3, recorded: 4.17, meets: true },
     // Hairlines that carry nothing, so neither criterion reaches them: the rule beside a section
     // heading, a card's edge against the page it sits on and the white it encloses, and the
     // timeline's spine and dots.
@@ -336,9 +354,10 @@ describe('colour tokens', () => {
   );
 
   // The measurement above says what a pairing is, not whether it is enough. This says which rows
-  // the record admits are failures, by name, so a fifth cannot join them quietly and none of the
-  // four can be quietly improved without the record being revised with it.
-  it('fails exactly the four pairings DDR-025 records as failures, and no others', () => {
+  // the records admit are failures, by name, so another cannot join them quietly and none of them
+  // can be quietly improved without its record being revised with it. The first four are DDR-025's
+  // and the last two DDR-035's.
+  it('fails exactly the six pairings DDR-025 and DDR-035 record as failures, and no others', () => {
     for (const { foreground, background, asked, recorded, meets } of pairings) {
       expect(recorded >= asked, `${foreground} on ${background}`).toBe(meets);
     }
@@ -348,6 +367,8 @@ describe('colour tokens', () => {
       'text-faint',
       'marker',
       'border-accent',
+      'border-accent-hover',
+      'underline',
     ]);
   });
 
@@ -423,9 +444,20 @@ describe('elevation tokens', () => {
     expect(token('shadow-bar')).toBe('0 2px 16px rgba(26, 26, 46, 0.1)');
   });
 
-  // The design's `duration-200`. A time rather than a length, so it is the one token in ms.
+  // The design's `duration-200`. A time rather than a length, so it is in ms.
   it('changes the bar’s edge over the design’s 200ms, per DDR-034', () => {
     expect(token('contents-bar-transition')).toBe('200ms');
+  });
+
+  // DDR-035: the design's `transition-colors`, whose default is 150ms — shorter than the bar's,
+  // because a link answers a pointer and the bar answers the page.
+  it('changes a link’s colours over the design’s 150ms, per DDR-035', () => {
+    expect(token('hover-transition')).toBe('150ms');
+  });
+
+  // DDR-035: the design's `underline-offset-2`, in px as the focus outline's offset is.
+  it('draws a project link’s underline 2px below the text, per DDR-035', () => {
+    expect(token('underline-offset')).toBe('2px');
   });
 
   // The two layers, their lengths and their ink are all the design's now, per DDR-025, which amends
@@ -663,9 +695,11 @@ const forPaper = [
   { name: 'color-surface-level-advanced', value: 'transparent' },
   { name: 'color-surface-level-proficient', value: 'transparent' },
   { name: 'color-surface-level-basic', value: 'transparent' },
+  { name: 'color-surface-hover', value: 'transparent' },
   { name: 'color-rule', value: 'transparent' },
   { name: 'color-border', value: 'transparent' },
   { name: 'color-border-accent', value: 'transparent' },
+  { name: 'color-border-accent-hover', value: 'transparent' },
   { name: 'shadow-raised', value: 'none' },
   { name: 'shadow-photo-glow', value: 'none' },
   { name: 'shadow-photo-inner', value: 'none' },

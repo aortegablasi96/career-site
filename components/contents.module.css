@@ -140,3 +140,11 @@
   font-weight: var(--font-weight-medium);
   text-decoration-line: none;
 }
+
+/* Under the pointer and on keyboard focus the link takes the accent, as the design draws both, per
+   DDR-035. It is 5.87:1 on the page and 5.42:1 on the worst blend the bar can show, so a link that
+   is pointed at clears the 4.5:1 WCAG 1.4.3 asks where the same link at rest does not. */
+.link:hover,
+.link:focus-visible {
+  color: var(--color-accent);
+}

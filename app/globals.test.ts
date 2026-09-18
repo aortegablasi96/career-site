@@ -30,6 +30,15 @@ describe('base styles', () => {
     expect(rule('a')).toMatch(/text-decoration-line:\s*underline;/);
   });
 
+  // DDR-035: every link changes colour under the pointer and on focus, over the design's 150ms, and
+  // not at all for a reader who prefers less motion. It is colour alone, so nothing moves or grows.
+  it('changes a link’s colours over the design’s short transition only when motion is welcome, per DDR-035', () => {
+    expect(declarations).toMatch(
+      /@media \(prefers-reduced-motion: no-preference\)\s*\{\s*a\s*\{\s*transition-property:\s*color, background-color, border-color, text-decoration-color;\s*transition-duration:\s*var\(--hover-transition\);\s*\}\s*\}/,
+    );
+    expect(declarations.match(/transition[\w-]*:/g)).toHaveLength(2);
+  });
+
   it('shows keyboard focus with an outline in the focus colour', () => {
     expect(rule(':focus-visible')).toMatch(
       /outline:\s*var\(--focus-outline-width\) solid var\(--color-focus\);/,

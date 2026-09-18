@@ -119,6 +119,16 @@ describe('Contents', () => {
     expect(styles.match(/text-decoration/g)).toHaveLength(1);
   });
 
+  // DDR-035: the design takes a contents link to the accent under the pointer and on keyboard
+  // focus alike, so focus is never less visible than hover. The outline the base styles draw on
+  // focus stays; this rule adds a colour and takes nothing away.
+  it('takes the accent under the pointer and on keyboard focus, per DDR-035', () => {
+    expect(styles).toMatch(
+      /\.link:hover,\s*\.link:focus-visible\s*\{\s*color:\s*var\(--color-accent\);\s*\}/,
+    );
+    expect(styles).not.toMatch(/outline/);
+  });
+
   // DDR-030 left the design's medium weight on these links to the story that rewrote this file.
   it('sets a contents link in medium, as the design draws it, per DDR-030 and DDR-031', () => {
     expect(rule('.link')).toMatch(/font-weight:\s*var\(--font-weight-medium\);/);

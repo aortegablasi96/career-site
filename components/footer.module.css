@@ -89,6 +89,13 @@
   overflow-wrap: anywhere;
 }
 
+/* Under the pointer and on keyboard focus an address takes the accent, per DDR-035, which is the
+   design's. At 5.87:1 it is the one moment the footer's text meets WCAG 1.4.3. */
+.link:hover,
+.link:focus-visible {
+  color: var(--color-accent);
+}
+
 @media print {
   /* The link's text is its address, so the address is not printed after it again — the same rule
      the introduction's pills write, per DDR-006, and what keeps `mailto:` off the sheet. */

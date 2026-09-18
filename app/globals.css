@@ -119,6 +119,17 @@ a {
   text-decoration-line: underline;
 }
 
+/* Every link on the page changes colour under the pointer and on keyboard focus, per DDR-035, and
+   the change is the design's short one. Written as the preference for motion rather than as its
+   absence, as the contents bar's is, so a browser that does not know the query does not animate. The
+   component that styles each link says which of these colours it changes. */
+@media (prefers-reduced-motion: no-preference) {
+  a {
+    transition-property: color, background-color, border-color, text-decoration-color;
+    transition-duration: var(--hover-transition);
+  }
+}
+
 /* For keyboard focus only, not mouse clicks. The offset keeps the outline on the surface, where
    its contrast is measured. */
 :focus-visible {
