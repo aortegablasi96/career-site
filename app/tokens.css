@@ -443,8 +443,9 @@
        the design's scale, where body text is 0.9375rem, and an unchanged base would print it at
        10.3pt and the level badges at 6.9pt — smaller than anything the printed CV has shown. 12pt
        restores body text to 11.25pt and puts the smallest step at 7.5pt. It is a round number, as
-       DDR-005's 10pt and DDR-015's 11pt were, and DDR-022 amends DDR-015 to say so. #99 prints the
-       page and may move it again. */
+       DDR-005's 10pt and DDR-015's 11pt were, and DDR-022 amends DDR-015 to say so. #99 printed the
+       finished page and kept it, per DDR-032: 11pt saves no sheet in either browser, and 12.8pt,
+       which would put the smallest step at 8pt, costs two. */
     --root-font-size: 12pt;
 
     /* Every surface is the paper. The page's own tint, the white card, the contents bar's, the tag's

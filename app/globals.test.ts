@@ -167,7 +167,15 @@ describe('print base styles', () => {
 
   it('prints the address after every link that leaves the page', () => {
     expect(print).toMatch(
-      /:where\(a\[href\]:not\(\[href\^='#'\]\)\)::after\s*\{\s*content:\s*' \(' attr\(href\) '\)';\s*\}/,
+      /:where\(a\[href\]:not\(\[href\^='#'\]\)\)::after\s*\{\s*content:\s*' \(' attr\(href\) '\)';/,
+    );
+  });
+
+  // DDR-032: an address that cannot break widens its column past the sheet, and Chromium then
+  // shrinks the whole printed page to fit it — which is why Edge printed the CV at 0.90 until #99.
+  it('lets a printed address break anywhere, so no address is wider than the sheet', () => {
+    expect(print).toMatch(
+      /:where\(a\[href\]:not\(\[href\^='#'\]\)\)::after\s*\{[^}]*overflow-wrap:\s*anywhere;[^}]*\}/,
     );
   });
 

@@ -184,9 +184,16 @@ main {
   }
 
   /* A link cannot be followed on paper, so its address is printed after it. A link within the page
-     leads nowhere on paper, so it prints nothing. */
+     leads nowhere on paper, so it prints nothing.
+
+     An address may break anywhere, per DDR-032. A long one is a single word as far as the browser
+     knows, and Chromium does not wrap it inside the column: measured on #99, the Digital Twin
+     project's repository took its text column to 713px on a sheet with 642.5px of room, and Edge
+     then shrank the whole sheet by 0.90 to fit it, so body text printed at 10.2pt rather than
+     11.25pt. Firefox already breaks it at its slashes, and prints identically either way. */
   :where(a[href]:not([href^='#']))::after {
     content: ' (' attr(href) ')';
+    overflow-wrap: anywhere;
   }
 
   /* A heading stays on the same page as what it introduces, and a single entry, such as a role or
