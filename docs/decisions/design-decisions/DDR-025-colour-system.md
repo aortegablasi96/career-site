@@ -10,6 +10,13 @@ not: one ink below the body's becomes three, the accent changes, the tag's ink s
 accent, the single decoration colour becomes three hairlines, and the rule that a border carrying
 meaning must reach 3:1 is given up.
 
+**Amended by DDR-031 in one respect**: the palette is no longer opaque throughout. The contents bar's
+surface, `--color-surface-bar`, is the page's own off-white at 96%, as the design draws it. It is a
+surface, not an ink, and every ink stays opaque. The contents link on it is measured on the worst
+blend the page can put behind it: 4.10:1, where this record gives 4.44:1 on the page. Both fail,
+and this record already counts that ink among its failures. The underline this record kept on the
+contents links is untouched.
+
 It **amends DDR-019**, which stands in every other respect — the indent, the recoloured `::marker`,
 the reason the marker is a token of its own and the reason it is not dropped on paper. What changes
 is its value: the marker is the design's `#a5b4fc` at 1.86:1, which that record measured and turned

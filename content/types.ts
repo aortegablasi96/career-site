@@ -115,7 +115,13 @@ export interface Introduction {
   contact: readonly ContactLink[];
 }
 
-/** The list of links to the page's sections, per DDR-006. */
+/**
+ * The bar of links to the page's sections, per DDR-031, which supersedes DDR-010's and DDR-006's
+ * rejection of a sticky one.
+ *
+ * The word each link shows is not here: it sits in its own section's module, beside the heading it
+ * stands for, so a section states both of its names in one place.
+ */
 export interface Contents {
   /** The accessible name of the navigation, so assistive technology can announce it. */
   label: string;
@@ -147,8 +153,15 @@ export interface Role {
 
 /** The experience section. */
 export interface Experience {
-  /** The section's heading, which its link in the contents shows too. */
+  /** The section's heading. */
   title: string;
+  /**
+   * The word this section's link in the contents bar shows, per DDR-031. It is the design's own,
+   * which is not always the heading: "Education" stands for "Education and certifications". The
+   * section is still named by its `h2` for assistive technology, so this shortens the link and not
+   * the section.
+   */
+  link: string;
   /** Newest first. The page shows them in this order, per ADR-002. */
   roles: readonly Role[];
 }
@@ -175,8 +188,15 @@ export interface Project {
 
 /** The projects section. */
 export interface Projects {
-  /** The section's heading, which its link in the contents shows too. */
+  /** The section's heading. */
   title: string;
+  /**
+   * The word this section's link in the contents bar shows, per DDR-031. It is the design's own,
+   * which is not always the heading: "Education" stands for "Education and certifications". The
+   * section is still named by its `h2` for assistive technology, so this shortens the link and not
+   * the section.
+   */
+  link: string;
   /** In the order the page shows them, per ADR-002. */
   projects: readonly Project[];
 }
@@ -200,8 +220,15 @@ export interface SkillGroup {
 
 /** The skills section. */
 export interface Skills {
-  /** The section's heading, which its link in the contents shows too. */
+  /** The section's heading. */
   title: string;
+  /**
+   * The word this section's link in the contents bar shows, per DDR-031. It is the design's own,
+   * which is not always the heading: "Education" stands for "Education and certifications". The
+   * section is still named by its `h2` for assistive technology, so this shortens the link and not
+   * the section.
+   */
+  link: string;
   /** Every level, strongest first, which is the order each group shows them in, per DDR-006. */
   levels: readonly SkillLevelName[];
   /** In the order the page shows them, per ADR-002. */
@@ -234,8 +261,15 @@ export type Credential = Degree | Certification;
 
 /** The education and certifications section. */
 export interface Credentials {
-  /** The section's heading, which its link in the contents shows too. */
+  /** The section's heading. */
   title: string;
+  /**
+   * The word this section's link in the contents bar shows, per DDR-031. It is the design's own,
+   * which is not always the heading: "Education" stands for "Education and certifications". The
+   * section is still named by its `h2` for assistive technology, so this shortens the link and not
+   * the section.
+   */
+  link: string;
   /** Newest first, per DDR-006. The page shows them in this order, per ADR-002. */
   credentials: readonly Credential[];
 }
@@ -249,8 +283,15 @@ export interface Language {
 
 /** The languages section. */
 export interface Languages {
-  /** The section's heading, which its link in the contents shows too. */
+  /** The section's heading. */
   title: string;
+  /**
+   * The word this section's link in the contents bar shows, per DDR-031. It is the design's own,
+   * which is not always the heading: "Education" stands for "Education and certifications". The
+   * section is still named by its `h2` for assistive technology, so this shortens the link and not
+   * the section.
+   */
+  link: string;
   /** In the order the page shows them, per ADR-002. */
   languages: readonly Language[];
 }

@@ -7,6 +7,7 @@ import type { Languages } from './types';
  */
 export const languages: Languages = {
   title: 'Languages',
+  link: 'Languages',
   languages: [
     { name: 'Spanish', level: 'Native (C2)' },
     { name: 'Catalan', level: 'Native (C2)' },

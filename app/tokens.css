@@ -115,6 +115,20 @@
      colour cannot change without the record changing; any pairing not in it is unverified. */
   --color-surface: #f8f7f4;
   --color-surface-card: #ffffff;
+
+  /* The contents bar's surface, per DDR-031, and the one translucent value in this palette. The
+     design draws the bar in the page's own off-white at 96% over a 12px backdrop blur (node 2:6),
+     so what shows through it is the page it is pinned over, softened rather than hidden. An opaque
+     fill would draw a band across the top of the page; the translucency is what keeps the bar a
+     surface the content passes under.
+
+     Every other colour here is an opaque hex, and DDR-025 said so as a rule: a translucent value is
+     wrong on text, on a border and on a surface, which is why the raised shadow's ink lives inside
+     its own token. DDR-031 amends the last of those three. A translucent *surface* is exactly what
+     the design draws, and the ink it carries is measured on the worst blend the page can put behind
+     it rather than on the token alone — 4.10:1 for a contents link where the page gives it 4.44:1,
+     both below what WCAG 1.4.3 asks and both already recorded as failing by DDR-025. */
+  --color-surface-bar: rgba(248, 247, 244, 0.96);
   --color-text-heading: #0f172a;
   --color-text: #334155;
 
@@ -359,6 +373,29 @@
      the behaviour; its narrow-breakpoint table lists the four role tokens that existed when it was
      written, and this is the fifth. */
   --language-columns: 1;
+
+  /* The contents bar, per DDR-031, which supersedes DDR-010's and DDR-006's rejection of it: the
+     contents are pinned to the top of the window rather than scrolling away with the introduction.
+
+     The height is the design's 48px (node 2:7), written in rem so the bar keeps its proportion to
+     the links inside it when text is enlarged, as the page column, the photo and the timeline are.
+     It is a minimum rather than a fixed height — the five links wrap when they run out of width,
+     and a bar that cannot grow would put them behind its own edge.
+
+     The blur is the design's 12px (node 2:6). It is in px, as the focus outline and the timeline's
+     line are: it softens what passes beneath the bar and gains nothing from growing with the text.
+
+     The clearance is how far below the top of the window the page scrolls anything into view — a
+     section the contents are followed to, or an element taking keyboard focus — which is the root's
+     scroll padding in app/globals.css. It is the answer to the first of DDR-010's five grounds — a bar covers
+     content, so everything it can be scrolled to has to clear it. It is the bar's own height plus
+     the flow step, so it follows the bar rather than repeating its number, and the step is the
+     clear space DDR-006 already kept above a heading that is scrolled to. Measured from 320px to
+     1536px at both text sizes, every heading the contents reach lands below the bar, 42.6px clear
+     at the least, where the links wrap to three rows at 200%; DDR-031 has the table. */
+  --contents-bar-height: 3rem;
+  --contents-bar-blur: 12px;
+  --contents-bar-clearance: calc(var(--contents-bar-height) + var(--space-flow));
 }
 
 /*
@@ -410,13 +447,14 @@
        page and may move it again. */
     --root-font-size: 12pt;
 
-    /* Every surface is the paper. The page's own tint, the white card, the tag's tint and the three
-       level tints all drop, so the sheet reads the same whether or not the browser prints
+    /* Every surface is the paper. The page's own tint, the white card, the contents bar's, the tag's
+       tint and the three level tints all drop, so the sheet reads the same whether or not the browser prints
        background graphics, and no ink is spent on a colour. Nothing is lost: every tint in the
        redesign repeats the word it holds, per DDR-010. The inks they carry are not touched, and
        each is darker on white paper than on the page it was measured against. */
     --color-surface: transparent;
     --color-surface-card: transparent;
+    --color-surface-bar: transparent;
     --color-surface-tag: transparent;
     --color-surface-level-advanced: transparent;
     --color-surface-level-proficient: transparent;

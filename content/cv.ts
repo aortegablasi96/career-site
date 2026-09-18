@@ -17,11 +17,12 @@ import type { Cv } from './types';
  * moved with #48 because the introduction gained the photo's alternative text, and again with #50
  * because each project gained its picture and that picture's alternative text, and again with #97
  * because each contact gained the short label its pill now shows, per DDR-029 — the addresses
- * themselves did not change. None of the three is a fact ADR-005 lists as shared, so none of them
- * moved the CV; the nine differences are the ones #59 records, unchanged.
+ * themselves did not change. It moved again with #98, because each section gained the word its
+ * link in the contents bar shows, per DDR-031. None of the four is a fact ADR-005 lists as shared,
+ * so none of them moved the CV; the nine differences are the ones #59 records, unchanged.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'aa0904f3c017c3f9a8c0caa6f9c98766a083e0d2521b24fa13ab0ae68344d753',
+  contentDigest: '218209f54b924df50b7ad452a1c8cd572146bb6f89886861101dc3a7afcad2b2',
 };

@@ -18,10 +18,14 @@ import { languages } from '@/content/languages';
 import { projects } from '@/content/projects';
 import { skills } from '@/content/skills';
 
-/** A major section of the page: where the contents link to, its title, and its items. */
+/**
+ * A major section of the page: where the contents link to, its title, the word its link in the
+ * contents shows, and its items.
+ */
 interface PageSection {
   id: string;
   title: string;
+  link: string;
   items: readonly ReactNode[];
 }
 
@@ -37,6 +41,7 @@ const sections: readonly PageSection[] = [
   {
     id: 'experience',
     title: experience.title,
+    link: experience.link,
     items: experience.roles.map((role) => (
       <Experience key={`${role.company} ${role.start}`} roles={[role]} dateLabels={dateLabels} />
     )),
@@ -44,11 +49,13 @@ const sections: readonly PageSection[] = [
   {
     id: 'projects',
     title: projects.title,
+    link: projects.link,
     items: projects.projects.map((project) => <Projects key={project.name} projects={[project]} />),
   },
   {
     id: 'skills',
     title: skills.title,
+    link: skills.link,
     // The section's item is a row of two groups rather than one group, because the two columns
     // DDR-010 gives the section have to be one grid and a grid needs one parent. One group to an
     // item would put the first inside the block the section keeps whole with its heading, per
@@ -60,6 +67,7 @@ const sections: readonly PageSection[] = [
   {
     id: 'education',
     title: credentials.title,
+    link: credentials.link,
     items: credentials.credentials.map((credential) => (
       <Credentials key={credential.name} credentials={[credential]} dateLabels={dateLabels} />
     )),
@@ -67,6 +75,7 @@ const sections: readonly PageSection[] = [
   {
     id: 'languages',
     title: languages.title,
+    link: languages.link,
     items: [<Languages key="languages" languages={languages.languages} />],
   },
 ];
@@ -74,9 +83,12 @@ const sections: readonly PageSection[] = [
 export default function HomePage() {
   return (
     <>
+      {/* The contents bar comes first, above main, per DDR-031: it is pinned to the top of the
+          window and spans it, as the design draws it above everything else on the page, so it
+          belongs to neither the introduction nor the column main sets. */}
+      <Contents label={contents.label} sections={sections} />
       <main>
         <Introduction introduction={introduction} cv={cv} />
-        <Contents label={contents.label} sections={sections} />
         {sections.map(({ id, title, items }) => (
           <Section key={id} id={id} title={title} items={items} />
         ))}

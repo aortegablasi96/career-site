@@ -12,6 +12,7 @@ import type { Skills } from './types';
  */
 export const skills: Skills = {
   title: 'Skills',
+  link: 'Skills',
   levels: [
     { level: 'advanced', name: 'Advanced' },
     { level: 'proficient', name: 'Proficient' },

@@ -10,6 +10,10 @@ actually set in it. DDR-023 keeps its two faces, its four weights, its one itali
 which elements take which face, and its seven files: no file is added, because DM Sans Medium has
 been loaded since DDR-011 and two elements on the page already use it.
 
+**The one it left open is closed by DDR-031**: the contents links are set in medium, as part of the
+story that rewrote their stylesheet. The medium row now reads: the positioning line, the four pill
+controls, the technology tags and the contents links.
+
 **It closes the last weight difference between the page and the design but one.** The contents links
 are the exception, and they are left open deliberately: #98 replaces the contents row with the
 design's sticky bar and rewrites `contents.module.css`, so the weight belongs to that story rather

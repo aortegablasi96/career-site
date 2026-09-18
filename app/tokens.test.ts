@@ -229,6 +229,7 @@ describe('colour tokens', () => {
     expect([...colors.keys()]).toEqual([
       'surface',
       'surface-card',
+      'surface-bar',
       'text-heading',
       'text',
       'text-secondary',
@@ -252,10 +253,34 @@ describe('colour tokens', () => {
     ]);
   });
 
+  // Every colour but one. DDR-031 gives the contents bar the design's translucent surface, which
+  // is the one colour on the site that is not opaque, and it is held out here by name.
   it('writes every colour as a six-digit hex value or a reference to another colour', () => {
     for (const [name, value] of colors) {
+      if (name === 'surface-bar') {
+        continue;
+      }
+
       expect(value, name).toMatch(/^#[\da-f]{6}$|^var\(--color-[\w-]+\)$/);
     }
+  });
+
+  // DDR-031: the bar is the page's own off-white at 96%, so it is measured by what it can become.
+  // Over the page it is the page. Over the darkest ink the page draws it is the darkest it gets,
+  // and a contents link on that is 4.10:1 — below the 4.44:1 DDR-025 records on the page, and on
+  // the same side of 4.5.
+  it('draws the contents bar in the page’s surface at 96%, and measures its link on the worst blend', () => {
+    const [r, g, b, alpha] = colors.get('surface-bar')!.match(/[\d.]+/g)!.map(Number);
+    const hex = (channels: readonly number[]) =>
+      `#${channels.map((channel) => Math.round(channel).toString(16).padStart(2, '0')).join('')}`;
+    const under = color('text-heading');
+    const beneath = [1, 3, 5].map((i) => Number.parseInt(under.slice(i, i + 2), 16));
+    const blend = hex([r!, g!, b!].map((channel, i) => alpha! * channel + (1 - alpha!) * beneath[i]!));
+
+    expect(hex([r!, g!, b!])).toBe(color('surface'));
+    expect(alpha).toBe(0.96);
+    expect(contrast(color('text-muted'), blend)).toBeCloseTo(4.1, 1);
+    expect(contrast(color('text-muted'), blend)).toBeLessThan(4.5);
   });
 
   // Every pairing the page draws, with the ratio DDR-025 measures, the Success Criterion that
@@ -414,16 +439,22 @@ describe('elevation tokens', () => {
   // The palette above is opaque throughout, and this is why: the shadow's ink is translucent black,
   // which is wrong on text, on a border and on a surface, so it is held inside the one value that
   // uses it rather than offered to anything that can read a colour token.
-  it('keeps its translucent ink out of the palette, and is the only translucency at the root', () => {
+  // DDR-031 admits one translucent colour, the contents bar's surface. It is a surface rather than
+  // an ink, and the argument above is about inks; it still holds for every one of them.
+  it('keeps its translucent ink out of the palette, whose one translucency is the bar’s surface', () => {
     for (const [name, value] of colors) {
+      if (name === 'surface-bar') {
+        continue;
+      }
+
       expect(value, name).not.toMatch(/rgba?\(|#[\da-f]{8}\b/i);
     }
 
     expect(token('shadow-raised')!.match(/rgba\(/g)).toHaveLength(2);
     expect(token('shadow-photo-glow')!.match(/rgba\(/g)).toHaveLength(1);
     expect(token('shadow-photo-inner')!.match(/rgba\(/g)).toHaveLength(1);
-    // Every translucency at the root belongs to a shadow, and there are four of them.
-    expect(root.match(/rgba\(/g)).toHaveLength(4);
+    // Every translucency at the root belongs to a shadow, four of them, or is the bar's surface.
+    expect(root.match(/rgba\(/g)).toHaveLength(5);
   });
 });
 
@@ -614,6 +645,7 @@ const forPaper = [
   { name: 'root-font-size', value: '12pt' },
   { name: 'color-surface', value: 'transparent' },
   { name: 'color-surface-card', value: 'transparent' },
+  { name: 'color-surface-bar', value: 'transparent' },
   { name: 'color-surface-tag', value: 'transparent' },
   { name: 'color-surface-level-advanced', value: 'transparent' },
   { name: 'color-surface-level-proficient', value: 'transparent' },

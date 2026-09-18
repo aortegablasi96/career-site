@@ -92,7 +92,7 @@ describe('component stylesheets', () => {
     expect(stylesheets).not.toHaveLength(0);
   });
 
-  describe.each(stylesheets)('$name', ({ css }) => {
+  describe.each(stylesheets)('$name', ({ name, css }) => {
     it('sets no literal colour, only tokens', () => {
       expect(css).not.toMatch(/#[\da-f]{3,8}\b|rgba?\(|hsla?\(/i);
     });
@@ -140,10 +140,23 @@ describe('component stylesheets', () => {
     // image. Anything that is content, matched by a class or an element, stays in the flow.
     it('takes nothing but a pseudo-element out of the flow, per DDR-021', () => {
       for (const { selector, body } of rules(css)) {
-        if (/position:\s*(?:absolute|fixed|sticky)/.test(body)) {
+        if (/position:\s*(?:absolute|fixed)/.test(body)) {
           expect(selector, selector).toMatch(/::[\w-]+$/);
         }
       }
+    });
+
+    // DDR-031 pins the contents bar with `position: sticky`, and that is not taking it out of the
+    // flow: a sticky element keeps its box and its place in the markup order, so what follows is
+    // laid out beneath it rather than under it and nothing is reordered. It is still an element
+    // that passes over the content, so it is admitted once, for the bar, and a second use is a
+    // decision rather than a precedent.
+    it('pins nothing but the contents bar, per DDR-031', () => {
+      const pinned = rules(css)
+        .filter(({ body }) => /position:\s*sticky/.test(body))
+        .map(({ selector }) => selector);
+
+      expect(pinned).toEqual(name === 'contents.module.css' ? ['.contents'] : []);
     });
   });
 });

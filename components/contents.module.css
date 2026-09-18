@@ -1,34 +1,95 @@
-/* Set apart from the contact links above by twice the flow step, per DDR-006. The first section
-   follows at the section step, from the base styles. The base styles also hide it in print. */
+/*
+ * The contents bar, per DDR-031, which supersedes DDR-010's and DDR-006's rejection of it.
+ *
+ * The design draws it as a full-width band pinned to the top of the frame, above everything else,
+ * with its links inside the page's own column (node 2:6, and its container 2:7). So the surface,
+ * the blur and the hairline are on the band, which spans the viewport, and the column is on the
+ * list inside it — the same two tokens `main` and the footer read, so the first link starts where
+ * the page's text starts at every width.
+ *
+ * `position: sticky` rather than `fixed`, which is the whole of the bar's behaviour and needs no
+ * script: a sticky element stays in the flow and keeps its place in the markup order, so the page
+ * below it is laid out beneath the bar rather than under it, and nothing has to be padded down to
+ * make room. components/stylesheets.test.ts admits it here and refuses `absolute` and `fixed`
+ * everywhere but a pseudo-element, per DDR-031.
+ *
+ * `z-index` because the introduction draws the photo's inner shadow on a positioned pseudo-element
+ * (DDR-021), and a positioned element later in the markup paints over an earlier one at the same
+ * level. It is a layer rather than a length, so there is no token it could read: the bar is the one
+ * thing on the page that is meant to pass over the rest of it, and 1 is the only layer the site
+ * has.
+ *
+ * Paper draws no bar and this file writes no rule for that: app/globals.css hides every `nav` in
+ * print, per DDR-015, which is the one of DDR-010's grounds that never needed answering.
+ */
 .contents {
-  margin-block-start: var(--space-large);
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
+  background-color: var(--color-surface-bar);
+  /* The design's 12px (node 2:6). What passes under the bar is softened rather than hidden, which
+     is what the 96% surface behind this is for. A browser that does not support it draws the
+     surface alone, which is the same bar with a firmer edge. */
+  backdrop-filter: blur(var(--contents-bar-blur));
+  border-block-end: 1px solid var(--color-border);
 }
 
-/* A row that wraps when it runs out of width, so it needs no breakpoint. The row gap is the one
-   measure here the design does not draw, because its bar is one line at one width: measured with
-   the gap off, two 19.5px links land one above the other and their 24px circles come within 22.5px
-   at every viewport from 420px to 490px, which fails WCAG 2.2's 2.5.8 spacing exception. A step of
-   the scale holds them 30.5px apart there and 38px at 320px, per DDR-027. */
+/* The page's column, and the bar's height with it, so the band around it is exactly as tall as the
+   links inside need. The design's 48px is a minimum rather than a fixed height: the five links are
+   one row in its 894px frame and wrap below 390px, and a bar that could not grow would hold
+   them behind its own edge. `align-content` centres the rows when there is more height than they
+   need, as `align-items` centres one row in it.
+
+   The size is set here rather than on the link so that each list item's line is the label's
+   19.5px rather than body text's 22.5px: two wrapped rows then fit inside the design's 48px, and a
+   bar that has to grow grows by less.
+
+   The column gap is the flow step below the wide breakpoint and the design's 28px taken to the
+   nearest step of DDR-013's scale, 32px, from it. The narrow gap is not a preference: at 320px with
+   text at 200%, 32px between "Experience" and "Projects" pushes the links onto four rows, the bar
+   to 229px and every heading the contents move to behind it; at 16px they take three rows, the bar
+   is 150px, and each heading lands 42px below it. The row gap is what keeps two wrapped links
+   outside the circles WCAG 2.2's 2.5.8 measures its spacing exception with, as the row this bar
+   replaces did, per DDR-027. */
 .list {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
   column-gap: var(--space-medium);
   row-gap: var(--space-small);
-  padding-inline-start: 0;
+  min-block-size: var(--contents-bar-height);
+  max-inline-size: var(--content-width);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+  font-size: var(--font-size-x-small);
   list-style: none;
 }
 
-/* A contents link is set as a label, at the step DDR-022 gives every short label the reader acts
-   on, and in the muted ink DDR-025 gives it, where every other link on the page is in the accent.
-   That is the design's, and it is 4.44:1, which fails WCAG 1.4.3; the underline the base styles
-   give every link is untouched, so the colour is not what says this is a link.
+@media (min-width: 48em) {
+  .list {
+    column-gap: var(--space-large);
+  }
+}
 
-   Its box is its text and nothing else, per DDR-027, where DDR-014 padded it to 44px. It stays a
-   flex container so that the box is the whole line the label sets in — 19.5px, which is the
-   design's own 20px — rather than the shorter content area an inline box would give it. */
+/* A contents link is set as a label, at the step DDR-022 gives every short label the reader acts
+   on, which the list above sets. It is in the medium weight the design draws it in, which DDR-030
+   named as missing and left to this story because it rewrites this file, and in the muted ink
+   DDR-025 gives it, where every other link on the page is in the accent. That is the design's, and
+   it is 4.44:1 over the page and never worse than 4.10:1 over the bar, both of which fail WCAG
+   1.4.3.
+
+   The underline the base styles give every link is untouched, so the colour is not what says this
+   is a link. The design draws none, and this is the one thing about the bar that does not follow
+   it: DDR-025 made that call for these links before the bar existed, on the ground that at 4.44:1
+   the colour is the last thing that should have to carry it, and DDR-031 does not reopen it.
+
+   Its box is its text and nothing else, per DDR-027. It stays a flex container so that the box is
+   the whole line the label sets in — 19.5px, which is the design's own 20px — rather than the
+   shorter content area an inline box would give it. */
 .link {
   display: inline-flex;
   align-items: center;
   color: var(--color-text-muted);
-  font-size: var(--font-size-x-small);
+  font-weight: var(--font-weight-medium);
 }

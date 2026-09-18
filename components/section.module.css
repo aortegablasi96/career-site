@@ -19,10 +19,12 @@
  * space stays, which is the boundary a sheet already had.
  */
 .section {
-  /* When the contents move to a section, its opening lands this far below the top of the window
-     rather than against it, per DDR-006. The divider and the space below it are inside the
-     section, so what the reader arrives at is the boundary and then the heading. */
-  scroll-margin-block-start: var(--space-medium);
+  /* When the contents move to a section, its opening lands below the contents bar with the flow
+     step above it rather than against the top of the window, per DDR-006 and DDR-031. That is the
+     root's scroll padding in app/globals.css since DDR-031, which covers keyboard focus as well as
+     the contents; a scroll margin here as well would add the two together. The divider and the
+     space below it are inside the section, so what the reader arrives at is the boundary and then
+     the heading. */
   margin-block-start: var(--space-item);
   border-block-start: 1px solid var(--color-border);
   padding-block-start: var(--space-item);

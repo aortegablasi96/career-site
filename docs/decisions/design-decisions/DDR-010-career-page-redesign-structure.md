@@ -26,6 +26,12 @@ all, and so is the print exception that follows from the old rule — a contact 
 address after itself, now so that `mailto:` stays off the sheet. DDR-029 takes DDR-006's rule with
 it.
 
+**Superseded in part a fourth time by DDR-031**, which takes the bullet below that says the
+contents are "not sticky", and the alternative "Adopt the sticky navigation bar" that it rests on.
+The contents are now the design's bar, pinned to the top of the window, and DDR-031 answers the five
+grounds one at a time. It declines the scroll-triggered shadow, which `career-site-design` does not
+draw, so the fourth ground never arises. Everything else this record says about the contents stands.
+
 **Amended in two respects by DDR-027.** Its bullet requiring every target to be at least 44 by 44
 pixels goes, along with DDR-014's: a target is now the size the design draws it. And its figure for
 the draft's contents links, "about 28px tall", is corrected — in `career-site-design` a link's box
@@ -159,7 +165,8 @@ note; the summary; the availability sentence; then a wrapping row of four contro
 
 * **A `nav` follows the introduction and precedes the first section**, holding one link to each of
   the five sections, laid out as a row that wraps. Each link's text is its section's title.
-* **It is not sticky.** The draft's sticky bar is rejected: it covers content; it needs an opaque or
+* **Superseded by DDR-031: the contents are now a bar pinned to the top of the window.** What this
+  bullet said: **It is not sticky.** The draft's sticky bar is rejected: it covers content; it needs an opaque or
   blurred surface, which is a new surface decision for something carrying no information; its links
   are about 28px tall and not underlined; it duplicates this row; and its scroll-triggered shadow
   needs a scroll listener, which makes it a client component in a statically exported site. It
@@ -337,6 +344,11 @@ Rejected. The draft is a statement of intent, and the brief it was generated fro
 constraints it breaks.
 
 ### Adopt the sticky navigation bar
+
+**Taken, by DDR-031**, which answers each objection below rather than disputing it. The bar replaces
+the row, so it duplicates nothing. The root's scroll padding keeps both the contents links and
+keyboard focus clear of it. Its surface is the design's own, and the link ink's cost on it is
+measured. The shadow is declined, so no client component is needed.
 
 Pros:
 * The contents stay in reach while reading a long page.
