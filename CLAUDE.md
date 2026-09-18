@@ -29,7 +29,7 @@ languages. Its page breaks were rechecked against the finished page for #23, and
 now keeps its heading with its first item on paper, per DDR-015.
 
 **The redesign, Epic #42, is complete.** Every section below is DDR-010's, and its print treatment
-landed under #52. The real media it was still waiting on, #63, moved to Epic #70. The token layer is
+landed under #52. The real media it was still waiting on, #63, moved to Epic #70 and has landed. The token layer is
 the redesign's, under #44: Lora and
 DM Sans, the type scale, the new palette, the wider page column and the second breakpoint are
 all in place, and DDR-011 to DDR-014 supersede DDR-001 to DDR-004. The scale DDR-011 set there is
@@ -90,19 +90,19 @@ Every section is now the redesign's, so DDR-006's entry anatomy and its labelled
 
 Two things about the introduction are worth knowing before changing it:
 
-* **The photo is a placeholder**, as the four project pictures are.
-  `public/andreu-ortega-blasi-photo.webp` and the four `public/project-*.webp` files are flat tinted
-  rectangles — the photo 3:4 and the four media 4:3 — not the owner's portrait and not pictures of
-  anything. The photo's stand-in was recut to 3:4 on #71, which is the ratio #63 crops the real
-  portrait to; since #89 the stylesheet clips that rectangle to a capsule, so the file #63 exports
-  is still 3:4 but its corners are cropped away on the page.
-  Every binary asset this site shows is the owner's to produce, and they
-  have chosen to run on stand-ins meanwhile; #63 replaces them. Replacing the file is the whole of
-  the change: the path and the alternative text in `content/introduction.ts` are written for the
-  real photo. Do not build anything else on the stand-in, do not draw a monogram or a gradient in
-  its place — DDR-010 rejects both — and do not go and capture a picture, which the owner has said
-  they will take themselves. A story that needs media the owner has not supplied, such as #50,
-  commits a blank stand-in the same way and leaves the real file to #63.
+* **The photo and the four project pictures are real since #63.** The owner supplied them and each
+  was cropped once, by hand, to the ratio the page draws — the photo 3:4, the media 4:3 — and saved
+  as WebP, per ADR-004. The project stills are 560 × 420, twice the 280px column. **The photo is
+  300 × 400**, which is all a 3:4 crop of the owner's 400px square original holds: it is sharp
+  everywhere at 1× and up to 150px wide at 2×, and soft on a high-density screen from the wide
+  breakpoint, where DDR-040 draws it up to 300px. A larger original is the fix, and replacing the
+  file is the whole of it. The stylesheet clips the photo to a capsule, so a replacement's corners
+  are cropped away on the page. The five files weigh 110 KB together, each far inside its budget.
+  The owner's full-size originals are kept outside the repository, not in `public/`, because
+  everything in `public/` is copied into the built site. Do not draw a monogram or a gradient in
+  the photo's place — DDR-010 rejects both — and do not capture a picture of the owner or their
+  applications unless they ask; on #63 they asked for this site's own still and supplied the rest.
+  The Digital Twin's demo video was deferred on #63, so that project shows a still.
 * **The photo sits beside the name at every width**, where DDR-010 and the UI Review on #43 put it
   above the name below the wide breakpoint. Measured against the real copy on #48, stacking it left
   the contact controls 2px below the fold of a 390px phone, which is the very thing DDR-010 places
@@ -646,8 +646,8 @@ chose it over two narrower options; a value that fails something is recorded as 
 Two things stay out — the gradient monogram, because #63 supplies a real portrait, and the mobile
 "Sections" toggle, because the design has no narrow view to match.
 
-The earlier audit's nine, #71 to #78 plus #63, are all landed but #63, which is the owner's to
-produce rather than the repository's. **#89 to #97 are the rewritten epic's first nine to land**,
+The earlier audit's nine, #71 to #78 plus #63, have all landed; #63, the real photo and project
+pictures, was last, with the owner supplying the media. **#89 to #97 are the rewritten epic's first nine to land**,
 as DDR-021 to DDR-029.
 
 **#71 has landed, as DDR-016: the photo is 3:4**, not the square it was. `--photo-size` and

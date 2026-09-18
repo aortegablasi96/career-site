@@ -12,11 +12,10 @@ import type { Introduction } from './types';
  * printed CV carries. The labels are the design's own words, and each names a service a reader
  * already knows; they say nothing about the owner, so none of them is a claim.
  *
- * The photo was adopted on Epic #42, reversing the Content Brief's decision against one. The file
- * it names is a plain stand-in until the owner supplies their portrait, and #47 carries what it has
- * to be. Its alternative text is written for the portrait rather than for the stand-in, so that
- * replacing the file is the whole of the change; it is worth reading back against the real photo
- * once it lands.
+ * The photo was adopted on Epic #42, reversing the Content Brief's decision against one, and is the
+ * owner's own portrait since #63. Its alternative text is the owner's name, as a portrait's is: it
+ * identifies who is pictured beside the name, and a reader who never sees it loses nothing, which
+ * `components/introduction.test.tsx` holds.
  */
 export const introduction: Introduction = {
   photo: { file: '/andreu-ortega-blasi-photo.webp', alt: 'Andreu Ortega Blasi' },
