@@ -55,6 +55,16 @@ describe('base styles', () => {
   it('scrolls everything into view below the contents bar, per DDR-031', () => {
     expect(rule(':root')).toMatch(/scroll-padding-block-start:\s*var\(--contents-bar-clearance\);/);
   });
+
+  // DDR-041: a contents link's scroll glides, while ContentsBar marks the root, and only for a reader
+  // who has not asked for less motion. `smooth` on the root itself would animate the back button, a
+  // page opened at a #fragment and every scroll keyboard focus causes as well.
+  it('scrolls smoothly only while a contents link has marked the root, and only when motion is welcome, per DDR-041', () => {
+    expect(declarations).toMatch(
+      /@media \(prefers-reduced-motion: no-preference\)\s*\{\s*:root\[data-gliding\]\s*\{\s*scroll-behavior:\s*smooth;\s*\}\s*\}/,
+    );
+    expect(declarations.match(/scroll-behavior:/g)).toHaveLength(1);
+  });
 });
 
 // DDR-011 switches off every font feature that would substitute a glyph no character maps to,

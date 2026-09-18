@@ -8,6 +8,10 @@ Applies ADR-001's rule that "`'use client'` requires a reason" for the first tim
 reason. It supersedes nothing: Server Components stay the default, no client-side library is
 added, and the site stays a static export.
 
+**Amended in part by ADR-008**: the component no longer "knows the scroll position and nothing
+else". It also handles a click on its own links, so that a contents link's scroll is smooth, per
+DDR-041. It is still the one Client Component, and everything else here stands.
+
 ## Context
 
 Issue #114 adopts the design's scroll-triggered edge on the contents bar: while the reader is at the

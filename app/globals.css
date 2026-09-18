@@ -26,6 +26,23 @@
   scroll-padding-block-start: var(--contents-bar-clearance);
 }
 
+/* A contents link glides to its section rather than jumping to it, per DDR-041, so the reader sees
+   the page move past and keeps their place on it. It is the browser's own fragment navigation made
+   smooth, so the address bar, the history entry and where keyboard focus starts from next are what
+   they were, and the section still comes to rest at the clearance above.
+
+   Only while `ContentsBar` marks the root, from a contents link's click until its scroll starts,
+   rather than on the root at all times: `smooth` there would also animate the back button, a page
+   opened with a `#fragment` and every scroll that keyboard focus causes, as measured in Edge
+   and Firefox, and the story asks for none of them. Written as the preference for motion rather
+   than as its absence, as every transition on the site is, so a reader who has asked for less
+   motion gets the jump, and so does a browser that does not know the query. */
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-gliding] {
+    scroll-behavior: smooth;
+  }
+}
+
 body {
   /* The browser's 8px default is not on the spacing scale. The page gutter, on main, replaces
      it. */

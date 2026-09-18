@@ -13,10 +13,11 @@ import styles from './contents.module.css';
  * `content/`, beside the section's own title, per ADR-002, and the section's accessible name is
  * still taken from its `h2` rather than from here.
  *
- * It renders no state of its own: nothing marks the current section. The one thing about the bar
- * that follows the page is its edge — a hairline and a shadow drawn once the page has scrolled, per
- * DDR-034 — and that is `ContentsBar`'s, the one Client Component on the site, per ADR-007. This
- * stays a Server Component and hands it the list as children, so only the band is client code.
+ * It renders no state of its own: nothing marks the current section. What the bar does in the
+ * browser — its edge, a hairline and a shadow drawn once the page has scrolled, per DDR-034, and
+ * the glide a link starts, per DDR-041 — is `ContentsBar`'s, the one Client Component on the site,
+ * per ADR-007 and ADR-008. This stays a Server Component and hands it the list as children, so only
+ * the band is client code.
  *
  * With no sections there is nothing to list, so nothing renders.
  */

@@ -511,17 +511,19 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001 to ADR-007 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
+ADR-001 to ADR-008 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
 separate CV file, and ADR-005 superseding the part of ADR-004 that makes the CV a PDF saved from the
 page's print output; the rest of both records stands. ADR-006 supersedes nothing: it refines
 ADR-001's styling boundary by saying which literal values a component stylesheet may write: `0`,
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. ADR-007 supersedes
 nothing either: it is the first time ADR-001's "`'use client'` requires a reason" is met, and it
 records the reason — the contents bar has to know how far the page has scrolled — and is not a
-precedent for the next one. The next ADR is `008`.
+precedent for the next one. ADR-008 amends ADR-007 in one respect: the same component also handles
+a click on its own links, so that a contents link's scroll is smooth, per DDR-041. It is still the
+one Client Component. The next ADR is `009`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-040. The next DDR is
-`041`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-041. The next DDR is
+`042`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Fifteen accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -1070,8 +1072,8 @@ owner chose over the design's.
 Four things about it are worth knowing before touching it.
 
 * **`components/contents-bar.tsx` is the site's only Client Component**, per ADR-007. It renders the
-  `nav` and reads `window.scrollY` through `useSyncExternalStore` with a passive listener, and knows
-  nothing else. `Contents` stays a Server Component and hands it the list as `children`. Its two
+  `nav` and reads `window.scrollY` through `useSyncExternalStore` with a passive listener. Since
+  #132 it also handles its links' clicks, per ADR-008, below. `Contents` stays a Server Component and hands it the list as `children`. Its two
   functions are tested in Node against a stubbed `window`, so there is still no DOM environment.
 * **Only the hairline's colour changes, never its width**, so the bar is 49px in both states and
   nothing below it moves. The transition is written inside `prefers-reduced-motion: no-preference`.
@@ -1080,6 +1082,24 @@ Four things about it are worth knowing before touching it.
 * **Check it against a server that sends `charset=utf-8`.** Python's `http.server` sends JavaScript
   without one, Firefox then decodes the chunks wrongly and never hydrates, and the bar never gains
   its edge. GitHub Pages sends the charset. This is a local artefact, not a fault in the site.
+
+**#132 has landed, as DDR-041 and ADR-008: a contents link glides to its section.** Only the scroll
+the link starts is smooth. `ContentsBar`'s `onClick` calls `glide`, which sets `data-gliding` on
+the root, and `app/globals.css` turns `:root[data-gliding]` into `scroll-behavior: smooth` inside
+`prefers-reduced-motion: no-preference`. The first `scroll` event removes the attribute, and a 250ms
+fallback removes it when the click scrolls nothing.
+
+Three things about it are worth knowing before touching it.
+
+* **`smooth` on the root at all times is the tempting fix, and it is wrong here.** Measured in Edge
+  and Firefox, it also animates the back button, a page opened at a `#fragment`, and every scroll
+  that keyboard focus causes. The story rules out all three.
+* **The browser still follows the link.** Nothing is cancelled or scrolled from script, so the
+  address, the history entry, where the next Tab starts from, and where the section comes to rest
+  (DDR-031's clearance) are exactly what they were. Measured against the tree before, every final
+  position matched in both browsers at 320px and 1280px.
+* **Do not replace the scroll listener with a timer or a frame count.** Firefox starts the scroll a
+  frame or two after the click, and one frame lost the glide in one click in three.
 
 **#115 has landed, as DDR-035: every link and control answers the pointer.** A contact pill takes
 `--color-surface-hover` and `--color-border-accent-hover`, the CV control darkens to
