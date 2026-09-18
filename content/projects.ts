@@ -13,17 +13,14 @@ const liveSite = 'Live site';
  * repository, and each live address is the one recorded on its repository. Descriptions are
  * CV-style, without pronouns.
  *
- * Each project gained its media on #50, per DDR-010. The files they name are plain stand-ins until
- * the owner supplies the real pictures, and #63 carries what each has to be: a picture of the
- * application itself running, rather than a logo or a landing page. The alternative text is
- * written for that picture rather than for the stand-in, so that replacing the file is the whole of
- * the change, as it is for the photo in `content/introduction.ts`; it says only what #63 requires
- * every one of them to show, and is worth reading back against each real picture once it lands.
+ * Each project gained its media on #50, per DDR-010, and since #63 each is a picture of the
+ * application itself running, supplied by the owner and cropped to 4:3. The alternative text says
+ * what each picture shows, so a reader who cannot see it learns what a sighted reader does; it
+ * leaves out the figures on screen, which are the application's data rather than the project.
  *
- * The Digital Twin's demo video, which DDR-010 gives it in place of a still, is outstanding on #63
- * along with the pictures. `Video` is the shape it takes and `components/projects.tsx` renders it;
- * until the file exists the project falls back to a still, which #63's third acceptance criterion
- * already allows for.
+ * The Digital Twin's demo video, which DDR-010 gives it in place of a still, has not been recorded,
+ * and #63 deferred it. `Video` is the shape it takes and `components/projects.tsx` renders it; until
+ * the file exists the project shows a still of the chatbot, as #63 allows.
  */
 export const projects: Projects = {
   title: 'Projects',
@@ -31,7 +28,7 @@ export const projects: Projects = {
   projects: [
     {
       name: 'NumisBook',
-      media: { file: '/project-numisbook.webp', alt: 'The NumisBook application running' },
+      media: { file: '/project-numisbook.webp', alt: 'NumisBook showing a coin’s record: its details beside a photograph of a silver denarius inscribed EID MAR, with the coin’s invoice below' },
       technologies: ['Next.js', 'TypeScript', 'PostgreSQL on Neon', 'OpenAI', 'Vercel', 'Cloudflare R2'],
       description:
         'A SaaS application for managing a coin collection, with an AI assistant that helps manage it and automates tasks such as adding a new coin. Built end to end with Claude Code, whose workflow, execution, governance, and project-management skills work as a simulated product team across the whole development pipeline, through to production.',
@@ -42,7 +39,7 @@ export const projects: Projects = {
     },
     {
       name: 'Digital Twin',
-      media: { file: '/project-digital-twin.webp', alt: 'The Digital Twin chatbot running' },
+      media: { file: '/project-digital-twin.webp', alt: 'The Digital Twin as Andreu’s Career Bot in a chat, introducing itself, suggesting questions to ask, and answering which roles fit Andreu’s experience' },
       technologies: ['LangGraph', 'OpenAI Agents SDK', 'Chroma', 'Cohere', 'FastAPI', 'Next.js'],
       description:
         'A chatbot that answers questions about the career on this page, in the visitor’s language. Demonstrates an agentic RAG system: several agents filter each question, retrieve the documents, write a professional answer, and send push notifications, while semantic vector search and BM25 lexical search run concurrently and are reranked with Cohere for precision.',
@@ -53,7 +50,7 @@ export const projects: Projects = {
     },
     {
       name: 'Stock Portfolio Viewer',
-      media: { file: '/project-stock-portfolio-viewer.webp', alt: 'The Stock Portfolio Viewer application running' },
+      media: { file: '/project-stock-portfolio-viewer.webp', alt: 'The Stock Portfolio Viewer’s Allocation view: the invested value, the number of positions and the largest holding, above a world map with donut charts for each country' },
       technologies: ['Electron', 'React', 'TypeScript', 'SQLite', 'OpenAI'],
       description:
         'A local desktop application for analysing a personal stock portfolio from an Interactive Brokers account, with an AI assistant that gives feedback on it, in which every figure is computed by the application and only phrased by the model. Built with Claude Code skills and MCP servers, including shadcn’s, working from a Figma design.',
@@ -61,7 +58,7 @@ export const projects: Projects = {
     },
     {
       name: 'This site',
-      media: { file: '/project-career-site.webp', alt: 'This site running in a browser' },
+      media: { file: '/project-career-site.webp', alt: 'This site’s introduction: the owner’s photo, name, positioning line and summary, above the contact and CV controls' },
       technologies: ['Next.js', 'TypeScript', 'CSS Modules', 'GitHub Pages'],
       description:
         'A career site that is also its own printed CV. Built with Claude Code through a skill-driven workflow, in which a content strategist, a UI designer, an architect, builders, and a tester are each a skill, and every significant design and architecture decision is recorded.',
