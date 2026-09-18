@@ -27,6 +27,7 @@ const liveSite = 'Live site';
  */
 export const projects: Projects = {
   title: 'Projects',
+  link: 'Projects',
   projects: [
     {
       name: 'NumisBook',

@@ -11,6 +11,7 @@ import type { Experience } from './types';
  */
 export const experience: Experience = {
   title: 'Experience',
+  link: 'Experience',
   roles: [
     {
       title: 'Global Product Specialist, Digital Solutions',

@@ -25,8 +25,19 @@ describe('HomePage', () => {
     expect(html).not.toContain('This site is being built');
   });
 
-  it('lists the experience section in the contents, and follows them with it', () => {
-    expect(html).toMatch(/<nav [^>]*>.*<a href="#experience"[^>]*>Experience<\/a>.*<\/nav><section id="experience"/);
+  // DDR-031: the contents are a bar pinned to the top of the window, so they come first, before
+  // main, rather than between the introduction and the first section.
+  it('opens with the contents bar, ahead of the main landmark', () => {
+    expect(html).toMatch(/<nav [^>]*>.*<a href="#experience"[^>]*>Experience<\/a>.*<\/nav><main>/);
+  });
+
+  // DDR-031: each link shows the design's word, stated beside its section's heading in content/.
+  it('labels each contents link with its section’s own link word, not always its heading', () => {
+    const nav = html.match(/<nav [\s\S]*?<\/nav>/)?.[0] ?? '';
+    const words = [...nav.matchAll(/<a [^>]*>([^<]+)<\/a>/g)].map(([, word]) => word);
+
+    expect(words).toEqual(['Experience', 'Projects', 'Skills', 'Education', 'Languages']);
+    expect(html).toMatch(/<h2 id="education-title"[^>]*>Education and certifications<\/h2>/);
   });
 
   it('lists every section in the contents, in the order the Content Brief sets', () => {

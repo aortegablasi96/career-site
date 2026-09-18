@@ -10,6 +10,11 @@ so the glow is now the accent's own hue rather than a near neighbour of it. Ever
 stands, including the glow's 1.17:1 and its 10.8 ΔE, and so does the argument for measuring a
 coloured light by hue rather than by luminance.
 
+**Amended by DDR-031 in one respect**: the stylesheet rule this record narrowed, which lets nothing
+but a pseudo-element leave the flow, now admits `position: sticky` once, on the contents bar. A
+sticky element keeps its box and its place in the markup order, so it reorders nothing. `absolute`
+and `fixed` are still refused everywhere but a pseudo-element.
+
 **Supersedes DDR-016**, the profile photo's shape, which settled the photo at 3:4 at
 `--radius-large` and rejected the design's rounding outright. The ratio and the two widths DDR-016
 sets carry forward unchanged, and so does everything it says about cropping, about `object-fit` and

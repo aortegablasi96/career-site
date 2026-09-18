@@ -17,6 +17,13 @@
   /* Every rem is measured from here: the reader's own setting on screen, and a size suited to paper
      in print, per DDR-005. */
   font-size: var(--root-font-size);
+  /* The contents bar is pinned to the top of the window, per DDR-031, so whatever the page scrolls
+     into view has to land below it rather than behind it: a section the contents move to, and an
+     element that takes keyboard focus above the window's top edge, which would otherwise be hidden
+     under the bar and fail WCAG 2.4.11. On the scroll container rather than on each section, so
+     both are covered by one declaration. The clearance is the bar's height plus the flow step,
+     which is the space DDR-006 kept above a heading scrolled to. */
+  scroll-padding-block-start: var(--contents-bar-clearance);
 }
 
 body {

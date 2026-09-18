@@ -153,8 +153,7 @@ Tooling notes that are easy to trip over:
 * **Fonts** are Lora and DM Sans, per DDR-011, with DDR-023 deciding which elements take which:
   Lora is `h1` and `h2` alone, and everything else — including `h3` to `h6`, which are the item
   titles — is DM Sans. Which elements take **medium** is DDR-030's since #109: the positioning line,
-  the four pill controls and the technology tags. The contents links are the one element the design
-  draws in medium that the page does not, and #98 takes them with the rest of that component. They are committed
+  the four pill controls and the technology tags, and since #98 the contents links, per DDR-031. They are committed
   to `app/fonts/`, with their licences, and loaded by `next/font/local` in `app/layout.tsx`, so
   builds need no network access for fonts. Each is one static file per weight and style, not a
   variable font: Firefox draws variable fonts as outlines when it saves a PDF, so the printed CV's
@@ -222,7 +221,8 @@ every shadow put out — so changing a token means revising its decision record 
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
 component stylesheet to the same rules: tokens only — sizes, spaces, tracking since DDR-017 and
 `box-shadow` since DDR-020 —
-no reordering, nothing but a pseudo-element taken out of the flow since DDR-021, and no width media
+no reordering, nothing but a pseudo-element taken out of the flow since DDR-021, `position: sticky`
+on the contents bar alone since DDR-031, and no width media
 query but
 the wide breakpoint, which DDR-015 lets a component extend to paper as `(min-width: 48em), print`
 and no further. **ADR-006 says which literals it admits**: `0`, `auto` and `none` anywhere,
@@ -511,8 +511,8 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-030. The next DDR is
-`031`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-031. The next DDR is
+`032`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Eleven accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -526,7 +526,8 @@ at the section concerned:
   the bullet this record calls "not negotiable", which makes each contact pill's text its address:
   the pills carry the design's labels and DDR-028's footer carries the addresses. The print
   exception that followed from the old rule survives — a contact link still prints no address after
-  itself.
+  itself. DDR-031 takes its "It is not sticky": the contents are the design's pinned bar, and
+  DDR-031 also amends DDR-021's out-of-flow rule, DDR-025's opaque palette and DDR-030's open item.
 * **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
   rule and its rule that nothing scrolls horizontally from 320px. DDR-027 takes its 44 by 44 pixel
   minimum target, and `--target-size-min` with it. The one sentence of that bullet which survives is
@@ -539,7 +540,7 @@ at the section concerned:
   about which elements take which face. DDR-030 corrects the one row of its weight table that was
   wrong in both directions: the medium row named the contents links and the tags, neither of which
   had the weight, and left out the CV control, which did. It now names the positioning line, the
-  four pill controls and the tags; the contents links are #98's.
+  four pill controls and the tags. DDR-031 adds the contents links, which were #98's.
 * **DDR-011** is superseded twice over. DDR-022 takes its type scale and its 13px floor; DDR-023
   takes which elements each typeface is used on, the three weights, the four files and the
   no-italics rule. What DDR-011 is still the record to read for is the two faces themselves and
@@ -990,6 +991,38 @@ DDR-018 blamed a weight above 400 for a split word, DDR-024 showed tracking was 
 is the only tracked text this touches — at +0.025em, well below the +0.1em where the badge splits.
 Swept every 10px from 300px to 900px at both text sizes, no pair of targets fails WCAG 2.5.8.
 
+**#98 has landed, as DDR-031: the contents are the design's bar, pinned to the top of the window.**
+`components/contents.tsx` renders the `nav` **before `main`**, so `app/page.tsx` now returns the bar,
+`main` and the footer. The bar is `position: sticky` over `--color-surface-bar`, which is the page's
+off-white at 96%, with a `--contents-bar-blur` backdrop blur and a `--color-border` hairline. Its
+links sit in the page's own column, in medium, at least `--contents-bar-height` (48px) tall. It is
+still a Server Component: the design's scroll-triggered shadow is declined, because
+`career-site-design` does not draw one, so no ADR was needed.
+
+Five things about it are worth knowing before touching it.
+
+* **Each link's word lives in its section's content module**, as `link`, beside `title`. The fourth
+  reads "Education" while its heading reads "Education and certifications", and the section still
+  takes its accessible name from its `h2`. The CV digest moved for this; no ADR-005 fact did.
+* **The clearance is the root's `scroll-padding-block-start`, not a section's `scroll-margin`.**
+  `--contents-bar-clearance` is the bar's height plus the flow step, and on the root it covers
+  keyboard focus as well as the contents links, which is WCAG 2.4.11. A section now writes no scroll
+  margin, because the two would add up.
+* **The column gap is 16px below the wide breakpoint and 32px from it**, where the design has 28px.
+  With 32px at 320px and 200% text, the links take four rows, the bar is 229px and headings end up
+  behind it. The font size is set on the list rather than on the link, so each row is 19.5px and two
+  rows fit the 48px bar. Any new label or section changes the wrapping, so rerun DDR-031's sweep.
+* **The links keep their underline**, which DDR-025 decided and DDR-031 does not reopen. Their ink is
+  4.44:1 on the page and as low as 4.10:1 on the bar.
+* **`z-index: 1` is the site's only z-index.** Without it, the photo's positioned inner shadow would
+  paint over the bar.
+
+Measured every 10px from 300px to 900px and at 1280px and 1536px, at both text sizes: nothing
+scrolls sideways, no pair of targets fails 2.5.8, and no focused element is ever wholly behind the
+bar. Every heading the contents reach clears the bar from 320px up. At 300px and 310px with 200%
+text it does not, which is below DDR-014's floor and recorded as a risk. Print is untouched in
+mechanism, because `nav` is hidden, and the sheet was not printed to PDF on this story; that is #99's.
+
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the
 accessibility tree and cannot reach the accessible name the section takes from its heading. It is a
@@ -1087,8 +1120,9 @@ Three things about it are worth knowing before touching it.
   the darkening cleared no longer exists.
 * **The ink is deliberately not in the palette.** Every colour token is an opaque hex, and this one
   is translucent black, which is wrong on text, on a border and on a surface. It lives inside
-  `--shadow-raised` rather than beside the colours, and `app/tokens.test.ts` holds the palette opaque
-  so it stays the only translucency in the file.
+  `--shadow-raised` rather than beside the colours, and `app/tokens.test.ts` holds every ink opaque.
+  Since DDR-031 the palette has one translucent colour, and it is a surface, not an ink: the
+  contents bar's `--color-surface-bar`.
 * **Paper draws no shadow**, by `--shadow-raised: none` in the print block rather than by a rule in
   either component — the same mechanism DDR-015 uses for the surfaces. Checked by printing with
   background graphics on, which is the only way a browser prints a shadow at all: no grey band on any

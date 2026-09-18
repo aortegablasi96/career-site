@@ -39,6 +39,13 @@ describe('base styles', () => {
   it('sets no literal colour, only tokens', () => {
     expect(globals).not.toMatch(/#[\da-f]{3,8}\b|rgba?\(|hsla?\(/i);
   });
+
+  // DDR-031 pins the contents bar to the top of the window. Whatever the page scrolls into view — a
+  // section the contents move to, or an element taking keyboard focus — lands below it rather than
+  // behind it, which is WCAG 2.4.11 for focus.
+  it('scrolls everything into view below the contents bar, per DDR-031', () => {
+    expect(rule(':root')).toMatch(/scroll-padding-block-start:\s*var\(--contents-bar-clearance\);/);
+  });
 });
 
 // DDR-011 switches off every font feature that would substitute a glyph no character maps to,

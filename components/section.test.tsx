@@ -56,6 +56,12 @@ describe('Section', () => {
   // DDR-026 supersedes DDR-010's rejection of the design's divider. It is a border on the section
   // it opens, so it is never in the accessibility tree and section.tsx renders nothing for it —
   // which the landmark test above already holds, by refusing an <hr>.
+  // DDR-031 clears the contents bar with the root's scroll padding, which already includes the flow
+  // step DDR-006 kept here. A scroll margin on the section as well would add the two together.
+  it('leaves the space it lands below the contents bar to the root, per DDR-031', () => {
+    expect(css).not.toMatch(/scroll-margin/);
+  });
+
   it('draws the divider above the section as a border, per DDR-026', () => {
     expect(css).toMatch(/\.section\s*\{[^}]*border-block-start:[^;]*var\(--color-border\);/);
   });

@@ -16,6 +16,8 @@ const upc = 'Universitat Politècnica de Catalunya';
  */
 export const credentials: Credentials = {
   title: 'Education and certifications',
+  // The design's shorter word for the contents bar, per DDR-031. The heading keeps its full name.
+  link: 'Education',
   credentials: [
     {
       name: 'PMI Certified Professional in Managing AI (PMI-CPMAI)',
