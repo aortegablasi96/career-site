@@ -133,10 +133,37 @@ describe('timeline styles', () => {
   });
 
   it('draws the spine in the indigo hairline, which may carry no information, per DDR-025', () => {
-    expect(rule('.dot')).toMatch(/inline-size:\s*var\(--timeline-dot-size\);/);
-    expect(rule('.dot')).toMatch(/background-color:\s*var\(--color-border-accent\);/);
     expect(rule('.line')).toMatch(/inline-size:\s*var\(--timeline-line-width\);/);
     expect(rule('.line')).toMatch(/background-color:\s*var\(--color-border-accent\);/);
+    expect(rule('.lead')).toMatch(/inline-size:\s*var\(--timeline-line-width\);/);
+    expect(rule('section > .row .lead')).toMatch(/background-color:\s*var\(--color-border-accent\);/);
+  });
+
+  // DDR-036: the design's ringed marker, node 2:260 — a circle in the page's surface, ringed in the
+  // line's tint, with an accent core at its centre.
+  it('marks each row with the design’s ringed dot and its accent core, per DDR-036', () => {
+    const dot = rule('.dot');
+
+    expect(dot).toMatch(/inline-size:\s*var\(--timeline-dot-size\);/);
+    expect(dot).toMatch(/block-size:\s*var\(--timeline-dot-size\);/);
+    expect(dot).toMatch(/border:\s*var\(--timeline-dot-ring\) solid var\(--color-border-accent\);/);
+    expect(dot).toMatch(/background-color:\s*var\(--color-surface\);/);
+
+    const core = rule('.dot::before');
+
+    expect(core).toMatch(/inline-size:\s*var\(--timeline-dot-core\);/);
+    expect(core).toMatch(/block-size:\s*var\(--timeline-dot-core\);/);
+    expect(core).toMatch(/background-color:\s*var\(--color-accent\);/);
+  });
+
+  // DDR-036: one line from the first dot to the last. The lead brings the dot level with the
+  // title's first line and, below the first row, joins the line the row above sends down; nothing
+  // holds the pieces apart.
+  it('runs one unbroken line through the dots, from the first to the last', () => {
+    expect(role).toMatch(/<span class="[^"]*lead[^"]*"><\/span><span class="[^"]*dot[^"]*"><\/span><span class="[^"]*line[^"]*"><\/span>/);
+    expect(rule('.lead')).toMatch(/block-size:\s*var\(--timeline-dot-offset\);/);
+    expect(rule('.lead')).not.toMatch(/background/);
+    expect(rule('.spine', wide)).not.toMatch(/gap|padding/);
   });
 
   // DDR-025: the design sets a place in #94a3b8 where it sets a company in #64748b, so the place

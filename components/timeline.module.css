@@ -87,15 +87,48 @@ section > .row {
   display: none;
 }
 
+/* The dot is the design's ringed marker, per DDR-036 (node 2:260): a circle in the page's own
+   surface, a 3px ring of the line's tint around it, and an accent core at its centre. The surface
+   is what lets the line pass behind the dot rather than through it, and the core is what makes the
+   dot a stop on the path rather than a bead on it. The ring is a border, so it takes space the way
+   the design's ring does not; the offset above the dot, which is measured with the ring in it,
+   accounts for that. The core is a pseudo-element, so the spine gains no element for it. */
 .dot {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
   inline-size: var(--timeline-dot-size);
   block-size: var(--timeline-dot-size);
+  border: var(--timeline-dot-ring) solid var(--color-border-accent);
   border-radius: var(--radius-pill);
+  background-color: var(--color-surface);
+}
+
+.dot::before {
+  content: '';
+  inline-size: var(--timeline-dot-core);
+  block-size: var(--timeline-dot-core);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-accent);
+}
+
+/* The line coming down into the dot. It is the space that brings the dot level with the centre of
+   the title's first line, and in every row but the first it is also the end of the line the row
+   above sends down, so the two meet at the ring with no break between them. The first row's is
+   left undrawn, because the line starts at the first dot, per DDR-036. */
+.lead {
+  flex: none;
+  inline-size: var(--timeline-line-width);
+  block-size: var(--timeline-dot-offset);
+}
+
+section > .row .lead {
   background-color: var(--color-border-accent);
 }
 
-/* The line fills whatever the dot leaves of the row, which reaches through the padding below the
-   content to the next row's dot. */
+/* The line leaving the dot fills whatever the dot leaves of the row, which reaches through the
+   padding below the content to the top of the next row, where that row's lead takes it on. */
 .line {
   flex: 1;
   inline-size: var(--timeline-line-width);
@@ -103,9 +136,10 @@ section > .row {
 }
 
 /* The last row in a section has no next row to reach, so it adds no space below itself and draws
-   no line, per DDR-010. The first row is inside the block the section keeps whole with its
-   heading, so it is the last child of that block rather than of the section: naming the section is
-   what tells the two apart. */
+   no line past its dot, per DDR-010 and DDR-036. The first row is inside the block the section
+   keeps whole with its heading, so it is the last child of that block rather than of the section:
+   naming the section is what tells the two apart. The same is why `section > .row` above draws
+   the lead in every row but the first. */
 section > .row:last-child .content {
   padding-block-end: 0;
 }
@@ -116,8 +150,10 @@ section > .row:last-child .line {
 
 /* From here the row is the timeline's three columns, per DDR-010. This is the one width a
    component may write, per DDR-014, and paper takes it too, per DDR-015: a sheet is a wide surface,
-   and DDR-010 prints the dates in the date column. The spine keeps its column there but is not
-   drawn, because print makes the decoration colour transparent. */
+   and DDR-010 prints the dates in the date column. The spine keeps its column there, but its
+   line, its ring and the surface inside the ring are hairline and surface tokens, which print makes
+   transparent. The accent core is not, so each entry keeps a small accent dot beside its title on
+   paper, per DDR-036, as it keeps its accent dates. */
 @media (min-width: 48em), print {
   .row {
     display: grid;
@@ -137,15 +173,10 @@ section > .row:last-child .line {
     text-align: end;
   }
 
+  /* The three pieces of the spine stack with no space between them, so the line is unbroken. */
   .spine {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* The clear space the UI Review draws around the dot as a ring, at the smallest step of the
-       spacing scale. The line stops at it rather than running behind it, so the page shows through
-       and the dot reads as a stop on the path rather than a bead on a string. */
-    gap: var(--space-x-small);
-    /* Enough to bring the dot onto the first line of the title beside it. */
-    padding-block-start: var(--space-x-small);
   }
 }

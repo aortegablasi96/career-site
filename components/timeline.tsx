@@ -17,7 +17,9 @@ import styles from './timeline.module.css';
  *
  * The spine carries no information — it draws the path from one row to the next, and removing it
  * would lose nothing — so it is hidden from assistive technology, and below the wide breakpoint it
- * is not rendered at all.
+ * is not rendered at all. It is three pieces, per DDR-036: the line coming down into the dot from
+ * the row above, the ringed dot, and the line leaving it for the row below. Joined across the rows,
+ * they are one line from the first dot to the last with a stop at each entry.
  *
  * Each row is an article, which print keeps whole, so no role and no credential is split across two
  * pages.
@@ -47,6 +49,7 @@ export function TimelineRow({
         {place && <MetadataLine parts={[place]} />}
       </div>
       <div className={styles.spine} aria-hidden="true">
+        <span className={styles.lead} />
         <span className={styles.dot} />
         <span className={styles.line} />
       </div>

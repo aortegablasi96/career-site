@@ -45,7 +45,10 @@ the pill shows, and `text`, which is the address and which only the footer shows
 a credential share one pattern, per DDR-010, and `components/timeline.tsx` is it. A row is one
 `article`: below the wide breakpoint a single column with its dates, and a role's place, above the
 title, and from the breakpoint a three-column grid of a date column, a decorative spine, and the
-content. The spine is `aria-hidden` and not rendered at all below the breakpoint. The space between
+content. The spine is `aria-hidden` and not rendered at all below the breakpoint. Since #116, per
+DDR-036, each row's spine is three pieces — a lead line down into the dot, the design's ringed dot
+with its accent core, and the line leaving it — so the rows join into one unbroken line from the
+first dot to the last; the first row's lead is left undrawn. The space between
 two rows is padding at the foot of the content column rather than a margin between the rows, so the
 spine's line runs through it to the next dot; the last row in a section, which
 `timeline.module.css` finds as `section > .row:last-child`, drops both. `--timeline-*` in
@@ -513,8 +516,8 @@ nothing either: it is the first time ADR-001's "`'use client'` requires a reason
 records the reason — the contents bar has to know how far the page has scrolled — and is not a
 precedent for the next one. The next ADR is `008`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-035. The next DDR is
-`036`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-036. The next DDR is
+`037`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Thirteen accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -531,6 +534,7 @@ at the section concerned:
   itself. DDR-035 takes its "Hover thickens the underline": hover changes colour instead.
   DDR-031 takes its "It is not sticky": the contents are the design's pinned bar, and
   DDR-031 also amends DDR-021's out-of-flow rule, DDR-025's opaque palette and DDR-030's open item.
+  DDR-036 amends its spine: a ringed dot on one unbroken line.
 * **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
   rule and its rule that nothing scrolls horizontally from 320px. DDR-027 takes its 44 by 44 pixel
   minimum target, and `--target-size-min` with it. The one sentence of that bullet which survives is
@@ -576,7 +580,9 @@ at the section concerned:
   10% black, because the hairlines the 22% was measured against no longer exist.
 * **DDR-025** keeps everything but one bullet: DDR-033 takes its ruling that the contents links keep
   their underline. Every other link still has one. DDR-035 amends it too: five hover and underline
-  colours join the palette, and its four failing pairings become six.
+  colours join the palette, and its four failing pairings become six. DDR-036 adopts the ringed
+  timeline dot it kept as structure, and withdraws its claim that the design has no experience
+  spine, which misread the file.
 * **DDR-031** keeps everything but its links' underline, which DDR-033 takes, per #113, and its
   declined scroll-triggered edge, which DDR-034 adopts, per #114, with its hairline row and its
   shadow row.
@@ -803,7 +809,9 @@ Six things about it are worth knowing before touching colour anywhere.
   (node 2:296). Three differences found on this story are **structure rather than colour and stay**:
   the design's timeline dot is a `#4f46e5` core in a `#c7d2fe` ring on the page's own surface
   (node 2:637) where the page draws one disc; the design draws **no spine at all** in the experience
-  section (node 2:99 is empty) where the page draws it in both; and the contents bar's border is
+  section (node 2:99 is empty) where the page draws it in both — **both since settled by #116**, as
+  DDR-036: the dot is now the design's, and the "no spine" reading was wrong, because the spine is
+  its own node, 2:89; and the contents bar's border is
   transparent in the design (node 2:6), not the `#e2e8f0` the issue gives it — the bar is #98's.
 
 Measured on the built page at 1536px and 320px: every value above matches the design node for node,
@@ -1073,6 +1081,22 @@ Four things about it are worth knowing before touching a link.
   resting underline at 1.86:1. `app/tokens.test.ts` holds six failures by name now.
 * **Paper is unchanged.** The hover fill and border drop at the token layer, and the projects' print
   block puts the underline back in the link's own ink with the browser's offset.
+
+**#116 has landed, as DDR-036: each timeline entry is marked by the design's ringed dot, on one
+continuous line.** A 12px circle in the page's surface, ringed by 3px of `--color-border-accent`,
+with a 6px `--color-accent` core drawn by `.dot::before`. Three tokens join the timeline's:
+`--timeline-dot-core`, `--timeline-dot-ring` and `--timeline-dot-offset`.
+
+Three things about it are worth knowing before touching it.
+
+* **The offset is arithmetic on the title, not a number.** `--timeline-dot-offset` is half of what
+  an item title's line — `--font-size-item-title` times `--line-height-heading` — leaves once the
+  dot and its ring are taken out, so the dot stays level with the title's first line as text grows.
+  It is 0 at the default size. Changing either of those tokens, as #118 may, moves the dot with it.
+* **The line ends at the last dot**, as #116 and DDR-010 ask, where node 2:89 carries it on to the
+  foot of the last row. DDR-036 records it as the one place the page stays short of the file.
+* **The core prints; the ring, the line and the surface inside the ring do not**, all at the token
+  layer. Each printed entry keeps a 6px accent dot beside its title.
 
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the

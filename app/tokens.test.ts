@@ -595,8 +595,35 @@ describe('spacing tokens', () => {
     expect(token('timeline-line-width')).toBe('2px');
   });
 
+  // DDR-036: the design's ringed marker, node 2:260 — a 6px core at the centre of the 12px circle,
+  // and a 3px ring around it. The core grows with the circle; the ring is a hairline, as the line
+  // it joins is.
+  it('draws the dot’s core at half the dot, and its ring as a hairline in px, per DDR-036', () => {
+    expect(token('timeline-dot-core')).toBe('0.375rem');
+    expect(rem(token('timeline-dot-core')!) * 2).toBe(rem(token('timeline-dot-size')!));
+    expect(token('timeline-dot-ring')).toBe('3px');
+  });
+
+  // The dot's centre is the centre of the title's first line, which is an item title set at the
+  // heading's leading, so the offset is measured from those two and not from a number of its own.
+  it('sets the dot level with the title’s first line, from the title’s own size and leading', () => {
+    const offset = token('timeline-dot-offset')!.replace(/\s+/g, ' ');
+
+    expect(offset).toContain('var(--font-size-item-title) * var(--line-height-heading)');
+    expect(offset).toContain('var(--timeline-dot-size)');
+    expect(offset).toContain('var(--timeline-dot-ring)');
+  });
+
   it('lays the timeline out in the components rather than here, so the wide breakpoint stays theirs', () => {
-    for (const name of ['timeline-date-width', 'timeline-spine-width', 'timeline-dot-size', 'timeline-line-width']) {
+    for (const name of [
+      'timeline-date-width',
+      'timeline-spine-width',
+      'timeline-dot-size',
+      'timeline-dot-core',
+      'timeline-dot-ring',
+      'timeline-dot-offset',
+      'timeline-line-width',
+    ]) {
       expect(atBreakpoint.has(name), name).toBe(false);
     }
   });
