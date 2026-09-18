@@ -1,3 +1,4 @@
+import { ContentsBar } from './contents-bar';
 import styles from './contents.module.css';
 
 /**
@@ -12,9 +13,10 @@ import styles from './contents.module.css';
  * `content/`, beside the section's own title, per ADR-002, and the section's accessible name is
  * still taken from its `h2` rather than from here.
  *
- * It renders no state of its own: nothing marks the current section, nothing animates, and the
- * design's scroll-triggered shadow is declined, per DDR-031, so the bar stays a Server Component
- * and the site stays statically exported, per ADR-001.
+ * It renders no state of its own: nothing marks the current section. The one thing about the bar
+ * that follows the page is its edge — a hairline and a shadow drawn once the page has scrolled, per
+ * DDR-034 — and that is `ContentsBar`'s, the one Client Component on the site, per ADR-007. This
+ * stays a Server Component and hands it the list as children, so only the band is client code.
  *
  * With no sections there is nothing to list, so nothing renders.
  */
@@ -30,7 +32,7 @@ export function Contents({
   }
 
   return (
-    <nav aria-label={label} className={styles.contents}>
+    <ContentsBar label={label}>
       <ul className={styles.list}>
         {sections.map(({ id, link }) => (
           <li key={id}>
@@ -40,6 +42,6 @@ export function Contents({
           </li>
         ))}
       </ul>
-    </nav>
+    </ContentsBar>
   );
 }

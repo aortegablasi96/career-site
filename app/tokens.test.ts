@@ -396,7 +396,7 @@ describe('elevation tokens', () => {
   // for the one element that may read them rather than putting them on a scale above `raised`: the
   // photo is not raised off the page the way a control or a card is, it is lit.
   it('names every shadow for what it does, so a third is a decision rather than a number', () => {
-    expect(shadows).toEqual(['raised', 'photo-glow', 'photo-inner']);
+    expect(shadows).toEqual(['raised', 'photo-glow', 'photo-inner', 'bar']);
   });
 
   // The photo's two lights are the design's own, ink and geometry both, per DDR-021. They are two
@@ -414,6 +414,18 @@ describe('elevation tokens', () => {
     expect(token('shadow-photo-inner')).toMatch(/^inset\b/);
     expect(token('shadow-photo-glow')).not.toMatch(/\binset\b/);
     expect(token('shadow-raised')).not.toMatch(/\binset\b/);
+    expect(token('shadow-bar')).not.toMatch(/\binset\b/);
+  });
+
+  // DDR-034: the contents bar's edge once the page has scrolled, ink and geometry both from the
+  // Figma Make file, where the bar is `shadow-[0_2px_16px_rgba(26,26,46,0.10)]`.
+  it('keeps the bar’s shadow exactly as the design draws it, per DDR-034', () => {
+    expect(token('shadow-bar')).toBe('0 2px 16px rgba(26, 26, 46, 0.1)');
+  });
+
+  // The design's `duration-200`. A time rather than a length, so it is the one token in ms.
+  it('changes the bar’s edge over the design’s 200ms, per DDR-034', () => {
+    expect(token('contents-bar-transition')).toBe('200ms');
   });
 
   // The two layers, their lengths and their ink are all the design's now, per DDR-025, which amends
@@ -429,7 +441,7 @@ describe('elevation tokens', () => {
 
   // A shadow marks an edge and gains nothing from growing with the reader's text, so its lengths
   // are in px, as the focus outline's and the timeline's line are. DDR-021's two follow it.
-  it.each(['raised', 'photo-glow', 'photo-inner'])(
+  it.each(['raised', 'photo-glow', 'photo-inner', 'bar'])(
     'draws --shadow-%s in px, as the site’s other hairlines do',
     (name) => {
       expect(token(`shadow-${name}`)!.replace(/rgba\([^)]*\)/g, '')).not.toMatch(/\d(?:rem|em|%)/);
@@ -453,8 +465,9 @@ describe('elevation tokens', () => {
     expect(token('shadow-raised')!.match(/rgba\(/g)).toHaveLength(2);
     expect(token('shadow-photo-glow')!.match(/rgba\(/g)).toHaveLength(1);
     expect(token('shadow-photo-inner')!.match(/rgba\(/g)).toHaveLength(1);
-    // Every translucency at the root belongs to a shadow, four of them, or is the bar's surface.
-    expect(root.match(/rgba\(/g)).toHaveLength(5);
+    expect(token('shadow-bar')!.match(/rgba\(/g)).toHaveLength(1);
+    // Every translucency at the root belongs to a shadow, five of them, or is the bar's surface.
+    expect(root.match(/rgba\(/g)).toHaveLength(6);
   });
 });
 
@@ -656,6 +669,7 @@ const forPaper = [
   { name: 'shadow-raised', value: 'none' },
   { name: 'shadow-photo-glow', value: 'none' },
   { name: 'shadow-photo-inner', value: 'none' },
+  { name: 'shadow-bar', value: 'none' },
   { name: 'content-width', value: 'none' },
   { name: 'page-gutter', value: '0' },
   { name: 'page-padding-block', value: '0' },
@@ -725,10 +739,11 @@ describe('print tokens', () => {
   // DDR-021's two follow it: the glow spreads 40px of indigo across the sheet and the inner shadow
   // darkens the top of the portrait, and a reader of paper is missing neither. The photograph keeps
   // its shape, which is drawn by a radius rather than by a light.
-  it('draws no shadow on paper, per DDR-020 and DDR-021', () => {
+  it('draws no shadow on paper, per DDR-020, DDR-021 and DDR-034', () => {
     expect(inPrint.get('shadow-raised')).toBe('none');
     expect(inPrint.get('shadow-photo-glow')).toBe('none');
     expect(inPrint.get('shadow-photo-inner')).toBe('none');
+    expect(inPrint.get('shadow-bar')).toBe('none');
   });
 
   it('gives the sheet margins in a unit of the paper', () => {
