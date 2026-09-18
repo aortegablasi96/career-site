@@ -4,6 +4,13 @@ Status: Accepted
 
 Date: 2026-09-18
 
+**Revised 2026-09-19, at the owner's request, after #133 landed.** Two things changed, and the
+record below is the revised decision. The current link is **underlined only**: it no longer takes
+the accent. And when a contents link is chosen, the mark moves **straight to that link** and stays
+there while the page glides past the sections in between, where it used to pass through each of
+them. The accent and the pass-through are kept below, under Alternatives Considered, as what was
+first decided and why it changed.
+
 **Amends DDR-033 in one respect.** A contents link at rest is still not underlined. The link of the
 section the reader is in is underlined, as a state. The underline marks where the reader is, not
 what a link is, so DDR-033's argument about what identifies a contents link still holds.
@@ -40,7 +47,7 @@ It is not colour alone and it moves nothing. Without script nothing is marked. I
 ## Decision
 
 **The contents bar marks the link of the section the reader is in. The link is announced as the
-current location, underlined, and set in the accent.**
+current location and underlined, and nothing else about it changes.**
 
 ### Which section is current
 
@@ -54,10 +61,17 @@ current location, underlined, and set in the accent.**
 * **At the foot of the page, the last section is marked**, whatever the line says. Languages is too
   short to reach the line in some windows: at 1536 by 864 its top stops 508px down. Without this
   rule, a reader looking at it would see Education marked.
-* **It follows the page, not the input.** The answer is recomputed on every `scroll` and `resize`
-  event, so the wheel, touch, the keyboard, a contents link's glide (DDR-041) and a page opened at a
-  `#fragment` all move it the same way. During a glide the mark passes through each section the page
-  moves past, which is where the reader is at that moment.
+* **It follows the page.** The answer is recomputed on every `scroll` and `resize` event, so the
+  wheel, touch, the keyboard and a page opened at a `#fragment` all move it the same way.
+* **Except on a contents link's journey, when it goes straight to the destination.** Choosing a
+  contents link, by pointer or by keyboard, moves the mark to that link at once, before the page
+  moves, and holds it there while the page glides past the sections in between (DDR-041). The reader
+  asked to go to that section, and marking Projects, Skills and Education in turn on the way to
+  Languages says they are somewhere they are only passing through. The mark is let go once the page
+  has not scrolled for 100ms, which a glide never pauses for, or after 250ms if the page never
+  starts scrolling, the same wait DDR-041 gives the glide. From then on it follows the page again,
+  which is where the section has come to rest. A second link chosen on the way takes over. With
+  reduced motion the page jumps, so the hold is over as soon as it has begun.
 
 ### How it is drawn
 
@@ -66,13 +80,12 @@ current location, underlined, and set in the accent.**
   because every link in the bar points into the same page.
 * **The stylesheet draws the attribute, not a class.** `.link[aria-current]` is the only rule that
   marks a link, so what a sighted reader sees is exactly what assistive technology is told.
-* **An underline, in the link's own ink, at `--underline-offset`.** This is the cue that is not
-  colour. It is the offset a project link's underline uses, per DDR-035, so the page has one
-  underline offset.
-* **The accent, `--color-accent`.** This is the second cue, and the ink a contents link already
-  takes under the pointer, per DDR-035. It lifts the current link to 5.87:1 on the page and 5.42:1 on
-  the bar's worst blend, both of which clear WCAG 1.4.3. The link's resting ink, 4.44:1, does not.
-* **Nothing that takes space.** Neither an underline nor a colour changes a box. The weight stays
+* **An underline, in the link's own ink, at `--underline-offset`, and nothing else.** It is not
+  colour at all, which is the cue DDR-006 asked for. It is the offset a project link's underline
+  uses, per DDR-035, so the page has one underline offset. The ink stays the muted ink every contents
+  link has at rest, which is 4.44:1 on the page and fails WCAG 1.4.3, as DDR-033 already records for
+  every contents link.
+* **Nothing that takes space.** An underline does not change a box. The weight stays
   medium, because semibold would widen the word and move every link after it. Measured on the built
   page, the bar's height and every link's position and size are identical at every scroll position.
 
@@ -82,8 +95,8 @@ current location, underlined, and set in the accent.**
   script gets the bar DDR-031 and DDR-034 describe. With script, the mark is right from the first
   frame after hydration.
 * **Paper.** The bar does not print, per DDR-015.
-* **Hover and focus.** A current link under the pointer or focused keeps the accent it already has;
-  the focus outline is the base styles' own.
+* **Hover and focus.** A current link under the pointer or focused takes the accent like any other
+  contents link, per DDR-035, and keeps its underline; the focus outline is the base styles' own.
 
 ## Alternatives Considered
 
@@ -97,6 +110,31 @@ Cons:
 
 * The story rules it out, and DDR-006 rejected the state on this ground.
 * The accent is also what the pointer draws, so a reader could not tell "here" from "pointed at".
+
+### The underline and the accent — first decided on #133, revised
+
+Pros:
+
+* A second cue, and the one a pointed-at link already takes.
+* The current link would pass WCAG 1.4.3, at 5.87:1 on the page, where the muted ink does not.
+
+Cons:
+
+* The owner did not want the colour to change, only the underline. The accent is what a link takes
+  under the pointer, so it also blurred "here" with "pointed at". Dropped on 2026-09-19.
+
+### Let the mark follow the page during a glide — first decided on #133, revised
+
+Pros:
+
+* One rule for every kind of scroll, with no state to hold.
+* During a glide the reader is, strictly, in each section the page moves past.
+
+Cons:
+
+* A contents link is a request to go to one section. Marking every section on the way flickers
+  through the bar and names places the reader never meant to stop at. The owner asked for the mark
+  to go straight from where they were to where they chose. Revised on 2026-09-19.
 
 ### A heavier weight, or a bar under the link
 
@@ -138,11 +176,15 @@ Cons:
 
 * The bar shows where the reader is on a long page, at every width, and assistive technology
   announces it.
-* The current link passes WCAG 1.4.3, where every other contents link at rest still fails it.
+* Choosing a contents link moves the mark once, from where the reader was to where they chose.
 
 ### Tradeoffs
 
 * The page adds a behaviour the design does not draw, at the owner's request.
+* The current link's ink fails WCAG 1.4.3, as every contents link's at rest already does, per
+  DDR-033. The accent would have lifted it past, and the owner chose the underline alone.
+* The mark is held for as long as the page keeps scrolling. A reader who interrupts a glide with the
+  wheel sees the destination marked until they pause for 100ms, and then the section they are in.
 * Rendering the links from the Client Component, which is what lets it mark one, is an architectural
   change, recorded in ADR-009.
 
@@ -162,7 +204,7 @@ Cons:
 * docs/decisions/design-decisions/DDR-010-career-page-redesign-structure.md and
   DDR-031-sticky-contents-bar.md, whose "no current-section state" this supersedes
 * docs/decisions/design-decisions/DDR-006-career-page-structure.md, which rejected the state first
-* docs/decisions/design-decisions/DDR-035-hover-states.md, whose accent and underline offset this
+* docs/decisions/design-decisions/DDR-035-hover-states.md, whose underline offset this
   reuses
 * docs/decisions/design-decisions/DDR-041-contents-links-scroll-smoothly.md
 * docs/decisions/architecture-decisions/ADR-009-contents-bar-renders-its-links.md

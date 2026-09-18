@@ -15,18 +15,24 @@ export function isScrolled(): boolean {
   return window.scrollY > scrolledThreshold;
 }
 
+/** Everything subscribed, so a change that is not a scroll or a resize can still be announced. */
+const listeners = new Set<() => void>();
+
 /**
- * Calls `onChange` whenever the page scrolls or the window is resized, and returns what stops it.
- * A resize moves every section without scrolling the page, so the current section can change
- * without a scroll event, per DDR-042.
+ * Calls `onChange` whenever the page scrolls, the window is resized or a contents link's
+ * destination is held or let go, and returns what stops it. A resize moves every section without
+ * scrolling the page, so the current section can change without a scroll event, per DDR-042; and
+ * letting a destination go changes the mark once the page has come to rest, when nothing scrolls.
  */
 export function subscribe(onChange: () => void): () => void {
   window.addEventListener('scroll', onChange, { passive: true });
   window.addEventListener('resize', onChange, { passive: true });
+  listeners.add(onChange);
 
   return () => {
     window.removeEventListener('scroll', onChange);
     window.removeEventListener('resize', onChange);
+    listeners.delete(onChange);
   };
 }
 
@@ -105,6 +111,81 @@ export function glide(event: Pick<MouseEvent, 'target'>): void {
   const timeout = window.setTimeout(stop, glideStartTimeout);
 }
 
+/**
+ * How long, in milliseconds, the page has to go without scrolling before a contents link's journey
+ * is over, per DDR-042. A glide scrolls on every frame, about every 16ms, so a pause six times that
+ * long means it has ended. It is a wait rather than anything drawn, so it is not a token.
+ */
+export const settleTimeout = 100;
+
+/** The section a contents link is taking the reader to, while the page is on its way there. */
+let destination: string | null = null;
+
+/** What lets go of the destination being held, if one is. */
+let letGo: (() => void) | null = null;
+
+function announce(): void {
+  listeners.forEach((listener) => listener());
+}
+
+/**
+ * Moves the mark straight to the section a contents link was chosen for, and holds it there until
+ * the page comes to rest, per DDR-042. Without it, a glide from Experience to Languages would mark
+ * Projects, Skills and Education in turn as the page moved past them.
+ *
+ * The destination is let go once the page has not scrolled for `settleTimeout`, or, if it never
+ * starts scrolling, after `glideStartTimeout`, the same wait `glide` gives it. A second link chosen
+ * on the way takes over the first one's journey. After it lets go, the mark follows the page again,
+ * which is where the section has come to rest.
+ */
+export function holdDestination(event: Pick<MouseEvent, 'target'>): void {
+  const link = event.target instanceof Element ? event.target.closest('a[href^="#"]') : null;
+
+  if (!link) {
+    return;
+  }
+
+  letGo?.();
+
+  let timeout = window.setTimeout(release, glideStartTimeout);
+
+  function wait() {
+    window.clearTimeout(timeout);
+    timeout = window.setTimeout(release, settleTimeout);
+  }
+
+  function stop() {
+    window.removeEventListener('scroll', wait);
+    window.clearTimeout(timeout);
+    destination = null;
+    letGo = null;
+  }
+
+  function release() {
+    stop();
+    announce();
+  }
+
+  destination = link.getAttribute('href')!.slice(1);
+  letGo = stop;
+  window.addEventListener('scroll', wait, { passive: true });
+  announce();
+}
+
+/**
+ * The section the bar marks: the one a contents link is taking the reader to, while it is, and
+ * otherwise the one the reader is in.
+ */
+export function markedSection(ids: readonly string[]): string | null {
+  return destination ?? currentSection(ids);
+}
+
+/** Handles a click in the bar: the glide, per DDR-041, and the mark held on its way, per DDR-042. */
+function choose(event: MouseEvent): void {
+  glide(event);
+  holdDestination(event);
+}
+
 /** The server renders the bar at rest, which is also what a reader without script keeps. */
 function isScrolledOnServer(): boolean {
   return false;
@@ -122,7 +203,8 @@ function currentSectionOnServer(): string | null {
  * page has scrolled past the design's threshold, so contents.module.css can draw the hairline and
  * the shadow, per DDR-034; to make the scroll a contents link starts glide rather than jump, per
  * DDR-041, which ADR-008 lets it do; and to mark the link of the section the reader is in with
- * `aria-current`, per DDR-042, which the stylesheet underlines.
+ * `aria-current`, per DDR-042, which the stylesheet underlines — moving it straight to the section
+ * a contents link was chosen for rather than through every section the glide passes.
  *
  * That last is why it renders the links itself, per ADR-009, where ADR-007 had `Contents` render
  * them and pass them in as children: a link can only be marked by what renders it. What it is
@@ -144,7 +226,7 @@ export function ContentsBar({
   const scrolled = useSyncExternalStore(subscribe, isScrolled, isScrolledOnServer);
   const current = useSyncExternalStore(
     subscribe,
-    () => currentSection(sections.map(({ id }) => id)),
+    () => markedSection(sections.map(({ id }) => id)),
     currentSectionOnServer,
   );
 
@@ -153,7 +235,7 @@ export function ContentsBar({
       aria-label={label}
       className={styles.contents}
       data-scrolled={scrolled || undefined}
-      onClick={glide}
+      onClick={choose}
     >
       <ul className={styles.list}>
         {sections.map(({ id, link }) => (

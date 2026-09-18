@@ -128,14 +128,15 @@ describe('Contents', () => {
     expect(html).not.toMatch(/aria-current/);
   });
 
-  // DDR-042, amending DDR-033: the current section's link is underlined, as a state, and takes the
-  // accent. The rule is keyed on `aria-current`, so what is drawn is what assistive technology is
-  // told, and it is the one rule besides DDR-033's that touches the underline. Nothing in it takes
-  // space, so marking a link moves nothing.
-  it('underlines the current section’s link in the accent, and nothing else, per DDR-042', () => {
+  // DDR-042, amending DDR-033: the current section's link is underlined, as a state, and nothing
+  // else about it changes — not its ink, at the owner's request, and nothing that takes space, so
+  // marking a link moves nothing. The rule is keyed on `aria-current`, so what is drawn is what
+  // assistive technology is told, and it is the one rule besides DDR-033's that touches the
+  // underline.
+  it('only underlines the current section’s link, per DDR-042', () => {
     const current = rule('.link[aria-current]');
 
-    expect(current).toMatch(/color:\s*var\(--color-accent\);/);
+    expect(current).not.toMatch(/color/);
     expect(current).toMatch(/text-decoration-line:\s*underline;/);
     expect(current).toMatch(/text-underline-offset:\s*var\(--underline-offset\);/);
     expect(current).not.toMatch(/font-weight|padding|margin|border|size/);

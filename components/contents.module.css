@@ -155,14 +155,12 @@
    `aria-current`, and this rule draws exactly what assistive technology is told, so the two cannot
    disagree.
 
-   The underline is the cue that is not colour, in the link's own ink at the offset a project link's
-   underline takes. The accent is the second cue, the one a pointed-at link already takes, which
-   lifts the current link to 5.87:1 on the page, clearing WCAG 1.4.3 where the muted ink does not.
-   Neither takes space, so marking a link moves nothing: the bar keeps its height and no link
-   shifts. No weight change, for that reason: medium to semibold would widen the word and move every
-   link after it. */
+   The underline is the whole of the mark, in the link's own ink at the offset a project link's
+   underline takes. The ink does not change, at the owner's request: the accent is what a link takes
+   under the pointer, and the mark is not that. The underline takes no space, so marking a link
+   moves nothing: the bar keeps its height and no link shifts. No weight change, for that reason:
+   medium to semibold would widen the word and move every link after it. */
 .link[aria-current] {
-  color: var(--color-accent);
   text-decoration-line: underline;
   text-underline-offset: var(--underline-offset);
 }
