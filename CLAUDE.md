@@ -240,8 +240,10 @@ The styles are mobile-first, per DDR-014. The `:root` values in `app/tokens.css`
 narrowest viewports, and the site has two breakpoints, both in em.
 
 The **narrow** one, a `min-width: 20em` media query in that file, is the tokens'. It redefines the
-four role tokens that adapt: the page and section titles (`--font-size-page-title`,
-`--font-size-section-title`) and the page's edges (`--page-gutter`, `--page-padding-block`). Styles
+three role tokens that adapt: the page and section titles (`--font-size-page-title`,
+`--font-size-section-title`) and the page's gutter (`--page-gutter`). Since DDR-040 the space above
+and below the page, `--page-padding-block`, is a section boundary and follows the rhythm factor
+instead. Styles
 read those roles rather than the steps behind them. `--font-size-item-title` is body size at every
 width, because there is nothing below body size a title could take.
 
@@ -518,10 +520,10 @@ nothing either: it is the first time ADR-001's "`'use client'` requires a reason
 records the reason — the contents bar has to know how far the page has scrolled — and is not a
 precedent for the next one. The next ADR is `008`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-039. The next DDR is
-`040`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-040. The next DDR is
+`041`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Fourteen accepted records are superseded or amended **in part**, and each says so at the top and again
+Fifteen accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -540,13 +542,18 @@ at the section concerned:
   a level's badge stands above its skills.
 * **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
   rule and its rule that nothing scrolls horizontally from 320px. DDR-039 lets the wide breakpoint
-  redefine one token, `--rhythm-scale`. DDR-027 takes its 44 by 44 pixel
+  redefine one token, `--rhythm-scale`. DDR-040 takes `--page-padding-block` off the narrow
+  breakpoint, which now adapts three role tokens. DDR-027 takes its 44 by 44 pixel
   minimum target, and `--target-size-min` with it. The one sentence of that bullet which survives is
   the one letting a component drop screen-only sizing on paper.
 * **DDR-013** keeps its scale, `--space-flow` and every other value. DDR-039 takes its rhythm: the
   space between sections, from a heading to its first item and between entries is the design's own,
   off the scale. DDR-026 amends the sentence that makes whitespace and a heading the whole section
   boundary: the boundary now carries a hairline, with the section's space split around it.
+  DDR-040 holds the introduction's summary to the design's 680px rather than 65ch, and pads the
+  page above and below by a section boundary.
+* **DDR-021** keeps its capsule, its two lights, its ratio and its narrow width. DDR-040 takes its
+  wide width: `13rem` becomes the Make file's `clamp(180px, 22vw, 300px)`, in rem bounds.
 * **DDR-026** keeps its divider, its colour, its place and its split. DDR-039 corrects its claim
   that the page drew the design's 56px on each side of the line: it drew 32px until #119.
 
@@ -580,7 +587,8 @@ at the section concerned:
 * **DDR-028** keeps everything it decides. What moved is the ground under it: it recorded DDR-010's
   contact-address rule as unchanged, and DDR-029 has since taken that rule, so the footer is no
   longer a repetition of the pills above but the one place an address is written out. The record
-  says so at the top and at the two places it anticipated #97.
+  says so at the top and at the two places it anticipated #97. DDR-040 closes its open item, the
+  space above the hairline, and corrects its reading of it: the design's is 72px, not 16px.
 * **DDR-027** keeps its ruling that a target is the size the design draws it, and its argument that
   44 by 44 was an AAA criterion the records had cited as AA. DDR-028 extends its table of every
   target on the page from eleven rows to fourteen: the footer's three addresses are 19.2px tall and
@@ -926,7 +934,8 @@ Six things about it are worth knowing before touching it.
   the *same ink* as the name beside them. DDR-028 records what identifies them instead — each is an
   address, and each repeats a pill the introduction has already identified — and records that
   DDR-025 went the other way for the contents links. It is one declaration away from reversal.
-* **The space above the hairline is the page's 64px, not the design's 16px.** `main` ends with
+* **The space above the hairline was the page's 64px until #120 closed it**, per DDR-040, below.
+  DDR-028 recorded it this way: `main` ends with
   `--page-padding-block` and the footer follows it; closing the gap means making the page's bottom
   padding asymmetric, which is DDR-013's and DDR-014's and guarded by `app/globals.test.ts`. DDR-028
   records it as an open item for #99 rather than taking a page-level decision inside a footer story.
@@ -1161,6 +1170,29 @@ At 894px every space matches the design to the pixel, and the page is 4769px aga
 390px, 768px, 894px or 1536px at either text size. The skill groups' column gap, 32px against the
 design's 64px, is not in #119 and is left open.
 
+**#120 has landed, as DDR-040: the introduction and the space above the footer take the design's
+proportions.** At the design's 894px every value #120 lists matches within 1px.
+
+* **The page begins and ends with a section boundary.** `--page-padding-block` is
+  `var(--space-boundary)`, 56px from the wide breakpoint and 42px below it, so the photo is 56px
+  below the contents bar. The narrow breakpoint no longer redefines it. The footer adds
+  `margin-block-start: var(--space-medium)`, so the last section is the design's 72px above its
+  hairline.
+* **The wide photo is sized by the viewport**, the Make file's `clamp(180px, 22vw, 300px)` written
+  with rem bounds: 180px at 768px, 196.8px at 894px, 300px from 1364px up. It is the one length on
+  the page measured from the viewport. The narrow photo is still `6rem`, and #68's float behaves
+  exactly as before at 320px, 360px and 390px at both text sizes.
+* **The introduction has two rhythm tokens**: `--space-summary`, 32px above the summary, and
+  `--space-controls`, 36px above the controls, both times `--rhythm-scale`. The gap between the photo
+  and the text is `--space-x-large`, 64px. The summary is held to `--measure-summary`, 680px, rather
+  than 65ch, which binds from about 1010px up.
+* **Paper is pixel-identical to the tree before**, six sheets in both browsers, background graphics
+  on and off: the two tokens print at `--space-flow` and the footer drops its margin in print.
+
+At 390 by 844 the controls end 842.5px down, just above the fold, where they ended 845.5px down. What
+remains different at 894px is outside #120: the name's leading, the controls' 8px gap against 10px,
+the footer's type and the skill groups' column gap.
+
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the
 accessibility tree and cannot reach the accessible name the section takes from its heading. It is a
@@ -1348,8 +1380,8 @@ the markers drawn on both sheets that carry points. All 479 words the page shows
 from all eight readings as letters. As whole words pypdf misses five, each explained: `Copilot-driven`
 and `data-driven`, wrapped at the hyphen, in both browsers; and the three level badges, which it
 spells out from Firefox, as DDR-024 recorded. "Get" is no longer counted, because print hides it.
-**The footer's 64px above its hairline, which DDR-028 left to #99, is still open**: #99 excludes any
-change to what the page shows, so it needs a story of its own.
+**The footer's 64px above its hairline, which DDR-028 left to #99, was not #99's**: #99 excludes any
+change to what the page shows. #120 closed it, per DDR-040, below.
 
 ADR-004 and ADR-005 together decide the downloadable CV and the site's first binary assets. The CV
 itself has landed, under #56: `public/andreu-ortega-blasi-cv.pdf` is a separately designed document,

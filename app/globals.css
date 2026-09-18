@@ -140,8 +140,10 @@ a {
 /* The page is a single centred column, wide enough for the sections to place things beside each
    other, per DDR-013. The gutter is padding outside the column, so content keeps off the edges of
    a narrow screen. Running text is held to the measure by the rule above rather than by the
-   column. The page begins and ends with the space that separates sections. On the narrowest
-   viewports, the gutter and that space are halved, per DDR-014. */
+   column. On the narrowest viewports the gutter is halved, per DDR-014. The page begins and ends
+   with a section boundary, per DDR-040: the design pads the introduction and every section by the
+   same 56px, so the photo stands that far below the contents bar and the last section ends that far
+   above the footer. */
 main {
   max-inline-size: var(--content-width);
   margin-inline: auto;

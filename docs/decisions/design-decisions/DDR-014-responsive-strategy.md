@@ -8,6 +8,11 @@ Date: 2026-09-16
 `app/tokens.css`, `--rhythm-scale`, so the vertical rhythm takes the design's values from 48em and
 three quarters of them below. Components still write only layout there.
 
+**Amended by DDR-040** in one respect: the narrow breakpoint no longer redefines
+`--page-padding-block`. The space above and below the page is a section boundary, which steps down
+with DDR-039's rhythm factor at the wide breakpoint instead. The narrow breakpoint now adapts three
+role tokens, marked in the table below.
+
 **Superseded in part by DDR-027**, which takes the 44 by 44 pixel minimum target below, and
 DDR-004's before it. A target is now the size the design draws it, and `--target-size-min` is gone.
 Everything else here stands, including the two breakpoints, the markup order, hover, and the rule
@@ -77,6 +82,9 @@ It redefines four role tokens in `app/tokens.css`, and nothing else:
 | `--font-size-section-title`| `--font-size-large`       | `--font-size-x-large`       |
 | `--page-gutter`            | `--space-small`           | `--space-medium`            |
 | `--page-padding-block`     | `--space-large`           | `--space-section`           |
+
+**Since DDR-040 the last row is gone**: `--page-padding-block` is `var(--space-boundary)` at every
+width, 42px below 48em and 56px from it.
 
 **It steps a heading down rather than shrinking it**, so a narrow column with enlarged text does not
 break a long word such as "certifications" in the middle. Styles read the role, never the step
