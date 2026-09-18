@@ -243,6 +243,19 @@
   --color-underline: #a5b4fc;
   --color-underline-hover: #6366f1;
 
+  /* The two services' own marks on the contact pills, per DDR-044. Each is the colour its brand
+     allows the mark to be drawn in, not a colour of this palette's choosing: LinkedIn's [in] may be
+     its blue, black or white and blue is the one LinkedIn prefers, and GitHub's Invertocat may be
+     black or white. Neither may take the pill's indigo, which is why they are tokens of their own.
+
+       mark-linkedin  5.69:1 on the pill's white, 5.09:1 on its hover fill
+       mark-github    21:1 on the pill's white, 18.78:1 on its hover fill
+
+     Both are marks, not text, and both clear the 3:1 WCAG 1.4.11 asks in either state. They are
+     inks, so paper keeps them: the print block drops the surface under them and nothing else. */
+  --color-mark-linkedin: #0a66c2;
+  --color-mark-github: #000000;
+
   /* How long a link or a control takes to change colour, per DDR-035: the design's
      `transition-colors`, which is 150ms. Not read at all when the reader prefers reduced motion. */
   --hover-transition: 150ms;

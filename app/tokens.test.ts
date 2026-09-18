@@ -304,6 +304,8 @@ describe('colour tokens', () => {
       'border-accent-hover',
       'underline',
       'underline-hover',
+      'mark-linkedin',
+      'mark-github',
       'focus',
     ]);
   });
@@ -387,6 +389,12 @@ describe('colour tokens', () => {
     // indigo at rest, and the stronger one under the pointer.
     { foreground: 'underline', background: 'surface', asked: 3, recorded: 1.86, meets: false },
     { foreground: 'underline-hover', background: 'surface', asked: 3, recorded: 4.17, meets: true },
+    // Each service's own mark on a contact pill, per DDR-044, in the colour its brand allows: on the
+    // pill's white at rest and on its fill under the pointer. Marks, so 3:1 is what is asked.
+    { foreground: 'mark-linkedin', background: 'surface-card', asked: 3, recorded: 5.69, meets: true },
+    { foreground: 'mark-linkedin', background: 'surface-hover', asked: 3, recorded: 5.09, meets: true },
+    { foreground: 'mark-github', background: 'surface-card', asked: 3, recorded: 21, meets: true },
+    { foreground: 'mark-github', background: 'surface-hover', asked: 3, recorded: 18.78, meets: true },
     // Hairlines that carry nothing, so neither criterion reaches them: the rule beside a section
     // heading, a card's edge against the page it sits on and the white it encloses, and the
     // timeline's spine and dots.
@@ -881,7 +889,7 @@ describe('print tokens', () => {
 
     expect(dropped.sort()).toEqual(droppable.sort());
     for (const name of inPrint.keys()) {
-      expect(name).not.toMatch(/^color-text|^color-marker$/);
+      expect(name).not.toMatch(/^color-text|^color-marker$|^color-mark-/);
     }
   });
 

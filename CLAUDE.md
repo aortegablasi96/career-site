@@ -320,7 +320,8 @@ What exists, to reuse rather than reinvent:
   wrapper, the metadata line and the date range are shared by the sections that need them.
 * **The icons**, in `components/icon.tsx`: one per contact address, one for the CV, and since #134
   the arrow that says a pill opens a new tab. They are inline SVG rather than committed files, drawn
-  in `currentColor` and sized in em. Each is hidden from assistive technology because it repeats
+  in `currentColor` and sized in em. Since #135 LinkedIn's and GitHub's are each service's official
+  mark, filled, in its brand colour, per DDR-044; the rest are our strokes. Each is hidden from assistive technology because it repeats
   what its control's own text says, except the arrow, which is given a `label` and is an image named
   "opens in a new tab", per DDR-043. Which mark
   a contact takes is a key in `content/`, not something worked out from its address.
@@ -526,8 +527,8 @@ ADR-007 again, in its boundary: the component renders the contents links itself,
 section's id and word, so that it can mark the current section's, per DDR-042. It is still the one
 Client Component. The next ADR is `010`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-043. The next DDR is
-`044`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-044. The next DDR is
+`045`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Sixteen accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -606,7 +607,8 @@ at the section concerned:
   10% black, because the hairlines the 22% was measured against no longer exist.
 * **DDR-025** keeps everything but one bullet: DDR-033 takes its ruling that the contents links keep
   their underline. Every other link still has one. DDR-035 amends it too: five hover and underline
-  colours join the palette, and its four failing pairings become six. DDR-036 adopts the ringed
+  colours join the palette, and its four failing pairings become six. DDR-044 adds LinkedIn's
+  and GitHub's brand colours for their marks, both passing. DDR-036 adopts the ringed
   timeline dot it kept as structure, and withdraws its claim that the design has no experience
   spine, which misread the file.
 * **DDR-031** keeps everything but its links' underline, which DDR-033 takes, per #113, and its
@@ -1155,6 +1157,23 @@ Three things about it are worth knowing before touching it.
   pixel-identical to the tree before, six sheets in Edge and Firefox, background graphics on and off.
 * **The footer's LinkedIn and GitHub still open in the same tab**, so one address behaves two ways.
   DDR-043 records it as a decision for another story.
+
+**#135 has landed, as DDR-044: the LinkedIn and GitHub pills show each service's official mark.**
+LinkedIn's [in] is in LinkedIn blue, `--color-mark-linkedin`, and GitHub's Invertocat in black,
+`--color-mark-github`: both brands forbid recolouring, so neither can take the pill's indigo. The
+email pill keeps its envelope in the pill's ink, and every label is unchanged.
+
+Three things about it are worth knowing before touching it.
+
+* **The colour is set by a class the introduction maps from the contact's `icon` key**, in
+  `brandColour`, rather than by `styles[icon]`: Vitest's CSS-module stub returns a class for any
+  key, so the lookup has to be explicit for the test to mean what the build does.
+* **Hover and focus never recolour a mark**, which is what both brands forbid; the pill's fill and
+  border change instead, and both marks clear 3:1 on the hover fill.
+* **No box moved and paper is unchanged but for the marks**: every pill's box matched the tree
+  before to 0.1px, every 10px from 300px to 900px and at 1280px and 1536px at both text sizes, and
+  the CV is six sheets in Edge and Firefox with identical text. Clear space against each brand's
+  rule was not measured, and on paper each mark sits against its label, as the drawn icons did.
 
 **#115 has landed, as DDR-035: every link and control answers the pointer.** A contact pill takes
 `--color-surface-hover` and `--color-border-accent-hover`, the CV control darkens to

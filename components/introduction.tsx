@@ -1,5 +1,5 @@
 import { asset } from '@/app/asset';
-import type { Cv, Introduction as IntroductionContent } from '@/content/types';
+import type { ContactIcon, Cv, Introduction as IntroductionContent } from '@/content/types';
 import { Icon } from './icon';
 import { MetadataLine } from './metadata-line';
 import styles from './introduction.module.css';
@@ -35,7 +35,19 @@ import styles from './introduction.module.css';
  *
  * The LinkedIn and GitHub pills open a new tab, per DDR-043, and carry an arrow after the label that
  * says so; the email pill opens the mail client and carries none.
+ *
+ * The LinkedIn and GitHub pills carry each service's own mark, in the colour its brand allows, per
+ * DDR-044. The email pill keeps the envelope, since email is no one's to have a mark.
  */
+/**
+ * The class that gives a service's mark its brand's colour, per DDR-044. LinkedIn and GitHub have
+ * one; the envelope has no brand and takes the pill's ink.
+ */
+const brandColour: Partial<Record<ContactIcon, string>> = {
+  linkedin: styles.linkedin,
+  github: styles.github,
+};
+
 export function Introduction({
   introduction,
   cv,
@@ -79,7 +91,7 @@ export function Introduction({
                 className={styles.contact}
                 {...(opensNewTab && { target: '_blank', rel: 'noopener' })}
               >
-                <Icon name={icon} />
+                <Icon name={icon} className={brandColour[icon]} />
                 {label}
                 {opensNewTab && (
                   <span className={styles.newTab}>

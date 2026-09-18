@@ -151,6 +151,25 @@ describe('Introduction', () => {
     expect(links.slice(0, 3).map(({ text }) => text)).toEqual(['Email', 'LinkedIn', 'GitHub']);
   });
 
+  // DDR-044: LinkedIn's and GitHub's pills carry each service's own mark, which is filled as the
+  // service publishes it, where the envelope and the download are the site's own strokes. Each
+  // service's mark carries a class, which is what gives it its brand's colour; the envelope has no
+  // brand, so it carries none and takes the pill's ink.
+  it("draws each service's own mark, filled, and the envelope as a stroke, per DDR-044", () => {
+    for (const { label, icon } of introduction.contact) {
+      const svg = links.find(({ text }) => text === label)!.markup.match(/<svg[^>]*>/)![0];
+
+      if (icon === 'email') {
+        expect(svg).toContain('stroke="currentColor"');
+        expect(svg).not.toContain('class=');
+      } else {
+        expect(svg).toContain('fill="currentColor"');
+        expect(svg).not.toContain('stroke=');
+        expect(svg).toMatch(/class="[^"]+"/);
+      }
+    }
+  });
+
   it('draws a different mark for each control, so no two are the same shape', () => {
     const marks = links.map(({ markup }) => markup.match(/<svg[\s\S]*<\/svg>/)?.[0]);
 
@@ -343,6 +362,15 @@ describe('introduction styles', () => {
     expect(cv).toMatch(/border-color:\s*var\(--color-accent-hover\);/);
     expect(cv).toMatch(/background-color:\s*var\(--color-accent-hover\);/);
     expect(`${contact}${cv}`).not.toMatch(/(?:^|[^-])(?:border|padding|box-shadow):/);
+  });
+
+  // DDR-044: each service's mark is the colour its brand allows it, not the pill's indigo, and
+  // hover and focus leave it that colour, since recolouring a mark is what both brands forbid.
+  it("draws LinkedIn's and GitHub's marks in their own colours, in every state, per DDR-044", () => {
+    expect(rule('.linkedin')).toMatch(/^\s*color:\s*var\(--color-mark-linkedin\);\s*$/);
+    expect(rule('.github')).toMatch(/^\s*color:\s*var\(--color-mark-github\);\s*$/);
+    expect(rule('.contact:hover,\n.contact:focus-visible')).not.toMatch(/(?:^|[^-])color:/);
+    expect(styles).not.toMatch(/\.(?:linkedin|github)[^{]*:(?:hover|focus)/);
   });
 
   // DDR-025: the design sets the location line in #94a3b8, the one ink on the page fainter than
