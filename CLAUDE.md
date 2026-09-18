@@ -318,9 +318,11 @@ What exists, to reuse rather than reinvent:
   outline, its contents row, and the metadata line — which DDR-010 narrows to a single part, so the
   timeline's dates, place and company each get a line set the same way. The contents, the section
   wrapper, the metadata line and the date range are shared by the sections that need them.
-* **The icons**, in `components/icon.tsx`: one per contact address and one for the CV. They are
-  inline SVG rather than committed files, drawn in `currentColor` and sized in em, and each is
-  hidden from assistive technology because it repeats what its control's own text says. Which mark
+* **The icons**, in `components/icon.tsx`: one per contact address, one for the CV, and since #134
+  the arrow that says a pill opens a new tab. They are inline SVG rather than committed files, drawn
+  in `currentColor` and sized in em. Each is hidden from assistive technology because it repeats
+  what its control's own text says, except the arrow, which is given a `label` and is an image named
+  "opens in a new tab", per DDR-043. Which mark
   a contact takes is a key in `content/`, not something worked out from its address.
 * **The content types.** `content/types.ts` covers the site metadata, an image, a video, the
   introduction and its contact links, the contents, dates, roles, projects, skills, credentials,
@@ -524,8 +526,8 @@ ADR-007 again, in its boundary: the component renders the contents links itself,
 section's id and word, so that it can mark the current section's, per DDR-042. It is still the one
 Client Component. The next ADR is `010`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-042. The next DDR is
-`043`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-043. The next DDR is
+`044`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Sixteen accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -545,6 +547,7 @@ at the section concerned:
   DDR-036 amends its spine: a ringed dot on one unbroken line. DDR-037 amends its skills pattern:
   a level's badge stands above its skills. DDR-042 takes the half of "It has no current-section
   state and does not animate" that rules out the state: the bar marks the current section's link.
+  DDR-043 takes its "Links open in the same tab" for the LinkedIn and GitHub pills alone.
 * **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
   rule and its rule that nothing scrolls horizontally from 320px. DDR-039 lets the wide breakpoint
   redefine one token, `--rhythm-scale`. DDR-040 takes `--page-padding-block` off the narrow
@@ -1134,6 +1137,24 @@ Four things about it are worth knowing before touching it.
   53px in Firefox at 1280px, the mark matched the rule at every position; clicks, `#fragment` loads,
   PageDown, End, Home and the wheel all settled on the right link, and the bar and its links never
   moved. The bar does not print, so paper is untouched.
+
+**#134 has landed, as DDR-043: the LinkedIn and GitHub pills open a new tab.** Each carries
+`target="_blank"` and `rel="noopener"`, and an arrow after its label, which is the one icon given a
+name: `role="img"` with the content string `newTab`, "opens in a new tab", so the link's accessible
+name is "LinkedIn opens in a new tab". Which contacts open a tab is the `newTab` flag on each
+`ContactLink`. The email pill, the footer's addresses, the project links and the CV control still
+open in the same tab.
+
+Three things about it are worth knowing before touching it.
+
+* **The two pills are 21px wider**, and the controls row wraps differently at a few widths: two rows
+  rather than one from 490px to 520px, and one more row at 200% text from 450px to 530px. At 390 by
+  844 the controls still end 842.5px down. #135, which replaces the service marks and asks that no
+  pill grow, measures against this.
+* **The arrow does not print**, by `.newTab { display: none }` in the print block. The printed CV is
+  pixel-identical to the tree before, six sheets in Edge and Firefox, background graphics on and off.
+* **The footer's LinkedIn and GitHub still open in the same tab**, so one address behaves two ways.
+  DDR-043 records it as a decision for another story.
 
 **#115 has landed, as DDR-035: every link and control answers the pointer.** A contact pill takes
 `--color-surface-hover` and `--color-border-accent-hover`, the CV control darkens to

@@ -7,21 +7,41 @@ import { Footer } from './footer';
 const styles = readFileSync(new URL('./footer.module.css', import.meta.url), 'utf8');
 
 // Each record carries the label its pill shows as well as the address, per DDR-029. The footer is
-// the place that shows the address, so the labels here are what it must not show.
+// the place that shows the address, so the labels here are what it must not show. The two profiles
+// open a new tab from their pills, per DDR-043, which the footer is to ignore.
 const contact: readonly ContactLink[] = [
-  { label: 'Email', text: 'someone@example.com', href: 'mailto:someone@example.com', icon: 'email' },
+  {
+    label: 'Email',
+    text: 'someone@example.com',
+    href: 'mailto:someone@example.com',
+    icon: 'email',
+    newTab: false,
+  },
   {
     label: 'LinkedIn',
     text: 'linkedin.com/in/someone',
     href: 'https://www.linkedin.com/in/someone/',
     icon: 'linkedin',
+    newTab: true,
   },
-  { label: 'GitHub', text: 'github.com/someone', href: 'https://github.com/someone', icon: 'github' },
+  {
+    label: 'GitHub',
+    text: 'github.com/someone',
+    href: 'https://github.com/someone',
+    icon: 'github',
+    newTab: true,
+  },
 ];
 
 const html = renderToStaticMarkup(<Footer name="Someone" contact={contact} />);
 
 describe('Footer', () => {
+  // DDR-043 opens the two profiles in a new tab from their pills only. The footer's addresses are
+  // not controls and carry no arrow to say so, so they open where they are.
+  it('opens every address in the same tab, per DDR-043', () => {
+    expect(html).not.toMatch(/target=/);
+  });
+
   it('is a footer, so it is the page’s contentinfo landmark when it follows main', () => {
     expect(html).toMatch(/^<footer /);
   });

@@ -32,6 +32,9 @@ import styles from './introduction.module.css';
  * address it links to, per DDR-029. The address is not lost: the footer shows all three, on screen
  * and on paper alike, which is what makes the label possible at all. So the pill prints its label
  * and nothing after it, and the printed CV still carries every address once.
+ *
+ * The LinkedIn and GitHub pills open a new tab, per DDR-043, and carry an arrow after the label that
+ * says so; the email pill opens the mail client and carries none.
  */
 export function Introduction({
   introduction,
@@ -40,8 +43,17 @@ export function Introduction({
   introduction: IntroductionContent;
   cv: Cv;
 }) {
-  const { photo, name, positioning, location, relocation, summary, availability, contact } =
-    introduction;
+  const {
+    photo,
+    name,
+    positioning,
+    location,
+    relocation,
+    summary,
+    availability,
+    contact,
+    newTab,
+  } = introduction;
 
   return (
     <header className={styles.introduction}>
@@ -55,11 +67,25 @@ export function Introduction({
         <p className={styles.summary}>{summary}</p>
         <p className={styles.summary}>{availability}</p>
         <ul className={styles.controls}>
-          {contact.map(({ label, href, icon }) => (
+          {/* A profile opens in a new tab, so the page stays open behind it, per DDR-043. `noopener`
+              keeps the new tab from reaching back to this one through `window.opener`; browsers
+              imply it for a new tab today, and it is written out so the guarantee does not rest on
+              a default. The arrow says so before the pill is chosen, and names it for assistive
+              technology. */}
+          {contact.map(({ label, href, icon, newTab: opensNewTab }) => (
             <li key={href}>
-              <a href={href} className={styles.contact}>
+              <a
+                href={href}
+                className={styles.contact}
+                {...(opensNewTab && { target: '_blank', rel: 'noopener' })}
+              >
                 <Icon name={icon} />
                 {label}
+                {opensNewTab && (
+                  <span className={styles.newTab}>
+                    <Icon name="external" label={newTab} />
+                  </span>
+                )}
               </a>
             </li>
           ))}

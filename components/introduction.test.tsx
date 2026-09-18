@@ -113,6 +113,44 @@ describe('Introduction', () => {
     }
   });
 
+  // DDR-043: a profile opens in a new tab so the page stays open behind it, and the new tab cannot
+  // reach back to this one. The email pill opens the mail client, so it opens no tab.
+  it('opens LinkedIn and GitHub in a new tab that cannot reach this one, per DDR-043', () => {
+    const anchors = [...html.matchAll(/<a [^>]*>/g)].map(([tag]) => tag);
+
+    for (const { href, newTab } of introduction.contact) {
+      const tag = anchors.find((anchor) => anchor.includes(`href="${href}"`))!;
+
+      if (newTab) {
+        expect(tag).toContain('target="_blank"');
+        expect(tag).toMatch(/rel="[^"]*\bnoopener\b[^"]*"/);
+      } else {
+        expect(tag).not.toMatch(/target=|rel=/);
+      }
+    }
+  });
+
+  // DDR-043: the arrow is the one mark that says something the label does not, so it is the one
+  // given a name. A screen reader hears it as part of the pill's name, and a sighted reader sees it.
+  it('says a pill opens a new tab before it is chosen, to the eye and to assistive technology', () => {
+    const arrow = `<svg[^>]*role="img"[^>]*aria-label="${literal(introduction.newTab)}"`;
+
+    for (const { label, newTab } of introduction.contact) {
+      const link = links.find(({ text }) => text === label)!;
+
+      if (newTab) {
+        expect(link.markup).toMatch(new RegExp(arrow));
+        expect(link.markup).not.toMatch(/<svg[^>]*role="img"[^>]*aria-hidden/);
+      } else {
+        expect(link.markup).not.toMatch(/role="img"|aria-label/);
+      }
+    }
+
+    // The visible label is unchanged and comes first, so the name a reader speaks to choose the
+    // pill is still the start of its accessible name, per WCAG 2.5.3.
+    expect(links.slice(0, 3).map(({ text }) => text)).toEqual(['Email', 'LinkedIn', 'GitHub']);
+  });
+
   it('draws a different mark for each control, so no two are the same shape', () => {
     const marks = links.map(({ markup }) => markup.match(/<svg[\s\S]*<\/svg>/)?.[0]);
 
@@ -352,6 +390,12 @@ describe('introduction styles', () => {
     expect(rule('.contact', paper)).toMatch(/border:\s*none;/);
   });
 
+  // DDR-043: nothing opens on paper, so the arrow that warns of a new tab is not printed, and the
+  // printed CV is the sheet it was.
+  it('drops the new-tab arrow on paper, per DDR-043', () => {
+    expect(rule('.newTab', paper)).toMatch(/display:\s*none;/);
+  });
+
   // Every shadow here is put out by its token in print — the pills' by DDR-020 and the photo's two
   // by DDR-021 — as the surfaces are by DDR-015, so there is nothing here to write.
   it('writes no rule to put out its own shadows, which the tokens drop', () => {
@@ -372,6 +416,15 @@ describe('introduction content', () => {
   // owner, and each is shorter than the address it replaces, which is the whole point of it.
   it('labels each contact pill with the service the design names, per DDR-029', () => {
     expect(introduction.contact.map(({ label }) => label)).toEqual(['Email', 'LinkedIn', 'GitHub']);
+  });
+
+  // DDR-043: the two profiles open a new tab and the email address does not.
+  it('opens the two profiles in a new tab and the email address in the mail client, per DDR-043', () => {
+    expect(introduction.contact.map(({ label, newTab }) => [label, newTab])).toEqual([
+      ['Email', false],
+      ['LinkedIn', true],
+      ['GitHub', true],
+    ]);
   });
 
   it('gives each contact link a mark of its own, so no two controls look alike', () => {
