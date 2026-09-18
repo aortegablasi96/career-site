@@ -24,6 +24,7 @@ export function Credentials({
       {credentials.map((credential) =>
         'thesis' in credential ? (
           <TimelineRow
+            kind="credential"
             key={credential.name}
             dates={<DateRange start={credential.start} end={credential.end} labels={dateLabels} />}
             title={credential.name}
@@ -33,6 +34,7 @@ export function Credentials({
           </TimelineRow>
         ) : (
           <TimelineRow
+            kind="credential"
             key={credential.name}
             dates={<MonthDate month={credential.granted} labels={dateLabels} />}
             title={credential.name}

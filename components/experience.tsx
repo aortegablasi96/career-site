@@ -17,6 +17,7 @@ export function Experience({ roles, dateLabels }: { roles: readonly Role[]; date
     <>
       {roles.map(({ title, company, place, start, end, points }) => (
         <TimelineRow
+          kind="role"
           key={`${company} ${start}`}
           dates={<DateRange start={start} end={end} labels={dateLabels} />}
           place={place}

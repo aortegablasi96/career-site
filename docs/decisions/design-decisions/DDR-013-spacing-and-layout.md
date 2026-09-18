@@ -4,6 +4,11 @@ Status: Accepted
 
 Date: 2026-09-16
 
+**Superseded in part by DDR-039**, which takes the rhythm below: `--space-item` and
+`--space-section` are now the design's own values, off this scale, alongside three new rhythm
+tokens, and all of them step down to three quarters below the wide breakpoint. The scale itself and
+`--space-flow` are untouched, and so is the rule that space is set above an element.
+
 **Amended by DDR-026** in one respect: sections are no longer separated by whitespace and a heading
 alone, because the design's divider is now drawn between them. The scale, the rhythm and every value
 below are untouched — DDR-026 splits the section step in half around the line rather than adding to
@@ -58,6 +63,9 @@ In rem, so space follows the reader's browser font-size setting with the text it
 not on this scale is a decision to make, not a number to write.
 
 ### The rhythm, unchanged
+
+**Superseded by DDR-039.** The table below is the rhythm as it was until #119. Only `--space-flow`
+still has the value it gives.
 
 | Token            | Step              | Separates                                    |
 | ---------------- | ----------------- | -------------------------------------------- |

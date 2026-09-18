@@ -8,8 +8,8 @@
  * above the text on a narrow screen rather than being moved there.
  */
 
-/* Projects in a section are separated by the item step, as roles and skill groups are, per
-   DDR-013. The first project follows the heading inside the block the section keeps whole with it,
+/* Projects in a section are separated by the item step, the design's 40px, as skill groups are,
+   per DDR-039. The first project follows the heading inside the block the section keeps whole with it,
    per DDR-008, so the section's own rules give it its space. */
 .project + .project {
   margin-block-start: var(--space-item);

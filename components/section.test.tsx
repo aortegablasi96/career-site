@@ -66,13 +66,13 @@ describe('Section', () => {
     expect(css).toMatch(/\.section\s*\{[^}]*border-block-start:[^;]*var\(--color-border\);/);
   });
 
-  // The boundary DDR-013 sets is --space-section, which is twice --space-item. Half above the line
-  // and half below leaves it that size and puts the line in the middle of it, where the design
-  // draws it. A section that took the whole step and then padded itself would open a boundary half
-  // as wide again as every other space on the page.
+  // The base styles set --space-section between two sections, which is twice --space-boundary, the
+  // design's 56px, per DDR-039. A boundary above the line and one below leaves that distance and
+  // puts the line in the middle of it, where the design draws it. A section that took the whole
+  // space and then padded itself would open a boundary half as wide again.
   it('splits the section boundary around the divider rather than adding to it, per DDR-026', () => {
-    expect(css).toMatch(/\.section\s*\{[^}]*margin-block-start:\s*var\(--space-item\);/);
-    expect(css).toMatch(/\.section\s*\{[^}]*padding-block-start:\s*var\(--space-item\);/);
+    expect(css).toMatch(/\.section\s*\{[^}]*margin-block-start:\s*var\(--space-boundary\);/);
+    expect(css).toMatch(/\.section\s*\{[^}]*padding-block-start:\s*var\(--space-boundary\);/);
   });
 
   // The divider is a hairline, so paper drops it at the token layer with no print rule here, as
@@ -82,8 +82,8 @@ describe('Section', () => {
     expect(print).not.toMatch(/\.section/);
   });
 
-  it('keeps the spacing a section has without the block, per DDR-003', () => {
-    expect(css).toMatch(/\.opening > \* \+ \*\s*\{\s*margin-block-start:\s*var\(--space-flow\);\s*\}/);
+  it('sets the first item the heading step below the heading, and the next at the item step, per DDR-039', () => {
+    expect(css).toMatch(/\.opening > \* \+ \*\s*\{\s*margin-block-start:\s*var\(--space-heading\);\s*\}/);
     expect(css).toMatch(/\.opening \+ \*\s*\{\s*margin-block-start:\s*var\(--space-item\);\s*\}/);
   });
 });

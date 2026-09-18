@@ -563,6 +563,9 @@ const spaces = new Map(
 );
 
 const steps = [...spaces].filter(([, value]) => value.endsWith('rem'));
+
+// The design's spaces, in pixels at its 894px width, per DDR-039.
+const designRhythm = { heading: 40, item: 40, role: 44, credential: 36, boundary: 56 };
 const stepNames = steps.map(([name]) => name);
 
 describe('spacing tokens', () => {
@@ -570,11 +573,12 @@ describe('spacing tokens', () => {
     expect(stepNames).toEqual(['x-small', 'small', 'medium', 'large', 'x-large']);
   });
 
-  it('writes every spacing token as a step in rem or a reference to a step', () => {
+  it('writes every spacing token as a step in rem, a reference to a step, or a rhythm value', () => {
     const onTheScale = new RegExp(`^\\d*\\.?\\d+rem$|^var\\(--space-(?:${stepNames.join('|')})\\)$`);
+    const rhythm = new Set(Object.keys(designRhythm)).add('section');
 
     for (const [name, value] of spaces) {
-      expect(value, name).toMatch(onTheScale);
+      if (!rhythm.has(name)) expect(value, name).toMatch(onTheScale);
     }
   });
 
@@ -585,12 +589,26 @@ describe('spacing tokens', () => {
     expect(sizes.slice(1)).toEqual(sizes.slice(0, -1).map((size) => size * 2));
   });
 
-  it.each([
-    { role: 'flow', step: 'medium' },
-    { role: 'item', step: 'large' },
-    { role: 'section', step: 'x-large' },
-  ])('separates at the $role level by the $step step, as DDR-013 records', ({ role, step }) => {
-    expect(spaces.get(role)).toBe(`var(--space-${step})`);
+  it('separates the blocks inside an item by the medium step, as DDR-013 records', () => {
+    expect(spaces.get('flow')).toBe('var(--space-medium)');
+  });
+
+  // DDR-039 takes the rest of the rhythm off the design, measured at 894px, and scales it by one
+  // factor so the spaces keep their proportions below the wide breakpoint.
+  it.each(Object.entries(designRhythm))(
+    "sets --space-%s to the design's %spx, times the rhythm factor, per DDR-039",
+    (name, pixels) => {
+      expect(spaces.get(name)).toBe(`calc(${pixels / 16}rem * var(--rhythm-scale))`);
+    },
+  );
+
+  it('sets the distance between two sections to a boundary on each side of the divider', () => {
+    expect(spaces.get('section')).toBe('calc(2 * var(--space-boundary))');
+  });
+
+  it("steps the rhythm down to three quarters below the wide breakpoint, and to the design's own from it", () => {
+    expect(token('rhythm-scale')).toBe('0.75');
+    expect(atWide.get('rhythm-scale')).toBe('1');
   });
 
   // DDR-013's single change to DDR-003: the column is no longer the measure. It is wide enough for
@@ -704,12 +722,13 @@ describe('spacing tokens', () => {
 // differ, and records the step each takes on either side of it. These tests read the tokens as
 // written, so a third breakpoint, or a new adaptation, cannot be added quietly.
 const atBreakpoint = redefined(breakpoints[0]?.body);
+const atWide = redefined(breakpoints[1]?.body);
 
 const adapted = [
   { role: 'font-size-page-title', narrow: 'font-size-xx-large', wide: 'font-size-xxx-large' },
   { role: 'font-size-section-title', narrow: 'font-size-large', wide: 'font-size-x-large' },
   { role: 'page-gutter', narrow: 'space-small', wide: 'space-medium' },
-  { role: 'page-padding-block', narrow: 'space-large', wide: 'space-section' },
+  { role: 'page-padding-block', narrow: 'space-large', wide: 'space-x-large' },
 ];
 
 // DDR-014's table also sends the language cards from one column to two at the breakpoint, and a
@@ -719,8 +738,14 @@ const adapted = [
 const adaptedCounts = [{ role: 'language-columns', narrow: '1', wide: '2' }];
 
 describe('responsive tokens', () => {
-  it('redefines tokens at one breakpoint only, a minimum width in em, so it follows the browser font-size setting', () => {
-    expect(breakpoints.map(({ query }) => query)).toEqual(['(min-width: 20em)']);
+  it('redefines tokens at the two breakpoints only, minimum widths in em, so they follow the browser font-size setting', () => {
+    expect(breakpoints.map(({ query }) => query)).toEqual(['(min-width: 20em)', '(min-width: 48em)']);
+  });
+
+  // The wide breakpoint is the components' layout, per DDR-014; DDR-039 lets it redefine the one
+  // value the rhythm is scaled by, and nothing else.
+  it('redefines nothing at the wide breakpoint but the rhythm factor, per DDR-039', () => {
+    expect([...atWide.keys()]).toEqual(['rhythm-scale']);
   });
 
   it('adapts only the page and section titles, the page edges and the language columns, never a step of either scale', () => {
@@ -767,6 +792,11 @@ const forPaper = [
   { name: 'root-font-size', value: '12pt' },
   { name: 'line-height-prose', value: 'var(--line-height-body)' },
   { name: 'line-height-prose-small', value: 'var(--line-height-body)' },
+  { name: 'space-heading', value: 'var(--space-flow)' },
+  { name: 'space-item', value: 'var(--space-large)' },
+  { name: 'space-role', value: 'var(--space-large)' },
+  { name: 'space-credential', value: 'var(--space-large)' },
+  { name: 'space-boundary', value: 'var(--space-large)' },
   { name: 'color-surface', value: 'transparent' },
   { name: 'color-surface-card', value: 'transparent' },
   { name: 'color-surface-bar', value: 'transparent' },
@@ -790,7 +820,7 @@ const forPaper = [
 ];
 
 describe('print tokens', () => {
-  it('redefines only the base size, the running-text leading, every surface, every hairline, the shadows, the column and its edges, and the photo', () => {
+  it('redefines only the base size, the running-text leading, the rhythm, every surface, every hairline, the shadows, the column and its edges, and the photo', () => {
     expect([...inPrint.keys()]).toEqual(forPaper.map(({ name }) => name));
   });
 

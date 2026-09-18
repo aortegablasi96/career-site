@@ -6,6 +6,11 @@ Date: 2026-09-16
 
 Supersedes DDR-005, the print stylesheet, and DDR-008, section openings in print.
 
+**Amended by DDR-039 in one respect**: the screen spaces sections, headings and entries by the
+design's values, and paper keeps the steps it had, which the print block restores through the five
+rhythm tokens. The design's values would have printed seven sheets; the narrow factor keeps six but
+moves the languages onto the footer's sheet. As shipped, each sheet is pixel-identical to what it was.
+
 **Amended by DDR-038 in one respect**: the screen sets running text at the design's looser leading,
 and paper keeps 1.5, which the print block restores through the two prose tokens. With the screen's
 leading the CV printed seven sheets and the browsers broke differently. With 1.5 each sheet is
