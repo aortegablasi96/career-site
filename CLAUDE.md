@@ -75,7 +75,7 @@ accent, and what identifies them is in the record.
 
 **The skills and languages sections are the redesign's, under #51.** A skill group is its name as an
 `h3` followed by one block per level, strongest first: a level badge — the level as a word in a
-tinted pill — and then that level's skills, separated by middle dots the same way the metadata line
+tinted pill — on a line of its own, per DDR-037, and below it that level's skills, separated by middle dots the same way the metadata line
 separates its parts, and, since #78, in the same ink and at the same size as one. Groups stand two
 to a row from the wide breakpoint and one below. The *row* is
 what `app/page.tsx` hands the section, not the group, because the two columns have to be one grid
@@ -516,8 +516,8 @@ nothing either: it is the first time ADR-001's "`'use client'` requires a reason
 records the reason — the contents bar has to know how far the page has scrolled — and is not a
 precedent for the next one. The next ADR is `008`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-036. The next DDR is
-`037`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-037. The next DDR is
+`038`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Thirteen accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -534,7 +534,8 @@ at the section concerned:
   itself. DDR-035 takes its "Hover thickens the underline": hover changes colour instead.
   DDR-031 takes its "It is not sticky": the contents are the design's pinned bar, and
   DDR-031 also amends DDR-021's out-of-flow rule, DDR-025's opaque palette and DDR-030's open item.
-  DDR-036 amends its spine: a ringed dot on one unbroken line.
+  DDR-036 amends its spine: a ringed dot on one unbroken line. DDR-037 amends its skills pattern:
+  a level's badge stands above its skills.
 * **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
   rule and its rule that nothing scrolls horizontally from 320px. DDR-027 takes its 44 by 44 pixel
   minimum target, and `--target-size-min` with it. The one sentence of that bullet which survives is
@@ -1097,6 +1098,16 @@ Three things about it are worth knowing before touching it.
   foot of the last row. DDR-036 records it as the one place the page stays short of the file.
 * **The core prints; the ring, the line and the surface inside the ring do not**, all at the token
   layer. Each printed entry keeps a 6px accent dot beside its title.
+
+**#117 has landed, as DDR-037: a level's badge stands above its skills.** The skills are wrapped
+in one `span` that `skills.module.css` sets `display: block`, so they start flush with the group's
+edge; the badge stays `inline-block` and first in the same paragraph, so the reading order does not
+move. The name and each level are `--space-flow` apart, where they were `--space-small`, and the
+badge is `--space-small` above its skills, the nearest step to the design's 6px. The design's 40px
+between two rows of groups is left to #119, which owns the spacing scale. **The printed CV is six
+sheets in both browsers since this story**: the skills section grows by 177.5px on paper and the
+footer — the only place the printed CV carries an address — now stands alone on sheet 6. Every
+section heading and every skill group is on the sheet it was on before.
 
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the

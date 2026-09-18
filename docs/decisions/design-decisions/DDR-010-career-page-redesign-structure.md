@@ -47,6 +47,10 @@ page's surface, a 3px ring of the line's tint and a 6px accent core — and the 
 from the first dot to the last, meeting each ring rather than stopping short of it. The rest of the
 timeline stands, including the rule that the line does not run past the last row. Marked below.
 
+**Amended by DDR-037** in its skills pattern. A level's badge now stands on a line of its own and
+its skills start on the line below, flush with the group's edge, where they ran on from the badge.
+The markup order is unchanged, and so is the rest of the skills pattern. Marked below.
+
 This record decides the page's **structure and patterns**. The token values the structure reads are
 reworked by #44, the CV download by #45, and the print stylesheet by #52. Where this record names a
 value, such as the accent, it is because the UI Review settled it and those stories implement it
@@ -238,7 +242,8 @@ Above the wide breakpoint, two columns: a media column and the text. Below it, m
 Two columns of groups above the wide breakpoint, one below. Each group is an `h3` — the group's name
 — followed by one block per level, strongest first. Each block is a **level badge**, the level as a
 word in a tinted pill, followed by that level's skills separated by middle dots. A level with no
-skills in a group is left out.
+skills in a group is left out. *Amended by DDR-037*: the badge stands above its skills rather than
+leading their line, and the skills start flush with the group's edge.
 
 * **Levels remain words**: Advanced, Proficient, Basic. No bars, stars, dots or percentages. This is
   DDR-006's rule and the brief's, carried forward.

@@ -100,6 +100,19 @@ describe('skills styles', () => {
     expect(wide).toMatch(/\.group \+ \.group\s*\{\s*margin-block-start:\s*0;/);
   });
 
+  // DDR-037: a badge stands on its own line and its skills start on the next, flush with the group's
+  // edge. The markup keeps the badge first, so this is layout and not reading order.
+  it('starts each level’s skills on the line below its badge, per DDR-037', () => {
+    expect(css).toMatch(/\.skills\s*\{[^}]*display:\s*block;[^}]*margin-block-start:\s*var\(--space-small\);/);
+    expect(css).toMatch(/\.badge\s*\{[^}]*display:\s*inline-block;/);
+    expect(groups[0]).toMatch(/<p class="[^"]*"><span class="[^"]*">[^<]+<\/span> <span class="[^"]*">/);
+  });
+
+  // The design holds the group's name, each level and the next 16px apart, which is the flow step.
+  it('holds the name and each level a flow step apart, per DDR-037', () => {
+    expect(css).toMatch(/\.group > \* \+ \*\s*\{\s*margin-block-start:\s*var\(--space-flow\);/);
+  });
+
   // DDR-012 records each tint with the ink it carries: 7.29:1, 8.88:1 and 6.92:1. Every one of them
   // clears 4.5:1, which is the floor the brief sets, and the words survive the tint being dropped.
   it('gives each level its own tint and ink, from the tokens DDR-012 measured', () => {

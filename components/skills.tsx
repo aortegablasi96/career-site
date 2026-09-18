@@ -22,8 +22,10 @@ const tints: Record<SkillLevel, string> = {
  * an `h3` followed by one block per level, strongest first, and a level with no skills in the group
  * is left out.
  *
- * A block is a level badge — the level as a word in a tinted pill — followed by that level's skills
- * separated by middle dots. Levels stay words: no bars, stars, dots or percentages, which is
+ * A block is a level badge — the level as a word in a tinted pill — above that level's skills
+ * separated by middle dots, per DDR-037. The two stay in one paragraph, badge first, so a reader
+ * still meets the level and then its skills; the skills are wrapped only so the stylesheet can start
+ * them on a line of their own. Levels stay words: no bars, stars, dots or percentages, which is
  * DDR-006's rule carried forward by DDR-010. The badge's tint repeats what the badge says, so
  * nothing on the page depends on colour, and the middle dots between skills are punctuation that
  * assistive technology does not announce, as the metadata line's are.
@@ -45,18 +47,20 @@ export function Skills({ levels, groups }: { levels: readonly SkillLevelName[]; 
             return listed.length === 0 ? null : (
               <p key={level} className={styles.level}>
                 <span className={`${styles.badge} ${tints[level]}`}>{label}</span>{' '}
-                {listed.map((skill, index) => (
-                  // The skills are fixed and never reordered, so their position identifies them.
-                  <Fragment key={skill}>
-                    {index > 0 && (
-                      <>
-                        {' '}
-                        <span aria-hidden="true">·</span>{' '}
-                      </>
-                    )}
-                    {skill}
-                  </Fragment>
-                ))}
+                <span className={styles.skills}>
+                  {listed.map((skill, index) => (
+                    // The skills are fixed and never reordered, so their position identifies them.
+                    <Fragment key={skill}>
+                      {index > 0 && (
+                        <>
+                          {' '}
+                          <span aria-hidden="true">·</span>{' '}
+                        </>
+                      )}
+                      {skill}
+                    </Fragment>
+                  ))}
+                </span>
               </p>
             );
           })}
