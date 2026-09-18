@@ -21,10 +21,12 @@
   margin-block-start: var(--space-item);
 }
 
-/* The levels are set closer to the group's name than the flow, so the group reads as one item, as
-   a timeline row's content does. */
+/* The group's name and its levels are held apart by the flow step, which is the design's 16px
+   between the name and the first level and between one level and the next, per DDR-037. Each
+   level is a block of its own now — a badge over a paragraph of skills — so it needs the room a
+   paragraph does rather than the room a line did. */
 .group > * + * {
-  margin-block-start: var(--space-small);
+  margin-block-start: var(--space-flow);
 }
 
 /* The group's name is a label for the block below it rather than a title over it, so it takes the
@@ -52,8 +54,8 @@
 }
 
 /* A level's skills are metadata rather than running text, so they sit at the step DDR-011 gives
-   dates, places and bullet text, and in the ink DDR-012 gives the same. The badge leads the line
-   and the skills follow it, separated by middle dots that assistive technology does not announce.
+   dates, places and bullet text, and in the ink DDR-012 gives the same. The badge stands above the
+   skills, which are separated by middle dots that assistive technology does not announce.
 
    The two declarations are what `metadata-line.module.css` writes, rather than that module reused:
    this line is not a metadata line. It carries a badge, its parts are skills separated for reading
@@ -66,13 +68,24 @@
   font-size: var(--font-size-x-small);
 }
 
+/* A level's skills start on the line below its badge, flush with the group's edge, per DDR-037, so
+   the lists align with one another and the badges read down the column. The badge stays first in
+   the paragraph, so a screen reader still meets the level and then its skills; this only moves
+   the skills onto a line of their own. The design holds the badge 6px above them, which is on no
+   step; 4px and 8px are equally far from it as boxes, and 8px is the nearer as ink, because the
+   design sets the skills with a taller line than the page does until #118. */
+.skills {
+  display: block;
+  margin-block-start: var(--space-small);
+}
+
 /* A badge is its own word on a tint that repeats what the word says, so it reads the same in
    greyscale, on paper and to a screen reader, per DDR-010. It is the smallest step on the site,
-   which DDR-022 allows for this badge and nothing else. Inline-block, so it takes its padding while
-   sitting on the line with the skills it labels.
+   which DDR-022 allows for this badge and nothing else. Inline-block, so it takes its padding and
+   its tint is as wide as its word, on the line of its own the skills below leave it.
 
    Uppercase and a weight above the line it leads, per DDR-018, which is what tells the badge apart
-   from the skills beside it now that both are words in a line: the tint says the same thing, and a
+   from the skills below it: the tint says the same thing, and a
    badge that lost its tint on paper had only its position left. The case is drawn rather than
    written into `content/`, so a screen reader still announces "Advanced".
 
