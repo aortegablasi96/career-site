@@ -130,43 +130,35 @@ describe('Introduction', () => {
     }
   });
 
-  // DDR-043: the arrow is the one mark that says something the label does not, so it is the one
-  // given a name. A screen reader hears it as part of the pill's name, and a sighted reader sees it.
-  it('says a pill opens a new tab before it is chosen, to the eye and to assistive technology', () => {
-    const arrow = `<svg[^>]*role="img"[^>]*aria-label="${literal(introduction.newTab)}"`;
+  // DDR-044: the pill shows no sign of the tab, so its accessible name says it, and says it after
+  // the visible label, so the name a reader speaks to choose the pill is still the start of the
+  // name, per WCAG 2.5.3. The email pill opens no tab and takes its name from its label alone.
+  it('says a pill opens a new tab in its accessible name, after the visible label, per DDR-044', () => {
+    const anchors = [...html.matchAll(/<a [^>]*>/g)].map(([tag]) => tag);
 
-    for (const { label, newTab } of introduction.contact) {
-      const link = links.find(({ text }) => text === label)!;
+    for (const { href, label, newTab } of introduction.contact) {
+      const tag = anchors.find((anchor) => anchor.includes(`href="${href}"`))!;
 
       if (newTab) {
-        expect(link.markup).toMatch(new RegExp(arrow));
-        expect(link.markup).not.toMatch(/<svg[^>]*role="img"[^>]*aria-hidden/);
+        expect(tag).toContain(`aria-label="${label}, ${introduction.newTab}"`);
       } else {
-        expect(link.markup).not.toMatch(/role="img"|aria-label/);
+        expect(tag).not.toContain('aria-label');
       }
     }
 
-    // The visible label is unchanged and comes first, so the name a reader speaks to choose the
-    // pill is still the start of its accessible name, per WCAG 2.5.3.
+    // Nothing visible says it: no mark on a pill is named, and the visible labels are DDR-029's.
+    expect(html).not.toMatch(/role="img"/);
     expect(links.slice(0, 3).map(({ text }) => text)).toEqual(['Email', 'LinkedIn', 'GitHub']);
   });
 
-  // DDR-044: LinkedIn's and GitHub's pills carry each service's own mark, which is filled as the
-  // service publishes it, where the envelope and the download are the site's own strokes. Each
-  // service's mark carries a class, which is what gives it its brand's colour; the envelope has no
-  // brand, so it carries none and takes the pill's ink.
-  it("draws each service's own mark, filled, and the envelope as a stroke, per DDR-044", () => {
-    for (const { label, icon } of introduction.contact) {
+  // DDR-044: the three contact marks are one set of solid shapes in the pill's ink, where the
+  // download beside them is still a line drawing. None carries a colour of its own.
+  it('draws the three contact marks as one solid set in the pill’s ink, per DDR-044', () => {
+    for (const { label } of introduction.contact) {
       const svg = links.find(({ text }) => text === label)!.markup.match(/<svg[^>]*>/)![0];
 
-      if (icon === 'email') {
-        expect(svg).toContain('stroke="currentColor"');
-        expect(svg).not.toContain('class=');
-      } else {
-        expect(svg).toContain('fill="currentColor"');
-        expect(svg).not.toContain('stroke=');
-        expect(svg).toMatch(/class="[^"]+"/);
-      }
+      expect(svg).toContain('fill="currentColor"');
+      expect(svg).not.toMatch(/stroke=|class=/);
     }
   });
 
@@ -364,15 +356,6 @@ describe('introduction styles', () => {
     expect(`${contact}${cv}`).not.toMatch(/(?:^|[^-])(?:border|padding|box-shadow):/);
   });
 
-  // DDR-044: each service's mark is the colour its brand allows it, not the pill's indigo, and
-  // hover and focus leave it that colour, since recolouring a mark is what both brands forbid.
-  it("draws LinkedIn's and GitHub's marks in their own colours, in every state, per DDR-044", () => {
-    expect(rule('.linkedin')).toMatch(/^\s*color:\s*var\(--color-mark-linkedin\);\s*$/);
-    expect(rule('.github')).toMatch(/^\s*color:\s*var\(--color-mark-github\);\s*$/);
-    expect(rule('.contact:hover,\n.contact:focus-visible')).not.toMatch(/(?:^|[^-])color:/);
-    expect(styles).not.toMatch(/\.(?:linkedin|github)[^{]*:(?:hover|focus)/);
-  });
-
   // DDR-025: the design sets the location line in #94a3b8, the one ink on the page fainter than
   // the muted grey `.metadata` carries. It is 2.39:1 and fails WCAG 1.4.3.
   it('sets the location line in the faintest ink, per DDR-025', () => {
@@ -416,12 +399,6 @@ describe('introduction styles', () => {
   it('prints the label with no address after it, per DDR-029', () => {
     expect(rule('.contact::after', paper)).toMatch(/content:\s*none;/);
     expect(rule('.contact', paper)).toMatch(/border:\s*none;/);
-  });
-
-  // DDR-043: nothing opens on paper, so the arrow that warns of a new tab is not printed, and the
-  // printed CV is the sheet it was.
-  it('drops the new-tab arrow on paper, per DDR-043', () => {
-    expect(rule('.newTab', paper)).toMatch(/display:\s*none;/);
   });
 
   // Every shadow here is put out by its token in print — the pills' by DDR-020 and the photo's two

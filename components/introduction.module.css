@@ -193,30 +193,6 @@
   background-color: var(--color-surface-card);
 }
 
-/* LinkedIn's and GitHub's own marks, each in the one colour its brand allows it and not in the
-   pill's indigo, per DDR-044. The label beside each keeps the pill's ink; only the mark is the
-   service's. The envelope has no owner and so no brand colour, and keeps the pill's.
-
-   Hover and focus change the pill's fill and border and leave the mark as it is: LinkedIn's blue is
-   5.09:1 on the hover fill and GitHub's black 18.78:1, so both stay legible, and a mark recoloured
-   on hover would be the recolouring both brands forbid. */
-.linkedin {
-  color: var(--color-mark-linkedin);
-}
-
-.github {
-  color: var(--color-mark-github);
-}
-
-/* The arrow after a profile's label, which says the pill opens a new tab, per DDR-043. It is one
-   more mark in the pill's row, at the same size and the same gap as the service's mark before the
-   label, so the pill grows by one mark and one gap and nothing else about it changes. The wrapper
-   is a flex container so the arrow sits on the pill's centre line rather than on a text baseline,
-   as the mark before the label does. */
-.newTab {
-  display: flex;
-}
-
 /* The CV pill is filled, which sets it apart from the three addresses. White on the accent is
    6.29:1, per DDR-025. Its border matches its fill, so both kinds of pill are the same size. */
 .cv {
@@ -304,11 +280,5 @@
      wrote; what changed is why. */
   .contact::after {
     content: none;
-  }
-
-  /* Nothing opens on paper, so there is no tab to warn of, per DDR-043. The arrow is dropped with
-     the label it carries, and the printed CV is the sheet it was. */
-  .newTab {
-    display: none;
   }
 }

@@ -22,11 +22,6 @@ link's underline — `--color-surface-hover`, `--color-accent-hover`, `--color-b
 six: a contact pill's hover border at 1.78:1 and a project link's resting underline at 1.86:1, both
 below the 3:1 of 1.4.11. The four below are unchanged.
 
-**Amended by DDR-044 in two respects**: the palette gains `--color-mark-linkedin` and
-`--color-mark-github`, the colours LinkedIn's and GitHub's brands allow their marks, and the accent
-below no longer sets those two pills' icons, only their labels. Both new colours pass 3:1 on the
-pill at rest and on hover, so the failures below are unchanged.
-
 **Amended and corrected by DDR-036**: of the three differences kept below as structure, the
 ringed timeline dot is now adopted, and the second — that the design draws no spine in the
 experience section — was a misreading and is withdrawn. Node 2:99 is the row's empty spine column;

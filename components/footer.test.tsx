@@ -37,7 +37,7 @@ const html = renderToStaticMarkup(<Footer name="Someone" contact={contact} />);
 
 describe('Footer', () => {
   // DDR-043 opens the two profiles in a new tab from their pills only. The footer's addresses are
-  // not controls and carry no arrow to say so, so they open where they are.
+  // not controls, so they open where they are.
   it('opens every address in the same tab, per DDR-043', () => {
     expect(html).not.toMatch(/target=/);
   });

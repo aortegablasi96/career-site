@@ -121,8 +121,8 @@ export interface Introduction {
    */
   contact: readonly ContactLink[];
   /**
-   * What a pill that opens a new tab says about it, per DDR-043. Assistive technology announces it
-   * as part of the pill's name; a sighted reader sees the arrow that carries it.
+   * What a pill that opens a new tab says about it, per DDR-043. Since DDR-044 it is said only to
+   * assistive technology, after the label in the pill's accessible name; nothing on the pill shows it.
    */
   newTab: string;
 }
