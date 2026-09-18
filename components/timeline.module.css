@@ -65,9 +65,15 @@ section > .row {
   font-size: var(--font-size-xxx-small);
 }
 
-/* The space to the next row, carried inside this one so the spine can run through it. */
-.content {
-  padding-block-end: var(--space-item);
+/* The space to the next row, carried inside this one so the spine can run through it. The design
+   draws the two timelines at different intervals, 44px between roles and 36px between credentials,
+   so the row is told which it is, per DDR-039. */
+.role .content {
+  padding-block-end: var(--space-role);
+}
+
+.credential .content {
+  padding-block-end: var(--space-credential);
 }
 
 .content > * + * {

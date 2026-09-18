@@ -6,13 +6,13 @@
  * section.tsx. It is drawn for the same reason the heading's rule is drawn by this file — a line
  * that carries no information should never be in the accessibility tree.
  *
- * It sits in the middle of the boundary rather than adding to it. DDR-013 separates two sections
- * by --space-section, which is exactly twice --space-item, so half of it above the line and half
- * below leaves the boundary the size DDR-013 set it and puts the line where the design puts it,
- * midway between the last item of one section and the heading of the next. That is why the margin
- * is written here at all: the base styles' rhythm rule has no specificity, through :where(), so
- * this splits the step it sets rather than fighting it, and the two halves still read as one step
- * of the scale.
+ * It sits in the middle of the boundary rather than adding to it. The base styles separate two
+ * sections by --space-section, which is twice --space-boundary, so a boundary above the line and
+ * one below leaves the distance the base styles set and puts the line where the design puts it,
+ * 56px below the last item of one section and 56px above the heading of the next, per DDR-039.
+ * That is why the margin is written here at all: the base styles' rhythm rule has no specificity,
+ * through :where(), so this splits the space it sets rather than fighting it. The first section
+ * takes the same boundary below the introduction, as the design's first divider does.
  *
  * Paper draws no divider, and there is no print rule here: DDR-015 makes --color-border
  * transparent at the token layer, as it does the heading's rule and the timeline's spine. The
@@ -25,9 +25,9 @@
      the contents; a scroll margin here as well would add the two together. The divider and the
      space below it are inside the section, so what the reader arrives at is the boundary and then
      the heading. */
-  margin-block-start: var(--space-item);
+  margin-block-start: var(--space-boundary);
   border-block-start: 1px solid var(--color-border);
-  padding-block-start: var(--space-item);
+  padding-block-start: var(--space-boundary);
 }
 
 /*
@@ -74,10 +74,12 @@
 }
 
 /* The heading and the first item share one block, per DDR-008. It keeps the spacing a section has
-   without it: the first item follows the heading at the flow step, and the next item follows the
-   block at the item step, as entries and skill groups follow one another, per DDR-003. */
+   without it: the first item follows the heading at the heading step, the design's 40px, per
+   DDR-039, and the next item follows the block at the item step, as projects and skill groups
+   follow one another. The timeline carries its own space inside each row instead, and takes this
+   margin back. */
 .opening > * + * {
-  margin-block-start: var(--space-flow);
+  margin-block-start: var(--space-heading);
 }
 
 .opening + * {

@@ -15,7 +15,8 @@
   margin-block-start: var(--space-item);
 }
 
-/* Groups in a section are separated by the item step, as roles and projects are, per DDR-013. From
+/* Groups in a section are separated by the item step, as projects are, per DDR-039: the design's
+   40px between two rows of groups, and the same between two groups stacked in one column. From
    the wide breakpoint the two sit side by side and this no longer applies. */
 .group + .group {
   margin-block-start: var(--space-item);

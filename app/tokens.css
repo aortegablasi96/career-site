@@ -265,13 +265,35 @@
   --space-large: 2rem;
   --space-x-large: 4rem;
 
-  /* The vertical rhythm: which step separates what. Each level is twice the one below, so a
-     section boundary is plain from whitespace and its heading, without a rule or a colour. Space
-     between items is applied by the component that renders them. The rhythm is the same at
-     every width. */
+  /* The vertical rhythm: which space separates what. The flow step, between the blocks inside an
+     item, is a step of the scale above. The rest are the design's, per DDR-039, which amends
+     DDR-013: measured off the file at 894px, none of them falls on the doubling scale, and the owner
+     chose the design's own values over the nearest steps. Each is written in rem, so it grows with
+     the reader's text as the scale does.
+
+     - The boundary is the space on each side of a section's divider, the design's 56px: from the
+       last item of one section down to the line, and from the line down to the next heading.
+     - The heading step is from a section's heading to its first item, 40px.
+     - The item step is between two projects, two skill groups and two rows of them, 40px.
+     - A role and a credential are held apart by their own steps, 44px and 36px, because the design
+       draws the two timelines at different intervals. Space between items is applied by the
+       component that renders them.
+
+     Every one of them is the design's value times --rhythm-scale, which is 1 from the wide
+     breakpoint and 0.75 below it, per DDR-039's amendment to DDR-014. The design has no narrow
+     view, and one factor steps the whole rhythm down together, so the proportions the file draws
+     between the spaces hold on a phone as well: a 42px boundary, a 30px heading step, 33px between
+     roles and 27px between credentials. */
+  --rhythm-scale: 0.75;
   --space-flow: var(--space-medium);
-  --space-item: var(--space-large);
-  --space-section: var(--space-x-large);
+  --space-heading: calc(2.5rem * var(--rhythm-scale));
+  --space-item: calc(2.5rem * var(--rhythm-scale));
+  --space-role: calc(2.75rem * var(--rhythm-scale));
+  --space-credential: calc(2.25rem * var(--rhythm-scale));
+  --space-boundary: calc(3.5rem * var(--rhythm-scale));
+  /* The whole distance from one section to the next, which the base styles set and the section
+     splits around its divider. */
+  --space-section: calc(2 * var(--space-boundary));
 
   /* The page is a single centred column, wide enough to place things beside each other, with a
      gutter that keeps content off the edges of a narrow screen and space above and below. The
@@ -493,18 +515,32 @@
     --font-size-page-title: var(--font-size-xxx-large);
     --font-size-section-title: var(--font-size-x-large);
     --page-gutter: var(--space-medium);
-    --page-padding-block: var(--space-section);
+    --page-padding-block: var(--space-x-large);
     --language-columns: 2;
+  }
+}
+
+/*
+ * The wide breakpoint, per DDR-014, where the components lay out in columns. Since DDR-039 it
+ * redefines one token as well: the factor the vertical rhythm is measured by, so the spaces between
+ * sections, headings and entries take the design's full values from here and three quarters of them
+ * below. It is written here rather than in each component because it is a value, not a layout, and
+ * one factor keeps every space in step with the others.
+ */
+@media (min-width: 48em) {
+  :root {
+    --rhythm-scale: 1;
   }
 }
 
 /*
  * The wide breakpoint, per DDR-014, is 48em, and it is the only other one the site has. From it
  * up, the timeline, the projects, the skills and the languages lay out in columns and the photo
- * sits beside the name. What changes there is layout rather than a value, so it redefines no
- * token and is written by the components that lay out: a media query cannot read a custom
- * property, so there is no way to give it a token either. components/stylesheets.test.ts holds
- * every component stylesheet to that one width and no other.
+ * sits beside the name. What changes there is layout, so it is written by the components that lay
+ * out: a media query cannot read a custom property, so there is no way to give it a token either.
+ * The one value that changes there, the rhythm's factor, is redefined in its own block above, per
+ * DDR-039. components/stylesheets.test.ts holds every component stylesheet to that one width and no
+ * other.
  *
  * Paper takes the same layouts, per DDR-015, so a component writes `(min-width: 48em), print`
  * rather than repeating its grid in a print block. A sheet of A4 inside its margins is about 40em,
@@ -537,6 +573,17 @@
        together. At 1.5 every sheet breaks exactly where it did. */
     --line-height-prose: var(--line-height-body);
     --line-height-prose-small: var(--line-height-body);
+
+    /* The rhythm prints at the steps it had before the screen took the design's, per DDR-039, for
+       the reason the leading above does. Paper is not wide by the media query, so it would take the
+       narrow three quarters; that keeps six sheets but moves the languages onto the sixth, and the
+       design's full values cost a seventh and leave the introduction alone on the first. The owner
+       chose on #119 to keep the sheet as it was, and it prints pixel-identical in both browsers. */
+    --space-heading: var(--space-flow);
+    --space-item: var(--space-large);
+    --space-role: var(--space-large);
+    --space-credential: var(--space-large);
+    --space-boundary: var(--space-large);
 
     /* Every surface is the paper. The page's own tint, the white card, the contents bar's, the tag's
        tint and the three level tints all drop, so the sheet reads the same whether or not the browser prints

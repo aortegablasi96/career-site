@@ -213,7 +213,8 @@ at `:root`, and `app/globals.css` applies the tokens to plain HTML elements. Com
 to be CSS Modules that read the tokens rather than writing literal values. A value the tokens do
 not provide is a design decision to make, not a number to invent. `app/tokens.test.ts` holds the
 type scale step by step and its floor to DDR-022, every colour pairing to the contrast ratio DDR-025 records — including the four that fail, held by name so a fifth cannot join them quietly — the
-spacing scale, rhythm, column and radii to DDR-013, the narrow breakpoint and what it adapts to
+spacing scale, column and radii to DDR-013, the rhythm — each space the design's value times one
+factor, and paper's steps as they were — to DDR-039, the narrow breakpoint and what it adapts to
 DDR-014, the **absence** of a target minimum to DDR-027 — the name is held missing, so reinstating
 one moves the record with it — the photo's two widths and its ratio to DDR-021, the three tracking values to DDR-017, the four leadings — each running-text block within half a pixel a line of the design, and 1.5 on paper — to DDR-038,
 the bullet marker's 1.86:1 to DDR-019 as DDR-025 amends it, the raised shadow and its 10% ink to DDR-020 as DDR-025 amends it, and the photo's
@@ -244,9 +245,10 @@ four role tokens that adapt: the page and section titles (`--font-size-page-titl
 read those roles rather than the steps behind them. `--font-size-item-title` is body size at every
 width, because there is nothing below body size a title could take.
 
-The **wide** one, `min-width: 48em`, is the components'. It redefines no token — what changes there
-is layout, and a media query cannot read a custom property — so each component that lays out in
-columns writes it in its own CSS Module. That is the one width a component stylesheet may write, and
+The **wide** one, `min-width: 48em`, is the components'. It redefines one token, `--rhythm-scale`,
+per DDR-039 — 0.75 below it and 1 from it — and nothing else: what changes there is layout, and a
+media query cannot read a custom property, so each component that lays out in columns writes it in
+its own CSS Module. That is the one width a component stylesheet may write, and
 the test enforces it. A third breakpoint is a new decision and a new record. To check either in a
 browser, change the browser's default font size, not the root's CSS font size: an em in a media
 query follows the former and ignores the latter.
@@ -516,10 +518,10 @@ nothing either: it is the first time ADR-001's "`'use client'` requires a reason
 records the reason — the contents bar has to know how far the page has scrolled — and is not a
 precedent for the next one. The next ADR is `008`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-038. The next DDR is
-`039`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-039. The next DDR is
+`040`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Thirteen accepted records are superseded or amended **in part**, and each says so at the top and again
+Fourteen accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -537,12 +539,16 @@ at the section concerned:
   DDR-036 amends its spine: a ringed dot on one unbroken line. DDR-037 amends its skills pattern:
   a level's badge stands above its skills.
 * **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
-  rule and its rule that nothing scrolls horizontally from 320px. DDR-027 takes its 44 by 44 pixel
+  rule and its rule that nothing scrolls horizontally from 320px. DDR-039 lets the wide breakpoint
+  redefine one token, `--rhythm-scale`. DDR-027 takes its 44 by 44 pixel
   minimum target, and `--target-size-min` with it. The one sentence of that bullet which survives is
   the one letting a component drop screen-only sizing on paper.
-* **DDR-013** keeps its scale, its rhythm and every value. DDR-026 amends the sentence that makes
-  whitespace and a heading the whole section boundary: the boundary now carries a hairline, with
-  half the section step above it and half below, so the step itself does not move.
+* **DDR-013** keeps its scale, `--space-flow` and every other value. DDR-039 takes its rhythm: the
+  space between sections, from a heading to its first item and between entries is the design's own,
+  off the scale. DDR-026 amends the sentence that makes whitespace and a heading the whole section
+  boundary: the boundary now carries a hairline, with the section's space split around it.
+* **DDR-026** keeps its divider, its colour, its place and its split. DDR-039 corrects its claim
+  that the page drew the design's 56px on each side of the line: it drew 32px until #119.
 
 * **DDR-023** keeps its two faces, its four weights, its one italic, its seven files and its rule
   about which elements take which face. DDR-030 corrects the one row of its weight table that was
@@ -560,7 +566,8 @@ at the section concerned:
   the same block, for the same reason, and since DDR-026 one of them draws the section divider,
   which therefore prints as nothing at all. DDR-032 keeps the 12pt base, lets a printed address break
   anywhere, and replaces its page-break measurements: five sheets in both browsers. DDR-038 keeps
-  running text at 1.5 on paper, where the screen now sets it looser.
+  running text at 1.5 on paper, where the screen now sets it looser, and DDR-039 keeps the rhythm
+  at its old steps on paper, where the screen now takes the design's.
 * **DDR-018** keeps its case and its ink. DDR-023 takes its "semibold, not bold" decision, and
   corrects its measurement of the tracking fault: at the 10px badge DDR-022 left, +0.1em splits the
   word in a Firefox PDF at **every** weight the site ships, 400 included, where DDR-018 concluded
@@ -1128,6 +1135,31 @@ Three things about it are worth knowing before touching leading.
   320px with 200% text. Nothing scrolls sideways at any width or text size checked, and the name
   beside the photo (#68) behaves exactly as before in every case, since no heading, photo or float
   changed.
+
+**#119 has landed, as DDR-039: sections, headings and entries are spaced as the design spaces
+them.** Five rhythm tokens are the design's own values, measured off the file at 894px, times
+`--rhythm-scale`: `--space-boundary` 56px on each side of a section's divider, `--space-heading`
+40px from a heading to its first item, `--space-item` 40px between projects and skill groups,
+`--space-role` 44px and `--space-credential` 36px. `--space-section` is two boundaries. The owner
+chose the design's values over the nearest steps of DDR-013's scale, which is unchanged.
+
+Three things about it are worth knowing before touching space.
+
+* **The factor is 0.75 below the wide breakpoint and 1 from it**, so a phone gets three quarters of
+  every space and the design's proportions between them. It is the one token the wide breakpoint
+  redefines, in `app/tokens.css`.
+* **`TimelineRow` takes a `kind`**, `role` or `credential`, because the design spaces the two
+  timelines differently. It is the only thing the row knows about what it holds.
+* **Paper keeps the old steps**, by setting the five tokens back in the print block. The owner chose
+  it on #119. The narrow factor keeps six sheets but moves Languages onto the footer's sheet, and
+  the design's values cost a seventh. As shipped, every sheet is pixel-identical to the tree before
+  in both browsers, with background graphics on and off.
+
+At 894px every space matches the design to the pixel, and the page is 4769px against the design's
+4787px; the rest is the introduction and the footer, which are #120's. The page is 452px longer at
+894px, 147px at 390px and 294px at 320px with 200% text. Nothing scrolls sideways at 320px, 360px,
+390px, 768px, 894px or 1536px at either text size. The skill groups' column gap, 32px against the
+design's 64px, is not in #119 and is left open.
 
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the

@@ -6,7 +6,7 @@ import { DateRange } from './date-range';
 import { TimelineRow } from './timeline';
 
 const role = renderToStaticMarkup(
-  <TimelineRow dates="Jun 2023 – Oct 2024" place="Lugano, Switzerland" title="Digital Solutions Manager" subtitle="Ponera Group">
+  <TimelineRow kind="role" dates="Jun 2023 – Oct 2024" place="Lugano, Switzerland" title="Digital Solutions Manager" subtitle="Ponera Group">
     <ul>
       <li>A point</li>
     </ul>
@@ -14,7 +14,7 @@ const role = renderToStaticMarkup(
 );
 
 const credential = renderToStaticMarkup(
-  <TimelineRow dates="Jun 2024" title="Project Management Professional (PMP)" subtitle="Project Management Institute" />,
+  <TimelineRow kind="credential" dates="Jun 2024" title="Project Management Professional (PMP)" subtitle="Project Management Institute" />,
 );
 
 /** The markup's text, as a reader meets it. */
@@ -78,6 +78,7 @@ describe('TimelineRow', () => {
   it('draws the case rather than rewriting the dates, so the row keeps what it announces', () => {
     const dated = renderToStaticMarkup(
       <TimelineRow
+        kind="role"
         dates={<DateRange start="2024-10" labels={dateLabels} />}
         title="Digital Product Manager"
         subtitle="Zerouno Informatica"
@@ -200,8 +201,16 @@ describe('timeline styles', () => {
 
   // The space between two rows is carried inside the row, so the line reaches the next dot rather
   // than breaking at the gap between them. The last row has no next dot to reach.
+  // The design draws roles 44px apart and credentials 36px, per DDR-039, so the row carries its
+  // kind and the stylesheet spaces each by its own step.
+  it('marks the row with its kind, so each timeline takes its own interval', () => {
+    expect(role).toMatch(/<article class="_row_\w+ _role_\w+">/);
+    expect(credential).toMatch(/<article class="_row_\w+ _credential_\w+">/);
+  });
+
   it('runs the line to the next row, and no further than the last one in a section', () => {
-    expect(rule('.content')).toMatch(/padding-block-end:\s*var\(--space-item\);/);
+    expect(rule('.role .content')).toMatch(/padding-block-end:\s*var\(--space-role\);/);
+    expect(rule('.credential .content')).toMatch(/padding-block-end:\s*var\(--space-credential\);/);
     expect(rule('section > .row')).toMatch(/margin-block-start:\s*0;/);
     expect(rule('section > .row:last-child .content')).toMatch(/padding-block-end:\s*0;/);
     expect(rule('section > .row:last-child .line')).toMatch(/display:\s*none;/);

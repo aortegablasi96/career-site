@@ -8,6 +8,11 @@ Supersedes **the one sentence of DDR-010** that rejects the design's divider bet
 Everything else in DDR-010 stands, including the decorative rule it gives each section's `h2`, which
 this record keeps unchanged and argues is a different line doing a different job.
 
+**Corrected by DDR-039**, which #119 found: this record calls the space on each side of the line
+"the design's own 56px and 56px", but the page drew 32px on each side, half of DDR-013's 64px step.
+The divider, its colour, its place and its split are unchanged. What moved is the space: each side
+is now `--space-boundary`, the design's 56px from the wide breakpoint and 42px below it.
+
 It **changes no token and adds none**. The hairline is `--color-border`, which DDR-025 already
 defines and already names this story in, and the space around it is DDR-013's section step, split
 rather than enlarged.
@@ -74,6 +79,10 @@ the two first. A border says it to the eye and to nothing else.
 `--space-item`. So half the step above the line and half below it leaves the distance between two
 sections the distance DDR-013 set, and puts the line in the middle of it — which is the symmetry
 the design draws, 56px and 56px.
+
+**DDR-039 corrects this.** The halves were 32px each, not the design's 56px, so the symmetry was
+the design's and the size was not. Since #119 each half is `--space-boundary`, and the base styles'
+`--space-section` is twice it.
 
 That is the only reason a margin is written in this file at all. The base styles' rhythm rule,
 `:where(main > * + section)`, has no specificity by design, "so a component's own class overrides

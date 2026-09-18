@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-16
 
+**Amended by DDR-039** in one respect: the wide breakpoint now redefines one token in
+`app/tokens.css`, `--rhythm-scale`, so the vertical rhythm takes the design's values from 48em and
+three quarters of them below. Components still write only layout there.
+
 **Superseded in part by DDR-027**, which takes the 44 by 44 pixel minimum target below, and
 DDR-004's before it. A target is now the size the design draws it, and `--target-size-min` is gone.
 Everything else here stands, including the two breakpoints, the markup order, hover, and the rule
@@ -91,6 +95,10 @@ It redefines no token, because what changes there is layout rather than a value 
 becoming three — and a media query cannot read a custom property, so there is no way to give its
 width a token either. It is therefore written by each component that lays out, in its own CSS
 Module.
+
+**DDR-039 amends the first clause.** Since #119 the wide breakpoint also redefines one token,
+`--rhythm-scale`, in `app/tokens.css`: the factor the vertical rhythm is measured by, 0.75 below
+48em and 1 from it. It is a value rather than a layout, and it is the only one.
 
 **The discipline that replaces DDR-004's guarantee:** a component stylesheet may write the wide
 breakpoint, exactly `@media (min-width: 48em)`, and may write no other width of its own.

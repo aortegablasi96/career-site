@@ -23,14 +23,20 @@ import styles from './timeline.module.css';
  *
  * Each row is an article, which print keeps whole, so no role and no credential is split across two
  * pages.
+ *
+ * The one thing the row is told about what it holds is its kind, because the design spaces the two
+ * timelines differently, per DDR-039: roles 44px apart and credentials 36px.
  */
 export function TimelineRow({
+  kind,
   dates,
   place,
   title,
   subtitle,
   children,
 }: {
+  /** Whether the row is a role or a credential, which sets the space to the next row. */
+  kind: 'role' | 'credential';
   /** The date range, or the single month a certification was granted. */
   dates: ReactNode;
   /** Where a role was held. A credential has none, and shows only its dates. */
@@ -43,7 +49,7 @@ export function TimelineRow({
   children?: ReactNode;
 }) {
   return (
-    <article className={styles.row}>
+    <article className={`${styles.row} ${styles[kind]}`}>
       <div className={styles.dates}>
         <MetadataLine parts={[dates]} className={styles.dateRange} />
         {place && <MetadataLine parts={[place]} />}
