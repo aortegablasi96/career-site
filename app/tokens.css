@@ -122,6 +122,12 @@
      text alone and no longer sets the column. */
   --measure: 65ch;
 
+  /* The introduction's summary is held to the design's 680px rather than to the measure, per
+     DDR-040: the Make file writes `max-w-[680px]` on it. In rem, so it follows the reader's text as
+     the measure does. At the default size it is 13px wider than 65ch, and it binds only where the
+     text column is wider than it, which is from about 1010px up. */
+  --measure-summary: 42.5rem;
+
   /* Colour, per DDR-025, which supersedes DDR-012. Light only, by decision. Every value here is
      the one `career-site-design` draws, node by node, including the eight DDR-012, DDR-019 and
      DDR-020 measured and replaced because they fail WCAG. The owner decided on 2026-09-17 that the
@@ -283,7 +289,10 @@
      breakpoint and 0.75 below it, per DDR-039's amendment to DDR-014. The design has no narrow
      view, and one factor steps the whole rhythm down together, so the proportions the file draws
      between the spaces hold on a phone as well: a 42px boundary, a 30px heading step, 33px between
-     roles and 27px between credentials. */
+     roles and 27px between credentials.
+
+     Two more are the introduction's, per DDR-040, measured off node 2:26 the same way: the summary
+     stands 32px below the location line, and the controls 36px below the summary. */
   --rhythm-scale: 0.75;
   --space-flow: var(--space-medium);
   --space-heading: calc(2.5rem * var(--rhythm-scale));
@@ -291,6 +300,8 @@
   --space-role: calc(2.75rem * var(--rhythm-scale));
   --space-credential: calc(2.25rem * var(--rhythm-scale));
   --space-boundary: calc(3.5rem * var(--rhythm-scale));
+  --space-summary: calc(2rem * var(--rhythm-scale));
+  --space-controls: calc(2.25rem * var(--rhythm-scale));
   /* The whole distance from one section to the next, which the base styles set and the section
      splits around its divider. */
   --space-section: calc(2 * var(--space-boundary));
@@ -298,11 +309,17 @@
   /* The page is a single centred column, wide enough to place things beside each other, with a
      gutter that keeps content off the edges of a narrow screen and space above and below. The
      width is 1100px at the default font size, written in rem so the column grows with the text
-     rather than cramping it. The gutter and the space above and below are the narrow values, half
-     the full ones, per DDR-014; the narrow breakpoint restores them. */
+     rather than cramping it. The gutter is the narrow value, half the full one, per DDR-014, and
+     the narrow breakpoint restores it.
+
+     The space above and below the page is a section boundary, per DDR-040, which amends DDR-014:
+     the design pads the introduction and every section by the same 56px, so the photo stands
+     that far below the contents bar and the last section ends that far above the footer, which adds
+     its own 16px. It follows the rhythm's factor rather than the narrow breakpoint, as every other
+     space between the page's blocks does. */
   --content-width: 68.75rem;
   --page-gutter: var(--space-small);
-  --page-padding-block: var(--space-large);
+  --page-padding-block: var(--space-boundary);
 
   /* The corner radius of a tinted or bordered surface, per DDR-013. Three values, one for each
      kind of surface the redesign has, so nothing rounds by an amount of its own: a small radius
@@ -382,10 +399,19 @@
      In px, as every other shadow is. */
   --shadow-bar: 0 2px 16px rgba(26, 26, 46, 0.1);
 
-  /* The profile photo, per DDR-010, #71 and DDR-021: 96px wide below the wide breakpoint and 208px
-     from it, at 3:4, drawn as a capsule by `--radius-pill` and lit by the two shadows above. The width is in rem, as --content-width is, so the photo keeps its proportion to the
-     name beside it when text is enlarged; the ratio is a shape rather than a length and has no
-     unit. This is the projects' media pattern — a width and a ratio rather than two lengths — so
+  /* The profile photo, per DDR-010, #71 and DDR-021: 96px wide below the wide breakpoint and, from
+     it, the design's width, at 3:4, drawn as a capsule by `--radius-pill` and lit by the two shadows
+     above. The narrow width is in rem, as --content-width is, so the photo keeps its proportion to
+     the name beside it when text is enlarged; the ratio is a shape rather than a length and has no
+     unit.
+
+     The wide width is the Make file's `clamp(180px, 22vw, 300px)`, per DDR-040, which amends
+     DDR-021's 208px: a fifth of the viewport and a little more, so 196.8px at the design's 894px,
+     the 180px floor at the 768px breakpoint, and 300px from 1364px up. It is the one length
+     on the page measured from the viewport, because the design sizes the photo by the room it
+     has rather than by the text beside it. Its two bounds are in rem, so enlarged text still
+     enlarges it, and at 200% the floor decides from the breakpoint, which is then 1536px, up to
+     1636px, where 22vw passes it. This is the projects' media pattern — a width and a ratio rather than two lengths — so
      the two pieces of media on the page are described the same way.
 
      The ratio is the design's, settled on #71 before #63 crops the real portrait: a head-and-
@@ -404,7 +430,7 @@
      that breakpoint. On paper the wide token is redefined again, to the measure DDR-015 gives the
      printed photo. */
   --photo-width: 6rem;
-  --photo-width-wide: 13rem;
+  --photo-width-wide: clamp(11.25rem, 22vw, 18.75rem);
   --photo-ratio: 3 / 4;
 
   /* The timeline's three columns, per DDR-010: the dates, the spine, and the content. The date
@@ -504,7 +530,9 @@
 
 /*
  * The narrow breakpoint, per DDR-014. From here up, the page and section titles take the full
- * scale DDR-022 records, the page's edges open out, and the language cards stand two to a row.
+ * scale DDR-022 records, the page's gutter opens out, and the language cards stand two to a row.
+ * The space above and below the page no longer changes here: since DDR-040 it is a section
+ * boundary, which the rhythm's factor steps down instead.
  *
  * It is in em, which in a media query is the browser's default font size, so a narrow screen with
  * enlarged text falls below it just as a narrower screen does. At the default size it is 320px. A
@@ -515,7 +543,6 @@
     --font-size-page-title: var(--font-size-xxx-large);
     --font-size-section-title: var(--font-size-x-large);
     --page-gutter: var(--space-medium);
-    --page-padding-block: var(--space-x-large);
     --language-columns: 2;
   }
 }
@@ -584,6 +611,11 @@
     --space-role: var(--space-large);
     --space-credential: var(--space-large);
     --space-boundary: var(--space-large);
+    /* The introduction's two spaces print at the flow step, which is what separated the summary
+       from the location and the controls from the summary before DDR-040, so the first sheet is
+       the one it was. */
+    --space-summary: var(--space-flow);
+    --space-controls: var(--space-flow);
 
     /* Every surface is the paper. The page's own tint, the white card, the contents bar's, the tag's
        tint and the three level tints all drop, so the sheet reads the same whether or not the browser prints

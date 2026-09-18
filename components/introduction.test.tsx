@@ -259,6 +259,18 @@ describe('introduction styles', () => {
     expect(rule('.frame', wide)).toMatch(/float:\s*none;/);
   });
 
+  // DDR-040: the design's proportions. 64px between the photo and the text, the summary held to
+  // 680px, and the summary and the controls set further apart from what precedes them than the
+  // flow step, by two spaces of the rhythm.
+  it("sets the introduction's gap, measure and spaces to the design's, per DDR-040", () => {
+    expect(rule('.introduction', wide)).toMatch(/gap:\s*var\(--space-x-large\);/);
+    expect(rule('.summary')).toMatch(/max-inline-size:\s*var\(--measure-summary\);/);
+    expect(rule('.location + .summary')).toMatch(/margin-block-start:\s*var\(--space-summary\);/);
+    expect(rule('.summary + .controls')).toMatch(
+      /margin-block-start:\s*var\(--space-controls\);/,
+    );
+  });
+
   // DDR-027: a control is the 37px the design draws, which is its padding and its label and no
   // minimum of its own. A minimum was also measured against the content box, since nothing on the
   // site sets border-box, so the 44px DDR-014 asked for drew a 62px pill rather than a 44px one.

@@ -9,6 +9,11 @@ Date: 2026-09-16
 tokens, and all of them step down to three quarters below the wide breakpoint. The scale itself and
 `--space-flow` are untouched, and so is the rule that space is set above an element.
 
+**Amended by DDR-040** in two respects: the introduction's summary is held to the design's 680px
+rather than to 65ch, so it is the one paragraph whose line may exceed the measure, by 13px at the
+default size; and the space above and below the page is a section boundary, `--space-boundary`,
+rather than `--space-section`. The measure itself stays 65ch for every other paragraph and list item.
+
 **Amended by DDR-026** in one respect: sections are no longer separated by whitespace and a heading
 alone, because the design's divider is now drawn between them. The scale, the rhythm and every value
 below are untouched — DDR-026 splits the section step in half around the line rather than adding to

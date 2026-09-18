@@ -565,7 +565,15 @@ const spaces = new Map(
 const steps = [...spaces].filter(([, value]) => value.endsWith('rem'));
 
 // The design's spaces, in pixels at its 894px width, per DDR-039.
-const designRhythm = { heading: 40, item: 40, role: 44, credential: 36, boundary: 56 };
+const designRhythm = {
+  heading: 40,
+  item: 40,
+  role: 44,
+  credential: 36,
+  boundary: 56,
+  summary: 32,
+  controls: 36,
+};
 const stepNames = steps.map(([name]) => name);
 
 describe('spacing tokens', () => {
@@ -619,6 +627,14 @@ describe('spacing tokens', () => {
     expect(token('content-width')).not.toBe(token('measure'));
   });
 
+  // DDR-040 holds the introduction's summary to the design's `max-w-[680px]`, in rem so it follows
+  // the text, and leaves every other paragraph on the measure.
+  it("holds the introduction's summary to the design's 680px, per DDR-040", () => {
+    expect(token('measure-summary')).toBe('42.5rem');
+    expect(rem(token('measure-summary')!) * 16).toBe(680);
+    expect(token('measure')).toBe('65ch');
+  });
+
   it.each([
     { name: 'radius-small', value: '0.25rem' },
     { name: 'radius-large', value: '0.75rem' },
@@ -631,11 +647,23 @@ describe('spacing tokens', () => {
   // breakpoint out of this file and a media query cannot read a custom property; the introduction
   // swaps between them. In rem, as the column is, so the photo keeps its proportion to the name
   // beside it when text is enlarged.
-  it('sizes the profile photo at both widths, in rem, the wider one larger', () => {
+  it('sizes the narrow photo in rem, and the wide one at its ratio', () => {
     expect(token('photo-width')).toBe('6rem');
-    expect(token('photo-width-wide')).toBe('13rem');
     expect(token('photo-ratio')).toBe('3 / 4');
-    expect(rem(token('photo-width-wide')!)).toBeGreaterThan(rem(token('photo-width')!));
+  });
+
+  // DDR-040 takes the wide width from the Make file, `clamp(180px, 22vw, 300px)`, which is the
+  // design's 196.8px at 894px. Its bounds are in rem so enlarged text still enlarges the photo, and
+  // the floor is larger than the narrow width, so the photo never shrinks crossing the breakpoint.
+  it("sizes the wide photo by the viewport between the design's two bounds, per DDR-040", () => {
+    const wide = token('photo-width-wide')!;
+    const [, floor, preferred, ceiling] = /^clamp\((\S+), (\S+), (\S+)\)$/.exec(wide)!;
+
+    expect(wide).toBe('clamp(11.25rem, 22vw, 18.75rem)');
+    expect(rem(floor!) * 16).toBe(180);
+    expect(rem(ceiling!) * 16).toBe(300);
+    expect((Number.parseFloat(preferred!) / 100) * 894.4).toBeCloseTo(196.76, 1);
+    expect(rem(floor!)).toBeGreaterThan(rem(token('photo-width')!));
   });
 
   it('adapts the photo in the components rather than here, so the wide breakpoint stays theirs', () => {
@@ -728,7 +756,6 @@ const adapted = [
   { role: 'font-size-page-title', narrow: 'font-size-xx-large', wide: 'font-size-xxx-large' },
   { role: 'font-size-section-title', narrow: 'font-size-large', wide: 'font-size-x-large' },
   { role: 'page-gutter', narrow: 'space-small', wide: 'space-medium' },
-  { role: 'page-padding-block', narrow: 'space-large', wide: 'space-x-large' },
 ];
 
 // DDR-014's table also sends the language cards from one column to two at the breakpoint, and a
@@ -748,7 +775,7 @@ describe('responsive tokens', () => {
     expect([...atWide.keys()]).toEqual(['rhythm-scale']);
   });
 
-  it('adapts only the page and section titles, the page edges and the language columns, never a step of either scale', () => {
+  it('adapts only the page and section titles, the gutter and the language columns, never a step of either scale', () => {
     expect([...atBreakpoint.keys()]).toEqual([...adapted, ...adaptedCounts].map(({ role }) => role));
   });
 
@@ -759,6 +786,14 @@ describe('responsive tokens', () => {
       expect(atBreakpoint.get(role)).toBe(`var(--${wide})`);
     },
   );
+
+  // DDR-040: the design pads the introduction and every section by the same 56px, so the page
+  // begins and ends with a section boundary, which the rhythm's factor steps down rather than the
+  // narrow breakpoint.
+  it('pads the page above and below by a section boundary, per DDR-040', () => {
+    expect(token('page-padding-block')).toBe('var(--space-boundary)');
+    expect(atBreakpoint.has('page-padding-block')).toBe(false);
+  });
 
   it.each(adaptedCounts)(
     'sets --$role to $narrow below the breakpoint and $wide from it, as DDR-010 records',
@@ -797,6 +832,8 @@ const forPaper = [
   { name: 'space-role', value: 'var(--space-large)' },
   { name: 'space-credential', value: 'var(--space-large)' },
   { name: 'space-boundary', value: 'var(--space-large)' },
+  { name: 'space-summary', value: 'var(--space-flow)' },
+  { name: 'space-controls', value: 'var(--space-flow)' },
   { name: 'color-surface', value: 'transparent' },
   { name: 'color-surface-card', value: 'transparent' },
   { name: 'color-surface-bar', value: 'transparent' },

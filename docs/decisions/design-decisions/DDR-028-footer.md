@@ -15,6 +15,12 @@ address is written out. Everything below was written in anticipation of that and
 what changes is that the footer is no longer a repetition, and removing it or stopping it printing
 would now cost the printed CV its contact details outright.
 
+**DDR-040 closes the open item below**, "The space above the hairline is the page's, not the
+design's". That section misread the design: the design's footer is 16px below `main`, and `main`
+ends with its last section's 56px of padding, so the last language card is 72px above the line, not
+16px. The page now matches: `main` ends with `--space-boundary` and the footer takes
+`margin-block-start: var(--space-medium)`, which paper drops.
+
 It **adds no token**. The hairline is `--color-border`, the ink is `--color-text-faint` and the
 space is DDR-013's scale — all three already defined, and DDR-025 already names the footer among the
 users of the first two. It **adds one font file to the page**, `lora-latin-400-normal.woff2`, which
@@ -162,6 +168,8 @@ difference is smaller than the cost of rewriting it.
   than the UI Review's 3px. Measured on the built page the three addresses sit 16.1px apart.
 
 ### The space above the hairline is the page's, not the design's
+
+**Closed by DDR-040**, which also corrects the 16px below: the design's space is 72px.
 
 The design puts 16px between the last language card and the footer's line. The page puts 64px,
 because `main` ends with `--page-padding-block` and the footer follows it. That is a **recorded

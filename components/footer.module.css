@@ -12,6 +12,10 @@
  * section divider and the timeline's spine already go. The space stays.
  */
 .footer {
+  /* The design's 16px between the page and the hairline, per DDR-040, which closes DDR-028's open
+     item. `main` ends with a section boundary, the 56px the design pads every section by, so the
+     last section's content stands 72px above the line, as the design's does. */
+  margin-block-start: var(--space-medium);
   border-block-start: 1px solid var(--color-border);
   padding-block: var(--space-large);
   /* The faintest ink on the page, at 2.39:1, which fails WCAG 1.4.3. It is the design's, per
@@ -97,6 +101,13 @@
 }
 
 @media print {
+  /* The printed CV keeps the space above its footer as it was before DDR-040, which is the footer's
+     own padding, so no sheet moves. The margin is the screen's, and DDR-015 lets a component drop
+     screen-only sizing on paper. */
+  .footer {
+    margin-block-start: 0;
+  }
+
   /* The link's text is its address, so the address is not printed after it again — the same rule
      the introduction's pills write, per DDR-006, and what keeps `mailto:` off the sheet. */
   .link::after {
