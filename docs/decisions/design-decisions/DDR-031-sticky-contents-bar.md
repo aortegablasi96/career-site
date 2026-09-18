@@ -29,6 +29,12 @@ state, no animation, not printed, and no mobile "Sections" toggle.
 them. The "Link ink" row and the bullet "The links keep their underline" below are the two places it
 takes; the rest of this record stands.
 
+**Superseded in part by DDR-034**: the bar now draws its edge only once the page has scrolled past
+60px, with a hairline in `--color-rule` and the design's shadow, `--shadow-bar`, and draws none at
+the top of the page. Ground 4 below, the "Bottom hairline" and "Shadow" rows of the anatomy table,
+and the alternative "Adopt the scroll-triggered shadow with a client component" are the places it
+takes. ADR-007 decides the mechanism. The rest of this record stands.
+
 ## Context
 
 Epic #70 closes the gaps between the page and `career-site-design`. On 2026-09-17 the owner decided
@@ -72,8 +78,8 @@ the markup and in the tab order, before the introduction. Only its place in the 
 | Height          | 48px                             | `--contents-bar-height`, 3rem, as a **minimum**             |
 | Surface         | `rgba(248, 247, 244, 0.96)`      | `--color-surface-bar`, the same value                       |
 | Blur            | 12px                             | `--contents-bar-blur`, 12px                                 |
-| Bottom hairline | 0.8px `#e2e8f0`                  | 1px `--color-border`, the width every other hairline has    |
-| Shadow          | none                             | none                                                        |
+| Bottom hairline | 0.8px `#e2e8f0`                  | 1px `--color-border`, the width every other hairline has (only once scrolled, in `--color-rule`, since DDR-034) |
+| Shadow          | none                             | none (`--shadow-bar` once scrolled, since DDR-034)          |
 | Column          | max 1100px, 24px side padding    | `--content-width` and `--page-gutter`, as `main` and the footer use |
 | Link gap        | 28px                             | 16px below the wide breakpoint, 32px from it                |
 | Link type       | DM Sans Medium 13px on 19.5px    | `--font-size-x-small`, `--font-weight-medium`, 19.5px line  |
@@ -136,7 +142,7 @@ link is shorter but the section's name is not.
    draws it. The page keeps the underline, as described above. The spacing that WCAG 2.5.8 (Target
    Size, Minimum) depends on was measured again, as DDR-027 requires whenever a gap or a label
    changes (below).
-4. **Its scroll-triggered shadow needs a scroll listener.** **Declined.** `career-site-design` draws
+4. **Its scroll-triggered shadow needs a scroll listener.** **Declined; superseded by DDR-034**, which adopts it, with ADR-007 as the mechanism. `career-site-design` draws
    no shadow on the bar: node 2:6 has a fill, a blur and a hairline and nothing else. The shadow came
    from the Figma Make draft, not from the design the owner adopted, so there is nothing for it to
    match. Declining it keeps `Contents` a Server Component and the site a static export with no
@@ -176,6 +182,8 @@ Cons:
   keeps it that way.
 
 ### Adopt the scroll-triggered shadow with a client component
+
+Adopted since, by DDR-034 and ADR-007, on #114.
 
 Pros:
 * It matches the Figma Make draft.

@@ -50,12 +50,49 @@ describe('Contents', () => {
     expect(bar).toMatch(/inset-block-start:\s*0;/);
     expect(bar).toMatch(/background-color:\s*var\(--color-surface-bar\);/);
     expect(bar).toMatch(/backdrop-filter:\s*blur\(var\(--contents-bar-blur\)\);/);
-    expect(bar).toMatch(/border-block-end:\s*1px solid var\(--color-border\);/);
   });
 
-  // The design's scroll-triggered shadow is declined, per DDR-031, so the bar draws none.
-  it('draws no shadow, so it needs no script to draw one on scroll', () => {
-    expect(styles).not.toMatch(/box-shadow/);
+  // DDR-034: at rest the bar has no visible edge. The hairline is there but transparent, so the bar
+  // is the same height in both states and nothing below it moves when the edge appears.
+  it('rests with a transparent hairline and no shadow, per DDR-034', () => {
+    const bar = rule('.contents');
+
+    expect(bar).toMatch(/border-block-end:\s*1px solid transparent;/);
+    expect(bar).not.toMatch(/box-shadow/);
+  });
+
+  // DDR-034: once the page has scrolled, a hairline and the design's shadow, and only the colour of
+  // the hairline changes, never its width. The hairline is `--color-rule`, a step darker than the
+  // design's `--color-border`, at the owner's request on #114.
+  it('draws the hairline and the design’s shadow once the page has scrolled, per DDR-034', () => {
+    const scrolled = rule('.contents[data-scrolled]');
+
+    expect(scrolled).toMatch(/border-block-end-color:\s*var\(--color-rule\);/);
+    expect(scrolled).toMatch(/box-shadow:\s*var\(--shadow-bar\);/);
+    expect(scrolled).not.toMatch(/border-block-end:|border-width|border-block-end-width/);
+  });
+
+  // DDR-034: with script off nothing can mark the bar, so it keeps the hairline DDR-031 drew.
+  it('keeps its hairline when script is off, per DDR-034', () => {
+    expect(styles).toMatch(
+      /@media \(scripting: none\)\s*\{\s*\.contents\s*\{\s*border-block-end-color:\s*var\(--color-rule\);\s*\}\s*\}/,
+    );
+  });
+
+  // DDR-034: the design's 200ms change, and none for a reader who prefers reduced motion. The
+  // transition is written only inside the preference for motion, so it is nowhere else.
+  it('changes state over the design’s 200ms only when motion is welcome, per DDR-034', () => {
+    expect(styles).toMatch(
+      /@media \(prefers-reduced-motion: no-preference\)\s*\{\s*\.contents\s*\{\s*transition-property:\s*border-block-end-color, box-shadow;\s*transition-duration:\s*var\(--contents-bar-transition\);\s*\}\s*\}/,
+    );
+    expect(styles.match(/^\s*transition[\w-]*:/gm)).toHaveLength(2);
+  });
+
+  // DDR-034: the server renders the bar at rest, which is what a reader without script keeps.
+  it('renders the bar at rest, unmarked, until script has read the scroll position', () => {
+    const html = renderToStaticMarkup(<Contents label="Sections" sections={sections} />);
+
+    expect(html).not.toMatch(/data-scrolled/);
   });
 
   it('lays the links out in the page’s column, at least the design’s height tall', () => {

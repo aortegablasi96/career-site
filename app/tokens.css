@@ -173,7 +173,8 @@
      from assistive technology, and all three sit below the 3:1 WCAG 1.4.11 asks of meaningful
      non-text — below, now, the 2.39:1 DDR-012 called the lightest at which a line reads at all.
 
-       rule           1.39:1  the rule beside a section heading
+       rule           1.39:1  the rule beside a section heading, and from #114 the contents bar's
+                              edge once the page has scrolled
        border         1.15:1  a language card's edge, and from #94 and #96 a section divider and
                               the footer's border
        border-accent  1.39:1  a contact pill's border, and the timeline's spine and dots
@@ -303,6 +304,16 @@
   --shadow-photo-glow: 0 8px 40px rgba(79, 70, 229, 0.18);
   --shadow-photo-inner: inset 0 4px 4px rgba(0, 0, 0, 0.25);
 
+  /* The contents bar's edge, per DDR-034, drawn beneath the bar once the page has scrolled and
+     content is passing under it, and not before. Ink and geometry are the design's own, from the
+     Figma Make file: a soft shadow 16px deep, 2px down, in the heading-dark `#1a1a2e` at 10%.
+
+     It is a third elevation and, like DDR-021's two, named for the one element that may read it
+     rather than numbered. The bar is not raised the way a control is, a little off the page all the
+     time: it is lifted only while something passes beneath it, which is a different thing to say.
+     In px, as every other shadow is. */
+  --shadow-bar: 0 2px 16px rgba(26, 26, 46, 0.1);
+
   /* The profile photo, per DDR-010, #71 and DDR-021: 96px wide below the wide breakpoint and 208px
      from it, at 3:4, drawn as a capsule by `--radius-pill` and lit by the two shadows above. The width is in rem, as --content-width is, so the photo keeps its proportion to the
      name beside it when text is enlarged; the ratio is a shape rather than a length and has no
@@ -395,6 +406,9 @@
      at the least, where the links wrap to three rows at 200%; DDR-031 has the table. */
   --contents-bar-height: 3rem;
   --contents-bar-blur: 12px;
+  /* How long the bar takes to gain or lose its edge, per DDR-034: the design's 200ms. It is a time,
+     the site's only one, and it is not read at all when the reader prefers reduced motion. */
+  --contents-bar-transition: 200ms;
   --contents-bar-clearance: calc(var(--contents-bar-height) + var(--space-flow));
 }
 
@@ -483,6 +497,10 @@
        Dropped here rather than in the component, as every other surface and light is. */
     --shadow-photo-glow: none;
     --shadow-photo-inner: none;
+    /* The bar never prints, since print hides every `nav`; its shadow is put out here all the same,
+       so that every light on the page is dropped in one place and none depends on the element
+       carrying it being hidden. */
+    --shadow-bar: none;
 
     --content-width: none;
     --page-gutter: 0;

@@ -504,15 +504,17 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001 to ADR-006 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
+ADR-001 to ADR-007 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
 separate CV file, and ADR-005 superseding the part of ADR-004 that makes the CV a PDF saved from the
 page's print output; the rest of both records stands. ADR-006 supersedes nothing: it refines
 ADR-001's styling boundary by saying which literal values a component stylesheet may write: `0`,
-`auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
-`007`.
+`auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. ADR-007 supersedes
+nothing either: it is the first time ADR-001's "`'use client'` requires a reason" is met, and it
+records the reason — the contents bar has to know how far the page has scrolled — and is not a
+precedent for the next one. The next ADR is `008`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-033. The next DDR is
-`034`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-034. The next DDR is
+`035`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Thirteen accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -573,7 +575,9 @@ at the section concerned:
   10% black, because the hairlines the 22% was measured against no longer exist.
 * **DDR-025** keeps everything but one bullet: DDR-033 takes its ruling that the contents links keep
   their underline. Every other link still has one.
-* **DDR-031** keeps everything but its links' underline, which DDR-033 takes, per #113.
+* **DDR-031** keeps everything but its links' underline, which DDR-033 takes, per #113, and its
+  declined scroll-triggered edge, which DDR-034 adopts, per #114, with its hairline row and its
+  shadow row.
 
 `Superseded` are DDR-001 to DDR-009, DDR-012, and DDR-016:
 
@@ -999,9 +1003,8 @@ Swept every 10px from 300px to 900px at both text sizes, no pair of targets fail
 `components/contents.tsx` renders the `nav` **before `main`**, so `app/page.tsx` now returns the bar,
 `main` and the footer. The bar is `position: sticky` over `--color-surface-bar`, which is the page's
 off-white at 96%, with a `--contents-bar-blur` backdrop blur and a `--color-border` hairline. Its
-links sit in the page's own column, in medium, at least `--contents-bar-height` (48px) tall. It is
-still a Server Component: the design's scroll-triggered shadow is declined, because
-`career-site-design` does not draw one, so no ADR was needed.
+links sit in the page's own column, in medium, at least `--contents-bar-height` (48px) tall. #98
+declined the design's scroll-triggered shadow, and **#114 has since adopted it**, below.
 
 Five things about it are worth knowing before touching it.
 
@@ -1030,6 +1033,27 @@ bar. Every heading the contents reach clears the bar from 320px up. At 300px and
 text it does not, which is below DDR-014's floor and recorded as a risk. Print is untouched in
 mechanism, because `nav` is hidden, and the sheet was not printed to PDF on this story; #99 printed it
 after, under DDR-032.
+
+**#114 has landed, as DDR-034 and ADR-007: the contents bar draws its edge only once the page has
+scrolled.** At rest its 1px hairline is transparent and it has no shadow; past 60px of scroll
+`ContentsBar` marks the `nav` with `data-scrolled`, and it takes a `--color-rule` hairline and
+`--shadow-bar` over `--contents-bar-transition`, 200ms. The hairline is **one step darker than the
+design's** `#e2e8f0`, which the owner asked for on the story; it is the only value on Epic #70 the
+owner chose over the design's.
+
+Four things about it are worth knowing before touching it.
+
+* **`components/contents-bar.tsx` is the site's only Client Component**, per ADR-007. It renders the
+  `nav` and reads `window.scrollY` through `useSyncExternalStore` with a passive listener, and knows
+  nothing else. `Contents` stays a Server Component and hands it the list as `children`. Its two
+  functions are tested in Node against a stubbed `window`, so there is still no DOM environment.
+* **Only the hairline's colour changes, never its width**, so the bar is 49px in both states and
+  nothing below it moves. The transition is written inside `prefers-reduced-motion: no-preference`.
+* **With script off, `@media (scripting: none)` keeps the hairline drawn all the time.** Before
+  hydration, or if script fails, the bar is at rest, which is what the static HTML renders.
+* **Check it against a server that sends `charset=utf-8`.** Python's `http.server` sends JavaScript
+  without one, Firefox then decodes the chunks wrongly and never hydrates, and the bar never gains
+  its edge. GitHub Pages sends the charset. This is a local artefact, not a fault in the site.
 
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the
