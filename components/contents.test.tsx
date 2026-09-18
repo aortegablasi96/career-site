@@ -69,11 +69,17 @@ describe('Contents', () => {
   });
 
   // DDR-025: the design sets a contents link in #64748b where every other link on the page is in
-  // the accent. It is 4.44:1 and fails WCAG 1.4.3. The underline the base styles give every link is
-  // untouched, so colour is not what identifies it. DDR-031 does not reopen that.
-  it('sets a contents link in the muted ink and leaves its underline alone, per DDR-025', () => {
+  // the accent. It is 4.44:1 and fails WCAG 1.4.3.
+  it('sets a contents link in the muted ink, per DDR-025', () => {
     expect(rule('.link')).toMatch(/color:\s*var\(--color-text-muted\);/);
-    expect(styles).not.toMatch(/text-decoration/);
+  });
+
+  // DDR-033: the design draws no underline on a contents link, and it supersedes DDR-025's ruling
+  // that kept one. The link is identified by its place in the bar, its weight and its focus
+  // outline. Only the link rule takes the underline away, so no other link on the page loses it.
+  it('draws no underline on a contents link, per DDR-033', () => {
+    expect(rule('.link')).toMatch(/text-decoration-line:\s*none;/);
+    expect(styles.match(/text-decoration/g)).toHaveLength(1);
   });
 
   // DDR-030 left the design's medium weight on these links to the story that rewrote this file.

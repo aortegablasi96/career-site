@@ -132,7 +132,8 @@ the contents links' underline against the design, on the grounds that at 4.44:1 
 last thing that should have to say a link is a link". A contents link's label is a section title —
 "Experience" — which carries no clue that it is a link, and the underline is the only cue it has. An
 address carries the clue in the string. That is the whole of the difference, and it is thin; Option
-A below is the record of the case for reversing it in one declaration.
+A below is the record of the case for reversing it in one declaration. **DDR-033 settled it the
+other way**: the contents links are no longer underlined either, so the two now agree.
 
 ### Two places the design's value is off the site's scales
 

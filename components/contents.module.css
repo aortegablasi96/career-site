@@ -79,10 +79,11 @@
    it is 4.44:1 over the page and never worse than 4.10:1 over the bar, both of which fail WCAG
    1.4.3.
 
-   The underline the base styles give every link is untouched, so the colour is not what says this
-   is a link. The design draws none, and this is the one thing about the bar that does not follow
-   it: DDR-025 made that call for these links before the bar existed, on the ground that at 4.44:1
-   the colour is the last thing that should have to carry it, and DDR-031 does not reopen it.
+   It is not underlined, as the design draws it, per DDR-033, which supersedes DDR-025's ruling that
+   it kept the underline the base styles give every link. What says this is a link is where it is —
+   a row of section names inside the one `nav` on the page, pinned above everything else — its
+   weight, and the focus outline; the record has the argument and what it costs. It is one
+   declaration away from reversal, as the footer's is.
 
    Its box is its text and nothing else, per DDR-027. It stays a flex container so that the box is
    the whole line the label sets in — 19.5px, which is the design's own 20px — rather than the
@@ -92,4 +93,5 @@
   align-items: center;
   color: var(--color-text-muted);
   font-weight: var(--font-weight-medium);
+  text-decoration-line: none;
 }

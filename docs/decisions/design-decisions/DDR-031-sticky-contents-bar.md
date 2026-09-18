@@ -25,6 +25,10 @@ state, no animation, not printed, and no mobile "Sections" toggle.
   top of the window. The offset moves from each section's `scroll-margin` to the root's
   `scroll-padding`, so it covers keyboard focus as well.
 
+**Amended by DDR-033 in one respect**: the contents links are not underlined, as the design draws
+them. The "Link ink" row and the bullet "The links keep their underline" below are the two places it
+takes; the rest of this record stands.
+
 ## Context
 
 Epic #70 closes the gaps between the page and `career-site-design`. On 2026-09-17 the owner decided
@@ -73,7 +77,7 @@ the markup and in the tab order, before the introduction. Only its place in the 
 | Column          | max 1100px, 24px side padding    | `--content-width` and `--page-gutter`, as `main` and the footer use |
 | Link gap        | 28px                             | 16px below the wide breakpoint, 32px from it                |
 | Link type       | DM Sans Medium 13px on 19.5px    | `--font-size-x-small`, `--font-weight-medium`, 19.5px line  |
-| Link ink        | `#64748b`, no underline          | `--color-text-muted`, **underlined**                        |
+| Link ink        | `#64748b`, no underline          | `--color-text-muted`, **underlined** (none since DDR-033)   |
 | Labels          | Experience … Education …         | the design's five, from `content/`                          |
 
 The labels are the design's own. Each one sits in its section's content module as `link`, next to
@@ -97,6 +101,7 @@ link is shorter but the section's name is not.
   heading clears it. The design has no narrow view to follow.
 * **The links keep their underline.** DDR-025 made that decision before the bar existed: at 4.44:1
   the colour cannot be the only sign that a link is a link. This record does not reopen it.
+  **DDR-033 does**, and the links are no longer underlined.
 * **The height is a minimum.** The design's five links fit on one row in 894px. Below 390px at the
   default text size, and below 770px at 200%, they wrap. A bar that could not grow would hide
   them behind its own edge.
