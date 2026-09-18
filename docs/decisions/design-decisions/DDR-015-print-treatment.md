@@ -12,6 +12,13 @@ is 0.9375rem, so the base had to move for that decision to keep its meaning; at 
 prints at 11.25pt and the smallest step at 7.5pt. Everything else this record decides is untouched,
 and #99 prints the page for Epic #70 and may move the base again.
 
+**Amended by DDR-032**, which printed the page Epic #70 finished and kept the 12pt base. Two things
+here changed. A printed address may now break anywhere, because an unbreakable one made Edge shrink
+the whole sheet to about 0.90. And the measurements under "Page breaks" are replaced: that shrinking,
+not a line of the summary, is why Edge printed four sheets to Firefox's five. Both browsers now
+print five sheets, broken in the same places. The contact pills row of the table under "What is
+hidden" is also stale since DDR-029: a pill prints its label, and the footer prints the address.
+
 **What carries forward from DDR-005**, unchanged in substance: paper is a medium rather than a
 layout, so the tokens express the change wherever they can and the base styles add only what a token
 cannot; the sheet's 2cm margins in a unit of the paper; the column filling the sheet and starting at
@@ -187,6 +194,9 @@ form where the medium cannot carry the first, and may not add content the screen
 | Every target size | Dropped. Nothing is tapped on paper |
 
 ### Page breaks, and what the browsers now do
+
+*Superseded in its measurements by DDR-032*, which prints five sheets in both browsers and finds that
+Edge's fourth came from shrinking the sheet, not from where a line ends. The rules below stand.
 
 The rules are DDR-005's and DDR-008's, unchanged: an `article` or list item is never split, a
 heading avoids a break after it, and each section's heading and first item sit in one block that

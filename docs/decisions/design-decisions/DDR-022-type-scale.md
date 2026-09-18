@@ -20,6 +20,9 @@ forward is every number, the count, and the claim that `medium` is the browser d
 base had to move for that decision to keep its meaning. Everything else DDR-015 decides is
 untouched, and #99 prints the page and may move the base again.
 
+**DDR-032 printed it on #99 and kept 12pt**: 11pt saves no sheet in either browser, and 12.8pt,
+which would put the smallest step at 8pt, costs two.
+
 DDR-014 reads this scale and is unchanged: the narrow breakpoint still steps the page and section
 titles down one step each rather than shrinking them, and it still redefines the same four role
 tokens and the language count. DDR-017's tracking is unchanged too, because it is measured in em and

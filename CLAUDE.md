@@ -511,8 +511,8 @@ ADR-001's styling boundary by saying which literal values a component stylesheet
 `auto` and `none` anywhere, `100%` on a maximum, and `min-content` on a minimum. The next ADR is
 `007`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-031. The next DDR is
-`032`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-032. The next DDR is
+`033`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Eleven accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -549,7 +549,8 @@ at the section concerned:
 * **DDR-015** keeps everything but its print base, which DDR-022 raises from 11pt to 12pt. DDR-025
   splits the one `--color-decoration` it drops on paper into three tokens; all three are dropped in
   the same block, for the same reason, and since DDR-026 one of them draws the section divider,
-  which therefore prints as nothing at all.
+  which therefore prints as nothing at all. DDR-032 keeps the 12pt base, lets a printed address break
+  anywhere, and replaces its page-break measurements: five sheets in both browsers.
 * **DDR-018** keeps its case and its ink. DDR-023 takes its "semibold, not bold" decision, and
   corrects its measurement of the tracking fault: at the 10px badge DDR-022 left, +0.1em splits the
   word in a Firefox PDF at **every** weight the site ships, 400 included, where DDR-018 concluded
@@ -1021,7 +1022,8 @@ Measured every 10px from 300px to 900px and at 1280px and 1536px, at both text s
 scrolls sideways, no pair of targets fails 2.5.8, and no focused element is ever wholly behind the
 bar. Every heading the contents reach clears the bar from 320px up. At 300px and 310px with 200%
 text it does not, which is below DDR-014's floor and recorded as a risk. Print is untouched in
-mechanism, because `nav` is hidden, and the sheet was not printed to PDF on this story; that is #99's.
+mechanism, because `nav` is hidden, and the sheet was not printed to PDF on this story; #99 printed it
+after, under DDR-032.
 
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the
@@ -1172,19 +1174,46 @@ and five, no heading stranded, each skill group still whole on one sheet with th
 between its two rows, and no replacement character in either PDF — the only words the two readers
 disagree on are the ones wrapped at a hyphen, which is pdfium's own behaviour rather than a fault.
 
-**The two browsers no longer agree on the total, and that is worth knowing before touching the
-introduction.** Every break rule behaves identically in both. Firefox simply sets the summary one
-line longer than Edge does, which pushes the second role past the foot of page 1, and
-`break-inside: avoid` then moves the whole role rather than splitting it. The difference is one line
-wide, so an edit to the summary could move Firefox to four sheets or Edge to five. The stand-ins are
-already the full box, so the real pictures on #63 will not change the length. Rechecked on #71, after
-the photo went from square to 3:4: still four sheets in Edge and five in Firefox, with no heading
-stranded and no item split in either. Rechecked on #89, after the photo became a lit capsule, with
-background graphics **on**: still four and five, 483 distinct words back out of both PDFs through
-both readers, and neither light drawn — not one pixel in the 18px band beside the printed photo is
-anything but paper white in either browser. The capsule itself does print. Worth knowing:
-**Firefox prints the photo at 28.11mm and Edge at 24.55mm**, because Edge scales the whole sheet by
-about 0.877; Edge printed the DDR-016 photo at 24.55mm too, so that is not #89's doing.
+Those rechecks, and #71's and #89's after them, all found four sheets in Edge and five in Firefox,
+and put the difference down to Firefox setting the summary one line longer. **#99 found the real
+cause, and it is gone**, below.
+
+**#99 has landed, as DDR-032: the printed CV is five sheets in both browsers, broken in the same
+places.** It is the Epic's closing print check. One declaration changed: the rule in
+`app/globals.css` that prints a link's address after it now also writes `overflow-wrap: anywhere`.
+
+Four things about it are worth knowing before touching print.
+
+* **An unbreakable address made Edge shrink the whole sheet.** A URL contains no space, so it is one
+  word, and a grid column cannot be narrower than its longest word. The Digital Twin project's
+  repository address took its text column to 713px on a sheet with 642.5px of room, and Chromium
+  then scaled everything to fit, to about 0.90. Body text printed at 10.16pt rather than 11.25pt and
+  the photo at 25.34mm rather than 28mm. That is the 0.877 #89 noticed, and it is why Edge printed
+  four sheets: a smaller sheet holds more. Firefox breaks the address at its slashes on its own and
+  prints pixel-identically with and without the change. **A new long address or a new grid
+  column is the thing to recheck**, by measuring `scrollWidth` at 643px under print media in Edge.
+* **The base stays at 12pt.** Priced in both browsers: 11pt still prints five sheets, and 12.8pt,
+  which would put the smallest label at 8pt, prints seven. Body text prints at 11.25pt and a level
+  badge at 7.5pt.
+* **Background graphics change the inks, and nothing else.** Every surface, hairline and light is
+  dropped at the token layer, so layout and text are identical either way; but with background
+  graphics off both browsers darken the pale inks themselves — the muted and faint text, and the
+  footer. That is their economy mode and is left alone; `print-color-adjust: exact` would force the
+  2.39:1 grey onto every sheet.
+* **Sheet 5 is close to full.** It carries the second row of skill groups, education, languages and
+  the footer, so a longer credential or a new project can make the CV six sheets.
+
+Printed to A4 through WebDriver in Edge 153 and Firefox 156, background graphics on and off, and read
+back through pypdf and pdfium: five sheets in all four, the section headings on sheets 1, 3, 4, 5
+and 5 in both browsers, each with its first item; none of the 18 blocks the page itself names — 13
+articles, four skill groups and the row of language cards — split across two sheets; each address
+once, from the footer, and no `mailto`; no replacement character; five apostrophes, all U+2019; and
+the markers drawn on both sheets that carry points. All 479 words the page shows on paper come back
+from all eight readings as letters. As whole words pypdf misses five, each explained: `Copilot-driven`
+and `data-driven`, wrapped at the hyphen, in both browsers; and the three level badges, which it
+spells out from Firefox, as DDR-024 recorded. "Get" is no longer counted, because print hides it.
+**The footer's 64px above its hairline, which DDR-028 left to #99, is still open**: #99 excludes any
+change to what the page shows, so it needs a story of its own.
 
 ADR-004 and ADR-005 together decide the downloadable CV and the site's first binary assets. The CV
 itself has landed, under #56: `public/andreu-ortega-blasi-cv.pdf` is a separately designed document,
