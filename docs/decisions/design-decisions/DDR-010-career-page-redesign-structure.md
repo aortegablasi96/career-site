@@ -51,6 +51,10 @@ timeline stands, including the rule that the line does not run past the last row
 its skills start on the line below, flush with the group's edge, where they ran on from the badge.
 The markup order is unchanged, and so is the rest of the skills pattern. Marked below.
 
+**Superseded in part by DDR-042**, which takes the half of the contents bullet "It has no
+current-section state and does not animate" that rules out a current-section state. The bar now
+marks the link of the section the reader is in. Marked below.
+
 This record decides the page's **structure and patterns**. The token values the structure reads are
 reworked by #44, the CV download by #45, and the print stylesheet by #52. Where this record names a
 value, such as the accent, it is because the UI Review settled it and those stories implement it
@@ -189,7 +193,8 @@ note; the summary; the availability sentence; then a wrapping row of four contro
   hides navigation on exactly the screens where navigation matters most, and needs client-side
   state. A row of five links that wraps to two or three lines is always visible and needs no
   JavaScript.
-* **It has no current-section state and does not animate**, as DDR-006 decided.
+* **It has no current-section state and does not animate**, as DDR-006 decided. *Superseded in part by
+  DDR-042*: the bar now marks the current section's link.
 * **It is not printed.**
 
 ### The timeline: roles and credentials

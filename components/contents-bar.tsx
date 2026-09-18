@@ -1,6 +1,6 @@
 'use client';
 
-import { useSyncExternalStore, type MouseEvent, type ReactNode } from 'react';
+import { useSyncExternalStore, type MouseEvent } from 'react';
 import styles from './contents.module.css';
 
 /**
@@ -15,11 +15,55 @@ export function isScrolled(): boolean {
   return window.scrollY > scrolledThreshold;
 }
 
-/** Calls `onChange` whenever the page scrolls, and returns what stops it. */
+/**
+ * Calls `onChange` whenever the page scrolls or the window is resized, and returns what stops it.
+ * A resize moves every section without scrolling the page, so the current section can change
+ * without a scroll event, per DDR-042.
+ */
 export function subscribe(onChange: () => void): () => void {
   window.addEventListener('scroll', onChange, { passive: true });
+  window.addEventListener('resize', onChange, { passive: true });
 
-  return () => window.removeEventListener('scroll', onChange);
+  return () => {
+    window.removeEventListener('scroll', onChange);
+    window.removeEventListener('resize', onChange);
+  };
+}
+
+/**
+ * The section the reader is in, as its id, or `null` while they are still in the introduction,
+ * per DDR-042.
+ *
+ * It is the last section whose top has reached the line a contents link scrolls a section to: the
+ * root's `scroll-padding-block-start`, which is the bar's clearance, per DDR-031. So choosing a
+ * link marks the section it lands on, and a section becomes current as its divider passes under the
+ * bar. The pixel of slack is for a section that comes to rest a fraction of a pixel below the line.
+ *
+ * At the foot of the page it is the last section, whatever the line says, because the last section
+ * can be too short to reach the line at all. The pixel of slack there is for a page whose height
+ * is not a whole number of pixels.
+ */
+export function currentSection(ids: readonly string[]): string | null {
+  const root = document.documentElement;
+
+  if (window.scrollY > 0 && window.scrollY + window.innerHeight >= root.scrollHeight - 1) {
+    return ids.at(-1) ?? null;
+  }
+
+  const line = (Number.parseFloat(window.getComputedStyle(root).scrollPaddingBlockStart) || 0) + 1;
+  let current: string | null = null;
+
+  for (const id of ids) {
+    const top = document.getElementById(id)?.getBoundingClientRect().top;
+
+    if (top === undefined || top > line) {
+      break;
+    }
+
+    current = id;
+  }
+
+  return current;
 }
 
 /**
@@ -66,21 +110,43 @@ function isScrolledOnServer(): boolean {
   return false;
 }
 
+/** The server marks no section, which is also what a reader without script keeps, per DDR-042. */
+function currentSectionOnServer(): string | null {
+  return null;
+}
+
 /**
- * The contents bar's band, per DDR-031, and the one Client Component on the site, per ADR-007.
+ * The contents bar, per DDR-031, and the one Client Component on the site, per ADR-007.
  *
- * It exists for two things, both about scrolling: to mark the bar with `data-scrolled` once the
+ * It exists for three things, all about scrolling: to mark the bar with `data-scrolled` once the
  * page has scrolled past the design's threshold, so contents.module.css can draw the hairline and
- * the shadow, per DDR-034; and to make the scroll a contents link starts glide rather than jump,
- * per DDR-041, which ADR-008 lets it do. Everything the bar holds is rendered by `Contents`, a Server Component, and passed in as
- * children, so the links and their words never reach the client bundle as code.
+ * the shadow, per DDR-034; to make the scroll a contents link starts glide rather than jump, per
+ * DDR-041, which ADR-008 lets it do; and to mark the link of the section the reader is in with
+ * `aria-current`, per DDR-042, which the stylesheet underlines.
+ *
+ * That last is why it renders the links itself, per ADR-009, where ADR-007 had `Contents` render
+ * them and pass them in as children: a link can only be marked by what renders it. What it is
+ * handed is each section's id and its word, as plain strings, so nothing but the list's markup
+ * becomes client code, and the static HTML still holds every link, unmarked.
  *
  * `useSyncExternalStore` rather than state set in an effect: it reads the scroll position during
- * hydration, so a page reloaded half way down has its edge from the first frame script runs in,
- * and React re-renders only when the answer changes, not on every scroll event.
+ * hydration, so a page reloaded half way down, or opened at a `#fragment`, has its edge and its
+ * mark from the first frame script runs in, and React re-renders only when an answer changes, not
+ * on every scroll event.
  */
-export function ContentsBar({ label, children }: { label: string; children: ReactNode }) {
+export function ContentsBar({
+  label,
+  sections,
+}: {
+  label: string;
+  sections: readonly { id: string; link: string }[];
+}) {
   const scrolled = useSyncExternalStore(subscribe, isScrolled, isScrolledOnServer);
+  const current = useSyncExternalStore(
+    subscribe,
+    () => currentSection(sections.map(({ id }) => id)),
+    currentSectionOnServer,
+  );
 
   return (
     <nav
@@ -89,7 +155,19 @@ export function ContentsBar({ label, children }: { label: string; children: Reac
       data-scrolled={scrolled || undefined}
       onClick={glide}
     >
-      {children}
+      <ul className={styles.list}>
+        {sections.map(({ id, link }) => (
+          <li key={id}>
+            <a
+              href={`#${id}`}
+              className={styles.link}
+              aria-current={id === current ? 'location' : undefined}
+            >
+              {link}
+            </a>
+          </li>
+        ))}
+      </ul>
     </nav>
   );
 }

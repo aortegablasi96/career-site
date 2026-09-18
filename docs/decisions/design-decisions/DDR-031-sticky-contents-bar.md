@@ -35,6 +35,11 @@ the top of the page. Ground 4 below, the "Bottom hairline" and "Shadow" rows of 
 and the alternative "Adopt the scroll-triggered shadow with a client component" are the places it
 takes. ADR-007 decides the mechanism. The rest of this record stands.
 
+**Superseded in part by DDR-042**: the words "no current-section state" in the list of what this
+record carries forward from DDR-010. The bar now marks the link of the section the reader is in with
+`aria-current`, underlined and in the accent. ADR-009 decides the mechanism. The rest of this record
+stands.
+
 ## Context
 
 Epic #70 closes the gaps between the page and `career-site-design`. On 2026-09-17 the owner decided

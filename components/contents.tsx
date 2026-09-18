@@ -1,5 +1,4 @@
 import { ContentsBar } from './contents-bar';
-import styles from './contents.module.css';
 
 /**
  * The page's contents, per DDR-031: a bar pinned to the top of the window, holding one link to
@@ -13,11 +12,12 @@ import styles from './contents.module.css';
  * `content/`, beside the section's own title, per ADR-002, and the section's accessible name is
  * still taken from its `h2` rather than from here.
  *
- * It renders no state of its own: nothing marks the current section. What the bar does in the
- * browser — its edge, a hairline and a shadow drawn once the page has scrolled, per DDR-034, and
- * the glide a link starts, per DDR-041 — is `ContentsBar`'s, the one Client Component on the site,
- * per ADR-007 and ADR-008. This stays a Server Component and hands it the list as children, so only
- * the band is client code.
+ * What the bar does in the browser — its edge, drawn once the page has scrolled, per DDR-034, the
+ * glide a link starts, per DDR-041, and the mark on the current section's link, per DDR-042 — is
+ * `ContentsBar`'s, the one Client Component on the site, per ADR-007. Since ADR-009 it renders the
+ * links too, because only what renders a link can mark it. This stays a Server Component and hands
+ * it each section's id and word and nothing else: the page's sections also carry their items,
+ * which are server-rendered elements and must not cross into client code.
  *
  * With no sections there is nothing to list, so nothing renders.
  */
@@ -32,17 +32,5 @@ export function Contents({
     return null;
   }
 
-  return (
-    <ContentsBar label={label}>
-      <ul className={styles.list}>
-        {sections.map(({ id, link }) => (
-          <li key={id}>
-            <a href={`#${id}`} className={styles.link}>
-              {link}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </ContentsBar>
-  );
+  return <ContentsBar label={label} sections={sections.map(({ id, link }) => ({ id, link }))} />;
 }
