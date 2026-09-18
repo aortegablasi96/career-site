@@ -55,6 +55,10 @@ The markup order is unchanged, and so is the rest of the skills pattern. Marked 
 current-section state and does not animate" that rules out a current-section state. The bar now
 marks the link of the section the reader is in. Marked below.
 
+**Superseded in part by DDR-043**, which takes the bullet "Links open in the same tab" for the
+LinkedIn and GitHub contact pills alone. They open a new tab and say so with a named arrow; every
+other link still opens in the same tab. Marked below.
+
 This record decides the page's **structure and patterns**. The token values the structure reads are
 reworked by #44, the CV download by #45, and the print stylesheet by #52. Where this record names a
 value, such as the accent, it is because the UI Review settled it and those stories implement it
@@ -280,7 +284,8 @@ This replaces DDR-006's labelled list for languages.
   height of its text, as DDR-006 allows. The three places are the contact and CV pills, the contents
   links and the projects' labelled links; DDR-027 gives all three the size the design draws, and the
   last sentence is the only part of this bullet that survives.
-* **Links open in the same tab.**
+* **Links open in the same tab.** **Superseded in part by DDR-043**: the LinkedIn and GitHub
+  contact pills open a new tab, and announce it. Every other link still opens in the same tab.
 
 ### One accent, settled
 

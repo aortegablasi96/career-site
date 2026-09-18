@@ -90,6 +90,13 @@ export interface ContactLink extends Link {
   /** What the pill shows, per DDR-029: "Email", "LinkedIn" or "GitHub". */
   label: string;
   icon: ContactIcon;
+  /**
+   * Whether the pill opens its address in a new tab, per DDR-043. The two profiles do, so the page
+   * stays open behind them; an email address opens the mail client, which is no tab at all. It is
+   * recorded here rather than worked out from the address, for the reason `icon` is. The footer
+   * ignores it: its addresses open in the same tab.
+   */
+  newTab: boolean;
 }
 
 /** The introduction at the top of the page, in the order DDR-010 sets. */
@@ -113,6 +120,11 @@ export interface Introduction {
    * address once.
    */
   contact: readonly ContactLink[];
+  /**
+   * What a pill that opens a new tab says about it, per DDR-043. Assistive technology announces it
+   * as part of the pill's name; a sighted reader sees the arrow that carries it.
+   */
+  newTab: string;
 }
 
 /**

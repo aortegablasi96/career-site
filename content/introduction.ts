@@ -12,6 +12,9 @@ import type { Introduction } from './types';
  * printed CV carries. The labels are the design's own words, and each names a service a reader
  * already knows; they say nothing about the owner, so none of them is a claim.
  *
+ * The LinkedIn and GitHub pills open in a new tab, per DDR-043, and `newTab` is what they say about
+ * it. It is a fact about the control rather than about the owner, so it is not a claim either.
+ *
  * The photo was adopted on Epic #42, reversing the Content Brief's decision against one, and is the
  * owner's own portrait since #63. Its alternative text is the owner's name, as a portrait's is: it
  * identifies who is pictured beside the name, and a reader who never sees it loses nothing, which
@@ -33,18 +36,22 @@ export const introduction: Introduction = {
       text: 'aortegablasi@gmail.com',
       href: 'mailto:aortegablasi@gmail.com',
       icon: 'email',
+      newTab: false,
     },
     {
       label: 'LinkedIn',
       text: 'linkedin.com/in/andreu-ob',
       href: 'https://www.linkedin.com/in/andreu-ob/',
       icon: 'linkedin',
+      newTab: true,
     },
     {
       label: 'GitHub',
       text: 'github.com/aortegablasi96',
       href: 'https://github.com/aortegablasi96',
       icon: 'github',
+      newTab: true,
     },
   ],
+  newTab: 'opens in a new tab',
 };

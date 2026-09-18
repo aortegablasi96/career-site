@@ -1,7 +1,10 @@
 import type { ContactIcon } from '@/content/types';
 
-/** The marks the introduction's controls carry: one per contact address, and one for the CV. */
-export type IconName = ContactIcon | 'download';
+/**
+ * The marks the introduction's controls carry: one per contact address, one for the CV, and the
+ * arrow a pill carries when it opens a new tab, per DDR-043.
+ */
+export type IconName = ContactIcon | 'download' | 'external';
 
 /**
  * A mark beside a control's text, per DDR-010.
@@ -15,10 +18,19 @@ export type IconName = ContactIcon | 'download';
  * is drawn in `currentColor`, so a pill's fill and its mark cannot disagree.
  *
  * Drawn here rather than committed as files: these are a few hundred bytes of markup, and ADR-004's
- * rule for binary assets exists for photographs and video, not for four line drawings. They are
+ * rule for binary assets exists for photographs and video, not for five line drawings. They are
  * strokes on a 24 unit grid, which is where their coordinates come from.
+ *
+ * One mark is not decoration, and it is the one given a `label`: the arrow that says a pill opens a
+ * new tab, per DDR-043. Nothing else on the pill says so, so the arrow is an image with that label
+ * as its name, and assistive technology reads it as part of the pill's name. A sighted reader and a
+ * screen reader are told the same thing by the same element.
  */
-export function Icon({ name }: { name: IconName }) {
+export function Icon({ name, label }: { name: IconName; label?: string }) {
+  const meaning = label
+    ? ({ role: 'img', 'aria-label': label } as const)
+    : ({ 'aria-hidden': true } as const);
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -30,7 +42,7 @@ export function Icon({ name }: { name: IconName }) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      aria-hidden="true"
+      {...meaning}
       focusable="false"
     >
       {paths[name]}
@@ -64,6 +76,14 @@ const paths: Record<IconName, React.ReactNode> = {
       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
       <path d="M12 3v12" />
       <path d="m7 10 5 5 5-5" />
+    </>
+  ),
+  // An arrow leaving a corner, up and to the right: the usual sign that a link opens somewhere
+  // other than the page it is on.
+  external: (
+    <>
+      <path d="M7 17 17 7" />
+      <path d="M8 7h9v9" />
     </>
   ),
 };
