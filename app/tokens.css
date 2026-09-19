@@ -77,6 +77,19 @@
   --font-size-section-title: var(--font-size-large);
   --font-size-item-title: var(--font-size-medium);
 
+  /* A project view's title, per DDR-050, which amends DDR-022: the design sets it at 41.6px (node
+     59:23), between the narrow page title and the full one, so it is the one size on the site
+     that is not a step of the scale. It is a role rather than an eleventh step, because nothing
+     else takes it and a step would rename every step above it. The view sets it from the wide
+     breakpoint.
+
+     Below the wide breakpoint the view's title is a role that adapts at the narrow breakpoint, as
+     the page and section titles do: the narrow page title's step from it, and the step below that
+     beneath it. At 320px with text at 200% the narrow page title's step broke "Portfolio" in
+     "Stock Portfolio Viewer" mid-word; a step lower sets it whole. */
+  --font-size-project-title: 2.6rem;
+  --font-size-project-title-narrow: var(--font-size-x-large);
+
   /* Four, per DDR-023, where DDR-011 had three. Bold is the design's weight for the three labels
      — the timeline's date range, a level badge and a skill-group name — which DDR-018 could only
      set semibold because the site shipped no file for 700. Each one is a file in app/fonts/, so a
@@ -219,6 +232,10 @@
   --color-rule: #cbd5e1;
   --color-border: #e2e8f0;
   --color-border-accent: #c7d2fe;
+  /* Where the short rule above a project view's title ends, per DDR-050: it runs from
+     --color-border-accent into this violet, as the design draws it (node 59:21). It is decoration
+     beside a heading that says everything it marks, so it carries nothing and takes no pairing. */
+  --color-rule-accent-end: #ddd6fe;
 
   /* The marker on a role's bullet points, per DDR-019 as DDR-025 amends it. It is the design's own
      `#a5b4fc`, at 1.86:1 on the page, where DDR-019 measured that value, called it fainter than
@@ -348,6 +365,9 @@
   --space-boundary: calc(3.5rem * var(--rhythm-scale));
   --space-summary: calc(2rem * var(--rhythm-scale));
   --space-controls: calc(2.25rem * var(--rhythm-scale));
+  /* The space above a project view's way back, per DDR-050: the design's 48px below the bar (node
+     59:12). The view's other spaces are the page's own. */
+  --space-view-top: calc(3rem * var(--rhythm-scale));
   /* The whole distance from one section to the next, which the base styles set and the section
      splits around its divider. */
   --space-section: calc(2 * var(--space-boundary));
@@ -544,6 +564,19 @@
   --project-media-width: 17.5rem;
   --project-media-ratio: 4 / 3;
 
+  /* A project's view, per DDR-050, measured off `career-site-project`. The lead media is the
+     design's 16:10 (node 59:71), which crops 8% off the top and the bottom of a 4:3 picture rather
+     than distorting it; its width is its column's, so it has none here. The rule above the title
+     is 40 by 6px, 24px above the name (node 59:21), and the label above the technologies stands
+     12px above them (node 59:54). Neither 24px nor 12px is a step of DDR-013's scale, and the view
+     is the design's to the pixel at its width, so they are measures of the view's own, as the
+     timeline's are. */
+  --project-view-media-ratio: 16 / 10;
+  --project-view-rule-width: 2.5rem;
+  --project-view-rule-height: 0.375rem;
+  --project-view-rule-gap: 1.5rem;
+  --project-view-label-gap: 0.75rem;
+
   /* How many language cards stand side by side below the wide breakpoint, per DDR-010: one at the
      narrowest, two from the narrow breakpoint. It is a count rather than a length, so it has no
      unit.
@@ -607,6 +640,7 @@
   :root {
     --font-size-page-title: var(--font-size-xxx-large);
     --font-size-section-title: var(--font-size-x-large);
+    --font-size-project-title-narrow: var(--font-size-xx-large);
     --page-gutter: var(--space-medium);
     --language-columns: 2;
   }

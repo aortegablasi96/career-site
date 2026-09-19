@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-17
 
+**Amended by DDR-050** in one respect: a project view's title is the design's 41.6px,
+`--font-size-project-title`, a role written in rem that is not a step. The ten steps stand.
+
 **Supersedes DDR-011's type scale and its 13px floor**, and nothing else of that record. DDR-011
 stands, and is still the record to read, for the two typefaces, the one-static-file-per-weight
 recipe, the three weights, the no-italics rule, the PDF guarantee that a saved document spells every

@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-19
 
+**Amended by DDR-050** in its scope: a project view's "Source code" and "Live site" controls open a
+new tab as well, announced as DDR-044 announces the pills'. The project links on the page, the
+footer's addresses and the CV control still open in the same tab.
+
 **Supersedes in part DDR-010**: the bullet "Links open in the same tab", for the LinkedIn and
 GitHub contact pills and for nothing else. Every other link on the page still opens in the same
 tab. DDR-006's "nothing opens a new window unannounced", which DDR-010 carried forward, still holds:

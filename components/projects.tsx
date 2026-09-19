@@ -18,13 +18,17 @@ import styles from './projects.module.css';
  * tokens, which fixes the box before the file arrives just as the attributes would; it has to be
  * done there because the media is capped to the width the row has for it, which an attribute
  * cannot follow.
+ *
+ * A project's view shows the same media at another size, per DDR-050, so it hands in a class of its
+ * own in place of the row's, and everything else here — the video, its printed still, the
+ * alternative text — is shared.
  */
-function Media({ media }: { media: ProjectMedia }) {
+export function Media({ media, className = styles.media }: { media: ProjectMedia; className?: string }) {
   if ('poster' in media) {
     return (
       <>
         <video
-          className={`${styles.media} ${styles.onScreen}`}
+          className={`${className} ${styles.onScreen}`}
           src={asset(media.file)}
           poster={asset(media.poster)}
           preload="none"
@@ -37,12 +41,12 @@ function Media({ media }: { media: ProjectMedia }) {
             cannot be one: measured on #52, Edge prints an empty box with a dead scrubber and no
             poster at all, and Firefox prints the poster under a controls bar. Exactly one of the two
             is displayed at any time, so the row still has one media element beside its text. */}
-        <img className={`${styles.media} ${styles.onPaper}`} src={asset(media.poster)} alt={media.description} />
+        <img className={`${className} ${styles.onPaper}`} src={asset(media.poster)} alt={media.description} />
       </>
     );
   }
 
-  return <img className={styles.media} src={asset(media.file)} alt={media.alt} />;
+  return <img className={className} src={asset(media.file)} alt={media.alt} />;
 }
 
 /**

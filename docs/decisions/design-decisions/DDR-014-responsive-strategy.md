@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-16
 
+**Amended by DDR-050** in one respect: the narrow breakpoint adapts a fourth role token,
+`--font-size-project-title-narrow`, which a project view's title reads below the wide breakpoint.
+
 **Amended by DDR-039** in one respect: the wide breakpoint now redefines one token in
 `app/tokens.css`, `--rhythm-scale`, so the vertical rhythm takes the design's values from 48em and
 three quarters of them below. Components still write only layout there.

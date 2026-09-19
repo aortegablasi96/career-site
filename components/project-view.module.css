@@ -1,0 +1,225 @@
+/*
+ * A project's view, per DDR-050, measured off `career-site-project` (node 59:2).
+ *
+ * The view is one child of `main`, so the base styles inset it to the page's column, as they inset
+ * the introduction and every section. It sets its own space above and below, because it is the
+ * whole of `main`: 48px under the contents bar, as the design draws it, and the page's own space
+ * above the footer's hairline at its foot.
+ *
+ * The view does not print. Only the page is the printed CV, per Epic #152, so nothing here has a
+ * print rule; the bar is hidden on paper by the base styles, and the rest prints as the browser
+ * lays it out.
+ *
+ * It is a grid of one column, so the way back is a box of its own, as tall as its label's line,
+ * rather than an inline box in a line of body text 3px taller, which would push everything below
+ * it down.
+ */
+.view {
+  display: grid;
+  padding-block-start: var(--space-view-top);
+  padding-block-end: var(--page-padding-block-end);
+}
+
+/* The way back, in the contents links' muted ink and medium weight at the label step, with no
+   underline, as the design draws it (node 59:13): it is set apart as a link by its chevron and its
+   place above everything else, and it takes the accent under the pointer, as a contents link does,
+   per DDR-035. Its box is the line its label sets in, per DDR-027. */
+.back {
+  display: inline-flex;
+  justify-self: start;
+  gap: var(--space-small);
+  align-items: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-x-small);
+  font-weight: var(--font-weight-medium);
+  text-decoration-line: none;
+}
+
+.back:hover,
+.back:focus-visible {
+  color: var(--color-accent);
+}
+
+/* The chevron is 16px beside a 13px label in the design. A mark is 1em square, so it is set a step
+   larger than the label rather than given a length of its own. */
+.backMark {
+  display: inline-flex;
+  font-size: var(--font-size-large);
+}
+
+/* The text and the picture. One column below the wide breakpoint, in the markup order, and two
+   equal columns from it, 56px apart, which is the design's and a section boundary. A column's
+   minimum is 0 rather than its content's, so the picture's own 560px can neither widen its column
+   nor push a narrow screen sideways. The space between the way back and the rule above the name
+   is the design's 40px, which is the heading step. */
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: var(--space-boundary);
+  margin-block-start: var(--space-heading);
+}
+
+/* The short rule above the name, drawn on the heading rather than as an element, as a section's
+   rule is, so it is never in the accessibility tree and never part of the heading's name. It is
+   the design's 40 by 6px pill, running from the pale indigo into a pale violet (node 59:21). */
+.name::before {
+  display: block;
+  inline-size: var(--project-view-rule-width);
+  block-size: var(--project-view-rule-height);
+  margin-block-end: var(--project-view-rule-gap);
+  border-radius: var(--radius-pill);
+  background-image: linear-gradient(
+    to right,
+    var(--color-border-accent),
+    var(--color-rule-accent-end)
+  );
+  content: '';
+}
+
+/* The name is the view's h1, in the serif the base styles give it. Below the wide breakpoint it is
+   the narrow page title's step, and a step below that beneath the narrow breakpoint, so a long word
+   fits a phone with enlarged text; from the wide breakpoint, the design's 41.6px, per DDR-050. */
+.name {
+  font-size: var(--font-size-project-title-narrow);
+}
+
+/* The full description, at body size and in the running text's leading, as the introduction's
+   summary is set: the design's 15px on 26.25px (node 59:26). */
+.description {
+  margin-block-start: var(--space-medium);
+  line-height: var(--line-height-prose);
+}
+
+/* "Built with", set as the design's labels are: 10px bold capitals, tracked and in the faint ink
+   (node 59:30). It is an h2, so it takes none of a section title's serif, size or tracking. */
+.label {
+  margin-block-start: var(--space-large);
+  color: var(--color-text-faint);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xxxx-small);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-body);
+  letter-spacing: var(--letter-spacing-x-loose);
+  text-transform: uppercase;
+}
+
+/* Every technology, as tags that wrap, 8px apart each way (node 59:32). */
+.technologies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-small);
+  margin-block-start: var(--project-view-label-gap);
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+/* A tag, as the page's are: its text on a tint that repeats it, in medium. The view's are a step
+   larger than the page's, as the design draws them at 12px (node 59:34); the scale's nearest step
+   is 12.8px, as the footer's is. */
+.tag {
+  padding-block: var(--space-x-small);
+  padding-inline: var(--space-small);
+  border-radius: var(--radius-small);
+  background-color: var(--color-surface-tag);
+  color: var(--color-text-tag);
+  font-size: var(--font-size-xx-small);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-loose);
+}
+
+/* The links, as pills that wrap when they run out of room. The gap is the introduction's controls'
+   8px, where the design has 12px. */
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-small);
+  margin-block-start: var(--space-large);
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+/* A link is a pill at the introduction's controls' size, per DDR-027, raised by the site's one
+   shadow, per DDR-020, and set in medium, per DDR-030. `anywhere` keeps a long label inside the
+   column, as the introduction's pills do. */
+.primary,
+.secondary {
+  display: inline-flex;
+  gap: var(--space-small);
+  align-items: center;
+  padding-block: var(--space-small);
+  padding-inline: var(--space-medium);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-raised);
+  font-size: var(--font-size-x-small);
+  font-weight: var(--font-weight-medium);
+  text-decoration-line: none;
+  overflow-wrap: anywhere;
+}
+
+/* The repository, filled in the accent as the CV control is (node 59:56). */
+.primary {
+  border: 1px solid var(--color-accent);
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* A live site, outlined on white in the accent's tint (node 59:61). */
+.secondary {
+  border: 1px solid var(--color-border-accent);
+  background-color: var(--color-surface-card);
+}
+
+/* Under the pointer and on keyboard focus, as the introduction's two kinds of pill answer it, per
+   DDR-035. */
+.primary:hover,
+.primary:focus-visible {
+  border-color: var(--color-accent-hover);
+  background-color: var(--color-accent-hover);
+}
+
+.secondary:hover,
+.secondary:focus-visible {
+  border-color: var(--color-border-accent-hover);
+  background-color: var(--color-surface-hover);
+}
+
+/* The picture and its caption, in one track that is the column's width whatever the picture's own,
+   so the picture can stretch to it without widening it. */
+.figure {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+}
+
+/* The lead picture, as wide as its column, in the design's 16:10 and at the large radius (node
+   59:71). A 4:3 picture is cropped to it from the centre rather than distorted. It stretches to
+   its column as a grid item, so no width is written for it. */
+.media {
+  justify-self: stretch;
+  aspect-ratio: var(--project-view-media-ratio);
+  border-radius: var(--radius-large);
+  object-fit: cover;
+}
+
+/* The caption, centred below the picture in the faint ink at 11px (node 59:81). */
+.caption {
+  margin-block-start: var(--space-small);
+  color: var(--color-text-faint);
+  font-size: var(--font-size-xxx-small);
+  text-align: center;
+}
+
+/* From here the text and the picture stand side by side, each as wide as the other, both from the
+   top, and the name takes the design's size. This is the one width a component may write, per
+   DDR-014. */
+@media (min-width: 48em) {
+  .columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-boundary);
+    align-items: start;
+  }
+
+  .name {
+    font-size: var(--font-size-project-title);
+  }
+}

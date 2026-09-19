@@ -184,10 +184,22 @@ export interface Experience {
 
 /** A project in the projects section, per the Content Brief on #25. */
 export interface Project {
-  /** The project's name, which is the entry's heading, per DDR-006. */
+  /** The project's name, which is the entry's heading, per DDR-006, and its view's `h1`. */
   name: string;
+  /**
+   * The last part of the project view's address, per ADR-010: `/projects/<slug>`. It is content
+   * rather than something worked out from the name, because an address someone has been sent must
+   * not change when a name is reworded. Lowercase words joined by hyphens.
+   */
+  slug: string;
   /** What the project looks like running, shown beside the text, per DDR-010. */
   media: ProjectMedia;
+  /**
+   * A few words under the media on the project's view, per DDR-050, naming what the picture shows.
+   * The media's own alternative text still describes it in full; this is what a sighted reader is
+   * told, so it adds nothing the alternative text does not already say.
+   */
+  caption: string;
   /**
    * The technologies it uses, shown as tags rather than as a line of metadata, per DDR-010, so a
    * technical reader can scan the stack without reading the description.
@@ -215,6 +227,24 @@ export interface Projects {
   link: string;
   /** In the order the page shows them, per ADR-002. */
   projects: readonly Project[];
+  /** The words each project's view shows around the project's own, per DDR-050. */
+  view: ProjectView;
+}
+
+/** The strings a project's view shows that are not the project's own, per DDR-050. */
+export interface ProjectView {
+  /** The link at the top of the view, which returns the reader to the projects on the page. */
+  back: string;
+  /** The label above the technologies. */
+  builtWith: string;
+  /**
+   * What a project's links say about opening a new tab, per DDR-043 as DDR-050 extends it. It is
+   * said only to assistive technology, after the link's text in its accessible name, as a profile
+   * pill says it.
+   */
+  newTab: string;
+  /** The browser tab's title and the link preview's, from the project's name. */
+  title: (project: string) => string;
 }
 
 /** The three levels a skill can have, per the Content Brief on #25. */

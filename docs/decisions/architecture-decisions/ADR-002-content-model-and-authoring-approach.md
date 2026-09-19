@@ -4,6 +4,12 @@ Status: Accepted
 
 Date: 2026-09-09
 
+**Superseded in part by ADR-010**, on 2026-09-19: the content-shape finding "A single scrolling
+page. Nothing has, or needs, a URL of its own. There are no detail pages." Revisit condition 3 below
+fired on Epic #152, and each project now has a view at an address of its own. Everything else here
+stands, including TypeScript modules over Markdown: what fired is an address per project, not
+long-form writing. The passage is marked below.
+
 The part of this record that rules out a separate CV file is `Superseded` by ADR-004, the
 downloadable CV and binary assets, on 2026-09-16. Epic #42 adopts a "Get my CV" download, and ADR-004
 decides what that file is and what keeps it in step with the page. The passages this affects are
@@ -28,6 +34,8 @@ site. It established:
 
 * **A single scrolling page.** Nothing has, or needs, a URL of its own. There are no detail
   pages.
+
+  > **Superseded by ADR-010.** Each project has a view at `/projects/<slug>`, per Epic #152.
 * **Four repeating content types:** work experience and roles, projects, skills and
   capabilities, and education and certifications.
 * **Content is structured records, not long-form prose.** A role is a company, a title, a date

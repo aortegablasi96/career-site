@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-16
 
+**Amended by ADR-010** in one respect: an `href` handed to `next/link` is a route of this site,
+which `next/link` gives the base path itself, and does not go through `asset()`. Every `src`,
+`poster` and `href` on a plain element still does.
+
 Supersedes the part of ADR-002 that rules out a separate CV file. The rest of ADR-002 stands: content
 is still authored as typed TypeScript modules in `content/`, the page is still the CV, and the print
 stylesheet is still what produces it.

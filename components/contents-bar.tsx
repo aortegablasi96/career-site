@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useSyncExternalStore, type MouseEvent } from 'react';
 import styles from './contents.module.css';
 
@@ -217,23 +218,34 @@ function currentSectionOnServer(): string | null {
  * hydration, so a page reloaded half way down, or opened at a `#fragment`, has its mark from the
  * first frame script runs in, and React re-renders only when the answer changes, not on every
  * scroll event.
+ *
+ * On a project's view, per DDR-050, the bar is the same bar, and `page` is the route of the page
+ * its sections are on. Each link then leads there — Home to the page's top and a section's link to
+ * that section — through `next/link`, which puts the site's base path in front of it, per ADR-010,
+ * without prefetching the page and every picture on it.
+ * Nothing is marked there, because the reader is in none of the page's sections, and nothing
+ * glides, because `glide` and `holdDestination` only act on a link to this page's own fragments.
  */
 export function ContentsBar({
   label,
   home,
   title,
   sections,
+  page,
 }: {
   label: string;
   home: string;
   title: string;
   sections: readonly { id: string; link: string }[];
+  /** The route of the page the sections are on, when the bar is shown anywhere else. */
+  page?: string;
 }) {
   const current = useSyncExternalStore(
     subscribe,
     () => markedSection(sections.map(({ id }) => id)),
     currentSectionOnServer,
   );
+  const marked = page === undefined ? current : null;
 
   return (
     <nav
@@ -246,13 +258,23 @@ export function ContentsBar({
         <ul className={styles.list}>
           {[{ id: homeId, link: home }, ...sections].map(({ id, link }) => (
             <li key={id}>
-              <a
-                href={`#${id}`}
-                className={styles.link}
-                aria-current={id === current ? 'location' : undefined}
-              >
-                {link}
-              </a>
+              {page === undefined ? (
+                <a
+                  href={`#${id}`}
+                  className={styles.link}
+                  aria-current={id === marked ? 'location' : undefined}
+                >
+                  {link}
+                </a>
+              ) : (
+                <Link
+                  href={id === homeId ? page : `${page}#${id}`}
+                  className={styles.link}
+                  prefetch={false}
+                >
+                  {link}
+                </Link>
+              )}
             </li>
           ))}
         </ul>
