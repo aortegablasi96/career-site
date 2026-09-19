@@ -4,6 +4,15 @@ Status: Accepted
 
 Date: 2026-09-19
 
+**Revised on 2026-09-19, at the owner's request after #142 merged: the alternation starts with the
+band on the introduction.** As first accepted, the introduction and the footer were on the
+off-white and the band began with experience. The contents bar is the off-white at 96%, so over an
+off-white introduction nothing set it apart from the page at rest; its hairline is transparent
+until the page scrolls, per DDR-034. The owner asked for the brighter surface on the first view so
+the bar is delimited from the start. Every part of the page has swapped surfaces, and the
+introduction now carries the space above the page, which `main` carried. Everything below is
+written as revised; the order it replaced is the first alternative considered.
+
 **Amends DDR-025 in one respect: the page has two surfaces rather than one.** `--color-surface`,
 the off-white, is joined by `--color-surface-band`, `#fcfbf9`. Every other colour, and every
 pairing DDR-025 records on the page, is unchanged.
@@ -17,10 +26,10 @@ and the distance on each side of it are unchanged.
 page's surface. It is now transparent, so the surface inside the ring is whichever band the
 timeline is on. The ring, the core, the line and the offset are unchanged.
 
-**Amends DDR-040 in one respect: where the space above the footer lives.** The 72px between the
-last section's content and the footer's hairline is now all inside the last section: a boundary
-plus DDR-040's 16px. The footer no longer adds the 16px, and `main` no longer pads its foot. The
-distance is unchanged.
+**Amends DDR-040 in one respect: where the space above and below the page lives.** The 72px between
+the last section's content and the footer's hairline is now all inside the last section: a
+boundary plus DDR-040's 16px. The footer no longer adds the 16px. The space above the page is now
+the introduction's own top padding. `main` pads neither. Both distances are unchanged.
 
 **Amends DDR-013 in how the column is drawn, not in what it is.** DDR-013 draws the column on
 `main`, as a maximum width with a gutter. It is now drawn inside each of `main`'s parts, as
@@ -54,31 +63,38 @@ The design draws one surface. This is the owner's request.
 
 ## Decision
 
-**The sections alternate between two surfaces, starting with the lighter one after the
+**The page's parts alternate between two surfaces, starting with the lighter one on the
 introduction.**
 
 | Part                          | Surface                                      |
 | ----------------------------- | -------------------------------------------- |
-| Introduction                  | `--color-surface`, `#f8f7f4`                 |
-| Experience                    | `--color-surface-band`, `#fcfbf9`            |
-| Projects                      | `--color-surface`                            |
-| Skills                        | `--color-surface-band`                       |
-| Education and certifications  | `--color-surface`                            |
-| Languages                     | `--color-surface-band`                       |
-| Footer                        | `--color-surface`                            |
+| Contents bar                  | `--color-surface-bar`, the off-white at 96%  |
+| Introduction                  | `--color-surface-band`, `#fcfbf9`            |
+| Experience                    | `--color-surface`, `#f8f7f4`                 |
+| Projects                      | `--color-surface-band`                       |
+| Skills                        | `--color-surface`                            |
+| Education and certifications  | `--color-surface-band`                       |
+| Languages                     | `--color-surface`                            |
+| Footer                        | `--color-surface-band`                       |
+
+* **The first view is on the band, so the contents bar is set apart from it.** At rest the bar
+  draws no hairline, per DDR-034, and it is the off-white at 96%. On an off-white introduction the
+  two read as one surface. On the band, the bar's lower edge is where the colour changes.
 
 * **The band is the off-white's own warm hue, about halfway to white.** It is 1.036:1 against the
   off-white and 1.034:1 against the card's white. It is close enough that the page still reads as
   one surface, and far enough from white that a card or a pill on it keeps its edge. A card's
   hairline is 1.19:1 on the band, where it is 1.15:1 on the page.
-* **The alternation is counted among the sections alone**, with `:nth-of-type(odd)`. The
+* **The alternation is counted among the sections alone**, with `:nth-of-type(even)`. The
   introduction is a `header`, so it never shifts the count. A section added or removed moves the
-  bands with it, and the alternation still starts with the band after the introduction.
-* **The footer is part of the alternation.** It follows Languages, on the band, so it sits on the
-  off-white, as the introduction does. It needs no rule to be there, because that is the page's own
-  surface.
+  bands with it, and the first section is always on the off-white, after the introduction's band.
+* **The footer is part of the alternation.** It follows Languages, on the off-white, so it is on the
+  band, as the introduction is. The page begins and ends on the same surface. That holds only while
+  the page has an odd number of sections; a sixth would put the footer on the same surface as the
+  section above it, and the footer's hairline would then be the only boundary there.
 * **The hairlines stay, and each one now marks a change of band.** Each band runs from its own
-  divider to the next, and the last runs down to the footer's hairline. So every divider falls
+  divider to the next. The introduction's runs from the contents bar down to the first divider, and
+  the last section's runs down to the footer's hairline. So every divider falls
   exactly where the colour changes. The line and the band say the same thing. The line keeps the
   boundary visible where the difference in surface is faint, as it is on a dim or washed-out
   screen. The band makes the boundary visible at a glance, as the story asks. Removing the
@@ -97,17 +113,33 @@ reaches the edges of the window with no `vw`, no negative margin and nothing tha
 The contents bar and the footer already drew their column this way.
 
 Each section pads both halves of its boundary: the half below its divider at its top, as before,
-and the half above the next divider at its foot. The next section takes no margin. The first
-section keeps its margin, because the introduction carries no band. The last pads its foot by
-`--page-padding-block-end`, a boundary plus 16px, down to the footer's hairline. The distance
-between any two sections, and where the divider falls in it, are unchanged.
+and the half above the next divider at its foot. No section takes a margin. The introduction pads
+its top by `--page-padding-block`, the space above the page that `main` carried, and its foot by a
+boundary, the half above the first divider that the first section's margin carried. The last
+section pads its foot by `--page-padding-block-end`, a boundary plus 16px, down to the footer's
+hairline. `main` pads nothing. The distance between any two parts, and where the divider falls in
+it, are unchanged.
 
 **Paper is unchanged.** The band drops at the token layer with every other surface, per DDR-015.
-The section's print block puts the space back where it was: as the next section's margin, with
-nothing at the foot of the last. A margin is truncated at a page break and a padding is not, so
+The section's print block puts the space back where it was: as each section's margin, with
+nothing at the foot of the introduction or of the last section. A margin is truncated at a page break and a padding is not, so
 moving it would move the breaks. `--page-inset` is 0 on paper.
 
 ## Alternatives Considered
+
+### Start the band after the introduction
+
+The order first accepted on #142: the introduction and the footer on the off-white, and experience,
+skills and languages on the band.
+
+Pros:
+* The page's own surface is what the reader sees first, as it was before #142.
+* The introduction needs no rule of its own, and `main` keeps the space above the page.
+
+Cons:
+* The contents bar is the off-white at 96% and draws no hairline at rest, per DDR-034. Over an
+  off-white introduction nothing sets it apart from the page on the first view. The owner rejected
+  it on that ground after #142 merged.
 
 ### Paint a full-width band from outside the column
 
@@ -161,11 +193,13 @@ Cons:
 
 Benefits:
 * The boundary between two parts is visible at a glance, without adding any line or text.
+* The contents bar is set apart from the introduction on the first view, before the page has
+  scrolled and before the bar draws its hairline.
 * Every text and mark on the page measures at least as well on the band as on the page, because
   the band is lighter than the off-white and every ink is darker than both. `--color-text-muted` is
-  4.60:1 on the band. So a company, an institution, a thesis and a contents link meet WCAG 1.4.3
-  there, where they fail at 4.44:1 on the page. DDR-025's failures are unchanged on the off-white
-  bands.
+  4.60:1 on the band. So an institution and a thesis meet WCAG 1.4.3 there, where they fail at
+  4.44:1 on the page. A company, on experience, is on the off-white and still fails, as DDR-025
+  records, and so is every contents link, which is on the bar.
 * Every element on screen is where it was, at every width and text size checked, and every printed
   sheet is identical to the tree before.
 
@@ -185,6 +219,13 @@ Risks:
 * **The contents bar is the page's off-white at 96%.** Over the band it is a shade darker than the
   surface below it. The difference is 1.036:1 at most, and the bar's links measure no worse than
   DDR-031 records, because a lighter surface behind a translucent bar only raises their contrast.
+
+Measured again for the revision, against the tree it revises, in Edge at 320px, 360px, 390px,
+894px, 1280px and 1536px with text at 100% and 200%: every box on the page but the introduction's
+own was identical, and the introduction's box grew by exactly the padding it took from `main` and
+from the first section. The page's height was identical, the bands met with no gap, and nothing
+scrolled sideways. Printed to A4 in Edge and Firefox with background graphics on and off, all four
+were six sheets, pixel-identical to the tree before, with the same text.
 
 Measured on #142 against the tree before, in Chromium, at 320px, 390px, 894px, 1280px and 1536px
 with text at 100% and at 200%, and at 360px at 200%. Every heading, paragraph, list item, image,

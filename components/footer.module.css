@@ -14,9 +14,10 @@
 .footer {
   /* The hairline is 72px below the last section's content, as the design's is, per DDR-040. Since
      DDR-046 the whole of that space is the last section's own, so its band runs down to this line;
-     the footer adds none, and it sits on the page's own off-white, after the band, as the
-     alternation would put it. */
+     the footer adds none. It is on the band, after languages on the off-white, as the alternation
+     puts it, and as the introduction is. Paper drops the band at the token layer. */
   border-block-start: 1px solid var(--color-border);
+  background-color: var(--color-surface-band);
   padding-block: var(--space-large);
   /* The faintest ink on the page, at 2.39:1, which fails WCAG 1.4.3. It is the design's, per
      DDR-025, which already names the footer among this token's users. Set here rather than on each

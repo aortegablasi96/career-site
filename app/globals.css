@@ -164,12 +164,10 @@ a {
    Since DDR-046 `main` spans the window and each of its parts draws the column inside itself, as
    the contents bar and the footer already do, so that a section's band can reach the edges of the
    window while its content stays in the column. The inset is the gutter or half of what the window
-   leaves beside the column, so the column is the one `main` drew, to the pixel. The page's foot is
-   the last section's own, so that its band runs down to the footer's hairline; section.module.css
-   writes it. */
-main {
-  padding-block-start: var(--page-padding-block);
-}
+   leaves beside the column, so the column is the one `main` drew, to the pixel. The page's top and
+   foot are the introduction's and the last section's own, so that each band runs from the contents
+   bar down to the footer's hairline with no gap; introduction.module.css and section.module.css
+   write them, and `main` pads nothing. */
 
 main > * {
   padding-inline: var(--page-inset);

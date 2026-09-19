@@ -13,6 +13,16 @@
  * This is the layout that keeps the reason the record gives.
  */
 
+/* The first of the page's bands, per DDR-046's revision, so the contents bar above it, on the
+   page's own off-white, is set apart from the page from the first view. The band runs from the bar
+   down to the first section's divider: the introduction carries the space above the page, which
+   `main` carried before, and the half of the first boundary above that divider, which was the
+   first section's margin. Every distance is what it was. */
+.introduction {
+  padding-block: var(--page-padding-block) var(--space-boundary);
+  background-color: var(--color-surface-band);
+}
+
 /* The frame is what floats, and it shrink-wraps the photo inside it, so it is the photo's box in
    every respect the layout cares about. It exists because the design lights the photo twice and the
    second light cannot be drawn on the image itself, per DDR-021.
@@ -298,7 +308,14 @@
      beside the *name*, which is what the float at the top of this file does. So there is no layout
      to write here: the float is already it, and print redefines the token that sizes it.
 
+     The space below it goes back to the first section's margin, where it was before DDR-046, so
+     the breaks do not move. The band is dropped at the token layer.
+
      A download control is dead on paper, and the paper is the CV, per DDR-010. */
+  .introduction {
+    padding-block-end: 0;
+  }
+
   .cvItem {
     display: none;
   }
