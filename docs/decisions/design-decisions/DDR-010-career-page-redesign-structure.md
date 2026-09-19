@@ -63,6 +63,12 @@ marks the link of the section the reader is in. Marked below.
 LinkedIn and GitHub contact pills alone. They open a new tab and say so with a named arrow; every
 other link still opens in the same tab. Marked below.
 
+**Superseded in part by DDR-051**, which takes the projects pattern below: its media-and-text row.
+Each project is now a card leading to its view: the picture, the name, one sentence, and at most
+four technology tags then a count. The card has no links out, and it prints with no address. A
+project is still an `article` named by its `h3`, technologies are still tags, and the gradient
+placeholders are still not adopted. Marked below.
+
 This record decides the page's **structure and patterns**. The token values the structure reads are
 reworked by #44, the CV download by #45, and the print stylesheet by #52. Where this record names a
 value, such as the accent, it is because the UI Review settled it and those stories implement it
@@ -233,6 +239,11 @@ Above the wide breakpoint, three columns: a date column, a narrow spine column, 
 * **Each row is kept whole in print.**
 
 ### Projects
+
+> **Superseded in part by DDR-051.** The row below is now a card per project, two to a row from the
+> wide breakpoint: the picture at 16:9, the name, one sentence and at most four tags then a count.
+> The whole card leads to the project's view. The labelled links and the full description are on
+> the view, and do not print.
 
 Above the wide breakpoint, two columns: a media column and the text. Below it, media above text.
 

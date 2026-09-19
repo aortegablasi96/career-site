@@ -1,74 +1,130 @@
 /*
- * The projects, per DDR-010.
+ * The projects, per DDR-051, as `career-site-main` draws them (node 58:938).
  *
- * A project is one row. Below the wide breakpoint the row is a single column: the media sits above
- * the name, as wide as the row has space for. From the wide breakpoint the row becomes two columns
- * — the media and the text — and the media moves beside the name. Nothing is reordered to do it:
- * the markup order is the visual order at both widths, per DDR-014, which is why the media sits
- * above the text on a narrow screen rather than being moved there.
+ * Each project is a card: its picture, its name, one sentence and its first technologies. The page
+ * hands the section two cards at a time, as a row, and a row is one grid: a single column below the
+ * wide breakpoint, where the cards stand one after another in the markup order, and two equal
+ * columns from it. Every space around a card is the design's one 20px.
  */
-
-/* Projects in a section are separated by the item step, the design's 40px, as skill groups are,
-   per DDR-039. The first project follows the heading inside the block the section keeps whole with it,
-   per DDR-008, so the section's own rules give it its space. */
-.project + .project {
-  margin-block-start: var(--space-item);
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--project-card-space);
 }
 
-/* The media is 4:3 at the one width ADR-004 prepares the file at, and never wider than the space
-   the row has for it, so a narrow screen with enlarged text wraps rather than scrolls sideways.
-   Both dimensions are settled before the file arrives, so the page does not shift when it loads,
-   and a picture that is not 4:3 is cropped rather than distorted.
+/* The second row follows the block the section keeps whole with its heading, so it is the
+   section's child rather than the first row's sibling, and the section would set it an item step
+   below. The cards are the design's 20px apart each way, so it takes the gap the rows have inside
+   them. Naming the element outranks the section's own rule, as the timeline's last row does. */
+section > .row {
+  margin-block-start: var(--project-card-space);
+}
 
-   It is rounded at the large radius, which DDR-013 gives a language card and a piece of project
-   media alike; the small radius beside it is the tag's and the badge's.
+/* A card is a language card's surface, per DDR-020 and DDR-025: white, edged by the hairline and
+   raised by the site's one shadow, at the large radius. The design draws a 16px radius and a
+   shadow of its own here; DDR-013 has three radii and DDR-020 one elevation, and a card is what
+   both were written for, so it takes theirs.
 
-   This is the img and the video alike: the video is the same box, showing its poster until someone
-   presses play, and the still it prints in its place is the same box again. */
+   It is the box the link is stretched over, which is all `relative` does here: nothing in it moves.
+   A column, so the picture stretches to the card's width. It is a flex column rather than a grid of
+   one track: measured on #154, Firefox sizes a grid row from the picture's own 420px height rather
+   than the 16:9 it is drawn at, and left 117px empty under every picture, on screen and on paper. */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background-color: var(--color-surface-card);
+  box-shadow: var(--shadow-raised);
+}
+
+/* The picture, as wide as the card, in the design's 16:9, and cropped from the centre rather than
+   distorted, as the owner chose on #154. It fills the top of the card, so it takes the card's two
+   upper corners. It stretches across the column, so no width is written for it. */
 .media {
   display: block;
-  inline-size: var(--project-media-width);
-  max-inline-size: 100%;
-  aspect-ratio: var(--project-media-ratio);
-  border-radius: var(--radius-large);
+  align-self: stretch;
+  aspect-ratio: var(--project-card-media-ratio);
+  border-start-start-radius: var(--radius-large);
+  border-start-end-radius: var(--radius-large);
   object-fit: cover;
 }
 
-/* A project whose media is a video carries the video and its poster still, and shows one of them:
-   the video on screen, the still on paper, per DDR-015. A video element cannot be the printed image
-   DDR-010 asks for — Edge prints an empty box with a dead scrubber and Firefox prints the poster
-   under a controls bar — so the still is what paper shows. Only one is ever displayed, so the row
-   still has a single media element beside its text. */
-.onPaper {
-  display: none;
+/* The text below the picture, 20px in from the card's edge all round. The base styles set a block in
+   an article a flow step below the one before it; here the picture and the text meet. */
+.body {
+  margin-block-start: 0;
+  padding: var(--project-card-space);
 }
 
-/* The text column is a div, which the base styles' flow rule does not reach, so it sets the rhythm
-   between its own blocks. Every step is the flow step, and the one that sits tighter says so
-   below. */
-.content > * + * {
-  margin-block-start: var(--space-flow);
+/* The name is the card's h3, in the serif the design sets it in, per DDR-051 as it amends DDR-023,
+   at an item title's size and on the running text's 1.5 line, which is the design's 22.5px. */
+.name {
+  font-family: var(--font-family-heading);
+  line-height: var(--line-height-body);
 }
 
-/* The tags describe the name above them rather than opening a block of their own, so they sit as
-   close to it as the metadata line did. They come after the rule above, which they override at the
-   same specificity. */
+/* The link is the name, in the heading's ink and without an underline: what says the card is a link
+   is the card itself, which answers the pointer anywhere on it. Its box is stretched over the whole
+   card by a pseudo-element, so the name stays its accessible name and the card is one stop in the
+   tab order. */
+.link {
+  color: inherit;
+  text-decoration-line: none;
+}
+
+.link::after {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-large);
+  content: '';
+}
+
+/* Under the pointer, anywhere on the card, and on keyboard focus, the name takes the accent, as a
+   contents link and the view's way back do, per DDR-035. */
+.link:hover,
+.link:focus-visible {
+  color: var(--color-accent);
+}
+
+/* Keyboard focus outlines the whole card rather than the name alone, since the card is what the
+   link opens, in the outline every focused element has. */
+.link:focus-visible {
+  outline: none;
+}
+
+.link:focus-visible::after {
+  outline: var(--focus-outline-width) solid var(--color-focus);
+  outline-offset: var(--focus-outline-offset);
+}
+
+/* One sentence, in the muted ink at the label step, as the design sets it: 13px, on the small prose
+   leading, which is the design's 20.8px within 0.7px. It passes on the card's white at 4.76:1. The
+   design's 6px below the name is not on the scale; it takes the smallest step. It runs the card's
+   width, as the design sets it, rather than stopping at the measure: a card is never wider than
+   about 80 characters of it. */
+.summary {
+  max-inline-size: none;
+  margin-block-start: var(--space-x-small);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-x-small);
+  line-height: var(--line-height-prose-small);
+}
+
+/* The tags, the design's 20px below the sentence, in a row that wraps where the design's does not,
+   so a narrow card never scrolls. */
 .technologies {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-x-small);
-  margin-block-start: var(--space-x-small);
+  margin-block-start: var(--project-card-space);
   padding-inline-start: 0;
   list-style: none;
 }
 
 /* A tag is its own text on a tint that repeats what the text says, so it reads the same in
-   greyscale, on paper and to a screen reader. The accent on the tint is 7.07:1, per DDR-012.
-
-   Medium, which is the weight DDR-023's table has always named for a tag and which no rule wrote
-   until DDR-030. It is the smallest text on the page, at 11px, and the one that most needs the
-   extra stroke; it is also the only tracked text this weight reaches, at +0.025em, which is well
-   below the +0.1em DDR-024 measures as the point a Firefox PDF spells a word out. */
+   greyscale, on paper and to a screen reader, in medium, per DDR-030, and tracked, per DDR-017. */
 .tag {
   padding-block: var(--space-x-small);
   padding-inline: var(--space-small);
@@ -80,75 +136,29 @@
   letter-spacing: var(--letter-spacing-loose);
 }
 
-/* The description is the one paragraph in the text column, so the selector names the element
-   rather than adding a class to it. It is a step below the name above it, per DDR-022: the design
-   sets a project's description at the size it sets a role's points, not at the size of the
-   introduction's summary. It is running text, so it takes the prose leading, which is the design's
-   own 1.72 for a description, per DDR-038. */
-.content > p {
-  font-size: var(--font-size-small);
-  line-height: var(--line-height-prose);
+/* The count of what the card leaves out is not a technology, so it is grey rather than indigo. The
+   surface is the design's; the ink is a step darker than its #64748b, which is 4.34:1 there, so it
+   is the Basic level badge's pairing, 6.92:1, which the owner chose on #154. */
+.more {
+  background-color: var(--color-surface-level-basic);
+  color: var(--color-text-level-basic);
 }
 
-/* A row of labelled links that wraps when it runs out of width, so it needs no breakpoint, per
-   DDR-006. The text column sets it below the description at the flow step. The row gap is the
-   contents row's, and is here for the same reason, per DDR-027: no width the page was measured at
-   wraps this row today, but two 19.5px links stacked with nothing between them would be inside the
-   circles WCAG 2.2's 2.5.8 measures its spacing exception with, and what wraps it is the content.
-   */
-.links {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: var(--space-medium);
-  row-gap: var(--space-small);
-  padding-inline-start: 0;
-  list-style: none;
-}
-
-/* A labelled link is set as a label rather than as the prose around it, per DDR-022, which is the
-   step the design gives every short label the reader acts on: these, and the introduction's pills.
-
-   Its box is its text and nothing else, per DDR-027, where DDR-014 padded it to 44px. It stays a
-   flex container for the reason a contents link does: the box is then the whole line the label sets
-   in, which is the design's own 19.5px. */
-.link {
-  display: inline-flex;
-  align-items: center;
-  font-size: var(--font-size-x-small);
-  /* The underline the base styles give every link, drawn as the design draws it, per DDR-035: in a
-     pale indigo, 2px below the letters. It is still what says this is a link, and at 1.86:1 it
-     says so more quietly than it did in the accent; DDR-035 records it as failing WCAG 1.4.11. */
-  text-decoration-color: var(--color-underline);
-  text-underline-offset: var(--underline-offset);
-}
-
-/* Under the pointer and on keyboard focus the text darkens and the underline strengthens, to
-   4.17:1, per DDR-035. The darker ink is 7.38:1 on the page. */
-.link:hover,
-.link:focus-visible {
-  color: var(--color-accent-hover);
-  text-decoration-color: var(--color-underline-hover);
-}
-
-/* From here the media takes a column of its own beside the text, per DDR-010. This is the one
+/* From here two cards stand in a row, per DDR-051, and on paper too, per DDR-015. This is the one
    width a component may write, per DDR-014. */
 @media (min-width: 48em), print {
-  .project {
-    display: grid;
-    grid-template-columns: var(--project-media-width) 1fr;
-    column-gap: var(--space-large);
-    align-items: start;
+  .row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
 
-  /* The columns sit beside one another, so the text is not pushed below the media by the rhythm
-     the single column needs. */
-  .project > * + * {
-    margin-block-start: 0;
-  }
+/* The projects' view shows a video with its poster still and prints the still, per DDR-015; `Media`
+   marks the two. A card shows the still alone, so it needs neither. */
+.onPaper {
+  display: none;
 }
 
 @media print {
-  /* Paper takes the poster still and not the video, per DDR-015. */
   .onScreen {
     display: none;
   }
@@ -157,29 +167,27 @@
     display: block;
   }
 
-  /* A tag has no print rule of its own: DDR-015 drops every tint at the token layer, so the tag
-     prints its text, and the padding that surrounded the tint becomes the space that separates one
-     technology from the next. The row still wraps and still needs no breakpoint.
-
-     A link takes the height of its text on screen too, since DDR-027, so what is left on the link
-     itself is the display: the address that prints after it, from the base styles, per DDR-005, is
-     a pseudo-element, and inside a flex container it would be laid out as an item of its own rather
-     than read as part of the line.
-
-     The row gap goes with it. It exists to keep two wrapped links apart for a finger, and nothing
-     is tapped on paper, which is the screen-only sizing DDR-015 lets a component drop. It is not
-     free either: an address printed after each link wraps this row on every sheet, so the gap would
-     have cost the printed CV 16px. */
-  .links {
-    row-gap: 0;
+  /* A row is two cards side by side, and is kept whole on paper, as the language cards are. */
+  .row {
+    break-inside: avoid;
   }
 
-  /* The pale underline and its offset are the screen's, per DDR-035, so paper takes the underline
-     it had before them: in the link's own ink, where the browser puts it. A pale line under a link
-     on a sheet is a mark nobody can follow, and the printed CV does not change. */
-  .link {
-    display: inline;
-    text-decoration-color: currentColor;
-    text-underline-offset: auto;
+  /* A card prints as it shows, per Epic #152: the picture, the name, the sentence and the tags. Its
+     fill, its edge and its shadow are dropped by the tokens, per DDR-015 and DDR-020, so the
+     picture is rounded all round and the text keeps only the space above it, which a box that is
+     no longer drawn needs no more of. */
+  .media {
+    border-radius: var(--radius-large);
+  }
+
+  .body {
+    padding-inline: 0;
+    padding-block-end: 0;
+  }
+
+  /* The link leads to a view, which paper cannot follow, so it prints no address, and there is no
+     card to stretch it over. */
+  .link::after {
+    content: none;
   }
 }

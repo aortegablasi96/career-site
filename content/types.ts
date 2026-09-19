@@ -201,8 +201,14 @@ export interface Project {
    */
   caption: string;
   /**
+   * The one sentence the project's card on the page shows, per DDR-051, approved by the owner on
+   * #154. The full `description` is the view's, and the card leads there.
+   */
+  summary: string;
+  /**
    * The technologies it uses, shown as tags rather than as a line of metadata, per DDR-010, so a
-   * technical reader can scan the stack without reading the description.
+   * technical reader can scan the stack without reading the description. A card shows the first
+   * four, per DDR-051, so the order is also which ones a card shows.
    */
   technologies: readonly string[];
   /** What the project is and what it demonstrates, CV-style, without pronouns. */
@@ -229,6 +235,11 @@ export interface Projects {
   projects: readonly Project[];
   /** The words each project's view shows around the project's own, per DDR-050. */
   view: ProjectView;
+  /**
+   * The last tag on a card whose project has more technologies than the card shows, per DDR-051,
+   * given how many it leaves out: "+2".
+   */
+  more: (count: number) => string;
 }
 
 /** The strings a project's view shows that are not the project's own, per DDR-050. */

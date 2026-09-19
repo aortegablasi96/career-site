@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Credentials } from '@/components/credentials';
 import { Experience } from '@/components/experience';
 import { Languages } from '@/components/languages';
-import { Projects } from '@/components/projects';
+import { Projects, projectRows } from '@/components/projects';
 import { Skills, skillRows } from '@/components/skills';
 import { credentials } from '@/content/credentials';
 import { dateLabels } from '@/content/dates';
@@ -47,7 +47,10 @@ export const sections: readonly PageSection[] = [
     id: 'projects',
     title: projects.title,
     link: projects.link,
-    items: projects.projects.map((project) => <Projects key={project.name} projects={[project]} />),
+    // A row of two cards rather than one, for the reason the skills below give, per DDR-051.
+    items: projectRows(projects.projects).map((row) => (
+      <Projects key={row[0]!.slug} projects={row} more={projects.more} />
+    )),
   },
   {
     id: 'skills',

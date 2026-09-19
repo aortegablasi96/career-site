@@ -57,14 +57,14 @@ the bullet points — indented one step of the scale and marked by the browser's
 through `::marker`, per DDR-019; a credential has no place, a degree's body is its thesis sentence,
 and a certification has no body at all.
 
-**The projects section is the redesign's media-and-text row, under #50.** A project is one
-`article`: below the wide breakpoint a single column with its media above the name, and from the
-breakpoint a two-column grid of the media and the text. The text is the name, the technologies as a
-wrapping row of tinted tags, the description, and the labelled links. `--project-media-*` in
-`app/tokens.css` holds the media's width and its 4:3 ratio, and the media is capped to the row so a
-narrow screen with enlarged text wraps rather than scrolls sideways. The media is an `img` or, for a
-project whose content gives it a `Video`, a `video` with its poster, controls and `preload="none"`;
-no project carries a video yet, so the branch is exercised by a test rather than by the page.
+**The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
+row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
+the name, the one-sentence `summary`, and at most four technology tags then a count such as "+2".
+The page hands the section two cards at a time, as `projectRows` splits them, for the reason it
+hands the skills two groups. `--project-card-*` in `app/tokens.css` holds the 16:9 and the design's
+one 20px. The card's picture is always a still; `Media` in `components/projects.tsx`, which renders
+a `video` with its poster, controls and `preload="none"`, is the view's alone now. No project
+carries a video yet, so that branch is exercised by a test rather than by a page.
 
 **The footer is the design's, under #96.** A `footer` follows `main`, holding the owner's name and
 the three contact addresses above a hairline, inside the page's own column — `components/footer.tsx`
@@ -221,7 +221,7 @@ DDR-014, the **absence** of a target minimum to DDR-027 — the name is held mis
 one moves the record with it — the photo's two widths and its ratio to DDR-021, the three tracking values to DDR-017, the four leadings — each running-text block within half a pixel a line of the design, and 1.5 on paper — to DDR-038,
 the bullet marker's 1.86:1 to DDR-019 as DDR-025 amends it, the raised shadow and its 10% ink to DDR-020 as DDR-025 amends it, and the photo's
 two lights to DDR-021, the timeline's and
-the projects' measures to DDR-010, and the print
+the project cards' measures to DDR-051, and the print
 treatment to DDR-015 as DDR-022 amends it — the 12pt base, every surface dropped and no ink touched, the 28mm photo, and
 every shadow put out — so changing a token means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
@@ -263,7 +263,7 @@ so what a browser prints, or saves as a PDF, is designed rather than left to def
 
 **Paper is the wide surface.** A component that lays out in columns writes
 `@media (min-width: 48em), print`, so the sheet gets the layout the wide screen gets: the timeline's
-date column, the projects' media beside their text, two columns of skill groups, four language cards
+date column, two project cards to a row, two columns of skill groups, four language cards
 in a row. A sheet of A4 inside its margins is about 40em and an em in a media query is the browser's
 default font size, which paper does not have, so the width alone never matches on paper; writing the
 grid twice would leave the two free to drift. `components/stylesheets.test.ts` admits that one
@@ -316,7 +316,7 @@ What exists, to reuse rather than reinvent:
   redesign's too, reworked on #52. The type scale and its floor are DDR-022's since #90, and
   DDR-011 keeps everything else it decides. Target sizes are DDR-027's since #95.
 * **The components.** Every section is DDR-010's: the introduction under #48, the timeline that
-  experience and education share under #49 and #51, the projects' media-and-text row under #50, and
+  experience and education share under #49 and #51, the project cards under #154 per DDR-051, and
   the skill groups and language cards under #51. The footer below them is DDR-028's, under #96. What still carries over from DDR-006 is its
   outline, its contents row, and the metadata line — which DDR-010 narrows to a single part, so the
   timeline's dates, place and company each get a line set the same way. The contents, the section
@@ -533,8 +533,8 @@ condition 3 Epic #152 meets: each project is a statically generated route, and a
 is a route rather than a file, so it does not go through `asset()`, which amends ADR-004. The next
 ADR is `011`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-050. The next DDR is
-`051`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-051. The next DDR is
+`052`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Twenty-two accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -556,6 +556,7 @@ at the section concerned:
   state and does not animate" that rules out the state: the bar marks the current section's link.
   DDR-043 takes its "Links open in the same tab" for the LinkedIn and GitHub pills alone.
   DDR-050 ends the page being the site's only page: each project has a view of its own.
+  DDR-051 takes its projects pattern: each project is a card that leads to its view.
 * **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
   rule and its rule that nothing scrolls horizontally from 320px. DDR-039 lets the wide breakpoint
   redefine one token, `--rhythm-scale`, and DDR-049 a second, `--contents-bar-title-row`. DDR-040 takes `--page-padding-block` off the narrow
@@ -581,7 +582,8 @@ at the section concerned:
   about which elements take which face. DDR-030 corrects the one row of its weight table that was
   wrong in both directions: the medium row named the contents links and the tags, neither of which
   had the weight, and left out the CV control, which did. It now names the positioning line, the
-  four pill controls and the tags. DDR-031 adds the contents links, which were #98's.
+  four pill controls and the tags. DDR-031 adds the contents links, which were #98's. DDR-051
+  sets one `h3` in Lora: a project card's name, as the design draws it.
 * **DDR-011** is superseded three times over. DDR-022 takes its type scale and its 13px floor; DDR-023
   takes which elements each typeface is used on, the three weights, the four files and the
   no-italics rule; DDR-038 adds two running-text leadings to its 1.5 and 1.2, which stand. What
@@ -594,7 +596,8 @@ at the section concerned:
   which therefore prints as nothing at all. DDR-032 keeps the 12pt base, lets a printed address break
   anywhere, and replaces its page-break measurements: five sheets in both browsers. DDR-038 keeps
   running text at 1.5 on paper, where the screen now sets it looser, and DDR-039 keeps the rhythm
-  at its old steps on paper, where the screen now takes the design's.
+  at its old steps on paper, where the screen now takes the design's. DDR-051 prints a project as
+  its card, with no address, and the CV is five sheets again, in both browsers.
 * **DDR-018** keeps its case and its ink. DDR-023 takes its "semibold, not bold" decision, and
   corrects its measurement of the tracking fault: at the 10px badge DDR-022 left, +0.1em splits the
   word in a Firefox PDF at **every** weight the site ships, 400 included, where DDR-018 concluded
@@ -1254,7 +1257,7 @@ Two things about it are worth knowing before touching it.
 `/projects/<slug>`, laid out as the Figma layer `career-site-project` draws it: a way back to the
 projects, then the name, description, "Built with" and every technology, and the links beside the
 lead picture and its caption. It is the first story of Epic #152; the cards that lead to a view are
-#154, so until then a view is reachable by its address alone.
+#154's, below.
 
 Five things about it are worth knowing before touching it.
 
@@ -1279,6 +1282,24 @@ Swept every 10px from 300px to 900px on all four views at both text sizes: nothi
 sideways, no pair of targets fails 2.5.8, and no title breaks mid-word. The page itself is
 byte-identical to the tree before, so the printed CV is untouched. DDR-050 lists every difference
 from the layer at its 1195px width.
+
+**#154 has landed, as DDR-051: the projects are cards that lead to each project's view.** A card
+is the picture at the design's 16:9, the name in Lora, one sentence (`summary`, which the owner
+approved) and at most four tags then a count. There are no links out, and paper prints no address.
+
+Four things about it are worth knowing before touching it.
+
+* **The link is the name, stretched over the card by `.link::after`**, so the card is one tab stop,
+  its accessible name is the project's name, and focus outlines the whole card. The card is
+  `position: relative` for that alone.
+* **The card is a flex column, not a one-track grid.** In a grid, Firefox sized the row from the
+  picture's natural height and left 117px empty under it. **The project view's figure has the same
+  fault**: 101.75px between its picture and caption in Firefox. That is #153's to fix.
+* **The count's ink is the Basic badge's passing pairing**, where the design's grey is 4.34:1. The
+  owner chose it on #154.
+* **The printed CV is five sheets in Edge and Firefox**, where it was six. All four cards are on
+  sheet 3, and headings fall on sheets 1, 3, 4, 4 and 5 in both. A longer sentence or name
+  changes a card's height, so reprint.
 
 **#115 has landed, as DDR-035: every link and control answers the pointer.** A contact pill takes
 `--color-surface-hover` and `--color-border-accent-hover`, the CV control darkens to

@@ -797,23 +797,15 @@ describe('spacing tokens', () => {
     }
   });
 
-  // DDR-010's project media, at the width the UI Review on #43 measured: a 280px column, at 4:3.
-  // The width is in rem, as the page column, the photo and the timeline are; the ratio is a shape
-  // rather than a length, so it has no unit.
-  it('sizes the projects’ media in rem, at the 4:3 DDR-010 lays it out', () => {
-    expect(token('project-media-width')).toBe('17.5rem');
-    expect(token('project-media-ratio')).toBe('4 / 3');
+  // DDR-051's cards, off `career-site-main`: the picture at 16:9, and one 20px inside a card,
+  // between cards and above the tags. The ratio is a shape rather than a length, so it has no unit.
+  it('draws a project card’s picture and its space as `career-site-main` does, per DDR-051', () => {
+    expect(token('project-card-media-ratio')).toBe('16 / 9');
+    expect(rem(token('project-card-space')!) * 16).toBe(20);
   });
 
-  // ADR-004 prepares each file once, by hand, at the size it is shown, so the media is one width
-  // rather than one per breakpoint. It is the widest thing the page places beside running text,
-  // and it still leaves the text column room: at the 1100px page it is about a quarter of it.
-  it('leaves the text room beside the media, which is a quarter of the page column', () => {
-    expect(rem(token('project-media-width')!)).toBeLessThan(rem(token('content-width')!) / 3);
-  });
-
-  it('lays the projects out in the components rather than here, so the wide breakpoint stays theirs', () => {
-    for (const name of ['project-media-width', 'project-media-ratio']) {
+  it('lays the cards out in the components rather than here, so the wide breakpoint stays theirs', () => {
+    for (const name of ['project-card-media-ratio', 'project-card-space']) {
       expect(atBreakpoint.has(name), name).toBe(false);
     }
   });
