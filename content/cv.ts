@@ -26,11 +26,13 @@ import type { Cv } from './types';
  * It moved again with #149, because the contents bar now shows the site's title, per DDR-049.
  * It moved again with #153, because each project gained the slug its view's address is made from
  * and a caption for its picture, and the projects gained the words their views show, per DDR-050.
+ * It moved again with #154, because each project gained the one sentence its card shows, and the
+ * projects the wording of a card's count of the technologies it leaves out, per DDR-051.
  * None of the nine is a fact ADR-005 lists as shared, so none of them moved the CV; the nine
  * differences are the ones #59 records, unchanged.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '49b20c9f5da7def79f8de922209b86a248231f9833b23f4a752c7323de5c29cf',
+  contentDigest: '4298a6424d0492ba32803724ab082790495aff51a2f81ab9c7eb4c01e588c063',
 };

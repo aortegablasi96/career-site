@@ -27,6 +27,11 @@ const liveSite = 'Live site';
  * names. The view shows the same name, description, technologies, links and picture as the page,
  * and adds one thing: a caption under the picture, a few words from what its alternative text
  * already says, which the owner approved on #153.
+ *
+ * Since #154 the page shows each project as a card leading to its view, per DDR-051, and a card says
+ * what the project is in one sentence, its `summary`, rather than the full description. The four are
+ * the ones the design proposes, which the owner approved on #154; each says nothing the full
+ * description does not.
  */
 export const projects: Projects = {
   title: 'Projects',
@@ -37,6 +42,7 @@ export const projects: Projects = {
       slug: 'numisbook',
       media: { file: '/project-numisbook.webp', alt: 'NumisBook showing a coin’s record: its details beside a photograph of a silver denarius inscribed EID MAR, with the coin’s invoice below' },
       caption: 'A coin’s record',
+      summary: 'AI-assisted SaaS for managing a coin collection, built end-to-end with Claude Code.',
       technologies: ['Next.js', 'TypeScript', 'PostgreSQL on Neon', 'OpenAI', 'Vercel', 'Cloudflare R2'],
       description:
         'A SaaS application for managing a coin collection, with an AI assistant that helps manage it and automates tasks such as adding a new coin. Built end to end with Claude Code, whose workflow, execution, governance, and project-management skills work as a simulated product team across the whole development pipeline, through to production.',
@@ -50,6 +56,7 @@ export const projects: Projects = {
       slug: 'digital-twin',
       media: { file: '/project-digital-twin.webp', alt: 'The Digital Twin as Andreu’s Career Bot in a chat, introducing itself, suggesting questions to ask, and answering which roles fit Andreu’s experience' },
       caption: 'The chatbot answering a question',
+      summary: 'Agentic RAG chatbot that answers questions about this career in the visitor’s language.',
       technologies: ['LangGraph', 'OpenAI Agents SDK', 'Chroma', 'Cohere', 'FastAPI', 'Next.js'],
       description:
         'A chatbot that answers questions about the career on this page, in the visitor’s language. Demonstrates an agentic RAG system: several agents filter each question, retrieve the documents, write a professional answer, and send push notifications, while semantic vector search and BM25 lexical search run concurrently and are reranked with Cohere for precision.',
@@ -63,6 +70,7 @@ export const projects: Projects = {
       slug: 'stock-portfolio-viewer',
       media: { file: '/project-stock-portfolio-viewer.webp', alt: 'The Stock Portfolio Viewer’s Allocation view: the invested value, the number of positions and the largest holding, above a world map with donut charts for each country' },
       caption: 'The Allocation view',
+      summary: 'Local desktop app for analysing an Interactive Brokers portfolio with an AI assistant.',
       technologies: ['Electron', 'React', 'TypeScript', 'SQLite', 'OpenAI'],
       description:
         'A local desktop application for analysing a personal stock portfolio from an Interactive Brokers account, with an AI assistant that gives feedback on it, in which every figure is computed by the application and only phrased by the model. Built with Claude Code skills and MCP servers, including shadcn’s, working from a Figma design.',
@@ -73,6 +81,7 @@ export const projects: Projects = {
       slug: 'career-site',
       media: { file: '/project-career-site.webp', alt: 'This site’s introduction: the owner’s photo, name, positioning line and summary, above the contact and CV controls' },
       caption: 'The introduction',
+      summary: 'A career site that doubles as a printed CV, built through a skill-driven Claude Code workflow.',
       technologies: ['Next.js', 'TypeScript', 'CSS Modules', 'GitHub Pages'],
       description:
         'A career site that is also its own printed CV. Built with Claude Code through a skill-driven workflow, in which a content strategist, a UI designer, an architect, builders, and a tester are each a skill, and every significant design and architecture decision is recorded.',
@@ -88,4 +97,5 @@ export const projects: Projects = {
     // own title leads with it.
     title: (project) => `${project} – ${introduction.name}`,
   },
+  more: (count) => `+${count}`,
 };

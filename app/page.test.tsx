@@ -100,11 +100,11 @@ describe('HomePage', () => {
       ...html.matchAll(/<section id="([^"]+)"[^>]*><div[^>]*><h2[^>]*>[^<]+<\/h2><(article|div|dl)[\s>]/g),
     ].map(([, id, tag]) => [id, tag]);
 
-    // Skills opens with a div because its item is a row of two groups rather than one group: the
-    // two columns DDR-010 gives the section have to be one grid, and a grid needs one parent.
+    // Projects and skills open with a div because each item is a row of two rather than one: the
+    // two columns DDR-010 and DDR-051 give them have to be one grid, and a grid needs one parent.
     expect(openings).toEqual([
       ['experience', 'article'],
-      ['projects', 'article'],
+      ['projects', 'div'],
       ['skills', 'div'],
       ['education', 'article'],
       ['languages', 'dl'],
@@ -112,8 +112,9 @@ describe('HomePage', () => {
   });
 
   it('shows every item once, in the order the content gives', () => {
-    // A skill group's name carries a class, per DDR-017, where the other item titles carry none.
-    const titles = [...html.matchAll(/<h3[^>]*>([^<]+)<\/h3>/g)].map(([, title]) => title);
+    // A skill group's name carries a class, per DDR-017, and a project's name is its card's link,
+    // per DDR-051, so the title is the heading's text whatever is inside it.
+    const titles = [...html.matchAll(/<h3[^>]*>(.*?)<\/h3>/g)].map(([, title]) => title!.replace(/<[^>]+>/g, ''));
 
     expect(titles).toEqual([
       ...experience.roles.map(({ title }) => title),

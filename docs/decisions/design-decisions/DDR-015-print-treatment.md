@@ -6,6 +6,10 @@ Date: 2026-09-16
 
 Supersedes DDR-005, the print stylesheet, and DDR-008, section openings in print.
 
+**Amended by DDR-051 in one respect**: a project prints as its card, with its picture, its name, one
+sentence and the tags the card shows. It prints no source or live address and no full description.
+The printed CV is five sheets in both browsers since then.
+
 **Amended by DDR-039 in one respect**: the screen spaces sections, headings and entries by the
 design's values, and paper keeps the steps it had, which the print block restores through the five
 rhythm tokens. The design's values would have printed seven sheets; the narrow factor keeps six but

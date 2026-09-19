@@ -3,25 +3,27 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { projects } from '@/content/projects';
 import type { Project } from '@/content/types';
-import { Projects } from './projects';
+import { Media, Projects, projectRows } from './projects';
 
-// Rendered with the real content, since what the projects say and link to is what #30 asks for and
-// what they show is what DDR-010 asks for.
-const html = renderToStaticMarkup(<Projects projects={projects.projects} />);
+// Rendered with the real content, a row at a time as the page renders it, since what the cards say
+// and lead to is what #154 asks for.
+const html = projectRows(projects.projects)
+  .map((row) => renderToStaticMarkup(<Projects projects={row} more={projects.more} />))
+  .join('');
 
 /** The markup's text, as a reader meets it. */
 const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 
-/** Each project's row, in the order the page shows them. */
-const rows = html.match(/<article[^>]*>.*?<\/article>/g) ?? [];
+/** Each project's card, in the order the page shows them. */
+const cards = html.match(/<article[^>]*>.*?<\/article>/g) ?? [];
 
-/** A row's links, as the reader meets them. */
-const linksOf = (row: string) =>
-  [...row.matchAll(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(([, href, text]) => ({ href, text }));
+/** A card's links, as the reader meets them. */
+const linksOf = (card: string) =>
+  [...card.matchAll(/<a [^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(([, href, text]) => ({ href, text }));
 
-/** A row's technology tags, in the order it shows them. */
-const tagsOf = (row: string) =>
-  [...(row.match(/<ul class="[^"]*technologies[^"]*">.*?<\/ul>/)?.[0] ?? '').matchAll(
+/** A card's tags, in the order it shows them, the count included. */
+const tagsOf = (card: string) =>
+  [...(card.match(/<ul class="[^"]*technologies[^"]*">.*?<\/ul>/)?.[0] ?? '').matchAll(
     /<li[^>]*>([^<]+)<\/li>/g,
   )].map(([, tag]) => tag);
 
@@ -45,103 +47,69 @@ function rule(selector: string, within = css): string {
 }
 
 describe('Projects', () => {
-  it('renders each project as a row, in the order the content gives', () => {
-    const titles = rows.map((row) => row.match(/<h3>([^<]+)<\/h3>/)?.[1]);
+  it('renders each project as a card, in the order the content gives, two to a row', () => {
+    const names = cards.map((card) => card.match(/<h3[^>]*><a [^>]*>([^<]+)<\/a><\/h3>/)?.[1]);
 
-    expect(titles).toEqual(projects.projects.map(({ name }) => name));
+    expect(names).toEqual(projects.projects.map(({ name }) => name));
+    expect(projectRows(projects.projects).map((row) => row.length)).toEqual([2, 2]);
   });
 
-  // DDR-010's order: the media, then the name, the tags, the description and the links. The markup
-  // order is the visual order at both widths, per DDR-014, so this is also what a screen reader and
-  // a keyboard meet.
-  it('follows the order DDR-010 sets: media, name, tags, description, links', () => {
-    for (const row of rows) {
-      expect(row).toMatch(
-        /^<article[^>]*><(?:img|video)[^>]*\/?>(?:<\/video>)?<div[^>]*><h3>[^<]+<\/h3><ul class="[^"]*technologies[^"]*">(?:<li[^>]*>[^<]+<\/li>)+<\/ul><p>[^<]+<\/p><ul[^>]*>(?:<li><a [^>]+>[^<]+<\/a><\/li>)+<\/ul><\/div><\/article>$/,
+  // DDR-051's order, which is the design's: the picture, then the name, the sentence and the tags.
+  // The markup order is the visual order at both widths, per DDR-014.
+  it('follows the order DDR-051 sets: picture, name, sentence, tags', () => {
+    for (const card of cards) {
+      expect(card).toMatch(
+        /^<article[^>]*><img [^>]*\/?><div[^>]*><h3[^>]*><a [^>]+>[^<]+<\/a><\/h3><p[^>]*>[^<]+<\/p><ul class="[^"]*technologies[^"]*">(?:<li[^>]*>[^<]+<\/li>)+<\/ul><\/div><\/article>$/,
       );
     }
   });
 
-  it('shows every technology as a discrete tag, not as a line of prose, per DDR-010', () => {
-    for (const [index, { technologies }] of projects.projects.entries()) {
-      expect(tagsOf(rows[index]!)).toEqual([...technologies]);
-    }
-
-    // DDR-006 ran them together in one metadata line. DDR-010 replaces that here.
-    expect(text).not.toContain('·');
-  });
-
-  it('shows each description exactly as content/ writes it', () => {
-    for (const { description } of projects.projects) {
-      expect(html).toContain(`<p>${description}</p>`);
+  // The whole card is one link, and the link is the name: one stop in the tab order, announced by
+  // the project's name rather than by every word on the card run together.
+  it('makes each card one link to its project’s view, named by the project alone', () => {
+    for (const [index, { name, slug }] of projects.projects.entries()) {
+      expect(linksOf(cards[index]!)).toEqual([{ href: `/projects/${slug}`, text: name }]);
     }
   });
 
-  it('links every project to its public repository on the owner’s GitHub account, first', () => {
-    for (const row of rows) {
-      expect(linksOf(row)[0]).toEqual({
-        href: expect.stringMatching(/^https:\/\/github\.com\/aortegablasi96\/[\w.-]+$/),
-        text: 'Source code',
-      });
-    }
-  });
-
-  it('links NumisBook and the chatbot to the live versions recorded on their repositories', () => {
-    const [numisbook, chatbot, viewer] = rows;
-
-    expect(linksOf(numisbook!)).toContainEqual({ href: 'https://numisbook.vercel.app', text: 'Live site' });
-    expect(linksOf(chatbot!)).toContainEqual({ href: 'https://career-conversation-chatbot.vercel.app', text: 'Live site' });
-    expect(linksOf(viewer!).map(({ text }) => text)).not.toContain('Live site');
-  });
-
-  it('links this site’s row to this repository, and to nothing else', () => {
-    expect(linksOf(rows.at(-1)!)).toEqual([
-      { href: 'https://github.com/aortegablasi96/career-site', text: 'Source code' },
-    ]);
-  });
-
-  it('opens every link in the same tab, per DDR-006', () => {
+  it('opens the view in the same tab, since it is a page of this site', () => {
     expect(html).not.toMatch(/target=/);
   });
 
-  // DDR-027: a link's box is the line its label sets in, as the design draws it, with no minimum
-  // padding it out. A wrapped row needs a gap of its own, though, or two 19.5px links would sit
-  // inside the circles WCAG 2.2's 2.5.8 measures its spacing exception with.
-  it('gives every link the box the design draws and a wrapped row a gap, per DDR-027', () => {
-    expect(rule('.link')).not.toMatch(/min-block-size|min-inline-size/);
-    expect(rule('.links')).toMatch(/row-gap:\s*var\(--space-small\);/);
+  // A card says what the project is in one sentence; the full description is the view's.
+  it('shows each card’s sentence, and leaves the full description to the view', () => {
+    for (const { summary, description } of projects.projects) {
+      expect(html).toContain(`>${summary}</p>`);
+      expect(text).not.toContain(description);
+    }
   });
 
-  // DDR-035: the one link on the page still underlined draws the design's pale underline, 2px below
-  // the text. It keeps the base styles' underline rather than drawing one of its own, so it writes
-  // the colour and the offset and never the line.
-  it('underlines every link in the design’s pale indigo, 2px below the text, per DDR-035', () => {
-    expect(rule('.link')).toMatch(/text-decoration-color:\s*var\(--color-underline\);/);
-    expect(rule('.link')).toMatch(/text-underline-offset:\s*var\(--underline-offset\);/);
-    expect(css).not.toMatch(/text-decoration-line/);
+  it('shows at most four technologies, in their order, then a count of the rest', () => {
+    for (const [index, { technologies }] of projects.projects.entries()) {
+      const rest = technologies.length - 4;
+
+      expect(tagsOf(cards[index]!)).toEqual([
+        ...technologies.slice(0, 4),
+        ...(rest > 0 ? [projects.more(rest)] : []),
+      ]);
+    }
   });
 
-  it('darkens the text and strengthens the underline under the pointer and on focus, per DDR-035', () => {
-    const hovered = css.match(/\.link:hover,\s*\.link:focus-visible\s*\{([^}]*)\}/)?.[1] ?? '';
-
-    expect(hovered).toMatch(/color:\s*var\(--color-accent-hover\);/);
-    expect(hovered).toMatch(/text-decoration-color:\s*var\(--color-underline-hover\);/);
+  it('counts the rest as the design does, and shows no count for four or fewer', () => {
+    expect(tagsOf(cards[0]!).at(-1)).toBe('+2');
+    expect(tagsOf(cards[3]!)).toEqual(['Next.js', 'TypeScript', 'CSS Modules', 'GitHub Pages']);
   });
 
-  // The pale underline is the screen's. Paper prints the underline it printed before DDR-035, in
-  // the link's own ink where the browser places it, so the printed CV does not change.
-  it('prints the underline in the link’s own ink, where the browser places it, per DDR-035', () => {
-    const printed = rule('.link', media('print'));
-
-    expect(printed).toMatch(/text-decoration-color:\s*currentColor;/);
-    expect(printed).toMatch(/text-underline-offset:\s*auto;/);
+  // The printed CV carries no project address since Epic #152, and the card has none to carry.
+  it('carries no source or live address', () => {
+    expect(html).not.toMatch(/https?:\/\//);
   });
 });
 
-describe('a project’s media', () => {
-  const images = rows.map((row) => row.match(/<img [^>]*>/)?.[0] ?? '');
+describe('a card’s picture', () => {
+  const images = cards.map((card) => card.match(/<img [^>]*>/)?.[0] ?? '');
 
-  it('shows every project’s media, with the alternative text content/ gives it', () => {
+  it('shows every project’s picture, with the alternative text content/ gives it', () => {
     for (const [index, { media }] of projects.projects.entries()) {
       expect('poster' in media).toBe(false);
       expect(images[index]).toContain(`alt="${'alt' in media ? media.alt : ''}"`);
@@ -149,18 +117,16 @@ describe('a project’s media', () => {
     }
   });
 
-  // The media shows what the words cannot, and says nothing the words do not: every alternative
-  // text names the project beside it, so a reader who never sees the picture still meets the name,
-  // the stack, the description and the links.
-  it('leaves the row reading correctly when the asset fails to load', () => {
-    for (const [index, { name, media }] of projects.projects.entries()) {
-      expect('alt' in media && media.alt.length).toBeGreaterThan(0);
-      expect(text).toContain(name);
-      expect(rows[index]).toMatch(/<p>[^<]+<\/p>/);
+  // The picture is content, so it keeps its alternative text, and it sits outside the link, so the
+  // link's name stays the project's.
+  it('is outside the link, so it adds nothing to the link’s name', () => {
+    for (const card of cards) {
+      expect(card).not.toMatch(/<a [^>]*>[^]*<img/);
     }
   });
 
   it('reaches every file through asset(), so it resolves under the Pages base path', () => {
+    expect(source).toContain('asset(still.src)');
     expect(source).toContain('asset(media.file)');
     expect(source).toContain('asset(media.poster)');
   });
@@ -174,40 +140,39 @@ describe('a project’s media', () => {
     }
   });
 
-  it('fixes both of the media’s dimensions, so the page does not shift when it loads', () => {
-    expect(rule('.media')).toMatch(/inline-size:\s*var\(--project-media-width\);/);
-    expect(rule('.media')).toMatch(/aspect-ratio:\s*var\(--project-media-ratio\);/);
-    expect(rule('.media')).toMatch(/object-fit:\s*cover;/);
-  });
+  // A card leads to the view, where a video plays; its controls could not be used under a link
+  // stretched over them. So a card shows the poster still, described in the video's own words.
+  it('shows a video’s poster still, and no video, for a project whose media is one', () => {
+    const demo: Project = {
+      ...projects.projects[1]!,
+      media: {
+        file: '/project-digital-twin.mp4',
+        poster: '/project-digital-twin.webp',
+        description: 'The Digital Twin chatbot answering a question',
+      },
+    };
+    const markup = renderToStaticMarkup(<Projects projects={[demo]} more={projects.more} />);
 
-  // DDR-014 forbids a horizontal scrollbar from 320px. The media is the first fixed-size box on
-  // the site wide enough to overflow one when text is enlarged, so it is capped to the row.
-  it('never grows wider than the room the row has for it', () => {
-    expect(rule('.media')).toMatch(/max-inline-size:\s*100%;/);
-  });
-
-  // DDR-013's radius table gives a language card and a piece of project media the same corner, and
-  // reserves the small radius for a technology tag and a level badge. The page drew the media at
-  // the small one until #73, so the two surfaces the record groups together were rounded
-  // differently.
-  it('is rounded at the large radius, as a language card is, per DDR-013', () => {
-    expect(rule('.media')).toMatch(/border-radius:\s*var\(--radius-large\);/);
+    expect(markup).not.toContain('<video');
+    expect(markup).toMatch(/<img [^>]*src="\/project-digital-twin\.webp"/);
+    expect(markup).toContain('alt="The Digital Twin chatbot answering a question"');
   });
 });
 
-// DDR-010 gives the Digital Twin its demo video in place of a still. The file itself is outstanding
-// on #63, so no project carries one yet; this renders one to hold the markup the record asks for,
-// rather than leaving the branch to be written for the first time when the file lands.
-describe('a project whose media is a video', () => {
-  const demo: Project = {
-    ...projects.projects[1]!,
-    media: {
-      file: '/project-digital-twin.mp4',
-      poster: '/project-digital-twin.webp',
-      description: 'The Digital Twin chatbot answering a question',
-    },
-  };
-  const markup = renderToStaticMarkup(<Projects projects={[demo]} />);
+// DDR-010 gives the Digital Twin its demo video in place of a still, and a project's view shows it,
+// per DDR-050. The file itself is outstanding on #63, so no project carries one yet; this renders
+// one to hold the markup the record asks for.
+describe('a project’s media as a video', () => {
+  const markup = renderToStaticMarkup(
+    <Media
+      media={{
+        file: '/project-digital-twin.mp4',
+        poster: '/project-digital-twin.webp',
+        description: 'The Digital Twin chatbot answering a question',
+      }}
+      className="media"
+    />,
+  );
   const video = markup.match(/<video[^>]*>/)?.[0] ?? '';
   const still = markup.match(/<img[^>]*>/)?.[0] ?? '';
 
@@ -224,119 +189,132 @@ describe('a project whose media is a video', () => {
     expect(video).toContain('preload="none"');
   });
 
-  // The UI Review on #43 makes the video content rather than decoration, so it is not hidden from
-  // assistive technology: it carries an accessible name and a description of what it shows, and
-  // nothing on the page depends on watching it.
   it('carries an accessible name describing what it shows, and is not hidden', () => {
     expect(video).toContain('aria-label="The Digital Twin chatbot answering a question"');
     expect(video).not.toContain('aria-hidden');
   });
 
-  // DDR-010 prints one still per project, and measured on #52 a video element cannot be it: Edge
-  // prints an empty box with a dead scrubber and no poster at all, and Firefox prints the poster
-  // under a controls bar. So the poster is rendered a second time, as an image, and exactly one of
-  // the two is displayed — the video on screen, the still on paper, per DDR-015.
+  // Measured on #52, a video element cannot be the printed still: Edge prints an empty box and
+  // Firefox the poster under a controls bar. So the poster is rendered a second time, as an image,
+  // and exactly one of the two is displayed, per DDR-015.
   it('carries its poster as an image for paper, described in the same words', () => {
     expect(still).toContain('src="/project-digital-twin.webp"');
     expect(still).toContain('alt="The Digital Twin chatbot answering a question"');
   });
 
-  it('marks the two so that exactly one is shown, and the row keeps a single media element', () => {
+  it('marks the two so that exactly one is shown, and gives both the class it is handed', () => {
     // A CSS Module is hashed when it is imported, so the class is read back by its last part.
-    const name = (markup: string) =>
-      (markup.match(/class="([^"]*)"/)?.[1]?.split(' ').at(-1) ?? '').replace(/^_|_[^_]*$/g, '');
+    const classes = (markup: string) => markup.match(/class="([^"]*)"/)?.[1]?.split(' ') ?? [];
+    const last = (markup: string) => (classes(markup).at(-1) ?? '').replace(/^_|_[^_]*$/g, '');
 
-    expect(name(video)).toBe('onScreen');
-    expect(name(still)).toBe('onPaper');
-  });
-
-  // Both are the same box as a still project's image: one class carries the width, the ratio and
-  // the radius, so the three never drift apart. Read by its first part, since the mark above is
-  // its last.
-  it('draws the video and the printed still as the same box an image would be', () => {
-    const first = (markup: string) =>
-      (markup.match(/class="([^"]*)"/)?.[1]?.split(' ')[0] ?? '').replace(/^_|_[^_]*$/g, '');
-
-    expect(first(video)).toBe('media');
-    expect(first(still)).toBe('media');
+    expect(last(video)).toBe('onScreen');
+    expect(last(still)).toBe('onPaper');
+    expect(classes(video)[0]).toBe('media');
+    expect(classes(still)[0]).toBe('media');
   });
 });
 
-// DDR-010 decides how a project is laid out and what it does on paper. These read the stylesheet as
+// DDR-051 decides how a card is drawn and what it does on paper. These read the stylesheet as
 // written, so a later edit cannot quietly drop a rule an acceptance criterion rests on.
 describe('project styles', () => {
   const wide = media('(min-width: 48em), print');
   const paper = media('print');
 
-  it('gives the media a column of its own from the wide breakpoint, per DDR-010', () => {
-    expect(rule('.project', wide)).toMatch(
-      /grid-template-columns:\s*var\(--project-media-width\)\s*1fr;/,
+  it('stands two cards in a row from the wide breakpoint and on paper, and one below it', () => {
+    expect(rule('.row')).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\);/);
+    expect(rule('.row', wide)).toMatch(/grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);/);
+  });
+
+  it('spaces the cards by the design’s 20px each way, the second row included', () => {
+    expect(rule('.row')).toMatch(/gap:\s*var\(--project-card-space\);/);
+    expect(rule('section > .row')).toMatch(/margin-block-start:\s*var\(--project-card-space\);/);
+    expect(rule('.body')).toMatch(/padding:\s*var\(--project-card-space\);/);
+  });
+
+  // A card is a language card's surface: white, the hairline edge, the one shadow, the large radius.
+  it('draws a card as the language cards are drawn, per DDR-020 and DDR-013', () => {
+    const card = rule('.card');
+
+    expect(card).toMatch(/background-color:\s*var\(--color-surface-card\);/);
+    expect(card).toMatch(/border:\s*1px solid var\(--color-border\);/);
+    expect(card).toMatch(/box-shadow:\s*var\(--shadow-raised\);/);
+    expect(card).toMatch(/border-radius:\s*var\(--radius-large\);/);
+  });
+
+  it('crops the picture to the design’s 16:9 rather than stretching it', () => {
+    expect(rule('.media')).toMatch(/aspect-ratio:\s*var\(--project-card-media-ratio\);/);
+    expect(rule('.media')).toMatch(/object-fit:\s*cover;/);
+    expect(rule('.media')).toMatch(/align-self:\s*stretch;/);
+  });
+
+  // Measured on #154: in a grid of one track, Firefox sizes the row from the picture's own height
+  // rather than the 16:9 it is drawn at, and leaves 117px empty below it. A flex column does not.
+  it('lays a card out as a flex column, which Firefox sizes by the picture as drawn', () => {
+    expect(rule('.card')).toMatch(/display:\s*flex;/);
+    expect(rule('.card')).toMatch(/flex-direction:\s*column;/);
+  });
+
+  // The link's box covers the card, so a pointer anywhere on it follows the link, and keyboard focus
+  // outlines the card rather than the name.
+  it('stretches the link over the card, and outlines the card on focus', () => {
+    expect(rule('.card')).toMatch(/position:\s*relative;/);
+    expect(rule('.link::after')).toMatch(/position:\s*absolute;/);
+    expect(rule('.link::after')).toMatch(/inset:\s*0;/);
+    expect(rule('.link:focus-visible::after')).toMatch(
+      /outline:\s*var\(--focus-outline-width\) solid var\(--color-focus\);/,
     );
   });
 
-  // A video element cannot be the still DDR-010 prints, so the poster is rendered a second time as
-  // an image and the two swap places on paper, per DDR-015.
-  it('shows the video on screen and its poster still on paper, per DDR-015', () => {
-    expect(rule('.onPaper')).toMatch(/display:\s*none;/);
-    expect(rule('.onScreen', paper)).toMatch(/display:\s*none;/);
-    expect(rule('.onPaper', paper)).toMatch(/display:\s*block;/);
+  it('answers the pointer and keyboard focus by taking the accent, per DDR-035', () => {
+    const hovered = css.match(/\.link:hover,\s*\.link:focus-visible\s*\{([^}]*)\}/)?.[1] ?? '';
+
+    expect(hovered).toMatch(/color:\s*var\(--color-accent\);/);
   });
 
-  // DDR-038: the description is running text, and the design sets it at 1.72.
-  it('sets the description at the prose leading, per DDR-038', () => {
-    expect(rule('.content > p')).toMatch(/line-height:\s*var\(--line-height-prose\);/);
+  // DDR-051 amends DDR-023 for this one heading: the design sets a card's name in Lora.
+  it('sets the name in the serif, per DDR-051', () => {
+    expect(rule('.name')).toMatch(/font-family:\s*var\(--font-family-heading\);/);
   });
 
-  it('separates projects by the item step, as roles and skill groups are, per DDR-013', () => {
-    expect(rule('.project + .project')).toMatch(/margin-block-start:\s*var\(--space-item\);/);
+  it('sets the sentence in the muted ink at the label step, on the small prose leading', () => {
+    expect(rule('.summary')).toMatch(/color:\s*var\(--color-text-muted\);/);
+    expect(rule('.summary')).toMatch(/font-size:\s*var\(--font-size-x-small\);/);
+    expect(rule('.summary')).toMatch(/line-height:\s*var\(--line-height-prose-small\);/);
   });
 
-  // DDR-030 writes the weight DDR-023's table has always named for a tag and which no rule ever
-  // wrote. It is the smallest text on the page, and the one an extra stroke helps most.
-  it('sets a tag in medium, per DDR-030', () => {
+  it('sets a tag in medium on its tint, tracked, per DDR-030 and DDR-017', () => {
     expect(rule('.tag')).toMatch(/font-weight:\s*var\(--font-weight-medium\);/);
-  });
-
-  it('reads a tag’s tint and its ink from the pairing DDR-012 measures', () => {
     expect(rule('.tag')).toMatch(/background-color:\s*var\(--color-surface-tag\);/);
     expect(rule('.tag')).toMatch(/color:\s*var\(--color-text-tag\);/);
     expect(rule('.tag')).toMatch(/font-size:\s*var\(--font-size-xxx-small\);/);
-  });
-
-  // DDR-022 takes the design's sizes: a tag and a link are labels rather than prose, and a
-  // description is set at the step a role's points take rather than at the introduction's.
-  it('sets a tag, the description and a link at the steps DDR-022 gives each', () => {
-    expect(rule('.tag')).toMatch(/font-size:\s*var\(--font-size-xxx-small\);/);
-    expect(rule('.content > p')).toMatch(/font-size:\s*var\(--font-size-small\);/);
-    expect(rule('.link')).toMatch(/font-size:\s*var\(--font-size-x-small\);/);
-  });
-
-  // DDR-017 opens a tag, which is a label to scan rather than a word to read. The description
-  // under it is prose, so it keeps the spacing DM Sans was drawn with.
-  it('opens a tag to the label tracking, and leaves the text around it alone, per DDR-017', () => {
     expect(rule('.tag')).toMatch(/letter-spacing:\s*var\(--letter-spacing-loose\);/);
-    expect(rule('.content > * + *')).not.toMatch(/letter-spacing/);
   });
 
-  // The tint is dropped by the token, for every surface on the page at once, per DDR-015, so the
-  // tag has no print rule of its own and its padding becomes the space between one technology and
-  // the next.
+  // The design's #64748b on its grey is 4.34:1, which fails WCAG 1.4.3; the owner chose the Basic
+  // badge's passing pairing on #154.
+  it('sets the count in the Basic badge’s pairing, which passes', () => {
+    expect(rule('.more')).toMatch(/background-color:\s*var\(--color-surface-level-basic\);/);
+    expect(rule('.more')).toMatch(/color:\s*var\(--color-text-level-basic\);/);
+  });
+
   it('leaves a tag nothing to say on paper, since the tint is dropped by the token, per DDR-015', () => {
     expect(rule('.tag', paper)).toBe('');
   });
 
-  // A link's own box is already the height of its text on screen, since DDR-027, so what paper
-  // still needs is the display: the address prints as a pseudo-element, and a flex container would
-  // lay that out as an item of its own rather than let it read as part of the line.
-  it('lets a link and the address after it read as one line, per DDR-005', () => {
-    expect(rule('.link', paper)).toMatch(/display:\s*inline;/);
+  // The view is a route paper cannot follow, so the base styles' address after the link is put out,
+  // along with the box the link is stretched over.
+  it('prints no address after the card’s link', () => {
+    expect(rule('.link::after', paper)).toMatch(/content:\s*none;/);
   });
 
-  it('lets every link print its address, since each one leaves the page, per DDR-005', () => {
-    for (const { href } of rows.flatMap(linksOf)) {
-      expect(href).toMatch(/^https:\/\//);
-    }
-    expect(css).not.toMatch(/::after|content:/);
+  it('keeps a row of cards whole on paper', () => {
+    expect(rule('.row', paper)).toMatch(/break-inside:\s*avoid;/);
+  });
+
+  it('shows a view’s video on screen and its poster still on paper, per DDR-015', () => {
+    expect(rule('.onPaper')).toMatch(/display:\s*none;/);
+    expect(rule('.onScreen', paper)).toMatch(/display:\s*none;/);
+    expect(rule('.onPaper', paper)).toMatch(/display:\s*block;/);
   });
 });
 
@@ -356,10 +334,18 @@ describe('projects content', () => {
     }
   });
 
-  it('writes descriptions without pronouns, and without self-assessed traits', () => {
-    for (const { description } of projects.projects) {
-      expect(description).not.toMatch(/\b(?:I|me|my|we|our)\b/i);
-      expect(description).not.toMatch(/strong|proven|leadership|servant|passionate|results-driven/i);
+  it('writes descriptions and sentences without pronouns, and without self-assessed traits', () => {
+    for (const { description, summary } of projects.projects) {
+      for (const words of [description, summary]) {
+        expect(words).not.toMatch(/\b(?:I|me|my|we|our)\b/i);
+        expect(words).not.toMatch(/strong|proven|leadership|servant|passionate|results-driven/i);
+      }
+    }
+  });
+
+  it('gives each card a sentence well under half the length of the project’s description', () => {
+    for (const { description, summary } of projects.projects) {
+      expect(summary.length).toBeLessThan(description.length / 2);
     }
   });
 });

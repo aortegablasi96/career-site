@@ -15,6 +15,11 @@ Date: 2026-09-18
 * **Its print base is confirmed, not moved.** DDR-022 raised it from 11pt to 12pt and left #99 free
   to move it again. It stays at 12pt.
 
+**Amended by DDR-051 in one respect**: the projects print as cards with no address, so the long
+repository URL this record measured is no longer on the sheet. The CV had grown to six sheets under
+DDR-037. It is five again, in Edge and Firefox, broken in the same places. DDR-051 has the
+measurements.
+
 DDR-015's table of what prints is also out of date in one row. Since DDR-029 a contact pill prints
 its label, "Email", "LinkedIn" or "GitHub", and not an address. The addresses print once each,
 from the footer DDR-028 added.

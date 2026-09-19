@@ -552,17 +552,14 @@
   );
   --timeline-line-width: 2px;
 
-  /* The projects' media, per DDR-010: a still or the demo video, shown at 4:3 in a column 280px
-     wide, which is the width the UI Review on #43 measured. The width is in rem, as the page
-     column, the photo and the timeline are, so the media keeps its proportion to the text beside
-     it when text is enlarged; the ratio is a shape rather than a length and has no unit.
-
-     ADR-004 prepares each file once, by hand, at the size it is shown, so this is the one width
-     the media takes at both breakpoints: from the wide breakpoint it is a column of the row, and
-     below it the media sits above the text at the same width. Only the projects read these, and
-     the component caps them to the space it has so nothing overflows a narrow screen. */
-  --project-media-width: 17.5rem;
-  --project-media-ratio: 4 / 3;
+  /* The projects' cards, per DDR-051, measured off `career-site-main` (node 58:938). The picture
+     is the design's 16:9, which crops 12.5% off the top and the bottom of a 4:3 picture rather than
+     distorting it, as the owner chose on #154; its width is its card's, so it has none here. The
+     design spaces a card by one 20px throughout: inside it, between two cards each way, and from
+     its sentence to its tags. 20px is not a step of DDR-013's scale, so it is a measure of the
+     cards' own, as the view's 24px and 12px are. */
+  --project-card-media-ratio: 16 / 9;
+  --project-card-space: 1.25rem;
 
   /* A project's view, per DDR-050, measured off `career-site-project`. The lead media is the
      design's 16:10 (node 59:71), which crops 8% off the top and the bottom of a 4:3 picture rather

@@ -21,6 +21,9 @@ here, one property at a time, that is no longer true of the badge at all — see
 gave back*. DDR-018's tracking amendment is #92's to supersede; this record only replaces the reason
 it was believed to be about weight.
 
+**Amended in one respect by DDR-051**: a project card's name, an `h3`, is set in Lora SemiBold, as
+the design draws it. Every other item title stays in DM Sans, and no file is added.
+
 ## Context
 
 Epic #70 closes the gap between the page and `career-site-design`, and on 2026-09-17 the owner
