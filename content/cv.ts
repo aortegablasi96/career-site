@@ -21,11 +21,12 @@ import type { Cv } from './types';
  * link in the contents bar shows, per DDR-031. It moved again with #63, because the four project
  * pictures became real and their alternative text now describes them. It moved again with #134,
  * because the two profile contacts now open a new tab and the introduction says so, per DDR-043.
- * None of the six is a fact ADR-005 lists as shared, so none of them moved the CV; the nine
+ * It moved again with #135, because the email contact's mark is now Gmail's and its key says so,
+ * per DDR-044. None of the seven is a fact ADR-005 lists as shared, so none of them moved the CV; the nine
  * differences are the ones #59 records, unchanged.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '5118ca370df3cd555dfe5c9f20f5e204d444d3bb510dd26b7f3bfa679b8ccee2',
+  contentDigest: 'f874af4fb3b0e61a8b7468b885ceca6276f8d73c7594e1dcb8d3fb1acafaee87',
 };

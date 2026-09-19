@@ -243,6 +243,42 @@
   --color-underline: #a5b4fc;
   --color-underline-hover: #6366f1;
 
+  /* The LinkedIn and GitHub pills are each service's own button, per DDR-044: filled in the brand's
+     colour, with the brand's white mark and a white label on it. Neither brand lets its mark take
+     another colour, so the pill does not give it the accent: the mark is white on screen, which
+     both brands publish, and on paper, where no fill prints, it is the brand's own colour on white.
+
+       linkedin               LinkedIn's blue, as brand.linkedin.com draws it
+       github                 GitHub's Process Black, from brand.github.com's palette
+       surface-linkedin       the LinkedIn pill's fill; white on it is 5.69:1
+       surface-linkedin-hover a darker step of the same blue under the pointer; white is 10.10:1
+       surface-github         the GitHub pill's fill; white on it is 18.58:1
+       surface-github-hover   GitHub's Gray 5 under the pointer; white on it is 14.84:1
+       on-brand               the mark and the label on either fill
+
+     The two brand colours are inks: on paper each sets its mark and its label, at 5.31:1 and
+     17.34:1 on the page's own surface. The four fills are surfaces, so the print block drops them
+     with every other. */
+  --color-linkedin: #0a66c2;
+  --color-github: #101411;
+  --color-surface-linkedin: var(--color-linkedin);
+  --color-surface-linkedin-hover: #004182;
+  --color-surface-github: var(--color-github);
+  --color-surface-github-hover: #232925;
+  --color-on-brand: #ffffff;
+
+  /* The email pill is Gmail's own button, per DDR-044, since the address is on gmail.com: Google's
+     light button, a white fill with a grey edge and near-black text, and the mark in its own four
+     colours, which are drawn into the mark and are not in this palette. The fill is the card's
+     white, which the pill already has.
+
+       google-ink            the label; 16.48:1 on the white, 14.21:1 on the hover fill
+       google-border         the edge; 4.53:1 on the white, 3.90:1 on the hover fill
+       surface-google-hover  Google's 8% grey state layer over the white, under the pointer */
+  --color-google-ink: #1f1f1f;
+  --color-google-border: #747775;
+  --color-surface-google-hover: #eeeeee;
+
   /* How long a link or a control takes to change colour, per DDR-035: the design's
      `transition-colors`, which is 150ms. Not read at all when the reader prefers reduced motion. */
   --hover-transition: 150ms;
@@ -632,6 +668,11 @@
     /* Nothing on paper is pointed at, so a contact pill's hover fill is dropped with the rest, per
        DDR-035, and so is its hover border below. */
     --color-surface-hover: transparent;
+    --color-surface-linkedin: transparent;
+    --color-surface-linkedin-hover: transparent;
+    --color-surface-github: transparent;
+    --color-surface-github-hover: transparent;
+    --color-surface-google-hover: transparent;
 
     /* No hairline prints. This is the whole of it: the rule beside a section heading, the language
        card's edge, and the timeline's dot and line. Each carries no information, so paper simply

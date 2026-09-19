@@ -1,5 +1,5 @@
 import { asset } from '@/app/asset';
-import type { Cv, Introduction as IntroductionContent } from '@/content/types';
+import type { ContactIcon, Cv, Introduction as IntroductionContent } from '@/content/types';
 import { Icon } from './icon';
 import { MetadataLine } from './metadata-line';
 import styles from './introduction.module.css';
@@ -33,9 +33,23 @@ import styles from './introduction.module.css';
  * and on paper alike, which is what makes the label possible at all. So the pill prints its label
  * and nothing after it, and the printed CV still carries every address once.
  *
- * The LinkedIn and GitHub pills open a new tab, per DDR-043, and carry an arrow after the label that
- * says so; the email pill opens the mail client and carries none.
+ * The LinkedIn and GitHub pills open a new tab, per DDR-043. Since DDR-044 nothing on the pill
+ * shows it: the link's accessible name says so instead, so assistive technology still announces it
+ * before the pill is chosen. The email pill opens the mail client and says nothing of a tab.
+ *
+ * Each contact pill is its service's own button, per DDR-044: Gmail's white button with its
+ * four-colour M, and LinkedIn's and GitHub's filled in the brand's colour with a white mark.
  */
+/**
+ * The class that makes each contact pill its service's own button, per DDR-044: Gmail's, since the
+ * address is on gmail.com, LinkedIn's and GitHub's.
+ */
+const brandButton: Record<ContactIcon, string> = {
+  gmail: styles.gmail,
+  linkedin: styles.linkedin,
+  github: styles.github,
+};
+
 export function Introduction({
   introduction,
   cv,
@@ -70,22 +84,24 @@ export function Introduction({
           {/* A profile opens in a new tab, so the page stays open behind it, per DDR-043. `noopener`
               keeps the new tab from reaching back to this one through `window.opener`; browsers
               imply it for a new tab today, and it is written out so the guarantee does not rest on
-              a default. The arrow says so before the pill is chosen, and names it for assistive
-              technology. */}
+              a default.
+
+              The pill shows no sign of the tab, per DDR-044, so its name carries it: the visible
+              label first, so the name a speech-input user reads off the pill is still the start of
+              the name, per WCAG 2.5.3, and then the words that say a tab opens. */}
           {contact.map(({ label, href, icon, newTab: opensNewTab }) => (
             <li key={href}>
               <a
                 href={href}
-                className={styles.contact}
-                {...(opensNewTab && { target: '_blank', rel: 'noopener' })}
+                className={`${styles.contact} ${brandButton[icon]}`}
+                {...(opensNewTab && {
+                  target: '_blank',
+                  rel: 'noopener',
+                  'aria-label': `${label}, ${newTab}`,
+                })}
               >
                 <Icon name={icon} />
                 {label}
-                {opensNewTab && (
-                  <span className={styles.newTab}>
-                    <Icon name="external" label={newTab} />
-                  </span>
-                )}
               </a>
             </li>
           ))}

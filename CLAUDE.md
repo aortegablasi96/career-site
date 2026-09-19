@@ -318,12 +318,13 @@ What exists, to reuse rather than reinvent:
   outline, its contents row, and the metadata line — which DDR-010 narrows to a single part, so the
   timeline's dates, place and company each get a line set the same way. The contents, the section
   wrapper, the metadata line and the date range are shared by the sections that need them.
-* **The icons**, in `components/icon.tsx`: one per contact address, one for the CV, and since #134
-  the arrow that says a pill opens a new tab. They are inline SVG rather than committed files, drawn
-  in `currentColor` and sized in em. Each is hidden from assistive technology because it repeats
-  what its control's own text says, except the arrow, which is given a `label` and is an image named
-  "opens in a new tab", per DDR-043. Which mark
-  a contact takes is a key in `content/`, not something worked out from its address.
+* **The icons**, in `components/icon.tsx`: one per contact address and one for the CV. They are
+  inline SVG rather than committed files, sized in em. Since #135 the three contact marks are the
+  services' own, per DDR-044: Gmail's M in its own four colours, and LinkedIn's [in] and GitHub's
+  Invertocat in `currentColor`, which the stylesheet only ever sets to a colour the brand
+  publishes. The download is still a line drawing in `currentColor`. Each is hidden from assistive
+  technology because it repeats what its control's own text says. Which mark a contact takes is a
+  key in `content/` — `gmail`, `linkedin`, `github` — not something worked out from its address.
 * **The content types.** `content/types.ts` covers the site metadata, an image, a video, the
   introduction and its contact links, the contents, dates, roles, projects, skills, credentials,
   languages, and the CV. A credential is a degree or a certification, and a project's media is an
@@ -526,10 +527,10 @@ ADR-007 again, in its boundary: the component renders the contents links itself,
 section's id and word, so that it can mark the current section's, per DDR-042. It is still the one
 Client Component. The next ADR is `010`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-043. The next DDR is
-`044`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-044. The next DDR is
+`045`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Sixteen accepted records are superseded or amended **in part**, and each says so at the top and again
+Seventeen accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -606,7 +607,8 @@ at the section concerned:
   10% black, because the hairlines the 22% was measured against no longer exist.
 * **DDR-025** keeps everything but one bullet: DDR-033 takes its ruling that the contents links keep
   their underline. Every other link still has one. DDR-035 amends it too: five hover and underline
-  colours join the palette, and its four failing pairings become six. DDR-036 adopts the ringed
+  colours join the palette, and its four failing pairings become six. DDR-044 adds the three
+  services' colours for the contact pills, all passing. DDR-036 adopts the ringed
   timeline dot it kept as structure, and withdraws its claim that the design has no experience
   spine, which misread the file.
 * **DDR-031** keeps everything but its links' underline, which DDR-033 takes, per #113, and its
@@ -614,6 +616,8 @@ at the section concerned:
   shadow row. DDR-042 takes the "no current-section state" it carried forward from DDR-010.
 * **DDR-033** keeps every contents link at rest without an underline. DDR-042 underlines the one
   link of the section the reader is in, as a state rather than as what identifies a link, per #133.
+* **DDR-043** keeps its new tab, its `noopener` and its two pills. DDR-044 takes its arrow: the tab
+  is announced in the link's accessible name instead, and nothing on the pill shows it.
 
 `Superseded` are DDR-001 to DDR-009, DDR-012, and DDR-016:
 
@@ -1139,22 +1143,40 @@ Four things about it are worth knowing before touching it.
   moved. The bar does not print, so paper is untouched.
 
 **#134 has landed, as DDR-043: the LinkedIn and GitHub pills open a new tab.** Each carries
-`target="_blank"` and `rel="noopener"`, and an arrow after its label, which is the one icon given a
-name: `role="img"` with the content string `newTab`, "opens in a new tab", so the link's accessible
-name is "LinkedIn opens in a new tab". Which contacts open a tab is the `newTab` flag on each
+`target="_blank"` and `rel="noopener"`. #134 drew an arrow after the label to say so, and **DDR-044
+has since removed it**, per #135: the link's `aria-label` is its label, a comma and the content
+string `newTab`, so its accessible name is "LinkedIn, opens in a new tab". Which contacts open a tab is the `newTab` flag on each
 `ContactLink`. The email pill, the footer's addresses, the project links and the CV control still
 open in the same tab.
 
 Three things about it are worth knowing before touching it.
 
-* **The two pills are 21px wider**, and the controls row wraps differently at a few widths: two rows
-  rather than one from 490px to 520px, and one more row at 200% text from 450px to 530px. At 390 by
-  844 the controls still end 842.5px down. #135, which replaces the service marks and asks that no
-  pill grow, measures against this.
-* **The arrow does not print**, by `.newTab { display: none }` in the print block. The printed CV is
-  pixel-identical to the tree before, six sheets in Edge and Firefox, background graphics on and off.
+* **The arrow made the two pills 21px wider**, and #135 took that back, so the controls row wraps
+  where it did before #134.
 * **The footer's LinkedIn and GitHub still open in the same tab**, so one address behaves two ways.
   DDR-043 records it as a decision for another story.
+
+**#135 has landed, as DDR-044: each contact pill is its service's own button, and the new-tab
+arrow is gone.** LinkedIn's is filled in LinkedIn blue and GitHub's in GitHub's Process Black, each
+with the brand's white mark and a white label. Email's is Gmail's light button: white, Google's grey
+edge and near-black label, and Gmail's M in its own colours. The owner reviewed three versions on
+#135 and chose this one because it recolours no brand's mark.
+
+Four things about it are worth knowing before touching it.
+
+* **No mark may be recoloured.** LinkedIn's and GitHub's marks are `currentColor`, and every rule
+  that sets it uses a colour the brand publishes: white on the fill, the brand's colour on paper.
+  Gmail's M carries its own fills in `components/icon.tsx`, which are the mark's, not the palette's.
+* **Paper sets each brand's colour as the pill's ink**, in the introduction's print block, because
+  the fills are surfaces and drop at the token layer, and a white mark would vanish.
+* **Each pill's class comes from `brandButton`**, keyed by the contact's `icon`, rather than from
+  `styles[icon]`, because Vitest's CSS-module stub returns a class for any key.
+* **A sighted visitor is no longer told a profile opens a new tab**; only assistive technology is,
+  through `aria-label`, with the visible label first, per WCAG 2.5.3.
+
+Measured against the tree before: the controls row never takes more rows at any width from 300px to
+900px or at 1280px and 1536px at either text size, and nothing scrolls sideways. The CV is six
+sheets in Edge and Firefox with identical text; the three marks print in their brands' colours.
 
 **#115 has landed, as DDR-035: every link and control answers the pointer.** A contact pill takes
 `--color-surface-hover` and `--color-border-accent-hover`, the CV control darkens to

@@ -9,6 +9,10 @@ GitHub contact pills and for nothing else. Every other link on the page still op
 tab. DDR-006's "nothing opens a new window unannounced", which DDR-010 carried forward, still holds:
 these two links are announced.
 
+**Superseded in part by DDR-044**: its visible cue. The arrow after the label is removed, and the
+new tab is announced in the link's accessible name instead, "LinkedIn, opens in a new tab". The new
+tab itself, `rel="noopener"`, and the scope of two pills stand.
+
 Everything DDR-029 decides about the pills' labels, DDR-027 about their size, and DDR-035 about
 their hover and focus states stands.
 

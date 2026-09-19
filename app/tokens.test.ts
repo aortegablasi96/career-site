@@ -304,6 +304,16 @@ describe('colour tokens', () => {
       'border-accent-hover',
       'underline',
       'underline-hover',
+      'linkedin',
+      'github',
+      'surface-linkedin',
+      'surface-linkedin-hover',
+      'surface-github',
+      'surface-github-hover',
+      'on-brand',
+      'google-ink',
+      'google-border',
+      'surface-google-hover',
       'focus',
     ]);
   });
@@ -387,6 +397,21 @@ describe('colour tokens', () => {
     // indigo at rest, and the stronger one under the pointer.
     { foreground: 'underline', background: 'surface', asked: 3, recorded: 1.86, meets: false },
     { foreground: 'underline-hover', background: 'surface', asked: 3, recorded: 4.17, meets: true },
+    // The LinkedIn and GitHub pills, per DDR-044: the white mark and label on each brand's fill, at
+    // rest and under the pointer, and each brand's colour as the ink it becomes on paper.
+    { foreground: 'on-brand', background: 'surface-linkedin', asked: 4.5, recorded: 5.69, meets: true },
+    { foreground: 'on-brand', background: 'surface-linkedin-hover', asked: 4.5, recorded: 10.1, meets: true },
+    { foreground: 'on-brand', background: 'surface-github', asked: 4.5, recorded: 18.58, meets: true },
+    { foreground: 'on-brand', background: 'surface-github-hover', asked: 4.5, recorded: 14.84, meets: true },
+    { foreground: 'linkedin', background: 'surface', asked: 4.5, recorded: 5.31, meets: true },
+    { foreground: 'github', background: 'surface', asked: 4.5, recorded: 17.34, meets: true },
+    // The email pill as Gmail's button, per DDR-044: its label on the white and on the hover fill,
+    // and its edge, which is what outlines a white button on the page, on both.
+    { foreground: 'google-ink', background: 'surface-card', asked: 4.5, recorded: 16.48, meets: true },
+    { foreground: 'google-ink', background: 'surface-google-hover', asked: 4.5, recorded: 14.21, meets: true },
+    { foreground: 'google-ink', background: 'surface', asked: 4.5, recorded: 15.39, meets: true },
+    { foreground: 'google-border', background: 'surface-card', asked: 3, recorded: 4.53, meets: true },
+    { foreground: 'google-border', background: 'surface-google-hover', asked: 3, recorded: 3.9, meets: true },
     // Hairlines that carry nothing, so neither criterion reaches them: the rule beside a section
     // heading, a card's edge against the page it sits on and the white it encloses, and the
     // timeline's spine and dots.
@@ -842,6 +867,11 @@ const forPaper = [
   { name: 'color-surface-level-proficient', value: 'transparent' },
   { name: 'color-surface-level-basic', value: 'transparent' },
   { name: 'color-surface-hover', value: 'transparent' },
+  { name: 'color-surface-linkedin', value: 'transparent' },
+  { name: 'color-surface-linkedin-hover', value: 'transparent' },
+  { name: 'color-surface-github', value: 'transparent' },
+  { name: 'color-surface-github-hover', value: 'transparent' },
+  { name: 'color-surface-google-hover', value: 'transparent' },
   { name: 'color-rule', value: 'transparent' },
   { name: 'color-border', value: 'transparent' },
   { name: 'color-border-accent', value: 'transparent' },
