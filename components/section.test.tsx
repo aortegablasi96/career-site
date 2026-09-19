@@ -73,11 +73,12 @@ describe('Section', () => {
   //
   // Since DDR-046 both halves are inside a section, so that its band runs from its own divider to
   // the next: the half below its divider at its top, and the half above the next at its foot, where
-  // it was the next section's margin. Only the first keeps its margin, below the introduction.
+  // it was the next section's margin. No section keeps a margin: the introduction is a band too, and
+  // pads its own foot down to the first divider.
   it('splits the section boundary around the divider rather than adding to it, per DDR-026', () => {
-    expect(css).toMatch(/\.section\s*\{[^}]*margin-block-start:\s*var\(--space-boundary\);/);
+    expect(css).toMatch(/\.section\s*\{[^}]*margin-block-start:\s*0;/);
     expect(css).toMatch(/\.section\s*\{[^}]*padding-block:\s*var\(--space-boundary\);/);
-    expect(css).toMatch(/\.section \+ \.section\s*\{\s*margin-block-start:\s*0;\s*\}/);
+    expect(css).not.toMatch(/\.section \+ \.section/);
   });
 
   // DDR-040's 72px between the last section and the footer's hairline, inside the last section, so
@@ -86,11 +87,12 @@ describe('Section', () => {
     expect(css).toMatch(/\.section:last-child\s*\{\s*padding-block-end:\s*var\(--page-padding-block-end\);\s*\}/);
   });
 
-  // DDR-046: the sections alternate, starting with the lighter band after the introduction.
+  // DDR-046, as revised: the page's parts alternate, starting with the band on the introduction, so
+  // the first section is on the off-white and the band is on every second section after it.
   // Counted among the sections alone, so the introduction, a header, never shifts the count.
-  it('draws the band on every second section, starting with the first, per DDR-046', () => {
-    expect(css).toMatch(/\.section:nth-of-type\(odd\)\s*\{\s*background-color:\s*var\(--color-surface-band\);\s*\}/);
-    expect(css).not.toMatch(/nth-of-type\(even\)|nth-child/);
+  it('draws the band on every second section, starting with the second, per DDR-046', () => {
+    expect(css).toMatch(/\.section:nth-of-type\(even\)\s*\{\s*background-color:\s*var\(--color-surface-band\);\s*\}/);
+    expect(css).not.toMatch(/nth-of-type\(odd\)|nth-child/);
   });
 
   // The divider and the band are a hairline and a surface, so paper drops both at the token layer
@@ -99,8 +101,9 @@ describe('Section', () => {
   // where a padding is not — and the sheets are pixel-identical to the tree before.
   it('leaves the divider and the band to the token layer on paper, and keeps its breaks, per DDR-015', () => {
     expect(print).not.toMatch(/border|background/);
-    expect(print).toMatch(/\.section,\s*\.section:last-child\s*\{\s*padding-block-end:\s*0;\s*\}/);
-    expect(print).toMatch(/\.section \+ \.section\s*\{\s*margin-block-start:\s*var\(--space-boundary\);\s*\}/);
+    expect(print).toMatch(
+      /\.section,\s*\.section:last-child\s*\{\s*margin-block-start:\s*var\(--space-boundary\);\s*padding-block-end:\s*0;\s*\}/,
+    );
   });
 
   it('sets the first item the heading step below the heading, and the next at the item step, per DDR-039', () => {

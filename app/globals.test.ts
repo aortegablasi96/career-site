@@ -158,11 +158,11 @@ describe('responsive base styles', () => {
     expect(rule(heading)).toMatch(new RegExp(`font-size:\\s*var\\(--font-size-${role}\\);`));
   });
 
-  // The page's foot is the last section's own since DDR-046, so its band reaches the footer; the
-  // section stylesheet writes it, and `main` pads its top alone.
-  it('sets the space above the page by the page padding, and leaves its foot to the last section', () => {
-    expect(rule('main')).toMatch(/padding-block-start:\s*var\(--page-padding-block\);/);
-    expect(rule('main')).not.toMatch(/padding-block(?:-end)?:/);
+  // The page's top is the introduction's own and its foot the last section's since DDR-046, so the
+  // bands run from the contents bar to the footer with no gap; their stylesheets write both, and
+  // `main` pads nothing.
+  it('leaves the space above and below the page to the introduction and the last section', () => {
+    expect(rule('main')).not.toMatch(/padding-block/);
   });
 
   it('writes no width media query at all, so a page-wide adaptation stays in the tokens', () => {

@@ -561,7 +561,8 @@ at the section concerned:
   boundary: the boundary now carries a hairline, with the section's space split around it.
   DDR-040 holds the introduction's summary to the design's 680px rather than 65ch, and pads the
   page above and below by a section boundary. DDR-046 draws the column inside each of `main`'s
-  parts, by `--page-inset`, rather than on `main`, so a section's band spans the window.
+  parts, by `--page-inset`, rather than on `main`, so a section's band spans the window, and moves
+  the page's top and foot into the introduction and the last section.
 * **DDR-021** keeps its capsule, its two lights, its ratio and its narrow width. DDR-040 takes its
   wide width: `13rem` becomes the Make file's `clamp(180px, 22vw, 300px)`, in rem bounds.
 * **DDR-026** keeps its divider, its colour, its place and its split. DDR-039 corrects its claim
@@ -1313,10 +1314,12 @@ At 390 by 844 the controls end 842.5px down, just above the fold, where they end
 remains different at 894px is outside #120: the name's leading, the controls' 8px gap against 10px,
 the footer's type and the skill groups' column gap.
 
-**#142 has landed, as DDR-046: the sections alternate between two surfaces.** Experience, skills and
-languages are on `--color-surface-band`, `#fcfbf9`. The introduction, projects, education and the
-footer are on the page's own off-white. `.section:nth-of-type(odd)` draws the band, so the
-alternation always starts with the first section after the introduction.
+**#142 has landed, as DDR-046: the page's parts alternate between two surfaces.** The introduction,
+projects, education and the footer are on `--color-surface-band`, `#fcfbf9`. Experience, skills
+and languages are on the page's own off-white. The owner revised the order after #142 merged, so
+the first view is on the band and the contents bar, on the off-white at 96% with no hairline at
+rest, is set apart from it. `.section:nth-of-type(even)` draws the sections' band, and the
+introduction and the footer each draw their own.
 
 Four things about it are worth knowing before touching the page's layout.
 
@@ -1324,18 +1327,20 @@ Four things about it are worth knowing before touching the page's layout.
   `--page-inset`: the gutter, or half of what the window leaves beside the column. That is the
   column `main` drew, to the pixel, and it is how a band reaches the window's edges with no `vw`.
   **A new direct child of `main` gets the inset too.**
-* **Each band runs from its own divider to the next.** A section pads both halves of its boundary,
-  and the next takes no margin; the first keeps its margin below the introduction, and the last pads
-  its foot by `--page-padding-block-end`, 72px, down to the footer's hairline. The footer adds no
-  margin, and `main` pads only its top. The dividers stay, each on a change of band, and now span
-  the window.
+* **Each band runs from its own divider to the next.** A section pads both halves of its boundary
+  and takes no margin. The introduction pads its top by `--page-padding-block`, from the contents
+  bar, and its foot by a boundary, down to the first divider. The last section pads its foot by
+  `--page-padding-block-end`, 72px, down to the footer's hairline. The footer adds no margin, and
+  `main` pads nothing. The dividers stay, each on a change of band, and now span the window.
 * **The timeline's dot has no fill**, so the inside of its ring is the band it is on.
 * **Paper is pixel-identical to the tree before**, six sheets in Edge and Firefox with background
-  graphics on and off. The band drops at the token layer, and the section's print block puts the
-  space back as the next section's margin, because a padding is not truncated at a page break.
+  graphics on and off. The band drops at the token layer, and the section's and introduction's print
+  blocks put the space back as each section's margin, because a padding is not truncated at a page
+  break.
 
 Every inked pairing is at least as good on the band as on the page, because the band is lighter.
-The muted ink is 4.60:1 there and passes 1.4.3. Against the tree before, every content box was
+The muted ink is 4.60:1 there and passes 1.4.3, so an institution and a thesis pass; a company,
+on experience, is on the off-white and does not. Against the tree before, every content box was
 identical at 320px, 390px, 894px, 1280px and 1536px at both text sizes, and nothing scrolls sideways.
 
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a

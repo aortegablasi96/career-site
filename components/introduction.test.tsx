@@ -429,6 +429,16 @@ describe('introduction styles', () => {
     expect(rule('.contact')).not.toMatch(/font-weight/);
   });
 
+  // DDR-046, as revised: the introduction is the first band, so the contents bar above it is set
+  // apart from the first view. It carries the space above the page, which `main` carried, and the
+  // half of the first boundary above the first divider, which was that section's margin. Paper
+  // gives the half back to the section, where a margin is truncated at a break and a padding is not.
+  it('is the first band, from the contents bar to the first divider, per DDR-046', () => {
+    expect(rule('.introduction')).toMatch(/background-color:\s*var\(--color-surface-band\);/);
+    expect(rule('.introduction')).toMatch(/padding-block:\s*var\(--page-padding-block\) var\(--space-boundary\);/);
+    expect(rule('.introduction', paper)).toMatch(/padding-block-end:\s*0;/);
+  });
+
   it('hides the CV control on paper, where a download is dead and the paper is the CV', () => {
     expect(rule('.cvItem', paper)).toMatch(/display:\s*none;/);
   });

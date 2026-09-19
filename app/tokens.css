@@ -138,8 +138,9 @@
   --color-surface-card: #ffffff;
 
   /* The page's second surface, per DDR-046, which amends DDR-025's single page surface. The
-     sections alternate between it and the page's own off-white, starting with this one after the
-     introduction, so a reader scrolling quickly sees where one part ends and the next begins. It
+     page's parts alternate between it and the page's own off-white, starting with this one on the
+     introduction, so the contents bar is set apart from the first view and a reader scrolling
+     quickly sees where one part ends and the next begins. It
      is the off-white's own warm hue, about halfway to the card's white: close enough that the page
      still reads as one surface, and far enough from white that a card and a pill on it keep their
      edge. Every ink is darker than both surfaces, so each measures higher on this one than on the

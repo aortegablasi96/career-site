@@ -22,7 +22,7 @@ section ends 72px above the footer's hairline, as in the design.
 **Adds two rhythm tokens to DDR-039's table**, `--space-summary` and `--space-controls`, on the same
 terms: the design's value times `--rhythm-scale`, and the old step on paper.
 
-**Amended by DDR-046 in where the space above the footer lives.** The 72px from the last section's content to the footer's hairline is now all the last section's padding, `--page-padding-block-end`, so its band runs down to that line. The footer adds no margin and `main` pads only its top. The distance is unchanged.
+**Amended by DDR-046 in where the space above the footer lives.** The 72px from the last section's content to the footer's hairline is now all the last section's padding, `--page-padding-block-end`, so its band runs down to that line. The footer adds no margin. Likewise the space above the page, `--page-padding-block`, is now the introduction's own top padding rather than `main`'s, so the introduction's band runs up to the contents bar. `main` pads nothing. Both distances are unchanged.
 
 ## Context
 

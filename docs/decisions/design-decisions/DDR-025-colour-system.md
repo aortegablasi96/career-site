@@ -53,7 +53,7 @@ glow is now the accent's own hue. Nothing else in DDR-021 moves, and the glow's 
 DDR-013's radii, DDR-022's sizes, DDR-023's faces and weights, DDR-017's and DDR-024's tracking and
 DDR-011's line heights and measure are all untouched. This record changes colour and nothing else.
 
-**Amended by DDR-046 in one respect: the page has two surfaces.** `--color-surface-band`, `#fcfbf9`, carries every second section, starting with experience. It is lighter than `--color-surface`, so every pairing this record measures on the page measures at least as well on it. The muted ink reaches 4.60:1 there. The failures this record lists are unchanged on the off-white.
+**Amended by DDR-046 in one respect: the page has two surfaces.** `--color-surface-band`, `#fcfbf9`, carries the introduction, projects, education and the footer: every second part of the page, starting with the introduction. It is lighter than `--color-surface`, so every pairing this record measures on the page measures at least as well on it. The muted ink reaches 4.60:1 there. The failures this record lists are unchanged on the off-white.
 
 ## Context
 

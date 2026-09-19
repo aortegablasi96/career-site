@@ -144,4 +144,10 @@ describe('Footer', () => {
   it('adds no space above its hairline, which the last section carries, per DDR-046', () => {
     expect(styles).not.toMatch(/\.footer\s*\{[^}]*margin-block-start/);
   });
+
+  // DDR-046, as revised: the parts alternate from the band on the introduction, so the footer,
+  // after languages on the off-white, is on the band. Paper drops it at the token layer.
+  it('sits on the band, as the alternation puts it, per DDR-046', () => {
+    expect(styles).toMatch(/\.footer\s*\{[^}]*background-color:\s*var\(--color-surface-band\);/);
+  });
 });
