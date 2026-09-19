@@ -548,19 +548,18 @@ describe('elevation tokens', () => {
     expect(token('shadow-bar')).not.toMatch(/\binset\b/);
   });
 
-  // DDR-034: the contents bar's edge once the page has scrolled, ink and geometry both from the
+  // DDR-034: the contents bar's edge, drawn at all times since DDR-048, ink and geometry both from the
   // Figma Make file, where the bar is `shadow-[0_2px_16px_rgba(26,26,46,0.10)]`.
   it('keeps the bar’s shadow exactly as the design draws it, per DDR-034', () => {
     expect(token('shadow-bar')).toBe('0 2px 16px rgba(26, 26, 46, 0.1)');
   });
 
-  // The design's `duration-200`. A time rather than a length, so it is in ms.
-  it('changes the bar’s edge over the design’s 200ms, per DDR-034', () => {
-    expect(token('contents-bar-transition')).toBe('200ms');
+  // DDR-048: the bar's edge never changes, so there is no transition for it to take.
+  it('has no time for the bar’s edge to change over, per DDR-048', () => {
+    expect(token('contents-bar-transition')).toBeUndefined();
   });
 
-  // DDR-035: the design's `transition-colors`, whose default is 150ms — shorter than the bar's,
-  // because a link answers a pointer and the bar answers the page.
+  // DDR-035: the design's `transition-colors`, whose default is 150ms.
   it('changes a link’s colours over the design’s 150ms, per DDR-035', () => {
     expect(token('hover-transition')).toBe('150ms');
   });

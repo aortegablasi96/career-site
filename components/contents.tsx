@@ -12,9 +12,8 @@ import { ContentsBar } from './contents-bar';
  * `content/`, beside the section's own title, per ADR-002, and the section's accessible name is
  * still taken from its `h2` rather than from here.
  *
- * What the bar does in the browser — its edge, drawn once the page has scrolled, per DDR-034, the
- * glide a link starts, per DDR-041, and the mark on the current section's link, per DDR-042 — is
- * `ContentsBar`'s, the one Client Component on the site, per ADR-007. Since ADR-009 it renders the
+ * What the bar does in the browser — the glide a link starts, per DDR-041, and the mark on the
+ * current section's link, per DDR-042 — is `ContentsBar`'s, the one Client Component on the site, per ADR-007. Since ADR-009 it renders the
  * links too, because only what renders a link can mark it. This stays a Server Component and hands
  * it each section's id and word and nothing else: the page's sections also carry their items,
  * which are server-rendered elements and must not cross into client code.

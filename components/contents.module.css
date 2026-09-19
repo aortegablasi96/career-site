@@ -19,10 +19,9 @@
  * thing on the page that is meant to pass over the rest of it, and 1 is the only layer the site
  * has.
  *
- * The edge beneath the bar — a hairline and a shadow — is drawn only once the page has scrolled,
- * per DDR-034, which supersedes DDR-031's decision to decline it. What knows how far the page has
- * scrolled is `ContentsBar`, the site's one Client Component, per ADR-007; this file only draws the
- * two states.
+ * The edge beneath the bar — a hairline and a shadow — is drawn at all times, per DDR-048, which
+ * supersedes DDR-034's two states. So the bar reads as the page's navigation from the first view,
+ * and nothing about it changes as the page scrolls.
  *
  * Paper draws no bar and this file writes no rule for that: app/globals.css hides every `nav` in
  * print, per DDR-015, which is the one of DDR-010's grounds that never needed answering.
@@ -36,47 +35,14 @@
      is what the 96% surface behind this is for. A browser that does not support it draws the
      surface alone, which is the same bar with a firmer edge. */
   backdrop-filter: blur(var(--contents-bar-blur));
-  /* The hairline is always there and only its colour changes, per DDR-034, so the bar is the same
-     height whether or not its edge is drawn and nothing below it moves when the edge appears. At
-     rest it is transparent, as the design's bar is at the top of the page: there is nothing under
-     it yet to separate it from. `transparent` is not a colour of the palette but the absence of
-     one, as `none` is the absence of a limit. */
-  border-block-end: 1px solid transparent;
-}
-
-/* Once the page has scrolled past the design's threshold, `ContentsBar` marks the band and it
-   gains a hairline and the design's shadow, per DDR-034; scrolling back to the top takes both away.
-   The shadow falls on the content passing under the bar, which is why the bar is lifted only while
-   there is some.
-
-   The hairline is `--color-rule`, one step darker than the design's `#e2e8f0`, because the owner
-   asked for the edge to be more visible on #114. It is the palette's next hairline up rather than a
-   new colour, at 1.39:1 where the design's is 1.15:1. */
-.contents[data-scrolled] {
-  border-block-end-color: var(--color-rule);
+  /* The hairline is `--color-rule`, one step darker than the design's `#e2e8f0`, because the owner
+     asked for the edge to be more visible on #114, per DDR-034; DDR-048 keeps it. It is the
+     palette's next hairline up rather than a new colour, at 1.39:1 where the design's is 1.15:1.
+     The shadow is the design's own, and it falls on whatever passes under the bar. Both are there
+     from the first frame, with or without script, so the bar has one height and one look, and
+     nothing below it ever moves or animates. */
+  border-block-end: 1px solid var(--color-rule);
   box-shadow: var(--shadow-bar);
-}
-
-/* With script off there is nothing to mark the band, so the bar keeps its hairline all the time, as
-   DDR-031 drew it, in the scrolled state's darker ink. That is the resting state DDR-034 documents
-   for it: it is right when content is
-   passing beneath the bar, and at the top of the page it costs one faint line. A browser whose
-   script is on but has not run yet, or has failed, keeps the design's resting state instead,
-   which is still a readable bar over its 96% surface. */
-@media (scripting: none) {
-  .contents {
-    border-block-end-color: var(--color-rule);
-  }
-}
-
-/* The design's short change between the two states, and none at all for a reader who has asked
-   for less motion. Written as the preference for motion rather than as its absence, so a browser
-   that does not know the query does not animate either. */
-@media (prefers-reduced-motion: no-preference) {
-  .contents {
-    transition-property: border-block-end-color, box-shadow;
-    transition-duration: var(--contents-bar-transition);
-  }
 }
 
 /* The page's column, and the bar's height with it, so the band around it is exactly as tall as the

@@ -3,18 +3,6 @@
 import { useSyncExternalStore, type MouseEvent } from 'react';
 import styles from './contents.module.css';
 
-/**
- * How far the page has to scroll, in CSS pixels, before the bar draws its edge. The design's own
- * threshold, from the Figma Make file (`window.scrollY > 60`), per DDR-034. It is a distance the
- * page has moved rather than a length anything is drawn at, so it is not a token.
- */
-export const scrolledThreshold = 60;
-
-/** Whether the page has scrolled past the threshold. */
-export function isScrolled(): boolean {
-  return window.scrollY > scrolledThreshold;
-}
-
 /** Everything subscribed, so a change that is not a scroll or a resize can still be announced. */
 const listeners = new Set<() => void>();
 
@@ -194,11 +182,6 @@ function choose(event: MouseEvent): void {
   holdDestination(event);
 }
 
-/** The server renders the bar at rest, which is also what a reader without script keeps. */
-function isScrolledOnServer(): boolean {
-  return false;
-}
-
 /**
  * The server marks no link, not even Home, which is also what a reader without script keeps, per
  * DDR-042 and DDR-045.
@@ -210,12 +193,12 @@ function currentSectionOnServer(): string | null {
 /**
  * The contents bar, per DDR-031, and the one Client Component on the site, per ADR-007.
  *
- * It exists for three things, all about scrolling: to mark the bar with `data-scrolled` once the
- * page has scrolled past the design's threshold, so contents.module.css can draw the hairline and
- * the shadow, per DDR-034; to make the scroll a contents link starts glide rather than jump, per
- * DDR-041, which ADR-008 lets it do; and to mark the link of the section the reader is in with
- * `aria-current`, per DDR-042, which the stylesheet underlines — moving it straight to the section
- * a contents link was chosen for rather than through every section the glide passes.
+ * It exists for two things, both about scrolling: to make the scroll a contents link starts glide
+ * rather than jump, per DDR-041, which ADR-008 lets it do; and to mark the link of the section the
+ * reader is in with `aria-current`, per DDR-042, which the stylesheet underlines — moving it
+ * straight to the section a contents link was chosen for rather than through every section the
+ * glide passes. The bar's edge, which ADR-007 first made it a Client Component for, is drawn by the
+ * stylesheet alone since DDR-048, so the bar no longer marks itself with anything.
  *
  * Its first link is Home, per DDR-045, which leads to the top of the page and is marked while the
  * reader is in the introduction. It is held, glided and marked exactly as a section's link is; the
@@ -227,9 +210,9 @@ function currentSectionOnServer(): string | null {
  * becomes client code, and the static HTML still holds every link, unmarked.
  *
  * `useSyncExternalStore` rather than state set in an effect: it reads the scroll position during
- * hydration, so a page reloaded half way down, or opened at a `#fragment`, has its edge and its
- * mark from the first frame script runs in, and React re-renders only when an answer changes, not
- * on every scroll event.
+ * hydration, so a page reloaded half way down, or opened at a `#fragment`, has its mark from the
+ * first frame script runs in, and React re-renders only when the answer changes, not on every
+ * scroll event.
  */
 export function ContentsBar({
   label,
@@ -240,7 +223,6 @@ export function ContentsBar({
   home: string;
   sections: readonly { id: string; link: string }[];
 }) {
-  const scrolled = useSyncExternalStore(subscribe, isScrolled, isScrolledOnServer);
   const current = useSyncExternalStore(
     subscribe,
     () => markedSection(sections.map(({ id }) => id)),
@@ -251,7 +233,6 @@ export function ContentsBar({
     <nav
       aria-label={label}
       className={styles.contents}
-      data-scrolled={scrolled || undefined}
       onClick={choose}
     >
       <ul className={styles.list}>

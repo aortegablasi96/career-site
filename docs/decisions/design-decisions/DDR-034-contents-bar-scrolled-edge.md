@@ -4,6 +4,11 @@ Status: Accepted
 
 Date: 2026-09-18
 
+**Superseded in part by DDR-048**, per #148: the bar no longer has two states. Its hairline and
+shadow are drawn at all times, so the threshold, the 200ms change, `--contents-bar-transition`, the
+`scripting: none` rule and the server-rendered resting state are gone. The hairline's colour, one
+step darker than the design's at the owner's request, and `--shadow-bar` stand.
+
 **Supersedes in part DDR-031**: ground 4 under "DDR-010's five grounds", which declined the
 design's scroll-triggered shadow, the "Shadow" and "Bottom hairline" rows of its anatomy table, and
 the alternative "Adopt the scroll-triggered shadow with a client component". Everything else
