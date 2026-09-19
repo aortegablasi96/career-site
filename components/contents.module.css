@@ -4,8 +4,9 @@
  * The design draws it as a full-width band pinned to the top of the frame, above everything else,
  * with its links inside the page's own column (node 2:6, and its container 2:7). So the surface,
  * the blur and the hairline are on the band, which spans the viewport, and the column is on the
- * list inside it — the same two tokens `main` and the footer read, so the first link starts where
- * the page's text starts at every width.
+ * block inside it, which holds the links and, since DDR-049, the site's title — the same two
+ * tokens `main` and the footer read, so the first link starts where the page's text starts at
+ * every width.
  *
  * `position: sticky` rather than `fixed`, which is the whole of the bar's behaviour and needs no
  * script: a sticky element stays in the flow and keeps its place in the markup order, so the page
@@ -46,25 +47,21 @@
 }
 
 /* The page's column, and the bar's height with it, so the band around it is exactly as tall as the
-   links inside need. The design's 48px is a minimum rather than a fixed height: the five links are
-   one row in its 894px frame and wrap below 390px, and a bar that could not grow would hold
-   them behind its own edge. `align-content` centres the rows when there is more height than they
-   need, as `align-items` centres one row in it.
+   links and the title inside need. The design's 48px is a minimum rather than a fixed height: the
+   links are one row in its 894px frame and wrap below 390px, and a bar that could not grow would
+   hold them behind its own edge. `align-content` centres the rows when there is more height than
+   they need, as `align-items` centres one row in it.
 
-   The size is set here rather than on the link so that each list item's line is the label's
-   19.5px rather than body text's 22.5px: two wrapped rows then fit inside the design's 48px, and a
-   bar that has to grow grows by less.
+   The column holds two things, per DDR-049: the site's title, which starts at its left edge, and
+   the list of links, which its own auto margin pushes to its right edge. Where the two fit on one
+   row they share it. Where they do not, the links wrap onto the rows below the title, still set
+   to the right, rather than squeezing beside it or being cut off. The title comes first in the
+   markup as it does on screen, so the reading order and the tab order are what is on screen.
 
-   The column gap is the small step below the wide breakpoint and the design's 28px taken to the
-   nearest step of DDR-013's scale, 32px, from it. The narrow gap is not a preference: at 320px with
-   text at 200%, 32px between "Experience" and "Projects" pushed five links onto four rows, the bar
-   to 229px and every heading the contents move to behind it, so DDR-031 took it to 16px. Home, the
-   sixth link, per DDR-045, put the bar back on four rows at 16px, 205px tall, and added a row at
-   410px as well; at 8px the bar is never taller than it was with five links, at any width from
-   300px to 900px at either text size. The row gap is what keeps two wrapped links
-   outside the circles WCAG 2.2's 2.5.8 measures its spacing exception with, as the row this bar
-   replaces did, per DDR-027. */
-.list {
+   The size is set here rather than on the link so that each line is the label's 19.5px rather
+   than body text's 22.5px: two wrapped rows then fit inside the design's 48px, and a bar that has
+   to grow grows by less. */
+.bar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -76,10 +73,46 @@
   margin-inline: auto;
   padding-inline: var(--page-gutter);
   font-size: var(--font-size-x-small);
+}
+
+/* The links, at the right of the column, in a row of their own that wraps inside it. Where they
+   take more than one row, each row is set to the right, so they read as one group.
+
+   The column gap is the small step below the wide breakpoint and the design's 28px taken to the
+   nearest step of DDR-013's scale, 32px, from it. The narrow gap is not a preference: at 320px with
+   text at 200%, 32px between "Experience" and "Projects" pushed five links onto four rows, the bar
+   to 229px and every heading the contents move to behind it, so DDR-031 took it to 16px. Home, the
+   sixth link, per DDR-045, put the bar back on four rows at 16px, 205px tall, and added a row at
+   410px as well; at 8px the bar is never taller than it was with five links, at any width from
+   300px to 900px at either text size. The row gap is what keeps two wrapped links
+   outside the circles WCAG 2.2's 2.5.8 measures its spacing exception with, as the row this bar
+   replaces did, per DDR-027. The base styles indent every list; this one is set by its margin. */
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  margin-inline-start: auto;
+  column-gap: var(--space-small);
+  row-gap: var(--space-small);
+  padding-inline-start: 0;
   list-style: none;
 }
 
+/* The site's title, per DDR-049, in bold and in the heading ink, at the step a section's title
+   takes from the wide breakpoint, so it reads as the bar's name rather than as one more label. Its
+   line is 31.2px, which the bar's 48px holds. It is a paragraph, not a heading, because the page's
+   one `h1` is the owner's name, and not a link, because Home already returns to the top. */
+.title {
+  color: var(--color-text-heading);
+  font-size: var(--font-size-x-large);
+  font-weight: var(--font-weight-bold);
+}
+
+/* From the wide breakpoint, the gap between two links, and between the title and the links where
+   they share a row, is the design's. */
 @media (min-width: 48em) {
+  .bar,
   .list {
     column-gap: var(--space-large);
   }
