@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-16
 
+**Amended by DDR-050** in one respect: the career page is no longer the site's only page. Each
+project has a view of its own, which DDR-050 designs. The projects section this record designs is
+unchanged by it.
+
 Supersedes DDR-006, the career page's structure. DDR-006's outline, contents row, contact-address
 rule, levels-as-words rule and newest-first ordering are carried forward into this record. Its entry
 anatomy and its labelled list are not: both were designed for a single 65ch column, and neither

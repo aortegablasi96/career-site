@@ -21,8 +21,11 @@ const fontSizes = [...root.matchAll(/--font-size-([\w-]+):\s*([^;]+);/g)].map(
   ([, name, value]) => ({ name, value: value.trim() }),
 );
 
-// The steps of the scale are written in rem. The heading roles DDR-014 adds refer to a step.
-const fontSteps = fontSizes.filter(({ value }) => value.endsWith('rem'));
+// The steps of the scale are written in rem. The heading roles DDR-014 adds refer to a step, and the
+// one role written in rem, a project view's title, is held apart by name, per DDR-050.
+const fontSteps = fontSizes.filter(
+  ({ name, value }) => value.endsWith('rem') && name !== 'project-title',
+);
 
 /** The size in rem, which is also the size in multiples of 16px at the browser default. */
 function rem(value: string): number {
@@ -65,6 +68,14 @@ describe('type scale tokens', () => {
     for (const { name, value } of fontSizes) {
       expect(value, name).toMatch(onTheScale);
     }
+  });
+
+  it('sets a project view’s title at the design’s 41.6px, between the two page titles, per DDR-050', () => {
+    const title = rem(token('font-size-project-title')!);
+
+    expect(title).toBe(2.6);
+    expect(title).toBeGreaterThan(rem(token('font-size-xx-large')!));
+    expect(title).toBeLessThan(rem(token('font-size-xxx-large')!));
   });
 
   it('measures every rem from the browser font-size setting on screen', () => {
@@ -158,6 +169,7 @@ describe('leading tokens', () => {
     { block: 'the summary', step: 'medium', leading: 'prose', design: 1.75 },
     { block: 'a role’s points', step: 'small', leading: 'prose', design: 1.7 },
     { block: 'a project’s description', step: 'small', leading: 'prose', design: 1.72 },
+    { block: 'a project view’s description', step: 'medium', leading: 'prose', design: 1.75 },
     { block: 'a level’s skills', step: 'x-small', leading: 'prose-small', design: 1.65 },
     { block: 'a thesis sentence', step: 'x-small', leading: 'prose-small', design: 1.625 },
   ])('sets $block within half a pixel a line of the design', ({ step, leading, design }) => {
@@ -299,6 +311,7 @@ describe('colour tokens', () => {
       'rule',
       'border',
       'border-accent',
+      'rule-accent-end',
       'marker',
       'surface-hover',
       'accent-hover',
@@ -632,6 +645,7 @@ const designRhythm = {
   boundary: 56,
   summary: 32,
   controls: 36,
+  'view-top': 48,
 };
 const stepNames = steps.map(([name]) => name);
 
@@ -803,6 +817,14 @@ describe('spacing tokens', () => {
       expect(atBreakpoint.has(name), name).toBe(false);
     }
   });
+
+  it('draws a project view’s media, its rule and its label as `career-site-project` does, per DDR-050', () => {
+    expect(token('project-view-media-ratio')).toBe('16 / 10');
+    expect(rem(token('project-view-rule-width')!) * 16).toBe(40);
+    expect(rem(token('project-view-rule-height')!) * 16).toBe(6);
+    expect(rem(token('project-view-rule-gap')!) * 16).toBe(24);
+    expect(rem(token('project-view-label-gap')!) * 16).toBe(12);
+  });
 });
 
 // DDR-014 adapts the scales at the narrow breakpoint, in em, by redefining the role tokens that
@@ -814,6 +836,8 @@ const atWide = redefined(breakpoints[1]?.body);
 const adapted = [
   { role: 'font-size-page-title', narrow: 'font-size-xx-large', wide: 'font-size-xxx-large' },
   { role: 'font-size-section-title', narrow: 'font-size-large', wide: 'font-size-x-large' },
+  // DDR-050: a project view's title, below the wide breakpoint, steps down as the page title does.
+  { role: 'font-size-project-title-narrow', narrow: 'font-size-x-large', wide: 'font-size-xx-large' },
   { role: 'page-gutter', narrow: 'space-small', wide: 'space-medium' },
 ];
 
@@ -836,7 +860,7 @@ describe('responsive tokens', () => {
     expect(atWide.get('contents-bar-title-row')).toBe('0rem');
   });
 
-  it('adapts only the page and section titles, the gutter and the language columns, never a step of either scale', () => {
+  it('adapts only the page, section and project view titles, the gutter and the language columns, never a step of either scale', () => {
     expect([...atBreakpoint.keys()]).toEqual([...adapted, ...adaptedCounts].map(({ role }) => role));
   });
 

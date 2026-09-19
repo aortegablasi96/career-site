@@ -25,6 +25,9 @@ import { ContentsBar } from './contents-bar';
  * markup as it is before them on screen. It is a string in `content/` too, and plain text: Home
  * already returns to the top, so the title is not a second link there.
  *
+ * On a project's view, per DDR-050, it is handed `page`, the route of the page the sections are on,
+ * and every link leads back there rather than to a fragment of the view.
+ *
  * With no sections there is nothing to list, so nothing renders — not even Home, since a page of
  * nothing but its introduction has nowhere else to return from.
  */
@@ -33,11 +36,14 @@ export function Contents({
   home,
   title,
   sections,
+  page,
 }: {
   label: string;
   home: string;
   title: string;
   sections: readonly { id: string; link: string }[];
+  /** The route of the page the sections are on, when the bar is shown on a project's view. */
+  page?: string;
 }) {
   if (sections.length === 0) {
     return null;
@@ -49,6 +55,7 @@ export function Contents({
       home={home}
       title={title}
       sections={sections.map(({ id, link }) => ({ id, link }))}
+      page={page}
     />
   );
 }

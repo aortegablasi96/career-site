@@ -201,8 +201,10 @@ the shapes, one module per content type exports the records, and Server Componen
 directly. A copy change should never require editing a component. `app/page.tsx` imports the
 content and passes it to the components as props.
 
-`app/page.tsx` also holds the page's sections in one ordered list. Each entry renders as a
-section and is listed in the contents, so a section story adds its section in that one place.
+`app/sections.tsx` holds the page's sections in one ordered list, since #153, which moved it out of
+`app/page.tsx` so each project's view can list the same sections in its contents bar. Each entry
+renders as a section and is listed in the contents, so a section story adds its section in that one
+place.
 A section is given its items one element each, such as one role, so that it can keep its heading
 with its first item on paper, per DDR-015. Since #96 the page returns a fragment rather than a
 single `main`: the footer follows `main` so that it is the page's `contentinfo` landmark, per
@@ -515,7 +517,7 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001 to ADR-009 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
+ADR-001 to ADR-010 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
 separate CV file, and ADR-005 superseding the part of ADR-004 that makes the CV a PDF saved from the
 page's print output; the rest of both records stands. ADR-006 supersedes nothing: it refines
 ADR-001's styling boundary by saying which literal values a component stylesheet may write: `0`,
@@ -526,12 +528,15 @@ precedent for the next one. ADR-008 amends ADR-007 in one respect: the same comp
 a click on its own links, so that a contents link's scroll is smooth, per DDR-041. ADR-009 amends
 ADR-007 again, in its boundary: the component renders the contents links itself, from each
 section's id and word, so that it can mark the current section's, per DDR-042. It is still the one
-Client Component. The next ADR is `010`.
+Client Component. ADR-010 supersedes ADR-002's "There are no detail pages", whose revisit
+condition 3 Epic #152 meets: each project is a statically generated route, and a `next/link` href
+is a route rather than a file, so it does not go through `asset()`, which amends ADR-004. The next
+ADR is `011`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-049. The next DDR is
-`050`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-050. The next DDR is
+`051`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Twenty-one accepted records are superseded or amended **in part**, and each says so at the top and again
+Twenty-two accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -550,10 +555,12 @@ at the section concerned:
   a level's badge stands above its skills. DDR-042 takes the half of "It has no current-section
   state and does not animate" that rules out the state: the bar marks the current section's link.
   DDR-043 takes its "Links open in the same tab" for the LinkedIn and GitHub pills alone.
+  DDR-050 ends the page being the site's only page: each project has a view of its own.
 * **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
   rule and its rule that nothing scrolls horizontally from 320px. DDR-039 lets the wide breakpoint
   redefine one token, `--rhythm-scale`, and DDR-049 a second, `--contents-bar-title-row`. DDR-040 takes `--page-padding-block` off the narrow
-  breakpoint, which now adapts three role tokens. DDR-027 takes its 44 by 44 pixel
+  breakpoint, which now adapts three role tokens; DDR-050 adds a fourth,
+  `--font-size-project-title-narrow`. DDR-027 takes its 44 by 44 pixel
   minimum target, and `--target-size-min` with it. The one sentence of that bullet which survives is
   the one letting a component drop screen-only sizing on paper.
 * **DDR-013** keeps its scale, `--space-flow` and every other value. DDR-039 takes its rhythm: the
@@ -629,7 +636,10 @@ at the section concerned:
 * **DDR-033** keeps every contents link at rest without an underline. DDR-042 underlines the one
   link of the section the reader is in, as a state rather than as what identifies a link, per #133.
 * **DDR-043** keeps its new tab, its `noopener` and its two pills. DDR-044 takes its arrow: the tab
-  is announced in the link's accessible name instead, and nothing on the pill shows it.
+  is announced in the link's accessible name instead, and nothing on the pill shows it. DDR-050
+  widens its scope to a project view's "Source code" and "Live site" controls.
+* **DDR-022** keeps its ten steps and its floor. DDR-050 adds one size that is not a step, a project
+  view's 41.6px title, as the role `--font-size-project-title`.
 * **DDR-044** keeps every pill, fill, mark and label it decides. DDR-047 takes the GitHub pill's
   hover fill: GitHub's Gray 5 barely changed the pill, so it is now a lighter grey in GitHub's hue.
 
@@ -1239,6 +1249,36 @@ Two things about it are worth knowing before touching it.
   which the wide breakpoint sets to 0. Without it, headings landed 15px behind the bar at 320px to
   390px with text at 200%. It assumes the title takes one line, so a longer title or a larger step
   means rerunning DDR-049's sweep and its heading check.
+
+**#153 has landed, as ADR-010 and DDR-050: each project has a view of its own**, at
+`/projects/<slug>`, laid out as the Figma layer `career-site-project` draws it: a way back to the
+projects, then the name, description, "Built with" and every technology, and the links beside the
+lead picture and its caption. It is the first story of Epic #152; the cards that lead to a view are
+#154, so until then a view is reachable by its address alone.
+
+Five things about it are worth knowing before touching it.
+
+* **Each view is a static route**, `app/projects/[slug]/page.tsx`, with `generateStaticParams` and
+  `dynamicParams = false`. The slug and the caption are fields on each project in
+  `content/projects.ts`, and the view's words are `projects.view`. A slug is an address someone may
+  have been sent, so do not rename one lightly.
+* **A view uses the site's own contents bar and footer.** `ContentsBar` takes an optional `page`:
+  given one, every link is a `next/link` back to the page and nothing is marked. The owner chose the
+  site's bar over the design's title-only bar on #153.
+* **Internal links go through `next/link` with `prefetch={false}`**, which prefixes the base path
+  itself; `components/assets.test.ts` exempts a `Link`'s href from `asset()` and nothing else.
+  Prefetching the page would fetch every picture on it from each view.
+* **The lead picture is the design's 16:10, cropped from the 4:3 file**, as the owner chose. Its
+  grid tracks are `minmax(0, 1fr)`: with a plain `1fr` the 560px file widened its column and the
+  view scrolled sideways at every width below 600px and from 770px to 900px.
+* **The name steps down twice below the wide breakpoint**, through
+  `--font-size-project-title-narrow`: at 36px, "Portfolio" broke mid-word at 320px with text at
+  200%. A new, longer project name means rerunning DDR-050's sweep.
+
+Swept every 10px from 300px to 900px on all four views at both text sizes: nothing scrolls
+sideways, no pair of targets fails 2.5.8, and no title breaks mid-word. The page itself is
+byte-identical to the tree before, so the printed CV is untouched. DDR-050 lists every difference
+from the layer at its 1195px width.
 
 **#115 has landed, as DDR-035: every link and control answers the pointer.** A contact pill takes
 `--color-surface-hover` and `--color-border-accent-hover`, the CV control darkens to

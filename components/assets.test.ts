@@ -10,10 +10,12 @@ import { describe, expect, it } from 'vitest';
 //
 // This covers app/ as well as components/. app/page.tsx renders the page and could write a path
 // just as readily; the test lives here because that is where ADR-004 put it and where the markup is.
+// app/ is read all the way down, since #153 put each project's view in a route of its own there.
 const directories = [new URL('./', import.meta.url), new URL('../app/', import.meta.url)];
 
 const sources = directories.flatMap((directory) =>
-  readdirSync(directory)
+  readdirSync(directory, { recursive: true, encoding: 'utf8' })
+    .map((name) => name.split(/[\\/]/).join('/'))
     .filter((name) => name.endsWith('.tsx') && !name.endsWith('.test.tsx'))
     .map((name) => ({
       name: `${directory.pathname.split('/').at(-2)}/${name}`,
@@ -25,6 +27,8 @@ const sources = directories.flatMap((directory) =>
 
 /** An attribute that addresses a file: what it is called, and what it was given. */
 interface Attribute {
+  /** The element it is written on, such as `a` or `Link`. */
+  element: string;
   name: string;
   /** The value as written, without its quotes or its braces. */
   value: string;
@@ -43,13 +47,14 @@ function addressingAttributes({ source }: { source: string }): Attribute[] {
 
   for (const match of source.matchAll(/\b(src|poster|href)=/g)) {
     const name = match[1];
+    const element = /<([\w.]+)/.exec(source.slice(source.lastIndexOf('<', match.index)))?.[1] ?? '';
     const start = match.index + match[0].length;
     const opening = source[start];
 
     if (opening === '"' || opening === "'") {
       const end = source.indexOf(opening, start + 1);
 
-      found.push({ name, value: source.slice(start + 1, end), literal: true });
+      found.push({ element, name, value: source.slice(start + 1, end), literal: true });
       continue;
     }
 
@@ -72,7 +77,7 @@ function addressingAttributes({ source }: { source: string }): Attribute[] {
       else if (character === '}') {
         depth -= 1;
         if (depth === 0) {
-          found.push({ name, value: source.slice(start + 1, at).trim(), literal: false });
+          found.push({ element, name, value: source.slice(start + 1, at).trim(), literal: false });
           break;
         }
       }
@@ -91,10 +96,14 @@ describe('asset references', () => {
     expect(names).toContain('components/introduction.tsx');
     expect(names).toContain('components/projects.tsx');
     expect(names).toContain('app/page.tsx');
+    expect(names).toContain('app/projects/[slug]/page.tsx');
   });
 
   describe.each(sources)('$name', (file) => {
-    const attributes = addressingAttributes(file);
+    // A `Link` is the exception, per ADR-010: its href is a route of this site rather than a file,
+    // and `next/link` puts the base path in front of it itself. Given `asset()` as well, it would
+    // carry the base path twice.
+    const attributes = addressingAttributes(file).filter(({ element }) => element !== 'Link');
 
     it('writes no path from the site root, which would lose the base path', () => {
       const literals = attributes.filter(({ literal }) => literal).map(({ value }) => value);

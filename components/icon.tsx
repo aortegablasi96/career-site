@@ -1,7 +1,14 @@
 import type { ContactIcon } from '@/content/types';
 
-/** The marks the introduction's controls carry: one per contact address, and one for the CV. */
-export type IconName = ContactIcon | 'download';
+/**
+ * The marks the introduction's controls carry: one per contact address, and one for the CV. Since
+ * DDR-050 a project's view carries two more: the chevron before its way back to the projects, and
+ * the arrow out of a box on each link that leaves the site.
+ */
+export type IconName = ContactIcon | 'download' | 'back' | 'external';
+
+/** The marks drawn as lines rather than filled, all on the 24 unit grid. */
+const lineDrawings: readonly IconName[] = ['download', 'back', 'external'];
 
 /**
  * A mark beside a control's text, per DDR-010.
@@ -23,7 +30,8 @@ export type IconName = ContactIcon | 'download';
  * brand's colour on paper. GitHub's is the Invertocat from GitHub's logo kit, unchanged, on the
  * kit's 98 by 96 grid. LinkedIn publishes its [in] as raster files only, so its path is the vector
  * tracing Simple Icons carries, under CC0. The download stays a line drawing, because it is the CV
- * control's and #135 leaves it alone.
+ * control's and #135 leaves it alone. The view's two marks are line drawings like it, as the
+ * design draws them, per DDR-050.
  *
  * Gmail's M is the one mark drawn in its own colours rather than `currentColor`, because it has
  * four and they are the mark: the address is on gmail.com, and the pill is Gmail's own button, per
@@ -31,8 +39,7 @@ export type IconName = ContactIcon | 'download';
  * in the palette, which is for colours the site chooses.
  */
 export function Icon({ name }: { name: IconName }) {
-  const drawing =
-    name === 'download'
+  const drawing = lineDrawings.includes(name)
       ? ({
           fill: 'none',
           stroke: 'currentColor',
@@ -89,6 +96,16 @@ const paths: Record<IconName, React.ReactNode> = {
       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
       <path d="M12 3v12" />
       <path d="m7 10 5 5 5-5" />
+    </>
+  ),
+  // A chevron pointing back, before "Back to portfolio".
+  back: <path d="m15 18-6-6 6-6" />,
+  // An arrow leaving a box: the link goes to another site.
+  external: (
+    <>
+      <path d="M15 3h6v6" />
+      <path d="M10 14 21 3" />
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
     </>
   ),
 };
