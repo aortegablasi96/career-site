@@ -204,8 +204,9 @@ function currentSectionOnServer(): string | null {
  * reader is in the introduction. It is held, glided and marked exactly as a section's link is; the
  * only thing that sets it apart is that it has no section to measure.
  *
- * After the links it shows the site's title, per DDR-049, which the stylesheet sets at the right of
- * the page's column. It is text, not a link, and nothing about it changes as the page scrolls.
+ * Before the links it shows the site's title, per DDR-049, which the stylesheet sets at the left of
+ * the page's column, with the links at its right. It is text, not a link, and nothing about it
+ * changes as the page scrolls.
  *
  * That last is why it renders the links itself, per ADR-009, where ADR-007 had `Contents` render
  * them and pass them in as children: a link can only be marked by what renders it. What it is
@@ -241,6 +242,7 @@ export function ContentsBar({
       onClick={choose}
     >
       <div className={styles.bar}>
+        <p className={styles.title}>{title}</p>
         <ul className={styles.list}>
           {[{ id: homeId, link: home }, ...sections].map(({ id, link }) => (
             <li key={id}>
@@ -254,7 +256,6 @@ export function ContentsBar({
             </li>
           ))}
         </ul>
-        <p className={styles.title}>{title}</p>
       </div>
     </nav>
   );

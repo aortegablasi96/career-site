@@ -247,8 +247,9 @@ instead. Styles
 read those roles rather than the steps behind them. `--font-size-item-title` is body size at every
 width, because there is nothing below body size a title could take.
 
-The **wide** one, `min-width: 48em`, is the components'. It redefines one token, `--rhythm-scale`,
-per DDR-039 — 0.75 below it and 1 from it — and nothing else: what changes there is layout, and a
+The **wide** one, `min-width: 48em`, is the components'. It redefines two tokens: `--rhythm-scale`,
+per DDR-039 — 0.75 below it and 1 from it — and `--contents-bar-title-row`, per DDR-049, which it
+takes out of the scroll clearance. Nothing else: what changes there is layout, and a
 media query cannot read a custom property, so each component that lays out in columns writes it in
 its own CSS Module. That is the one width a component stylesheet may write, and
 the test enforces it. A third breakpoint is a new decision and a new record. To check either in a
@@ -551,7 +552,7 @@ at the section concerned:
   DDR-043 takes its "Links open in the same tab" for the LinkedIn and GitHub pills alone.
 * **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
   rule and its rule that nothing scrolls horizontally from 320px. DDR-039 lets the wide breakpoint
-  redefine one token, `--rhythm-scale`. DDR-040 takes `--page-padding-block` off the narrow
+  redefine one token, `--rhythm-scale`, and DDR-049 a second, `--contents-bar-title-row`. DDR-040 takes `--page-padding-block` off the narrow
   breakpoint, which now adapts three role tokens. DDR-027 takes its 44 by 44 pixel
   minimum target, and `--target-size-min` with it. The one sentence of that bullet which survives is
   the one letting a component drop screen-only sizing on paper.
@@ -618,7 +619,8 @@ at the section concerned:
   declined scroll-triggered edge, which DDR-034 adopts, per #114, with its hairline row and its
   shadow row. DDR-042 takes the "no current-section state" it carried forward from DDR-010.
   DDR-045 adds a Home link before the sections' and takes its narrow link gap from 16px to 8px.
-  DDR-049 puts the links at the left of the column and the site's title at its right.
+  DDR-049 puts the site's title at the left of the column and the links at its right, and adds
+  the title's row to the clearance below the wide breakpoint.
 * **DDR-042** keeps everything but its unmarked introduction: DDR-045 marks Home there.
 * **DDR-034** keeps its hairline's colour and `--shadow-bar`. DDR-048 takes its two states: the edge
   is drawn at all times, with no threshold, no transition and no script-off rule.
@@ -1222,18 +1224,21 @@ Two things about it are worth knowing before touching it.
 Paper is untouched: under print emulation every box is identical to the tree before.
 
 **#149 has landed, as DDR-049: the contents bar shows the site's title.** "Andreu’s site", as
-`title` in `content/contents.ts`, stands at the right of the bar's column in bold, after the links
-in the markup. The column is `.bar`, a wrapping flex row of the list and the title; the list is not
-indented, and the title's auto margin takes it to the right edge.
+`title` in `content/contents.ts`, stands at the left of the bar's column in bold at
+`--font-size-x-large`, before the links in the markup, and the links sit at the right. The owner
+swapped the two sides from the issue's first arrangement on #151. The column is `.bar`, a wrapping
+flex row of the title and the list; the list's auto margin takes it to the right edge, and each row
+it wraps to is set to the right.
 
 Two things about it are worth knowing before touching it.
 
-* **Where the two cannot share a row, the title takes one of its own**, at the right, which the
-  owner chose on #149. That is below 410px at the default text size and below 790px at 200%, and
-  the bar is one row taller there: 75.3px rather than 48.8px on a phone.
-* **Headings now land closer beneath the narrow bar**: 8px below it at 320px to 390px with text at
-  200%, where it was 63px. The clearance was deliberately not raised. A new label, section or a
-  longer title means rerunning DDR-049's sweep and this check.
+* **Where the two cannot share a row, the links wrap below the title.** That is below 550px at the
+  default text size and at every width below the wide breakpoint at 200%, and the bar is a row
+  taller there: 87px rather than 48.8px on a phone.
+* **The clearance adds the title's row below the wide breakpoint**, as `--contents-bar-title-row`,
+  which the wide breakpoint sets to 0. Without it, headings landed 15px behind the bar at 320px to
+  390px with text at 200%. It assumes the title takes one line, so a longer title or a larger step
+  means rerunning DDR-049's sweep and its heading check.
 
 **#115 has landed, as DDR-035: every link and control answers the pointer.** A contact pill takes
 `--color-surface-hover` and `--color-border-accent-hover`, the CV control darkens to

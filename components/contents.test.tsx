@@ -96,22 +96,24 @@ describe('Contents', () => {
     expect(rule('.list')).toMatch(/flex-wrap:\s*wrap;/);
   });
 
-  // DDR-049: the links start at the column's left edge, and the title follows them in the markup,
-  // as it does on screen, so the reading order and the tab order are what the bar shows.
-  it('shows the site’s title after the links, as text rather than a link, per DDR-049', () => {
+  // DDR-049: the title starts at the column's left edge, and the links follow it in the markup, as
+  // they do on screen, so the reading order and the tab order are what the bar shows.
+  it('shows the site’s title before the links, as text rather than a link, per DDR-049', () => {
     const html = renderToStaticMarkup(
       <Contents label="Sections" home="Home" title="Andreu’s site" sections={sections} />,
     );
 
-    expect(html).toMatch(/<\/ul><p class="[^"]*">Andreu’s site<\/p><\/div><\/nav>$/);
+    expect(html).toMatch(/<div class="[^"]*"><p class="[^"]*">Andreu’s site<\/p><ul /);
     expect(html.match(/<a /g)).toHaveLength(3);
   });
 
-  // DDR-049: the list is not indented, so the first link is at the column's edge; the title's auto
-  // margin takes it to the other edge, on the links' row where it fits and on its own where not.
-  it('puts the links at the left of the column and the bold title at its right, per DDR-049', () => {
+  // DDR-049: the title is at the column's left edge, larger than the links and bold; the list's
+  // auto margin takes the links to the other edge, and each row they wrap to is set to the right.
+  it('puts the larger bold title at the left of the column and the links at its right, per DDR-049', () => {
     expect(rule('.list')).toMatch(/padding-inline-start:\s*0;/);
-    expect(rule('.title')).toMatch(/margin-inline-start:\s*auto;/);
+    expect(rule('.list')).toMatch(/margin-inline-start:\s*auto;/);
+    expect(rule('.list')).toMatch(/justify-content:\s*flex-end;/);
+    expect(rule('.title')).toMatch(/font-size:\s*var\(--font-size-x-large\);/);
     expect(rule('.title')).toMatch(/font-weight:\s*var\(--font-weight-bold\);/);
   });
 

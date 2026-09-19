@@ -578,10 +578,19 @@
      the flow step, so it follows the bar rather than repeating its number, and the step is the
      clear space DDR-006 already kept above a heading that is scrolled to. Measured from 320px to
      1536px at both text sizes, every heading the contents reach lands below the bar, 42.6px clear
-     at the least, where the links wrap to three rows at 200%; DDR-031 has the table. */
+     at the least, where the links wrap to three rows at 200%; DDR-031 has the table.
+
+     Since DDR-049 the bar shows the site's title, and below the wide breakpoint the title can take
+     a row of its own above the links. So the clearance adds that row there — the title's line and
+     the gap below it — and the wide breakpoint takes it away again, where the title shares the
+     links' row. Without it, at 320px to 390px with text at 200%, a heading landed 15px behind the
+     bar. */
   --contents-bar-height: 3rem;
   --contents-bar-blur: 12px;
-  --contents-bar-clearance: calc(var(--contents-bar-height) + var(--space-flow));
+  --contents-bar-title-row: calc(var(--font-size-x-large) * var(--line-height-body) + var(--space-small));
+  --contents-bar-clearance: calc(
+    var(--contents-bar-height) + var(--contents-bar-title-row) + var(--space-flow)
+  );
 }
 
 /*
@@ -609,10 +618,14 @@
  * sections, headings and entries take the design's full values from here and three quarters of them
  * below. It is written here rather than in each component because it is a value, not a layout, and
  * one factor keeps every space in step with the others.
+ *
+ * Since DDR-049 it also takes the contents bar's title row out of the scroll clearance, because
+ * from here the title shares the links' row and the bar is its own 48px again.
  */
 @media (min-width: 48em) {
   :root {
     --rhythm-scale: 1;
+    --contents-bar-title-row: 0rem;
   }
 }
 

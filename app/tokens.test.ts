@@ -829,9 +829,11 @@ describe('responsive tokens', () => {
   });
 
   // The wide breakpoint is the components' layout, per DDR-014; DDR-039 lets it redefine the one
-  // value the rhythm is scaled by, and nothing else.
-  it('redefines nothing at the wide breakpoint but the rhythm factor, per DDR-039', () => {
-    expect([...atWide.keys()]).toEqual(['rhythm-scale']);
+  // value the rhythm is scaled by, and DDR-049 the contents bar's title row, which the scroll
+  // clearance adds only where the title can wrap above the links. Nothing else.
+  it('redefines nothing at the wide breakpoint but the rhythm factor and the bar’s title row', () => {
+    expect([...atWide.keys()]).toEqual(['rhythm-scale', 'contents-bar-title-row']);
+    expect(atWide.get('contents-bar-title-row')).toBe('0rem');
   });
 
   it('adapts only the page and section titles, the gutter and the language columns, never a step of either scale', () => {

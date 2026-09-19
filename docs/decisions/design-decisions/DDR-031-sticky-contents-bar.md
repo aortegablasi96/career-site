@@ -25,9 +25,9 @@ state, no animation, not printed, and no mobile "Sections" toggle.
   top of the window. The offset moves from each section's `scroll-margin` to the root's
   `scroll-padding`, so it covers keyboard focus as well.
 
-**Amended by DDR-049 in one respect**: the bar's arrangement. The links start at the left of the
-page's column and the site's title stands at its right, in bold, on a row of its own below the links
-where the two cannot share one.
+**Amended by DDR-049 in two respects**: the bar's arrangement, and its clearance. The site's
+title stands at the left of the page's column, larger and in bold, with the links at the right; and
+below the wide breakpoint the clearance adds the title's row, which can stand above the links there.
 
 **Amended by DDR-045 in two respects**: the bar begins with a Home link, which leads to the top of
 the page rather than to a section, and the link gap below the wide breakpoint is 8px rather than

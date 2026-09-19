@@ -21,8 +21,8 @@ import { ContentsBar } from './contents-bar';
  * The bar's first link is Home, per DDR-045, which returns the reader to the top of the page. Its
  * word is in `content/` beside the bar's accessible name, since it names no section.
  *
- * At the right of the bar's column is the site's title, per DDR-049, after the links in the
- * markup as it is after them on screen. It is a string in `content/` too, and plain text: Home
+ * At the left of the bar's column is the site's title, per DDR-049, before the links in the
+ * markup as it is before them on screen. It is a string in `content/` too, and plain text: Home
  * already returns to the top, so the title is not a second link there.
  *
  * With no sections there is nothing to list, so nothing renders — not even Home, since a page of

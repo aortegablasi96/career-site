@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-18
 
+**Amended by DDR-049 in one respect**: the wide breakpoint, which this record lets redefine
+`--rhythm-scale` and nothing else, also redefines `--contents-bar-title-row`, to take the contents
+bar's title row out of the scroll clearance where the title shares the links' row.
+
 **Supersedes DDR-013's rhythm**, and nothing else there. DDR-013 set three levels of space, each
 twice the one below: `--space-flow`, `--space-item` and `--space-section`. This record keeps the
 flow step and replaces the other two with the design's own values. DDR-013's **spacing scale is

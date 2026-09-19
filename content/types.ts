@@ -139,7 +139,7 @@ export interface Contents {
   label: string;
   /** The word the bar's first link shows, which returns the reader to the top of the page. */
   home: string;
-  /** The site's title, which the bar shows at the right of the page's column, per DDR-049. */
+  /** The site's title, which the bar shows at the left of the page's column, per DDR-049. */
   title: string;
 }
 
