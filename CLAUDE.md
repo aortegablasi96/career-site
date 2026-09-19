@@ -527,10 +527,10 @@ ADR-007 again, in its boundary: the component renders the contents links itself,
 section's id and word, so that it can mark the current section's, per DDR-042. It is still the one
 Client Component. The next ADR is `010`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-045. The next DDR is
-`046`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-046. The next DDR is
+`047`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Eighteen accepted records are superseded or amended **in part**, and each says so at the top and again
+Nineteen accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -560,11 +560,13 @@ at the section concerned:
   off the scale. DDR-026 amends the sentence that makes whitespace and a heading the whole section
   boundary: the boundary now carries a hairline, with the section's space split around it.
   DDR-040 holds the introduction's summary to the design's 680px rather than 65ch, and pads the
-  page above and below by a section boundary.
+  page above and below by a section boundary. DDR-046 draws the column inside each of `main`'s
+  parts, by `--page-inset`, rather than on `main`, so a section's band spans the window.
 * **DDR-021** keeps its capsule, its two lights, its ratio and its narrow width. DDR-040 takes its
   wide width: `13rem` becomes the Make file's `clamp(180px, 22vw, 300px)`, in rem bounds.
 * **DDR-026** keeps its divider, its colour, its place and its split. DDR-039 corrects its claim
-  that the page drew the design's 56px on each side of the line: it drew 32px until #119.
+  that the page drew the design's 56px on each side of the line: it drew 32px until #119. DDR-046
+  runs the line across the window, and moves the half above it into the section before.
 
 * **DDR-023** keeps its two faces, its four weights, its one italic, its seven files and its rule
   about which elements take which face. DDR-030 corrects the one row of its weight table that was
@@ -610,12 +612,14 @@ at the section concerned:
   colours join the palette, and its four failing pairings become six. DDR-044 adds the three
   services' colours for the contact pills, all passing. DDR-036 adopts the ringed
   timeline dot it kept as structure, and withdraws its claim that the design has no experience
-  spine, which misread the file.
+  spine, which misread the file. DDR-046 adds a second page surface, `--color-surface-band`.
 * **DDR-031** keeps everything but its links' underline, which DDR-033 takes, per #113, and its
   declined scroll-triggered edge, which DDR-034 adopts, per #114, with its hairline row and its
   shadow row. DDR-042 takes the "no current-section state" it carried forward from DDR-010.
   DDR-045 adds a Home link before the sections' and takes its narrow link gap from 16px to 8px.
 * **DDR-042** keeps everything but its unmarked introduction: DDR-045 marks Home there.
+* **DDR-036** keeps its ring, its core, its line and its offset. DDR-046 takes the dot's fill, so the
+  inside of the ring is the band the timeline is on.
 * **DDR-033** keeps every contents link at rest without an underline. DDR-042 underlines the one
   link of the section the reader is in, as a state rather than as what identifies a link, per #133.
 * **DDR-043** keeps its new tab, its `noopener` and its two pills. DDR-044 takes its arrow: the tab
@@ -1291,9 +1295,9 @@ proportions.** At the design's 894px every value #120 lists matches within 1px.
 
 * **The page begins and ends with a section boundary.** `--page-padding-block` is
   `var(--space-boundary)`, 56px from the wide breakpoint and 42px below it, so the photo is 56px
-  below the contents bar. The narrow breakpoint no longer redefines it. The footer adds
-  `margin-block-start: var(--space-medium)`, so the last section is the design's 72px above its
-  hairline.
+  below the contents bar. The narrow breakpoint no longer redefines it. The last section is the
+  design's 72px above the footer's hairline — since DDR-046 all of it the last section's own
+  padding, `--page-padding-block-end`, where it was `main`'s padding and a 16px footer margin.
 * **The wide photo is sized by the viewport**, the Make file's `clamp(180px, 22vw, 300px)` written
   with rem bounds: 180px at 768px, 196.8px at 894px, 300px from 1364px up. It is the one length on
   the page measured from the viewport. The narrow photo is still `6rem`, and #68's float behaves
@@ -1308,6 +1312,31 @@ proportions.** At the design's 894px every value #120 lists matches within 1px.
 At 390 by 844 the controls end 842.5px down, just above the fold, where they ended 845.5px down. What
 remains different at 894px is outside #120: the name's leading, the controls' 8px gap against 10px,
 the footer's type and the skill groups' column gap.
+
+**#142 has landed, as DDR-046: the sections alternate between two surfaces.** Experience, skills and
+languages are on `--color-surface-band`, `#fcfbf9`. The introduction, projects, education and the
+footer are on the page's own off-white. `.section:nth-of-type(odd)` draws the band, so the
+alternation always starts with the first section after the introduction.
+
+Four things about it are worth knowing before touching the page's layout.
+
+* **`main` no longer draws the column.** It spans the window, and `main > *` pads each part by
+  `--page-inset`: the gutter, or half of what the window leaves beside the column. That is the
+  column `main` drew, to the pixel, and it is how a band reaches the window's edges with no `vw`.
+  **A new direct child of `main` gets the inset too.**
+* **Each band runs from its own divider to the next.** A section pads both halves of its boundary,
+  and the next takes no margin; the first keeps its margin below the introduction, and the last pads
+  its foot by `--page-padding-block-end`, 72px, down to the footer's hairline. The footer adds no
+  margin, and `main` pads only its top. The dividers stay, each on a change of band, and now span
+  the window.
+* **The timeline's dot has no fill**, so the inside of its ring is the band it is on.
+* **Paper is pixel-identical to the tree before**, six sheets in Edge and Firefox with background
+  graphics on and off. The band drops at the token layer, and the section's print block puts the
+  space back as the next section's margin, because a padding is not truncated at a page break.
+
+Every inked pairing is at least as good on the band as on the page, because the band is lighter.
+The muted ink is 4.60:1 there and passes 1.4.3. Against the tree before, every content box was
+identical at 320px, 390px, 894px, 1280px and 1536px at both text sizes, and nothing scrolls sideways.
 
 **#72 has landed: each section's `h2` carries its rule**, drawn by `section.module.css` as a
 pseudo-element on the heading rather than an element in `section.tsx`, so it is never in the

@@ -139,10 +139,9 @@ describe('Footer', () => {
   // DDR-040 closes DDR-028's open item: the design holds the footer 16px below the page, which ends
   // with a section boundary, so the last section stands 72px above the hairline. Paper keeps the
   // space it had, so the margin is dropped there as screen-only sizing.
-  it("sets the design's 16px above its hairline on screen and none on paper, per DDR-040", () => {
-    const print = styles.match(/@media print\s*\{([\s\S]*)\}\s*$/)?.[1] ?? '';
-
-    expect(styles).toMatch(/\.footer\s*\{[^}]*margin-block-start:\s*var\(--space-medium\);/);
-    expect(print).toMatch(/\.footer\s*\{\s*margin-block-start:\s*0;\s*\}/);
+  // DDR-040's 72px above the hairline is the last section's own since DDR-046, so its band runs
+  // down to the line; the footer adds no space above itself, on screen or on paper.
+  it('adds no space above its hairline, which the last section carries, per DDR-046', () => {
+    expect(styles).not.toMatch(/\.footer\s*\{[^}]*margin-block-start/);
   });
 });

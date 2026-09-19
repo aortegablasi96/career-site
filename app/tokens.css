@@ -137,6 +137,15 @@
   --color-surface: #f8f7f4;
   --color-surface-card: #ffffff;
 
+  /* The page's second surface, per DDR-046, which amends DDR-025's single page surface. The
+     sections alternate between it and the page's own off-white, starting with this one after the
+     introduction, so a reader scrolling quickly sees where one part ends and the next begins. It
+     is the off-white's own warm hue, about halfway to the card's white: close enough that the page
+     still reads as one surface, and far enough from white that a card and a pill on it keep their
+     edge. Every ink is darker than both surfaces, so each measures higher on this one than on the
+     page, and app/tokens.test.ts holds that. Paper drops it with every other surface. */
+  --color-surface-band: #fcfbf9;
+
   /* The contents bar's surface, per DDR-031, and the one translucent value in this palette. The
      design draws the bar in the page's own off-white at 96% over a 12px backdrop blur (node 2:6),
      so what shows through it is the page it is pinned over, softened rather than hidden. An opaque
@@ -350,12 +359,25 @@
 
      The space above and below the page is a section boundary, per DDR-040, which amends DDR-014:
      the design pads the introduction and every section by the same 56px, so the photo stands
-     that far below the contents bar and the last section ends that far above the footer, which adds
-     its own 16px. It follows the rhythm's factor rather than the narrow breakpoint, as every other
-     space between the page's blocks does. */
+     that far below the contents bar and the last section ends that far and 16px more above
+     the footer's hairline. It follows the rhythm's factor rather than the narrow breakpoint, as every other
+     space between the page's blocks does.
+
+     Since DDR-046 the column is drawn inside each of the page's parts rather than on `main`, so
+     that a section's band can reach the full width of the window while its content stays where it
+     was. The inset is the padding each part takes on either side: the gutter, or half of whatever
+     the window leaves beside the column, whichever is more. That is the same column `main` drew,
+     to the pixel. The percentage is the width of `main`, which is now the window's, and it is
+     resolved where the token is read.
+
+     The last section ends with the space the design puts between it and the footer's hairline,
+     72px, inside itself rather than below it, so its band runs down to that hairline. It is a
+     section boundary and the 16px DDR-040 gave the footer, which the footer no longer adds. */
   --content-width: 68.75rem;
   --page-gutter: var(--space-small);
+  --page-inset: max(var(--page-gutter), calc((100% - var(--content-width)) / 2));
   --page-padding-block: var(--space-boundary);
+  --page-padding-block-end: calc(var(--space-boundary) + var(--space-medium));
 
   /* The corner radius of a tinted or bordered surface, per DDR-013. Three values, one for each
      kind of surface the redesign has, so nothing rounds by an amount of its own: a small radius
@@ -653,12 +675,13 @@
     --space-summary: var(--space-flow);
     --space-controls: var(--space-flow);
 
-    /* Every surface is the paper. The page's own tint, the white card, the contents bar's, the tag's
+    /* Every surface is the paper. The page's own tint and its second one, per DDR-046, the white card, the contents bar's, the tag's
        tint and the three level tints all drop, so the sheet reads the same whether or not the browser prints
        background graphics, and no ink is spent on a colour. Nothing is lost: every tint in the
        redesign repeats the word it holds, per DDR-010. The inks they carry are not touched, and
        each is darker on white paper than on the page it was measured against. */
     --color-surface: transparent;
+    --color-surface-band: transparent;
     --color-surface-card: transparent;
     --color-surface-bar: transparent;
     --color-surface-tag: transparent;
@@ -704,6 +727,7 @@
 
     --content-width: none;
     --page-gutter: 0;
+    --page-inset: 0;
     --page-padding-block: 0;
 
     /* The photo prints beside the name at 28mm, the measure the UI Review on #43 gives it. It is

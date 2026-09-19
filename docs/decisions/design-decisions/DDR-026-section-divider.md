@@ -17,6 +17,8 @@ It **changes no token and adds none**. The hairline is `--color-border`, which D
 defines and already names this story in, and the space around it is DDR-013's section step, split
 rather than enlarged.
 
+**Amended by DDR-046 in two respects.** The divider spans the window, where it spanned the column, because each section's band now does. The half of the boundary above each divider is now the foot of the section before it, where it was the next section's margin, so each band runs from one divider to the next. The line, its colour, its place and the distance on each side are unchanged, and paper keeps the old arrangement.
+
 ## Context
 
 DDR-010 rejected the divider in a sentence, inside its decision about the page column:

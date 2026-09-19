@@ -148,7 +148,8 @@ describe('timeline styles', () => {
     expect(dot).toMatch(/inline-size:\s*var\(--timeline-dot-size\);/);
     expect(dot).toMatch(/block-size:\s*var\(--timeline-dot-size\);/);
     expect(dot).toMatch(/border:\s*var\(--timeline-dot-ring\) solid var\(--color-border-accent\);/);
-    expect(dot).toMatch(/background-color:\s*var\(--color-surface\);/);
+    // No fill of its own since DDR-046: the surface inside the ring is the band the timeline is on.
+    expect(dot).not.toMatch(/background/);
 
     const core = rule('.dot::before');
 

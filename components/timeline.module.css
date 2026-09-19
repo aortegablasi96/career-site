@@ -94,9 +94,11 @@ section > .row {
 }
 
 /* The dot is the design's ringed marker, per DDR-036 (node 2:260): a circle in the page's own
-   surface, a 3px ring of the line's tint around it, and an accent core at its centre. The surface
-   is what lets the line pass behind the dot rather than through it, and the core is what makes the
-   dot a stop on the path rather than a bead on it. The ring is a border, so it takes space the way
+   surface, a 3px ring of the line's tint around it, and an accent core at its centre. The core is
+   what makes the dot a stop on the path rather than a bead on it. The line runs into the ring and
+   out of it rather than behind it, so nothing is drawn under the dot and it takes no fill of its
+   own: the surface inside the ring is whichever band the timeline is on, per DDR-046, so the dot
+   looks the same on either. The ring is a border, so it takes space the way
    the design's ring does not; the offset above the dot, which is measured with the ring in it,
    accounts for that. The core is a pseudo-element, so the spine gains no element for it. */
 .dot {
@@ -108,7 +110,6 @@ section > .row {
   block-size: var(--timeline-dot-size);
   border: var(--timeline-dot-ring) solid var(--color-border-accent);
   border-radius: var(--radius-pill);
-  background-color: var(--color-surface);
 }
 
 .dot::before {
