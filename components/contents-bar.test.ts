@@ -5,9 +5,7 @@ import {
   glideStartTimeout,
   holdDestination,
   homeId,
-  isScrolled,
   markedSection,
-  scrolledThreshold,
   settleTimeout,
   subscribe,
 } from './contents-bar';
@@ -33,22 +31,6 @@ afterEach(() => {
 });
 
 describe('ContentsBar', () => {
-  // DDR-034: the design's threshold, from the Figma Make file's `window.scrollY > 60`.
-  it('takes the design’s 60px as its threshold', () => {
-    expect(scrolledThreshold).toBe(60);
-  });
-
-  it.each([
-    { scrollY: 0, scrolled: false },
-    { scrollY: 60, scrolled: false },
-    { scrollY: 61, scrolled: true },
-    { scrollY: 2000, scrolled: true },
-  ])('is scrolled at $scrollY px: $scrolled', ({ scrollY, scrolled }) => {
-    stubWindow(scrollY);
-
-    expect(isScrolled()).toBe(scrolled);
-  });
-
   // A passive listener cannot delay scrolling, which is the one thing a scroll listener must not do.
   // A resize is listened to as well, because it moves the sections without scrolling, per DDR-042.
   it('listens to scrolling and resizing passively, and stops when it is told to', () => {

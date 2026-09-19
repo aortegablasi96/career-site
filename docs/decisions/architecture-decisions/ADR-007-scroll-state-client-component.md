@@ -16,6 +16,13 @@ DDR-041. It is still the one Client Component, and everything else here stands.
 as `children`; it passes each section's id and word, and `ContentsBar` renders the list, so that it
 can mark the current section's link, per DDR-042. It is still the one Client Component.
 
+**Its first purpose is gone since DDR-048**, per #148: the bar draws its edge at all times, so
+`ContentsBar` no longer marks it with `data-scrolled` and the `scripting: none` rule is removed. The
+component still reads the scroll position, with the `useSyncExternalStore` subscription decided
+here, to mark the current section, per DDR-042 and ADR-009, and it still glides a link's scroll, per
+ADR-008. So the reason this record gives — the page needs to know something that exists only in the
+browser — still holds, and nothing else here changes.
+
 ## Context
 
 Issue #114 adopts the design's scroll-triggered edge on the contents bar: while the reader is at the

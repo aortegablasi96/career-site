@@ -527,10 +527,10 @@ ADR-007 again, in its boundary: the component renders the contents links itself,
 section's id and word, so that it can mark the current section's, per DDR-042. It is still the one
 Client Component. The next ADR is `010`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-047. The next DDR is
-`048`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-048. The next DDR is
+`049`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Twenty accepted records are superseded or amended **in part**, and each says so at the top and again
+Twenty-one accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -619,6 +619,8 @@ at the section concerned:
   shadow row. DDR-042 takes the "no current-section state" it carried forward from DDR-010.
   DDR-045 adds a Home link before the sections' and takes its narrow link gap from 16px to 8px.
 * **DDR-042** keeps everything but its unmarked introduction: DDR-045 marks Home there.
+* **DDR-034** keeps its hairline's colour and `--shadow-bar`. DDR-048 takes its two states: the edge
+  is drawn at all times, with no threshold, no transition and no script-off rule.
 * **DDR-036** keeps its ring, its core, its line and its offset. DDR-046 takes the dot's fill, so the
   inside of the ring is the band the timeline is on.
 * **DDR-033** keeps every contents link at rest without an underline. DDR-042 underlines the one
@@ -1082,6 +1084,12 @@ bar. Every heading the contents reach clears the bar from 320px up. At 300px and
 text it does not, which is below DDR-014's floor and recorded as a risk. Print is untouched in
 mechanism, because `nav` is hidden, and the sheet was not printed to PDF on this story; #99 printed it
 after, under DDR-032.
+
+**#148 has landed, as DDR-048: the contents bar draws its edge at all times.** One rule in
+`contents.module.css` draws the `--color-rule` hairline and `--shadow-bar`; `data-scrolled`,
+`isScrolled`, the `scripting: none` rule and `--contents-bar-transition` are gone. The bar is as
+tall as it was, because the 1px hairline was always there. What #114 says below about the edge's
+two states is history now; what it says about the Client Component still stands.
 
 **#114 has landed, as DDR-034 and ADR-007: the contents bar draws its edge only once the page has
 scrolled.** At rest its 1px hairline is transparent and it has no shadow; past 60px of scroll

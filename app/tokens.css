@@ -448,14 +448,14 @@
   --shadow-photo-glow: 0 8px 40px rgba(79, 70, 229, 0.18);
   --shadow-photo-inner: inset 0 4px 4px rgba(0, 0, 0, 0.25);
 
-  /* The contents bar's edge, per DDR-034, drawn beneath the bar once the page has scrolled and
-     content is passing under it, and not before. Ink and geometry are the design's own, from the
-     Figma Make file: a soft shadow 16px deep, 2px down, in the heading-dark `#1a1a2e` at 10%.
+  /* The contents bar's edge, per DDR-034, drawn beneath the bar at all times since DDR-048. Ink and
+     geometry are the design's own, from the Figma Make file: a soft shadow 16px deep, 2px down, in
+     the heading-dark `#1a1a2e` at 10%.
 
      It is a third elevation and, like DDR-021's two, named for the one element that may read it
-     rather than numbered. The bar is not raised the way a control is, a little off the page all the
-     time: it is lifted only while something passes beneath it, which is a different thing to say.
-     In px, as every other shadow is. */
+     rather than numbered. The bar is not raised the way a control is, a little off the page: it
+     floats over everything that passes beneath it, which is a different thing to say. In px, as
+     every other shadow is. */
   --shadow-bar: 0 2px 16px rgba(26, 26, 46, 0.1);
 
   /* The profile photo, per DDR-010, #71 and DDR-021: 96px wide below the wide breakpoint and, from
@@ -581,9 +581,6 @@
      at the least, where the links wrap to three rows at 200%; DDR-031 has the table. */
   --contents-bar-height: 3rem;
   --contents-bar-blur: 12px;
-  /* How long the bar takes to gain or lose its edge, per DDR-034: the design's 200ms. It is a time,
-     as `--hover-transition` is, and it is not read at all when the reader prefers reduced motion. */
-  --contents-bar-transition: 200ms;
   --contents-bar-clearance: calc(var(--contents-bar-height) + var(--space-flow));
 }
 
