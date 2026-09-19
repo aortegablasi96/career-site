@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-19
 
+**Amended by DDR-047 in one respect: the GitHub pill's hover fill.** It was GitHub's Gray 5,
+`#232925`, which was so close to the resting black that the pill barely changed. It is now
+`#3d423f`, a lighter grey in the same hue, and white on it is 10.25:1. Everything else here stands.
+
 **Supersedes in part DDR-043**: its visible cue. The arrow after the LinkedIn and GitHub labels is
 removed. Everything else in DDR-043 stands: the two pills still open a new tab with
 `rel="noopener"`, and the tab is still announced before the pill is chosen, now in the link's
@@ -62,7 +66,7 @@ named "LinkedIn, opens in a new tab" and "GitHub, opens in a new tab".**
   | `--color-surface-linkedin`      | the blue  | the LinkedIn pill's fill                                     |
   | `--color-surface-linkedin-hover`| `#004182` | a darker step of the same blue, under the pointer            |
   | `--color-surface-github`        | the black | the GitHub pill's fill                                       |
-  | `--color-surface-github-hover`  | `#232925` | GitHub's Gray 5, under the pointer                           |
+  | `--color-surface-github-hover`  | `#3d423f` | a lighter grey in GitHub's hue, under the pointer, per DDR-047 |
   | `--color-on-brand`              | `#ffffff` | the mark and the label on either fill                        |
   | `--color-google-ink`            | `#1f1f1f` | the Gmail pill's label, as Google's light button sets it     |
   | `--color-google-border`         | `#747775` | its edge, as Google's light button draws it                  |
@@ -87,7 +91,7 @@ named "LinkedIn, opens in a new tab" and "GitHub, opens in a new tab".**
 | White on LinkedIn's fill                 | 5.69:1  | 4.5:1 | Yes   |
 | White on LinkedIn's hover fill           | 10.10:1 | 4.5:1 | Yes   |
 | White on GitHub's fill                   | 18.58:1 | 4.5:1 | Yes   |
-| White on GitHub's hover fill             | 14.84:1 | 4.5:1 | Yes   |
+| White on GitHub's hover fill             | 10.25:1 | 4.5:1 | Yes   |
 | LinkedIn's blue on the page (paper)      | 5.31:1  | 4.5:1 | Yes   |
 | GitHub's black on the page (paper)       | 17.34:1 | 4.5:1 | Yes   |
 | Google's ink on white                    | 16.48:1 | 4.5:1 | Yes   |

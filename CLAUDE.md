@@ -527,10 +527,10 @@ ADR-007 again, in its boundary: the component renders the contents links itself,
 section's id and word, so that it can mark the current section's, per DDR-042. It is still the one
 Client Component. The next ADR is `010`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-046. The next DDR is
-`047`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-047. The next DDR is
+`048`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Nineteen accepted records are superseded or amended **in part**, and each says so at the top and again
+Twenty accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -625,6 +625,8 @@ at the section concerned:
   link of the section the reader is in, as a state rather than as what identifies a link, per #133.
 * **DDR-043** keeps its new tab, its `noopener` and its two pills. DDR-044 takes its arrow: the tab
   is announced in the link's accessible name instead, and nothing on the pill shows it.
+* **DDR-044** keeps every pill, fill, mark and label it decides. DDR-047 takes the GitHub pill's
+  hover fill: GitHub's Gray 5 barely changed the pill, so it is now a lighter grey in GitHub's hue.
 
 `Superseded` are DDR-001 to DDR-009, DDR-012, and DDR-016:
 
@@ -1184,6 +1186,14 @@ Four things about it are worth knowing before touching it.
 Measured against the tree before: the controls row never takes more rows at any width from 300px to
 900px or at 1280px and 1536px at either text size, and nothing scrolls sideways. The CV is six
 sheets in Edge and Firefox with identical text; the three marks print in their brands' colours.
+
+**#143 has landed, as DDR-047: the GitHub pill's hover is plainly visible.** Its hover fill was
+GitHub's Gray 5, `#232925`, only 1.25:1 from the resting black. It is now `#3d423f`, a grey in
+GitHub's own green-tinted hue, 1.81:1 from rest, where LinkedIn's hover is 1.78:1. White on it is
+10.25:1. GitHub publishes no grey between Gray 5 and Gray 4, and Gray 4 leaves the white label at
+3.02:1, so the owner chose an unpublished grey, as LinkedIn's hover blue already is.
+`app/tokens.test.ts` holds the GitHub step at or above LinkedIn's. Only the fill and border change,
+and hover never prints.
 
 **#141 has landed, as DDR-045: the contents bar begins with a Home link.** It is `#top`, the
 fragment HTML reserves for the top of the document, so it needs no anchor and lands at 0 with the
