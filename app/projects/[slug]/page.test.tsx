@@ -72,6 +72,35 @@ describe('a project’s view', () => {
     expect(await render('numisbook')).toMatch(/<a [^>]*href="\/#projects"[^>]*>.*Back to portfolio<\/a>/);
   });
 
+  // DDR-052: the projects on either side of this one, in the order the page shows them, and no
+  // link where there is no project to lead to.
+  it.each(projects.projects.map(({ slug }, index) => [slug, index]))(
+    '%s leads to the projects the page shows on either side of it',
+    async (slug, index) => {
+      const html = await render(slug as string);
+      const at = index as number;
+      const expected = [
+        projects.projects[at - 1] && {
+          href: `/projects/${projects.projects[at - 1]!.slug}`,
+          label: projects.view.neighbour(projects.view.previous, projects.projects[at - 1]!.name),
+        },
+        projects.projects[at + 1] && {
+          href: `/projects/${projects.projects[at + 1]!.slug}`,
+          label: projects.view.neighbour(projects.view.next, projects.projects[at + 1]!.name),
+        },
+      ].filter(Boolean);
+
+      const links = [...html.matchAll(/<a ([^>]*href="\/projects\/[^>]*)>/g)].map(
+        ([, attributes]) => ({
+          href: attributes.match(/href="([^"]+)"/)?.[1],
+          label: attributes.match(/aria-label="([^"]+)"/)?.[1],
+        }),
+      );
+
+      expect(links).toEqual(expected);
+    },
+  );
+
   it('closes with the site’s footer, outside the main landmark', async () => {
     const html = await render('numisbook');
 

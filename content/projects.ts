@@ -28,6 +28,9 @@ const liveSite = 'Live site';
  * and adds one thing: a caption under the picture, a few words from what its alternative text
  * already says, which the owner approved on #153.
  *
+ * Since #156 a view also leads to the projects on either side of this one, per DDR-052, which adds
+ * the two words those links show and what they are called. The order here is the order they follow.
+ *
  * Since #154 the page shows each project as a card leading to its view, per DDR-051, and a card says
  * what the project is in one sentence, its `summary`, rather than the full description. The four are
  * the ones the design proposes, which the owner approved on #154; each says nothing the full
@@ -96,6 +99,10 @@ export const projects: Projects = {
     // The name first, so a row of tabs shows which project each is, then the owner's, as the page's
     // own title leads with it.
     title: (project) => `${project} – ${introduction.name}`,
+    // The projects before and after this one, per DDR-052, in the order the page shows them.
+    previous: 'Previous',
+    next: 'Next',
+    neighbour: (direction, project) => `${direction} project: ${project}`,
   },
   more: (count) => `+${count}`,
 };

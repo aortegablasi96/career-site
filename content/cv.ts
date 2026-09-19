@@ -28,11 +28,13 @@ import type { Cv } from './types';
  * and a caption for its picture, and the projects gained the words their views show, per DDR-050.
  * It moved again with #154, because each project gained the one sentence its card shows, and the
  * projects the wording of a card's count of the technologies it leaves out, per DDR-051.
- * None of the nine is a fact ADR-005 lists as shared, so none of them moved the CV; the nine
+ * It moved again with #156, because the projects gained the two words a view's links to the
+ * projects on either side of it show, and what those links are called, per DDR-052.
+ * None of the ten is a fact ADR-005 lists as shared, so none of them moved the CV; the nine
  * differences are the ones #59 records, unchanged.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '4298a6424d0492ba32803724ab082790495aff51a2f81ab9c7eb4c01e588c063',
+  contentDigest: '5151068d04f8990fa01f7fbc1ff08e537d6c3309258affd09114c77d6dfec9d7',
 };

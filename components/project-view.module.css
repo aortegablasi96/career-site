@@ -212,6 +212,93 @@
   text-align: center;
 }
 
+/* The foot of the view, per DDR-052: the projects on either side of this one, below the design's
+   hairline (node 59:117). The divider is a border on this block, as a section's is on the section
+   it opens, so it is never in the accessibility tree and drops on paper with `--color-border`. The
+   design's 56px above it is a section boundary and its 40px below is the heading step, which is
+   how the page already spaces a line from what it separates.
+
+   One column below the wide breakpoint, in the markup order — the project before, then the one
+   after — and two equal halves from it, 24px apart, as the design draws them. A half's minimum is
+   zero, so a long project name can never widen it. */
+.neighbours {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--project-neighbour-gap);
+  margin-block-start: var(--space-boundary);
+  border-block-start: 1px solid var(--color-border);
+  padding-block-start: var(--space-heading);
+}
+
+/* A card, as the design draws it (node 59:120): white, edged by the hairline at the large radius,
+   16px in from its edge all round, with the chevron 12px from the words. It carries no shadow,
+   which is the design's and keeps DDR-020's elevation where it is. The whole card is the link, so
+   it is not underlined: what says it is one is the card, its chevron and its answer to the
+   pointer. Its ink is the heading's, which the name takes and the chevron is drawn in. */
+.neighbour {
+  display: flex;
+  gap: var(--project-neighbour-mark-gap);
+  align-items: center;
+  padding: var(--space-medium);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background-color: var(--color-surface-card);
+  color: var(--color-text-heading);
+  text-decoration-line: none;
+}
+
+/* The project after this one stands at the right of its card, as the design draws it. The one
+   before it is its mirror, at the left, which is where a card's content already sits. */
+.next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+/* The empty half beside the first project's link, which is the design's own (node 59:119). Below
+   the wide breakpoint the halves are one column, where an empty box would be a gap above the card,
+   so it is drawn only where there are two halves to keep. */
+.half {
+  display: none;
+}
+
+/* The two lines of a card: the direction above the project's name. `anywhere` keeps a long name
+   inside the card, as the view's pills and the footer's addresses keep theirs: measured at 320px
+   with text at 200%, "Portfolio" alone is wider than the 136px the card leaves it, and without it
+   the name runs out over the card's edge. */
+.neighbourText {
+  display: flex;
+  flex-direction: column;
+  overflow-wrap: anywhere;
+}
+
+/* "NEXT", set as the view's other label is: 10px bold capitals, tracked, in the faint ink
+   (node 59:123). */
+.direction {
+  color: var(--color-text-faint);
+  font-size: var(--font-size-xxxx-small);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-body);
+  letter-spacing: var(--letter-spacing-x-loose);
+  text-transform: uppercase;
+}
+
+/* The chevron, 16px beside the 14px name in the design, so it is a step above it rather than a
+   length of its own, as the way back's is. It never shrinks, so the name wraps before it does. */
+.neighbourMark {
+  display: inline-flex;
+  flex-shrink: 0;
+  font-size: var(--font-size-large);
+}
+
+/* Under the pointer and on keyboard focus, the card takes the accent's tint and edge and its words
+   and chevron the accent, as the view's outlined control does, per DDR-035. */
+.neighbour:hover,
+.neighbour:focus-visible {
+  border-color: var(--color-border-accent-hover);
+  background-color: var(--color-surface-hover);
+  color: var(--color-accent);
+}
+
 /* From here the text and the picture stand side by side, each as wide as the other, both from the
    top, and the name takes the design's size. This is the one width a component may write, per
    DDR-014. */
@@ -224,5 +311,14 @@
 
   .name {
     font-size: var(--font-size-project-title);
+  }
+
+  .neighbours {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* The empty half takes its track, so the project after this one keeps the right one. */
+  .half {
+    display: block;
   }
 }

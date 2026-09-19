@@ -24,8 +24,21 @@ export function generateStaticParams(): { slug: string }[] {
   return projects.projects.map(({ slug }) => ({ slug }));
 }
 
+/**
+ * The project this address names, with the ones the page shows on either side of it, per DDR-052.
+ * The first has nothing before it and the last nothing after it, and each view shows a link only
+ * where there is a project to lead to.
+ */
 function projectAt(slug: string) {
-  return projects.projects.find((project) => project.slug === slug) ?? notFound();
+  const index = projects.projects.findIndex((project) => project.slug === slug);
+
+  if (index < 0) notFound();
+
+  return {
+    project: projects.projects[index]!,
+    previous: projects.projects[index - 1],
+    next: projects.projects[index + 1],
+  };
 }
 
 // The browser tab and a link preview name the project, per #153, and describe it in its own words.
@@ -34,14 +47,14 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { name, description } = projectAt((await params).slug);
+  const { name, description } = projectAt((await params).slug).project;
   const title = projects.view.title(name);
 
   return { title, description, openGraph: { title, description } };
 }
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
-  const project = projectAt((await params).slug);
+  const { project, previous, next } = projectAt((await params).slug);
 
   return (
     <>
@@ -59,6 +72,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           project={project}
           strings={projects.view}
           backHref={`${page}#${sections.find(({ title }) => title === projects.title)!.id}`}
+          previous={previous}
+          next={next}
         />
       </main>
       {/* The site's own footer, as the page has it, per DDR-028. */}

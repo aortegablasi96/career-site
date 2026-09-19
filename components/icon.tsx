@@ -3,12 +3,13 @@ import type { ContactIcon } from '@/content/types';
 /**
  * The marks the introduction's controls carry: one per contact address, and one for the CV. Since
  * DDR-050 a project's view carries two more: the chevron before its way back to the projects, and
- * the arrow out of a box on each link that leaves the site.
+ * the arrow out of a box on each link that leaves the site. DDR-052 adds the chevron's mirror, on
+ * the link to the project after this one.
  */
-export type IconName = ContactIcon | 'download' | 'back' | 'external';
+export type IconName = ContactIcon | 'download' | 'back' | 'forward' | 'external';
 
 /** The marks drawn as lines rather than filled, all on the 24 unit grid. */
-const lineDrawings: readonly IconName[] = ['download', 'back', 'external'];
+const lineDrawings: readonly IconName[] = ['download', 'back', 'forward', 'external'];
 
 /**
  * A mark beside a control's text, per DDR-010.
@@ -98,8 +99,11 @@ const paths: Record<IconName, React.ReactNode> = {
       <path d="m7 10 5 5 5-5" />
     </>
   ),
-  // A chevron pointing back, before "Back to portfolio".
+  // A chevron pointing back, before "Back to portfolio" and on the link to the project before this
+  // one.
   back: <path d="m15 18-6-6 6-6" />,
+  // Its mirror, after the name of the project after this one.
+  forward: <path d="m9 18 6-6-6-6" />,
   // An arrow leaving a box: the link goes to another site.
   external: (
     <>
