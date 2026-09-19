@@ -263,7 +263,7 @@
        surface-linkedin       the LinkedIn pill's fill; white on it is 5.69:1
        surface-linkedin-hover a darker step of the same blue under the pointer; white is 10.10:1
        surface-github         the GitHub pill's fill; white on it is 18.58:1
-       surface-github-hover   GitHub's Gray 5 under the pointer; white on it is 14.84:1
+       surface-github-hover   a grey in GitHub's hue, lighter under the pointer, per DDR-047; white is 10.25:1
        on-brand               the mark and the label on either fill
 
      The two brand colours are inks: on paper each sets its mark and its label, at 5.31:1 and
@@ -274,7 +274,7 @@
   --color-surface-linkedin: var(--color-linkedin);
   --color-surface-linkedin-hover: #004182;
   --color-surface-github: var(--color-github);
-  --color-surface-github-hover: #232925;
+  --color-surface-github-hover: #3d423f;
   --color-on-brand: #ffffff;
 
   /* The email pill is Gmail's own button, per DDR-044, since the address is on gmail.com: Google's

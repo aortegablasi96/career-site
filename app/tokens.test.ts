@@ -403,7 +403,7 @@ describe('colour tokens', () => {
     { foreground: 'on-brand', background: 'surface-linkedin', asked: 4.5, recorded: 5.69, meets: true },
     { foreground: 'on-brand', background: 'surface-linkedin-hover', asked: 4.5, recorded: 10.1, meets: true },
     { foreground: 'on-brand', background: 'surface-github', asked: 4.5, recorded: 18.58, meets: true },
-    { foreground: 'on-brand', background: 'surface-github-hover', asked: 4.5, recorded: 14.84, meets: true },
+    { foreground: 'on-brand', background: 'surface-github-hover', asked: 4.5, recorded: 10.25, meets: true },
     { foreground: 'linkedin', background: 'surface', asked: 4.5, recorded: 5.31, meets: true },
     { foreground: 'github', background: 'surface', asked: 4.5, recorded: 17.34, meets: true },
     // The email pill as Gmail's button, per DDR-044: its label on the white and on the hover fill,
@@ -428,6 +428,18 @@ describe('colour tokens', () => {
       expect(contrast(color(foreground), color(background))).toBeCloseTo(recorded, 2);
     },
   );
+
+  // DDR-047: the GitHub pill's hover is as easy to see as the LinkedIn pill's. Between two fills,
+  // "easy to see" is how far apart they are, so the GitHub pair is held at least as far apart as the
+  // LinkedIn pair, where Gray 5 left it at 1.25:1 against LinkedIn's 1.78:1.
+  it('changes the GitHub pill under the pointer at least as plainly as the LinkedIn pill, per DDR-047', () => {
+    const linkedin = contrast(color('surface-linkedin'), color('surface-linkedin-hover'));
+    const github = contrast(color('surface-github'), color('surface-github-hover'));
+
+    expect(linkedin).toBeCloseTo(1.78, 2);
+    expect(github).toBeCloseTo(1.81, 2);
+    expect(github).toBeGreaterThanOrEqual(linkedin);
+  });
 
   // DDR-046 adds a second page surface, lighter than the first, and every ink and mark measured on
   // the page's surface is darker than both. So each pairing measures at least as well on the band
