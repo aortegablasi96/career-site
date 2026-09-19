@@ -23,20 +23,22 @@ const sections = [
 
 describe('Contents', () => {
   it('is navigation with an accessible name, so assistive technology can announce it', () => {
-    const html = renderToStaticMarkup(<Contents label="Sections" sections={sections} />);
+    const html = renderToStaticMarkup(<Contents label="Sections" home="Home" sections={sections} />);
 
     expect(html).toMatch(/^<nav aria-label="Sections"/);
   });
 
   // DDR-031: a link shows the design's word for its section, which is not always the heading.
-  it('links to each section by the word its content gives the link, in order', () => {
-    const html = renderToStaticMarkup(<Contents label="Sections" sections={sections} />);
+  // DDR-045: the first link is Home, which leads to the top of the page, before every section.
+  it('links to the top of the page, then to each section by its content’s word, in order', () => {
+    const html = renderToStaticMarkup(<Contents label="Sections" home="Home" sections={sections} />);
     const links = [...html.matchAll(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(([, href, text]) => ({
       href,
       text,
     }));
 
     expect(links).toEqual([
+      { href: '#top', text: 'Home' },
       { href: '#experience', text: 'Experience' },
       { href: '#education', text: 'Education' },
     ]);
@@ -91,7 +93,7 @@ describe('Contents', () => {
 
   // DDR-034: the server renders the bar at rest, which is what a reader without script keeps.
   it('renders the bar at rest, unmarked, until script has read the scroll position', () => {
-    const html = renderToStaticMarkup(<Contents label="Sections" sections={sections} />);
+    const html = renderToStaticMarkup(<Contents label="Sections" home="Home" sections={sections} />);
 
     expect(html).not.toMatch(/data-scrolled/);
   });
@@ -123,7 +125,7 @@ describe('Contents', () => {
   // DDR-042: the static HTML marks no section, so a reader without script gets the bar as it was,
   // and a reader with script gets the mark once the scroll position has been read.
   it('marks no link as current until script has read the scroll position, per DDR-042', () => {
-    const html = renderToStaticMarkup(<Contents label="Sections" sections={sections} />);
+    const html = renderToStaticMarkup(<Contents label="Sections" home="Home" sections={sections} />);
 
     expect(html).not.toMatch(/aria-current/);
   });
@@ -146,11 +148,20 @@ describe('Contents', () => {
   // Client Component, per ADR-009, or the items would be sent again as client props.
   it('hands the bar each section’s id and word and nothing else, per ADR-009', () => {
     const withItems = sections.map((section) => ({ ...section, items: [<p key="x">Item</p>] }));
-    const bar = Contents({ label: 'Sections', sections: withItems }) as ReactElement<{
+    const bar = Contents({ label: 'Sections', home: 'Home', sections: withItems }) as ReactElement<{
       sections: unknown;
     }>;
 
     expect(bar.props.sections).toEqual(sections);
+  });
+
+  // DDR-045: Home's word is the one string the bar is handed that names no section.
+  it('hands the bar the Home link’s word, per DDR-045', () => {
+    const bar = Contents({ label: 'Sections', home: 'Home', sections }) as ReactElement<{
+      home: unknown;
+    }>;
+
+    expect(bar.props.home).toBe('Home');
   });
 
   // DDR-035: the design takes a contents link to the accent under the pointer and on keyboard
@@ -178,7 +189,16 @@ describe('Contents', () => {
     expect(rule('.list')).toMatch(/row-gap:\s*var\(--space-small\);/);
   });
 
+  // DDR-045, amending DDR-031: with Home as a sixth link, the narrow gap is the small step, so the
+  // bar is never taller than it was with five links; from the wide breakpoint it is 32px, as it was.
+  it('holds its links a small step apart below the wide breakpoint and a large one from it', () => {
+    expect(rule('.list')).toMatch(/column-gap:\s*var\(--space-small\);/);
+    expect(styles).toMatch(
+      /@media \(min-width: 48em\)\s*\{\s*\.list\s*\{\s*column-gap:\s*var\(--space-large\);\s*\}\s*\}/,
+    );
+  });
+
   it('renders nothing when there are no sections to list', () => {
-    expect(renderToStaticMarkup(<Contents label="Sections" sections={[]} />)).toBe('');
+    expect(renderToStaticMarkup(<Contents label="Sections" home="Home" sections={[]} />)).toBe('');
   });
 });

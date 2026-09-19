@@ -19,18 +19,24 @@ import { ContentsBar } from './contents-bar';
  * it each section's id and word and nothing else: the page's sections also carry their items,
  * which are server-rendered elements and must not cross into client code.
  *
- * With no sections there is nothing to list, so nothing renders.
+ * The bar's first link is Home, per DDR-045, which returns the reader to the top of the page. Its
+ * word is in `content/` beside the bar's accessible name, since it names no section.
+ *
+ * With no sections there is nothing to list, so nothing renders — not even Home, since a page of
+ * nothing but its introduction has nowhere else to return from.
  */
 export function Contents({
   label,
+  home,
   sections,
 }: {
   label: string;
+  home: string;
   sections: readonly { id: string; link: string }[];
 }) {
   if (sections.length === 0) {
     return null;
   }
 
-  return <ContentsBar label={label} sections={sections.map(({ id, link }) => ({ id, link }))} />;
+  return <ContentsBar label={label} home={home} sections={sections.map(({ id, link }) => ({ id, link }))} />;
 }

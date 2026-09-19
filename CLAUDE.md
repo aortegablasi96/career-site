@@ -527,10 +527,10 @@ ADR-007 again, in its boundary: the component renders the contents links itself,
 section's id and word, so that it can mark the current section's, per DDR-042. It is still the one
 Client Component. The next ADR is `010`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-044. The next DDR is
-`045`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-045. The next DDR is
+`046`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Seventeen accepted records are superseded or amended **in part**, and each says so at the top and again
+Eighteen accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -614,6 +614,8 @@ at the section concerned:
 * **DDR-031** keeps everything but its links' underline, which DDR-033 takes, per #113, and its
   declined scroll-triggered edge, which DDR-034 adopts, per #114, with its hairline row and its
   shadow row. DDR-042 takes the "no current-section state" it carried forward from DDR-010.
+  DDR-045 adds a Home link before the sections' and takes its narrow link gap from 16px to 8px.
+* **DDR-042** keeps everything but its unmarked introduction: DDR-045 marks Home there.
 * **DDR-033** keeps every contents link at rest without an underline. DDR-042 underlines the one
   link of the section the reader is in, as a state rather than as what identifies a link, per #133.
 * **DDR-043** keeps its new tab, its `noopener` and its two pills. DDR-044 takes its arrow: the tab
@@ -1177,6 +1179,23 @@ Four things about it are worth knowing before touching it.
 Measured against the tree before: the controls row never takes more rows at any width from 300px to
 900px or at 1280px and 1536px at either text size, and nothing scrolls sideways. The CV is six
 sheets in Edge and Firefox with identical text; the three marks print in their brands' colours.
+
+**#141 has landed, as DDR-045: the contents bar begins with a Home link.** It is `#top`, the
+fragment HTML reserves for the top of the document, so it needs no anchor and lands at 0 with the
+introduction in full view below the bar. Its word is `home` in `content/contents.ts`, and
+`ContentsBar` renders it before the sections' links, so it glides, is held on its journey and is
+marked through the same code. `markedSection` returns `homeId` wherever DDR-042's rule finds no
+section, so Home is marked in the introduction; the server still marks nothing.
+
+Two things about it are worth knowing before touching it.
+
+* **No element may have the id `top`**, or Home goes there instead. `app/page.test.tsx` holds it.
+* **The narrow link gap is 8px now, and it has no slack left.** At 16px a sixth link grew the bar
+  by a row at 320px, 330px, 410px and 420px with text at 200%. At 8px, swept every 10px from 300px
+  to 900px at both sizes, the bar is never taller than it was with five links, nothing scrolls
+  sideways and no pair fails 2.5.8. A new label or section means rerunning that sweep.
+
+Paper is untouched: under print emulation every box is identical to the tree before.
 
 **#115 has landed, as DDR-035: every link and control answers the pointer.** A contact pill takes
 `--color-surface-hover` and `--color-border-accent-hover`, the CV control darkens to

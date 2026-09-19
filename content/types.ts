@@ -137,6 +137,8 @@ export interface Introduction {
 export interface Contents {
   /** The accessible name of the navigation, so assistive technology can announce it. */
   label: string;
+  /** The word the bar's first link shows, which returns the reader to the top of the page. */
+  home: string;
 }
 
 /** A month, as its machine-readable value: the year and the month's two digits, such as "2024-10". */

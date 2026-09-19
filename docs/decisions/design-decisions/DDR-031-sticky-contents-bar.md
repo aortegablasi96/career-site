@@ -25,6 +25,11 @@ state, no animation, not printed, and no mobile "Sections" toggle.
   top of the window. The offset moves from each section's `scroll-margin` to the root's
   `scroll-padding`, so it covers keyboard focus as well.
 
+**Amended by DDR-045 in two respects**: the bar begins with a Home link, which leads to the top of
+the page rather than to a section, and the link gap below the wide breakpoint is 8px rather than
+16px, so that six links wrap no more than five did. The "Link gap" row and the bullet on it below are
+the places it takes.
+
 **Amended by DDR-033 in one respect**: the contents links are not underlined, as the design draws
 them. The "Link ink" row and the bullet "The links keep their underline" below are the two places it
 takes; the rest of this record stands.

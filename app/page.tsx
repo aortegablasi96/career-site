@@ -86,7 +86,7 @@ export default function HomePage() {
       {/* The contents bar comes first, above main, per DDR-031: it is pinned to the top of the
           window and spans it, as the design draws it above everything else on the page, so it
           belongs to neither the introduction nor the column main sets. */}
-      <Contents label={contents.label} sections={sections} />
+      <Contents label={contents.label} home={contents.home} sections={sections} />
       <main>
         <Introduction introduction={introduction} cv={cv} />
         {sections.map(({ id, title, items }) => (
