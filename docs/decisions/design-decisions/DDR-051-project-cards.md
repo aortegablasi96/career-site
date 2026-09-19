@@ -192,9 +192,9 @@ Risks:
 * A project whose media is a video shows only its poster on the card. Nothing on the card says it
   is a video, although the design draws a play icon. When the first video lands, whether to mark it
   is a decision.
-* **The project view has the same Firefox fault the cards had.** Its figure is a grid of one track,
-  and Firefox leaves 101.75px empty between the lead picture and its caption at 1195px. That is
-  #153's, and it is recorded here because it was found here.
+* **The project view had the same Firefox fault the cards had.** Its figure was a grid of one track,
+  and Firefox left 101.75px empty between the lead picture and its caption at 1195px. It was found
+  here and fixed on #159 the same way: the figure is now a flex column.
 * A longer name, sentence or tag changes how a card wraps. Rerun the sweep below.
 
 ### Measured on #154

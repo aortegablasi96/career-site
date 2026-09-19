@@ -183,19 +183,22 @@
   background-color: var(--color-surface-hover);
 }
 
-/* The picture and its caption, in one track that is the column's width whatever the picture's own,
-   so the picture can stretch to it without widening it. */
+/* The picture and its caption, in a column that is its grid track's width whatever the picture's
+   own, so the picture can stretch to it without widening it. It is a flex column rather than a grid
+   of one track: measured on #159, Firefox sizes a grid row from the picture's own height rather than
+   the 16:10 it is drawn at, and left 101.75px empty between the picture and its caption, as it did
+   under each project card, per DDR-051. */
 .figure {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   margin: 0;
 }
 
 /* The lead picture, as wide as its column, in the design's 16:10 and at the large radius (node
-   59:71). A 4:3 picture is cropped to it from the centre rather than distorted. It stretches to
-   its column as a grid item, so no width is written for it. */
+   59:71). A 4:3 picture is cropped to it from the centre rather than distorted. It stretches
+   across the column, so no width is written for it. */
 .media {
-  justify-self: stretch;
+  align-self: stretch;
   aspect-ratio: var(--project-view-media-ratio);
   border-radius: var(--radius-large);
   object-fit: cover;
