@@ -279,6 +279,7 @@ describe('colour tokens', () => {
     expect([...colors.keys()]).toEqual([
       'surface',
       'surface-card',
+      'surface-band',
       'surface-bar',
       'text-heading',
       'text',
@@ -427,6 +428,28 @@ describe('colour tokens', () => {
       expect(contrast(color(foreground), color(background))).toBeCloseTo(recorded, 2);
     },
   );
+
+  // DDR-046 adds a second page surface, lighter than the first, and every ink and mark measured on
+  // the page's surface is darker than both. So each pairing measures at least as well on the band
+  // as DDR-025 records on the page, and no failure grows; the ones that fail still fail.
+  it('measures every pairing on the page at least as well on the band, per DDR-046', () => {
+    for (const { foreground } of pairings.filter(({ background }) => background === 'surface')) {
+      expect(contrast(color(foreground), color('surface-band')), foreground).toBeGreaterThanOrEqual(
+        contrast(color(foreground), color('surface')),
+      );
+    }
+  });
+
+  // The band is close to the page's off-white and short of the card's white: it reads as the same
+  // page, and a white card or pill on it keeps its edge.
+  it('draws the band between the page and the card, per DDR-046', () => {
+    const toPage = contrast(color('surface-band'), color('surface'));
+    const toCard = contrast(color('surface-card'), color('surface-band'));
+
+    expect(toPage).toBeCloseTo(1.036, 3);
+    expect(toCard).toBeCloseTo(1.034, 3);
+    expect(contrast(color('border'), color('surface-band'))).toBeCloseTo(1.19, 2);
+  });
 
   // The measurement above says what a pairing is, not whether it is enough. This says which rows
   // the records admit are failures, by name, so another cannot join them quietly and none of them
@@ -820,6 +843,16 @@ describe('responsive tokens', () => {
     expect(atBreakpoint.has('page-padding-block')).toBe(false);
   });
 
+  // DDR-046 draws the column inside each of the page's parts, so a section's band can span the
+  // window: the gutter, or half of what the window leaves beside the column, which is the column
+  // `main` drew before. The page's foot is the last section's, a boundary and the 16px DDR-040 gave
+  // the footer, so its band runs down to the footer's hairline.
+  it('insets each part to the column, and pads the page’s foot by the space above the footer, per DDR-046', () => {
+    expect(token('page-inset')).toBe('max(var(--page-gutter), calc((100% - var(--content-width)) / 2))');
+    expect(token('page-padding-block-end')).toBe('calc(var(--space-boundary) + var(--space-medium))');
+    expect(atBreakpoint.has('page-inset')).toBe(false);
+  });
+
   it.each(adaptedCounts)(
     'sets --$role to $narrow below the breakpoint and $wide from it, as DDR-010 records',
     ({ role, narrow, wide }) => {
@@ -860,6 +893,7 @@ const forPaper = [
   { name: 'space-summary', value: 'var(--space-flow)' },
   { name: 'space-controls', value: 'var(--space-flow)' },
   { name: 'color-surface', value: 'transparent' },
+  { name: 'color-surface-band', value: 'transparent' },
   { name: 'color-surface-card', value: 'transparent' },
   { name: 'color-surface-bar', value: 'transparent' },
   { name: 'color-surface-tag', value: 'transparent' },
@@ -882,6 +916,7 @@ const forPaper = [
   { name: 'shadow-bar', value: 'none' },
   { name: 'content-width', value: 'none' },
   { name: 'page-gutter', value: '0' },
+  { name: 'page-inset', value: '0' },
   { name: 'page-padding-block', value: '0' },
   { name: 'photo-width', value: '28mm' },
 ];

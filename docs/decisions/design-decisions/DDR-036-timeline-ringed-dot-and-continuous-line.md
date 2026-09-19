@@ -20,6 +20,8 @@ own node, 2:89, a 2px `#c7d2fe` line behind all five rows. Nothing DDR-025 decid
 moves: the ring and the line are `--color-border-accent`, and the core is `--color-accent`, both
 already in its palette and already measured.
 
+**Amended by DDR-046 in one respect: the dot has no fill.** The surface inside the ring is whichever band the timeline is on, so the dot looks the same on either. Nothing is drawn under the dot, so there is nothing for a fill to cover.
+
 ## Context
 
 Epic #70 closes the gaps between the page and the Figma design. On 2026-09-17 the owner decided

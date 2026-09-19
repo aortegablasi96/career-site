@@ -25,6 +25,8 @@ rather than by a rule. Its **layout does not**: the single column as wide as the
 page wide enough to place things beside each other, so `--content-width` stops equalling
 `--measure` and the measure now governs running text alone. Three corner radii are added.
 
+**Amended by DDR-046 in how the column is drawn.** The column is no longer a maximum width on `main`. Each of `main`'s parts pads itself to it instead, by `--page-inset`: the gutter, or half of what the window leaves beside the column. It is the same column to the pixel. That lets a section's band reach the edges of the window.
+
 ## Context
 
 Epic #42 adopts the redesign the owner made in Figma, and the UI Review on #43 is its contract.

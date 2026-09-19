@@ -116,12 +116,12 @@ describe('base typography', () => {
 // DDR-013 lays the page out from the spacing tokens alone, and relies on the section step, with the
 // section's heading, to show where one section ends and the next begins.
 describe('base layout', () => {
-  it('sets the page in a single centred column, as wide as the content width', () => {
-    const main = rule('main');
-
-    expect(main).toMatch(/max-inline-size:\s*var\(--content-width\);/);
-    expect(main).toMatch(/margin-inline:\s*auto;/);
-    expect(main).toMatch(/padding-inline:\s*var\(--page-gutter\);/);
+  // Since DDR-046 `main` spans the window, so a section's band can, and each of its parts draws the
+  // column inside itself by the page's inset: the gutter, or half of what the window leaves beside
+  // the column. That is the column `main` drew before, to the pixel.
+  it('sets the page in a single centred column, as wide as the content width, inside each part', () => {
+    expect(rule('main')).not.toMatch(/max-inline-size|margin-inline|padding-inline/);
+    expect(rule('main > *')).toMatch(/padding-inline:\s*var\(--page-inset\);/);
   });
 
   it('holds running text to the measure rather than to the column, per DDR-013', () => {
@@ -158,8 +158,11 @@ describe('responsive base styles', () => {
     expect(rule(heading)).toMatch(new RegExp(`font-size:\\s*var\\(--font-size-${role}\\);`));
   });
 
-  it('sets the space above and below the page by the page padding, so it tightens with the gutter', () => {
-    expect(rule('main')).toMatch(/padding-block:\s*var\(--page-padding-block\);/);
+  // The page's foot is the last section's own since DDR-046, so its band reaches the footer; the
+  // section stylesheet writes it, and `main` pads its top alone.
+  it('sets the space above the page by the page padding, and leaves its foot to the last section', () => {
+    expect(rule('main')).toMatch(/padding-block-start:\s*var\(--page-padding-block\);/);
+    expect(rule('main')).not.toMatch(/padding-block(?:-end)?:/);
   });
 
   it('writes no width media query at all, so a page-wide adaptation stays in the tokens', () => {

@@ -14,9 +14,21 @@
  * through :where(), so this splits the space it sets rather than fighting it. The first section
  * takes the same boundary below the introduction, as the design's first divider does.
  *
- * Paper draws no divider, and there is no print rule here: DDR-015 makes --color-border
+ * Paper draws no divider, and there is no print rule for it here: DDR-015 makes --color-border
  * transparent at the token layer, as it does the heading's rule and the timeline's spine. The
  * space stays, which is the boundary a sheet already had.
+ *
+ * Since DDR-046 the sections alternate between two surfaces, starting with the band after the
+ * introduction, so each section is a band from its own divider to the next one. That is why both
+ * halves of the boundary are now inside a section: the half below its divider at its top, as
+ * before, and the half above the next divider at its foot, where it was the next section's margin.
+ * The distance between two sections, and where the line falls in it, are exactly what they were.
+ * The first section keeps its margin, because the introduction has no band to carry it, and the
+ * last pads its foot down to the footer's hairline, so its band meets that line as every other
+ * band meets a divider.
+ *
+ * The section spans the window, as `main` does, and app/globals.css draws the column inside it, so
+ * the band and the divider both reach the edges of the window, as the footer's hairline does.
  */
 .section {
   /* When the contents move to a section, its opening lands below the contents bar with the flow
@@ -24,10 +36,26 @@
      root's scroll padding in app/globals.css since DDR-031, which covers keyboard focus as well as
      the contents; a scroll margin here as well would add the two together. The divider and the
      space below it are inside the section, so what the reader arrives at is the boundary and then
-     the heading. */
+     the heading — and, since DDR-046, the change of band, which falls on the divider. */
   margin-block-start: var(--space-boundary);
   border-block-start: 1px solid var(--color-border);
-  padding-block-start: var(--space-boundary);
+  padding-block: var(--space-boundary);
+}
+
+.section + .section {
+  margin-block-start: 0;
+}
+
+.section:last-child {
+  padding-block-end: var(--page-padding-block-end);
+}
+
+/* The lighter surface, on the first section after the introduction and every second one from
+   there: experience, skills and languages. The others are on the page's own off-white, as the
+   introduction and the footer are. Counted among the sections alone, so the introduction, which is
+   a header, never shifts the count. Paper drops it at the token layer. */
+.section:nth-of-type(odd) {
+  background-color: var(--color-surface-band);
 }
 
 /*
@@ -91,5 +119,18 @@
      Firefox ignores break-after: avoid on the heading, but honours this, per DDR-008 (#23). */
   .opening {
     break-inside: avoid;
+  }
+
+  /* Paper keeps the boundary where it was before DDR-046: above each divider as the next section's
+     margin rather than at the foot of the section before, and nothing below the last. There is no
+     band to carry on a sheet, and a margin is truncated at a page break where a padding is not, so
+     moving it would move the breaks. */
+  .section,
+  .section:last-child {
+    padding-block-end: 0;
+  }
+
+  .section + .section {
+    margin-block-start: var(--space-boundary);
   }
 }

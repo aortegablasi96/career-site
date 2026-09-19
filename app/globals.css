@@ -159,13 +159,20 @@ a {
    a narrow screen. Running text is held to the measure by the rule above rather than by the
    column. On the narrowest viewports the gutter is halved, per DDR-014. The page begins and ends
    with a section boundary, per DDR-040: the design pads the introduction and every section by the
-   same 56px, so the photo stands that far below the contents bar and the last section ends that far
-   above the footer. */
+   same 56px, so the photo stands that far below the contents bar.
+
+   Since DDR-046 `main` spans the window and each of its parts draws the column inside itself, as
+   the contents bar and the footer already do, so that a section's band can reach the edges of the
+   window while its content stays in the column. The inset is the gutter or half of what the window
+   leaves beside the column, so the column is the one `main` drew, to the pixel. The page's foot is
+   the last section's own, so that its band runs down to the footer's hairline; section.module.css
+   writes it. */
 main {
-  max-inline-size: var(--content-width);
-  margin-inline: auto;
-  padding-block: var(--page-padding-block);
-  padding-inline: var(--page-gutter);
+  padding-block-start: var(--page-padding-block);
+}
+
+main > * {
+  padding-inline: var(--page-inset);
 }
 
 /*
@@ -190,8 +197,9 @@ main {
 /* A major section is set apart by the section space, the design's 56px on each side of its
    divider, per DDR-039. Since DDR-026 the boundary carries the design's hairline, which
    section.module.css draws: it splits this space in half around the line rather than adding to it,
-   so the distance between two sections is still the one set here. There is no background either
-   way. */
+   so the distance between two sections is still the one set here. Since DDR-046 alternate sections
+   carry a band, and section.module.css moves the half above each line into the section before it,
+   so that each band runs from one divider to the next. */
 :where(main > * + section) {
   margin-block-start: var(--space-section);
 }
