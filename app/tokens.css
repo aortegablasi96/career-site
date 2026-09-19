@@ -574,6 +574,12 @@
   --project-view-rule-gap: 1.5rem;
   --project-view-label-gap: 0.75rem;
 
+  /* The foot of a project's view, per DDR-052, measured off node 59:118: the two halves stand 24px
+     apart, and inside a card the chevron is 12px from the words. Neither is a step of DDR-013's
+     scale either, for the reason the two above are not. */
+  --project-neighbour-gap: 1.5rem;
+  --project-neighbour-mark-gap: 0.75rem;
+
   /* How many language cards stand side by side below the wide breakpoint, per DDR-010: one at the
      narrowest, two from the narrow breakpoint. It is a count rather than a length, so it has no
      unit.

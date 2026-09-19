@@ -316,12 +316,14 @@ What exists, to reuse rather than reinvent:
   redesign's too, reworked on #52. The type scale and its floor are DDR-022's since #90, and
   DDR-011 keeps everything else it decides. Target sizes are DDR-027's since #95.
 * **The components.** Every section is DDR-010's: the introduction under #48, the timeline that
-  experience and education share under #49 and #51, the project cards under #154 per DDR-051, and
+  experience and education share under #49 and #51, the project cards under #154 per DDR-051, whose
+  view leads on to the projects on either side of it under #156 per DDR-052, and
   the skill groups and language cards under #51. The footer below them is DDR-028's, under #96. What still carries over from DDR-006 is its
   outline, its contents row, and the metadata line — which DDR-010 narrows to a single part, so the
   timeline's dates, place and company each get a line set the same way. The contents, the section
   wrapper, the metadata line and the date range are shared by the sections that need them.
-* **The icons**, in `components/icon.tsx`: one per contact address and one for the CV. They are
+* **The icons**, in `components/icon.tsx`: one per contact address, one for the CV, and the view's
+  own chevrons and arrow. They are
   inline SVG rather than committed files, sized in em. Since #135 the three contact marks are the
   services' own, per DDR-044: Gmail's M in its own four colours, and LinkedIn's [in] and GitHub's
   Invertocat in `currentColor`, which the stylesheet only ever sets to a colour the brand
@@ -533,10 +535,10 @@ condition 3 Epic #152 meets: each project is a statically generated route, and a
 is a route rather than a file, so it does not go through `asset()`, which amends ADR-004. The next
 ADR is `011`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-051. The next DDR is
-`052`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-052. The next DDR is
+`053`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Twenty-two accepted records are superseded or amended **in part**, and each says so at the top and again
+Twenty-three accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -557,6 +559,9 @@ at the section concerned:
   DDR-043 takes its "Links open in the same tab" for the LinkedIn and GitHub pills alone.
   DDR-050 ends the page being the site's only page: each project has a view of its own.
   DDR-051 takes its projects pattern: each project is a card that leads to its view.
+* **DDR-050** keeps everything it decides about a view's address, its way back, its introduction
+  and its two columns. DDR-052 adds its foot: a divider, and the projects on either side of this
+  one.
 * **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
   rule and its rule that nothing scrolls horizontally from 320px. DDR-039 lets the wide breakpoint
   redefine one token, `--rhythm-scale`, and DDR-049 a second, `--contents-bar-title-row`. DDR-040 takes `--page-padding-block` off the narrow
@@ -1301,6 +1306,31 @@ Four things about it are worth knowing before touching it.
 * **The printed CV is five sheets in Edge and Firefox**, where it was six. All four cards are on
   sheet 3, and headings fall on sheets 1, 3, 4, 4 and 5 in both. A longer sentence or name
   changes a card's height, so reprint.
+
+**#156 has landed, as DDR-052: each project's view ends with the projects on either side of it.**
+Below the design's divider, a card for the project before this one at the left and one for the
+project after it at the right, each showing the direction above the project's name with a chevron
+pointing the way it leads. The owner chose both directions on #156, and chose that the projects are
+an order rather than a ring: the first view shows no link back and the last none on.
+
+Four things about it are worth knowing before touching it.
+
+* **The card is the anchor itself**, not a box with a link stretched over it as a project card on
+  the page is, because it holds nothing but the two lines and the chevron. Its accessible name is
+  "Next project: Digital Twin", from `projects.view.neighbour`, with the visible word first, per
+  WCAG 2.5.3.
+* **The first view keeps the design's empty left half** (node 59:119), as a `div` that is drawn
+  only from the wide breakpoint, so the next card keeps the right half. Placing it with
+  `grid-column` instead is what `components/stylesheets.test.ts` refuses, per DDR-014.
+* **A name wraps anywhere inside the card.** At 320px with text at 200% the card leaves the words
+  136px, and "Portfolio" alone is wider; without `overflow-wrap: anywhere` the name ran out over
+  the card's edge. A new or renamed project means rerunning DDR-052's sweep.
+* **Paper is untouched.** The view does not print, and the page's own markup did not change; the
+  two new tokens are the view's, and no rule the page uses reads them.
+
+Swept every 10px from 300px to 900px on all four views at the browser's default text size, and from
+300px to 760px at 200%, where the wide layout cannot apply: nothing scrolls sideways, no card's
+words are cut, and the closest pair of targets is the footer's addresses at 27.2px, as before.
 
 **#115 has landed, as DDR-035: every link and control answers the pointer.** A contact pill takes
 `--color-surface-hover` and `--color-border-accent-hover`, the CV control darkens to

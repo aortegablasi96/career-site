@@ -256,6 +256,20 @@ export interface ProjectView {
   newTab: string;
   /** The browser tab's title and the link preview's, from the project's name. */
   title: (project: string) => string;
+  /**
+   * The word above the name of the project before this one, at the foot of the view, per DDR-052.
+   * The first project's view shows no such link, because the projects are an order rather than a
+   * ring.
+   */
+  previous: string;
+  /** The word above the name of the project after this one. The last project's view shows none. */
+  next: string;
+  /**
+   * What a link to a neighbouring project is called, from the word above it and that project's
+   * name: "Next project: Digital Twin". The link shows the two apart, so its accessible name says
+   * what the two together mean, with the visible word first, per WCAG 2.5.3.
+   */
+  neighbour: (direction: string, project: string) => string;
 }
 
 /** The three levels a skill can have, per the Content Brief on #25. */
