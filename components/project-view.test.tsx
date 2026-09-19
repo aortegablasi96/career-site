@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { introduction } from '@/content/introduction';
 import { projects } from '@/content/projects';
-import type { Project } from '@/content/types';
+import type { GalleryItem, Project } from '@/content/types';
 import { ProjectView } from './project-view';
 
 // Rendered with the real content, since what a view says is the project's own record, per #153,
@@ -116,6 +116,94 @@ describe('ProjectView', () => {
 
     expect(figure).toContain('display: flex');
     expect(figure).toContain('flex-direction: column');
+  });
+
+  // DDR-053: further pictures and videos below the introduction. No project states a gallery yet —
+  // the media is the owner's to supply, as on #63 — so the branch that shows one is exercised here
+  // rather than by a page, as the video branch of `Media` has been since #50.
+  describe('the gallery', () => {
+    const picture: GalleryItem = {
+      media: { file: '/gallery-picture.webp', alt: 'The assistant adding a coin from a photograph' },
+      caption: 'AI assistant in action',
+    };
+    const video: GalleryItem = {
+      media: {
+        file: '/gallery-walkthrough.mp4',
+        poster: '/gallery-walkthrough.webp',
+        description: 'A walkthrough of the application, from signing in to adding a coin',
+      },
+      caption: 'Walkthrough demo',
+    };
+    const withGallery = (gallery: readonly GalleryItem[]) => render({ ...numisBook!, gallery });
+
+    it('shows nothing at all for a project the owner has supplied no media for', () => {
+      for (const project of projects.projects) {
+        expect(project.gallery).toBeUndefined();
+        expect(text(render(project))).not.toContain(projects.view.gallery);
+      }
+
+      expect(text(withGallery([]))).not.toContain(projects.view.gallery);
+    });
+
+    it('heads the block with an h2 and lists every item in the order the content gives', () => {
+      const shown = text(withGallery([picture, video]));
+
+      expect(withGallery([picture, video])).toMatch(
+        new RegExp(`<h2[^>]*>${projects.view.gallery}</h2>`),
+      );
+      expect(shown.indexOf(picture.caption)).toBeGreaterThan(shown.indexOf(projects.view.gallery));
+      expect(shown.indexOf(video.caption)).toBeGreaterThan(shown.indexOf(picture.caption));
+    });
+
+    // Each item is a figure with its caption, as the lead picture is, so the words below a picture
+    // are tied to it rather than standing loose under it.
+    it('ties each caption to its own picture, and describes the picture for a reader who cannot see it', () => {
+      const markup = withGallery([picture]);
+      const alt = 'alt' in picture.media ? picture.media.alt : '';
+
+      expect(markup).toMatch(
+        new RegExp(`<figure[^>]*><img [^>]*alt="${alt}"[^>]*><figcaption[^>]*>${picture.caption}</figcaption></figure>`),
+      );
+    });
+
+    // DDR-010 and ADR-004: nothing is fetched until someone presses play, and the poster is what is
+    // seen until then. The still beside it is for paper, and exactly one of the two is displayed.
+    it('leaves a video unplayed and unfetched until the reader starts it', () => {
+      const markup = withGallery([video]);
+      const element = markup.match(/<video[^>]*>/)?.[0] ?? '';
+      const description = 'poster' in video.media ? video.media.description : '';
+
+      expect(element).toContain('preload="none"');
+      expect(element).toContain('controls=""');
+      expect(element).toContain('poster="/gallery-walkthrough.webp"');
+      expect(element).toContain(`aria-label="${description}"`);
+      expect(element).not.toContain('autoplay');
+      expect(markup).toContain(`<img class="`);
+    });
+
+    // Every path a picture or video is reached by goes through `asset()`, per ADR-004, so it
+    // resolves under the Pages base path as well as locally. `components/assets.test.ts` holds
+    // every attribute in `components/` to it; this holds the gallery's own two.
+    it('reaches each file by the one route a binary asset takes', () => {
+      expect(withGallery([picture])).toContain('src="/gallery-picture.webp"');
+      expect(withGallery([video])).toContain('src="/gallery-walkthrough.mp4"');
+    });
+
+    // DDR-053: one item to a row below the wide breakpoint, where two 16:10 pictures side by side
+    // on a phone would be about 130px wide each, and two from it, as the design draws them.
+    it('stands one item to a row below the wide breakpoint and two from it', () => {
+      expect(css.match(/\.gallery\s*\{([^}]*)\}/)?.[1]).toContain('grid-template-columns: minmax(0, 1fr);');
+      expect(css).toMatch(
+        /@media \(min-width: 48em\) \{[\s\S]*\.gallery \{\s*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);/,
+      );
+    });
+
+    // An item is drawn in the lead picture's shape, at the same ratio and radius, so it is cropped
+    // rather than stretched by the rule #153 already measured.
+    it('keeps each item in the design’s shape, as the lead picture is kept', () => {
+      expect(withGallery([picture, video])).toMatch(/<img class="[^"]*media[^"]*"/);
+      expect(css.match(/\.media\s*\{([^}]*)\}/)?.[1]).toContain('object-fit: cover');
+    });
   });
 
   // DDR-052: the projects on either side of this one, at the foot of the view.

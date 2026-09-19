@@ -31,6 +31,11 @@ const liveSite = 'Live site';
  * Since #156 a view also leads to the projects on either side of this one, per DDR-052, which adds
  * the two words those links show and what they are called. The order here is the order they follow.
  *
+ * Since #155 a view can also show a gallery of further pictures and videos below its introduction,
+ * per DDR-053. No project states one yet: each file is the owner's to supply, as on #63, and a
+ * project with no `gallery` shows no gallery and no heading. Adding one is content alone — a list
+ * of media and captions here, and the files in `public/` — with no change to a component.
+ *
  * Since #154 the page shows each project as a card leading to its view, per DDR-051, and a card says
  * what the project is in one sentence, its `summary`, rather than the full description. The four are
  * the ones the design proposes, which the owner approved on #154; each says nothing the full
@@ -94,6 +99,9 @@ export const projects: Projects = {
   view: {
     back: 'Back to portfolio',
     builtWith: 'Built with',
+    // The label above the further pictures and videos of a project, per DDR-053. No project carries
+    // gallery media yet, so no view shows it; the media is the owner's to supply, as on #63.
+    gallery: 'Gallery',
     // The same words a profile pill says, from the one place they are stated.
     newTab: introduction.newTab,
     // The name first, so a row of tabs shows which project each is, then the owner's, as the page's
