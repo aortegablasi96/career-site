@@ -90,10 +90,12 @@
   line-height: var(--line-height-prose);
 }
 
-/* "Built with", set as the design's labels are: 10px bold capitals, tracked and in the faint ink
-   (node 59:30). It is an h2, so it takes none of a section title's serif, size or tracking. */
-.label {
-  margin-block-start: var(--space-large);
+/* "Built with" and "Gallery", set as the design's labels are: 10px bold capitals, tracked and in
+   the faint ink (nodes 59:30 and 59:86). Both are h2, so neither takes a section title's serif,
+   size or tracking. They stand at different distances from what is above them — one inside the
+   view's text column, the other opening a block below it — so each sets its own space above. */
+.label,
+.galleryTitle {
   color: var(--color-text-faint);
   font-family: var(--font-family-body);
   font-size: var(--font-size-xxxx-small);
@@ -101,6 +103,10 @@
   line-height: var(--line-height-body);
   letter-spacing: var(--letter-spacing-x-loose);
   text-transform: uppercase;
+}
+
+.label {
+  margin-block-start: var(--space-large);
 }
 
 /* Every technology, as tags that wrap, 8px apart each way (node 59:32). */
@@ -183,20 +189,22 @@
   background-color: var(--color-surface-hover);
 }
 
-/* The picture and its caption, in a column that is its grid track's width whatever the picture's
-   own, so the picture can stretch to it without widening it. It is a flex column rather than a grid
-   of one track: measured on #159, Firefox sizes a grid row from the picture's own height rather than
-   the 16:10 it is drawn at, and left 101.75px empty between the picture and its caption, as it did
-   under each project card, per DDR-051. */
+/* A picture and its caption — the lead one, and each item of the gallery, per DDR-053 — in a column
+   that is its grid track's width whatever the picture's own, so the picture can stretch to it
+   without widening it. It is a flex column rather than a grid of one track: measured on #159,
+   Firefox sizes a grid row from the picture's own height rather than the 16:10 it is drawn at, and
+   left 101.75px empty between the picture and its caption, as it did under each project card, per
+   DDR-051. */
 .figure {
   display: flex;
   flex-direction: column;
   margin: 0;
 }
 
-/* The lead picture, as wide as its column, in the design's 16:10 and at the large radius (node
-   59:71). A 4:3 picture is cropped to it from the centre rather than distorted. It stretches
-   across the column, so no width is written for it. */
+/* A picture or video, as wide as its column, in the design's 16:10 and at the large radius (nodes
+   59:71 and 59:90, which are 560 by 350 and 492 by 307.5). A 4:3 file is cropped to it from the
+   centre rather than distorted. It stretches across the column, so no width is written for it, and
+   the lead picture and a gallery item are drawn alike because the design draws them alike. */
 .media {
   align-self: stretch;
   aspect-ratio: var(--project-view-media-ratio);
@@ -204,12 +212,43 @@
   object-fit: cover;
 }
 
-/* The caption, centred below the picture in the faint ink at 11px (node 59:81). */
-.caption {
+/* A caption, below its picture in the faint ink at 11px, 8px under it (nodes 59:81 and 59:100).
+   The lead picture's is centred under a picture that fills its column; a gallery item's begins at
+   the picture's edge, as the design sets it. */
+.caption,
+.galleryCaption {
   margin-block-start: var(--space-small);
   color: var(--color-text-faint);
   font-size: var(--font-size-xxx-small);
+}
+
+.caption {
   text-align: center;
+}
+
+/* The gallery, per DDR-053 (node 59:84): the "Gallery" label a section boundary below the
+   introduction, and the items 20px under it. */
+.galleryTitle {
+  margin-block-start: var(--space-boundary);
+}
+
+/* The items themselves: one column below the wide breakpoint and two equal ones from it, 20px
+   apart each way, as the design draws them. A column's minimum is 0 rather than its content's, so
+   a 560px file can neither widen its column nor push a narrow screen sideways, which is what #153
+   found for the lead picture. They are a list, so the browser's own marker and indent go: what
+   separates two items is the grid.
+
+   Below the breakpoint one item to a row is the arrangement, per DDR-053: the design draws no
+   narrow view, and two 16:10 pictures side by side on a phone would be about 130px wide each,
+   which is too small to show anything an application is doing. Each item keeps its shape at every
+   width, because the shape is the picture's `aspect-ratio` and not a pair of lengths. */
+.gallery {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--project-view-gallery-gap);
+  margin-block-start: var(--project-view-gallery-gap);
+  padding-inline-start: 0;
+  list-style: none;
 }
 
 /* The foot of the view, per DDR-052: the projects on either side of this one, below the design's
@@ -300,8 +339,8 @@
 }
 
 /* From here the text and the picture stand side by side, each as wide as the other, both from the
-   top, and the name takes the design's size. This is the one width a component may write, per
-   DDR-014. */
+   top; the name takes the design's size; and the gallery's items and the two neighbouring projects
+   stand two to a row. This is the one width a component may write, per DDR-014. */
 @media (min-width: 48em) {
   .columns {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -311,6 +350,10 @@
 
   .name {
     font-size: var(--font-size-project-title);
+  }
+
+  .gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .neighbours {

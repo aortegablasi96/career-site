@@ -63,8 +63,9 @@ the name, the one-sentence `summary`, and at most four technology tags then a co
 The page hands the section two cards at a time, as `projectRows` splits them, for the reason it
 hands the skills two groups. `--project-card-*` in `app/tokens.css` holds the 16:9 and the design's
 one 20px. The card's picture is always a still; `Media` in `components/projects.tsx`, which renders
-a `video` with its poster, controls and `preload="none"`, is the view's alone now. No project
-carries a video yet, so that branch is exercised by a test rather than by a page.
+a `video` with its poster, controls and `preload="none"`, is the view's alone now — its lead
+picture, and since #155 each item of its gallery. No project carries a video anywhere yet, so that
+branch is exercised by a test rather than by a page.
 
 **The footer is the design's, under #96.** A `footer` follows `main`, holding the owner's name and
 the three contact addresses above a hairline, inside the page's own column — `components/footer.tsx`
@@ -317,7 +318,8 @@ What exists, to reuse rather than reinvent:
   DDR-011 keeps everything else it decides. Target sizes are DDR-027's since #95.
 * **The components.** Every section is DDR-010's: the introduction under #48, the timeline that
   experience and education share under #49 and #51, the project cards under #154 per DDR-051, whose
-  view leads on to the projects on either side of it under #156 per DDR-052, and
+  view shows a gallery under #155 per DDR-053 and leads on to the projects on either side of it
+  under #156 per DDR-052, and
   the skill groups and language cards under #51. The footer below them is DDR-028's, under #96. What still carries over from DDR-006 is its
   outline, its contents row, and the metadata line — which DDR-010 narrows to a single part, so the
   timeline's dates, place and company each get a line set the same way. The contents, the section
@@ -333,7 +335,8 @@ What exists, to reuse rather than reinvent:
 * **The content types.** `content/types.ts` covers the site metadata, an image, a video, the
   introduction and its contact links, the contents, dates, roles, projects, skills, credentials,
   languages, and the CV. A credential is a degree or a certification, and a project's media is an
-  image or a video.
+  image or a video. A project may also carry a gallery, per DDR-053: a list of `GalleryItem`, each
+  one of those media with its caption.
 
 The GitHub repository is `aortegablasi96/career-site` (public), with `main` as the default
 branch. Issue templates exist in `.github/ISSUE_TEMPLATE/` (Epic, User Story, Bug), and the
@@ -535,8 +538,8 @@ condition 3 Epic #152 meets: each project is a statically generated route, and a
 is a route rather than a file, so it does not go through `asset()`, which amends ADR-004. The next
 ADR is `011`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-052. The next DDR is
-`053`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-053. The next DDR is
+`054`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Twenty-three accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -561,7 +564,8 @@ at the section concerned:
   DDR-051 takes its projects pattern: each project is a card that leads to its view.
 * **DDR-050** keeps everything it decides about a view's address, its way back, its introduction
   and its two columns. DDR-052 adds its foot: a divider, and the projects on either side of this
-  one.
+  one. DDR-053 adds its middle: a gallery of further pictures and videos, between the introduction
+  and that foot, which a view whose project has no gallery media does not draw at all.
 * **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
   rule and its rule that nothing scrolls horizontally from 320px. DDR-039 lets the wide breakpoint
   redefine one token, `--rhythm-scale`, and DDR-049 a second, `--contents-bar-title-row`. DDR-040 takes `--page-padding-block` off the narrow
@@ -1331,6 +1335,42 @@ Four things about it are worth knowing before touching it.
 Swept every 10px from 300px to 900px on all four views at the browser's default text size, and from
 300px to 760px at 200%, where the wide layout cannot apply: nothing scrolls sideways, no card's
 words are cut, and the closest pair of targets is the footer's addresses at 27.2px, as before.
+
+**#155 has landed, as DDR-053: a project's view can show a gallery of further pictures and videos**,
+between its introduction and DDR-052's foot (node 59:84): the "Gallery" label, then every item the
+project states, two to a row from the wide breakpoint and one below it, each in the lead picture's
+16:10 with its caption beneath. It closes Epic #152.
+
+**No project carries gallery media yet.** The owner chose on #155 to ship the mechanism and supply
+the files later, as #63 supplied the rest, so every view is byte-identical to the tree this branched
+from and the printed CV is untouched. Adding a gallery is content alone: a list of media and
+captions on the project in `content/projects.ts`, and the files in `public/`.
+
+Five things about it are worth knowing before touching it.
+
+* **A gallery item is the lead picture's pair**, `GalleryItem` — the media and the caption — so it
+  reuses the lead's `figure`, its `.media` rule, its 16:10 and its large radius, and writes no ratio
+  of its own. The one thing it does not share is the caption's alignment: the lead's is centred and
+  a gallery item's begins at the picture's edge, as the design sets them.
+* **A view with no gallery media draws nothing at all** — no items, no label, no empty block. That
+  branch is the one every view takes today, and the branch that draws a gallery is exercised by
+  `components/project-view.test.tsx` rather than by a view, as `Media`'s video branch has been since
+  #50.
+* **A video is drawn by the same `Media` the lead picture is**, so it inherits DDR-010's controls,
+  its poster and `preload="none"` with no second implementation. Measured on #155 with a video in
+  place: the browser fetched the poster and never fetched the file.
+* **A gallery video with speech may not land without a captions track**, per DDR-053 and WCAG 1.2.2,
+  which the owner chose on #155. `Video` carries no field for one yet: the story that brings the
+  first video adds `captions` beside `poster` and renders a `<track kind="captions">`.
+* **One item to a row below the wide breakpoint** is decided here, not drawn: two 16:10 pictures
+  side by side on a phone would be about 130px wide each, which shows nothing of an application.
+
+Measured with stand-in media at the design's 1195px: every value matches node 59:84 — 56px above the
+label, 20px below it and 20px between the items, each item exactly 16:10 at a 12px radius, its
+caption 11px in the faint ink 8px below. Swept every 10px from 300px to 900px at the browser's
+default text size and at 200%: nothing scrolls sideways, every item keeps its shape, no pair of
+targets fails WCAG 2.5.8 — the closest is still the footer's addresses at 27.2px — and the narrowest
+an item gets is 268.8px.
 
 **#115 has landed, as DDR-035: every link and control answers the pointer.** A contact pill takes
 `--color-surface-hover` and `--color-border-accent-hover`, the CV control darkens to

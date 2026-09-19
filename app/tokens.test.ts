@@ -817,6 +817,12 @@ describe('spacing tokens', () => {
     expect(rem(token('project-view-rule-gap')!) * 16).toBe(24);
     expect(rem(token('project-view-label-gap')!) * 16).toBe(12);
   });
+
+  // DDR-053's gallery, off node 59:84: one 20px between two items each way and above the first row.
+  // An item is the lead picture's shape, so the ratio above is the only one a view writes.
+  it('spaces a project view’s gallery as `career-site-project` does, per DDR-053', () => {
+    expect(rem(token('project-view-gallery-gap')!) * 16).toBe(20);
+  });
 });
 
 // DDR-014 adapts the scales at the narrow breakpoint, in em, by redefining the role tokens that

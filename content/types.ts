@@ -64,6 +64,24 @@ export interface Video {
 export type ProjectMedia = Image | Video;
 
 /**
+ * One picture or video in a project view's gallery, per DDR-053 (node 59:84).
+ *
+ * It is the lead picture's pair — the media and the few words shown under it — so a gallery item
+ * and the lead differ in where they stand rather than in what they are. The caption is what a
+ * sighted reader is told; the media's own `alt` or `description` still describes it in full, so it
+ * adds nothing the alternative text does not already say.
+ *
+ * A video with speech carries a captions track before it may land, per DDR-053 and WCAG 1.2. No
+ * gallery video exists yet, so `Video` has no field for one: the story that brings the first video
+ * adds it, rather than the site shipping a shape nothing fills.
+ */
+export interface GalleryItem {
+  media: ProjectMedia;
+  /** The few words below it (node 59:100), naming what it shows. */
+  caption: string;
+}
+
+/**
  * The mark a contact control carries beside its label.
  *
  * DDR-010 gives each control an icon as a second, non-colour cue that it is a control, since the
@@ -201,6 +219,12 @@ export interface Project {
    */
   caption: string;
   /**
+   * Further pictures and videos of the project, each with its caption, shown below the view's
+   * introduction, per DDR-053. Left out where there is nothing more to show, and a view with none
+   * shows no gallery and no heading: an empty gallery is a heading over nothing.
+   */
+  gallery?: readonly GalleryItem[];
+  /**
    * The one sentence the project's card on the page shows, per DDR-051, approved by the owner on
    * #154. The full `description` is the view's, and the card leads there.
    */
@@ -248,6 +272,11 @@ export interface ProjectView {
   back: string;
   /** The label above the technologies. */
   builtWith: string;
+  /**
+   * The label above the gallery, per DDR-053. A view whose project has no gallery media shows it
+   * nowhere, so it names the block rather than standing on its own.
+   */
+  gallery: string;
   /**
    * What a project's links say about opening a new tab, per DDR-043 as DDR-050 extends it. It is
    * said only to assistive technology, after the link's text in its accessible name, as a profile

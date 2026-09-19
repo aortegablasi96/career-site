@@ -1,8 +1,41 @@
 import Link from 'next/link';
-import type { Project, ProjectView as ProjectViewStrings } from '@/content/types';
+import type { GalleryItem, Project, ProjectView as ProjectViewStrings } from '@/content/types';
 import { Icon } from './icon';
 import { Media, projectHref } from './projects';
 import styles from './project-view.module.css';
+
+/**
+ * Further pictures and videos of the project, per DDR-053, as the design draws them (node 59:84):
+ * the "Gallery" label, then the items two to a row from the wide breakpoint and one below it, each
+ * in the lead picture's shape with its caption beneath.
+ *
+ * It is a list, because the items are several of one thing and their number is worth announcing,
+ * and each item is a `figure` with its `figcaption`, as the lead picture is, so the caption is tied
+ * to what it names rather than standing loose under it. The label is an `h2`, as "Built with" is,
+ * so the view's outline stays the project, what it is built with, and what there is to see of it.
+ *
+ * A video plays only when the reader starts it, shows its poster until then and fetches nothing
+ * before that, because it is drawn by the same `Media` the lead picture is, per DDR-010 and
+ * ADR-004. A view with nothing to show renders no gallery at all: `ProjectView` leaves it out
+ * rather than this drawing an empty one, since a heading over nothing is worse than no heading.
+ */
+function Gallery({ title, items }: { title: string; items: readonly GalleryItem[] }) {
+  return (
+    <>
+      <h2 className={styles.galleryTitle}>{title}</h2>
+      <ul className={styles.gallery}>
+        {items.map(({ media, caption }) => (
+          <li key={media.file}>
+            <figure className={styles.figure}>
+              <Media media={media} className={styles.media} />
+              <figcaption className={styles.galleryCaption}>{caption}</figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}
 
 /**
  * The project before or after this one, per DDR-052, as a card at the foot of the view (node
@@ -60,7 +93,8 @@ function Neighbour({
  * breakpoint: the project's name, what it is, what it is built with and the links that lead to it,
  * and beside them its lead picture with a caption. Below the breakpoint the two are one column, in
  * the same order, so the picture follows the links; the markup order is the visual order at both
- * widths, per DDR-014. At the foot, below a divider, the projects on either side of this one, per
+ * widths, per DDR-014. Below them, where the project has any, a gallery of further pictures and
+ * videos, per DDR-053. At the foot, below a divider, the projects on either side of this one, per
  * DDR-052.
  *
  * Every word is the project's own record, stated once in `content/` and shown on the page as well,
@@ -80,8 +114,16 @@ function Neighbour({
  * picture on each view, whether or not the reader goes back.
  */
 export function ProjectView({
-  project: { name, media, caption, technologies, description, links },
-  strings: { back, builtWith, newTab, previous: previousWord, next: nextWord, neighbour },
+  project: { name, media, caption, gallery, technologies, description, links },
+  strings: {
+    back,
+    builtWith,
+    gallery: galleryTitle,
+    newTab,
+    previous: previousWord,
+    next: nextWord,
+    neighbour,
+  },
   backHref,
   previous,
   next,
@@ -137,6 +179,9 @@ export function ProjectView({
           <figcaption className={styles.caption}>{caption}</figcaption>
         </figure>
       </div>
+      {/* Further pictures and videos, below the introduction, per DDR-053 (node 59:84). A project
+          the owner has supplied none for shows no gallery and no heading. */}
+      {gallery && gallery.length > 0 && <Gallery title={galleryTitle} items={gallery} />}
       {/* The projects on either side of this one, below the design's divider (node 59:117). The
           first project has nothing before it and the last nothing after it, and neither view
           shows a card in that half: the projects are the page's order, not a ring, per DDR-052. */}
