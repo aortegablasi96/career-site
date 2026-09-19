@@ -32,20 +32,27 @@ describe('HomePage', () => {
   });
 
   // DDR-031: each link shows the design's word, stated beside its section's heading in content/.
-  it('labels each contents link with its section’s own link word, not always its heading', () => {
+  // DDR-045: Home comes first, before every section's link.
+  it('labels each contents link with its section’s own link word, after Home', () => {
     const nav = html.match(/<nav [\s\S]*?<\/nav>/)?.[0] ?? '';
     const words = [...nav.matchAll(/<a [^>]*>([^<]+)<\/a>/g)].map(([, word]) => word);
 
-    expect(words).toEqual(['Experience', 'Projects', 'Skills', 'Education', 'Languages']);
+    expect(words).toEqual(['Home', 'Experience', 'Projects', 'Skills', 'Education', 'Languages']);
     expect(html).toMatch(/<h2 id="education-title"[^>]*>Education and certifications<\/h2>/);
   });
 
-  it('lists every section in the contents, in the order the Content Brief sets', () => {
+  it('lists every section in the contents after Home, in the order the Content Brief sets', () => {
     const listed = [...html.matchAll(/<a href="#([^"]+)"/g)].map(([, id]) => id);
     const shown = [...html.matchAll(/<section id="([^"]+)"/g)].map(([, id]) => id);
 
     expect(shown).toEqual(['experience', 'projects', 'skills', 'education', 'languages']);
-    expect(listed).toEqual(shown);
+    expect(listed).toEqual(['top', ...shown]);
+  });
+
+  // DDR-045: HTML sends `#top` to the top of the document only while no element has that id. One
+  // that did would take the Home link to it instead.
+  it('gives no element the id the Home link relies on, per DDR-045', () => {
+    expect(html).not.toMatch(/\sid="top"/i);
   });
 
   // DDR-028: the footer follows main rather than sitting inside it, so it is the page's

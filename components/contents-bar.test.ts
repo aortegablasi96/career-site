@@ -4,6 +4,7 @@ import {
   glide,
   glideStartTimeout,
   holdDestination,
+  homeId,
   isScrolled,
   markedSection,
   scrolledThreshold,
@@ -252,6 +253,43 @@ describe('currentSection', () => {
   });
 });
 
+// DDR-045: Home is the bar's first link, and it is marked while the reader is in the introduction,
+// where DDR-042 marked nothing.
+describe('markedSection', () => {
+  const ids = ['experience', 'projects'];
+
+  function stubPage(scrollY: number) {
+    vi.stubGlobal('window', {
+      scrollY,
+      innerHeight: 800,
+      getComputedStyle: () => ({ scrollPaddingBlockStart: '64px' }),
+    });
+    vi.stubGlobal('document', {
+      documentElement: { scrollHeight: 6000 },
+      getElementById: (id: string) => ({
+        getBoundingClientRect: () => ({ top: 900 + ids.indexOf(id) * 1000 - scrollY }),
+      }),
+    });
+  }
+
+  // HTML reserves `#top` for the top of the document when no element has that id.
+  it('leads Home to the fragment HTML reserves for the top of the document', () => {
+    expect(homeId).toBe('top');
+  });
+
+  it.each([0, 500, 900 - 64 - 2])('marks Home in the introduction, at %i px', (scrollY) => {
+    stubPage(scrollY);
+
+    expect(markedSection(ids)).toBe(homeId);
+  });
+
+  it('marks the section, and not Home, once the first section has reached the clearance', () => {
+    stubPage(900 - 64);
+
+    expect(markedSection(ids)).toBe('experience');
+  });
+});
+
 // DDR-042: a contents link moves the mark straight to its section, and holds it there while the
 // page glides past the sections in between, until the page comes to rest. There is no DOM, so the
 // window, the clicked link and the page `currentSection` measures are stubbed.
@@ -381,6 +419,19 @@ describe('holdDestination', () => {
 
     expect(markedSection(ids)).toBe('skills');
     expect(window.removeEventListener).toHaveBeenCalledWith('scroll', first.scroll);
+
+    journey(window).release();
+
+    expect(markedSection(ids)).toBe('experience');
+  });
+
+  // DDR-045: Home is held and marked the way a section's link is, by the id its fragment names.
+  it('holds the mark on Home while the page returns to the top', () => {
+    const window = stubPage();
+
+    choose(`#${homeId}`);
+
+    expect(markedSection(ids)).toBe(homeId);
 
     journey(window).release();
 

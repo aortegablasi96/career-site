@@ -22,6 +22,10 @@ which DDR-010 carries this from, is superseded already.
 
 Everything else DDR-031, DDR-033, DDR-034 and DDR-041 decide about the bar stands.
 
+**Amended by DDR-045 in one respect**: the bar now has a Home link, and it is marked while the reader
+is in the introduction, where this record marks nothing. The bullet "Above the first section,
+nothing is marked" below is the place it takes.
+
 ## Context
 
 Epic #131 refines how the contents bar and the contact pills behave. Issue #133 is its second story.

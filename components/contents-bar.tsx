@@ -173,11 +173,19 @@ export function holdDestination(event: Pick<MouseEvent, 'target'>): void {
 }
 
 /**
- * The section the bar marks: the one a contents link is taking the reader to, while it is, and
- * otherwise the one the reader is in.
+ * Where the Home link leads, per DDR-045: the fragment HTML reserves for the top of the document,
+ * which scrolls there whenever no element on the page has that id. It is also the id the bar marks
+ * Home by, so the Home link is held and marked through the same code as a section's.
  */
-export function markedSection(ids: readonly string[]): string | null {
-  return destination ?? currentSection(ids);
+export const homeId = 'top';
+
+/**
+ * The part of the page the bar marks: the one a contents link is taking the reader to, while it
+ * is, and otherwise the section the reader is in, or Home while they are still in the
+ * introduction, per DDR-045.
+ */
+export function markedSection(ids: readonly string[]): string {
+  return destination ?? currentSection(ids) ?? homeId;
 }
 
 /** Handles a click in the bar: the glide, per DDR-041, and the mark held on its way, per DDR-042. */
@@ -191,7 +199,10 @@ function isScrolledOnServer(): boolean {
   return false;
 }
 
-/** The server marks no section, which is also what a reader without script keeps, per DDR-042. */
+/**
+ * The server marks no link, not even Home, which is also what a reader without script keeps, per
+ * DDR-042 and DDR-045.
+ */
 function currentSectionOnServer(): string | null {
   return null;
 }
@@ -206,6 +217,10 @@ function currentSectionOnServer(): string | null {
  * `aria-current`, per DDR-042, which the stylesheet underlines — moving it straight to the section
  * a contents link was chosen for rather than through every section the glide passes.
  *
+ * Its first link is Home, per DDR-045, which leads to the top of the page and is marked while the
+ * reader is in the introduction. It is held, glided and marked exactly as a section's link is; the
+ * only thing that sets it apart is that it has no section to measure.
+ *
  * That last is why it renders the links itself, per ADR-009, where ADR-007 had `Contents` render
  * them and pass them in as children: a link can only be marked by what renders it. What it is
  * handed is each section's id and its word, as plain strings, so nothing but the list's markup
@@ -218,9 +233,11 @@ function currentSectionOnServer(): string | null {
  */
 export function ContentsBar({
   label,
+  home,
   sections,
 }: {
   label: string;
+  home: string;
   sections: readonly { id: string; link: string }[];
 }) {
   const scrolled = useSyncExternalStore(subscribe, isScrolled, isScrolledOnServer);
@@ -238,7 +255,7 @@ export function ContentsBar({
       onClick={choose}
     >
       <ul className={styles.list}>
-        {sections.map(({ id, link }) => (
+        {[{ id: homeId, link: home }, ...sections].map(({ id, link }) => (
           <li key={id}>
             <a
               href={`#${id}`}

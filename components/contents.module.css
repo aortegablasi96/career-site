@@ -89,11 +89,13 @@
    19.5px rather than body text's 22.5px: two wrapped rows then fit inside the design's 48px, and a
    bar that has to grow grows by less.
 
-   The column gap is the flow step below the wide breakpoint and the design's 28px taken to the
+   The column gap is the small step below the wide breakpoint and the design's 28px taken to the
    nearest step of DDR-013's scale, 32px, from it. The narrow gap is not a preference: at 320px with
-   text at 200%, 32px between "Experience" and "Projects" pushes the links onto four rows, the bar
-   to 229px and every heading the contents move to behind it; at 16px they take three rows, the bar
-   is 150px, and each heading lands 42px below it. The row gap is what keeps two wrapped links
+   text at 200%, 32px between "Experience" and "Projects" pushed five links onto four rows, the bar
+   to 229px and every heading the contents move to behind it, so DDR-031 took it to 16px. Home, the
+   sixth link, per DDR-045, put the bar back on four rows at 16px, 205px tall, and added a row at
+   410px as well; at 8px the bar is never taller than it was with five links, at any width from
+   300px to 900px at either text size. The row gap is what keeps two wrapped links
    outside the circles WCAG 2.2's 2.5.8 measures its spacing exception with, as the row this bar
    replaces did, per DDR-027. */
 .list {
@@ -101,7 +103,7 @@
   flex-wrap: wrap;
   align-items: center;
   align-content: center;
-  column-gap: var(--space-medium);
+  column-gap: var(--space-small);
   row-gap: var(--space-small);
   min-block-size: var(--contents-bar-height);
   max-inline-size: var(--content-width);
