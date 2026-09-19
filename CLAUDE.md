@@ -1293,8 +1293,9 @@ Four things about it are worth knowing before touching it.
   its accessible name is the project's name, and focus outlines the whole card. The card is
   `position: relative` for that alone.
 * **The card is a flex column, not a one-track grid.** In a grid, Firefox sized the row from the
-  picture's natural height and left 117px empty under it. **The project view's figure has the same
-  fault**: 101.75px between its picture and caption in Firefox. That is #153's to fix.
+  picture's natural height and left 117px empty under it. The project view's figure had the same
+  fault, 101.75px between its picture and caption, and #159 made it a flex column too. Don't lay
+  out a stretched picture as a grid item.
 * **The count's ink is the Basic badge's passing pairing**, where the design's grey is 4.34:1. The
   owner chose it on #154.
 * **The printed CV is five sheets in Edge and Firefox**, where it was six. All four cards are on

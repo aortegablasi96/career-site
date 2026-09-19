@@ -98,6 +98,17 @@ describe('ProjectView', () => {
 
     expect(media).toContain('aspect-ratio: var(--project-view-media-ratio)');
     expect(media).toContain('object-fit: cover');
+    expect(media).toContain('align-self: stretch');
+  });
+
+  // #159: in a grid of one track, Firefox sizes the row from the picture's own height rather than
+  // the 16:10 it is drawn at, and leaves 101.75px between the picture and its caption. A flex column
+  // does not, as DDR-051 found for the project cards.
+  it('lays the picture and its caption out as a flex column, which Firefox sizes by the picture as drawn', () => {
+    const figure = css.match(/\.figure\s*\{([^}]*)\}/)?.[1] ?? '';
+
+    expect(figure).toContain('display: flex');
+    expect(figure).toContain('flex-direction: column');
   });
 
   it('lays the two columns side by side from the wide breakpoint only', () => {
