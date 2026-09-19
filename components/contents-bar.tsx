@@ -204,6 +204,9 @@ function currentSectionOnServer(): string | null {
  * reader is in the introduction. It is held, glided and marked exactly as a section's link is; the
  * only thing that sets it apart is that it has no section to measure.
  *
+ * After the links it shows the site's title, per DDR-049, which the stylesheet sets at the right of
+ * the page's column. It is text, not a link, and nothing about it changes as the page scrolls.
+ *
  * That last is why it renders the links itself, per ADR-009, where ADR-007 had `Contents` render
  * them and pass them in as children: a link can only be marked by what renders it. What it is
  * handed is each section's id and its word, as plain strings, so nothing but the list's markup
@@ -217,10 +220,12 @@ function currentSectionOnServer(): string | null {
 export function ContentsBar({
   label,
   home,
+  title,
   sections,
 }: {
   label: string;
   home: string;
+  title: string;
   sections: readonly { id: string; link: string }[];
 }) {
   const current = useSyncExternalStore(
@@ -235,19 +240,22 @@ export function ContentsBar({
       className={styles.contents}
       onClick={choose}
     >
-      <ul className={styles.list}>
-        {[{ id: homeId, link: home }, ...sections].map(({ id, link }) => (
-          <li key={id}>
-            <a
-              href={`#${id}`}
-              className={styles.link}
-              aria-current={id === current ? 'location' : undefined}
-            >
-              {link}
-            </a>
-          </li>
-        ))}
-      </ul>
+      <div className={styles.bar}>
+        <ul className={styles.list}>
+          {[{ id: homeId, link: home }, ...sections].map(({ id, link }) => (
+            <li key={id}>
+              <a
+                href={`#${id}`}
+                className={styles.link}
+                aria-current={id === current ? 'location' : undefined}
+              >
+                {link}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p className={styles.title}>{title}</p>
+      </div>
     </nav>
   );
 }

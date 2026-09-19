@@ -527,8 +527,8 @@ ADR-007 again, in its boundary: the component renders the contents links itself,
 section's id and word, so that it can mark the current section's, per DDR-042. It is still the one
 Client Component. The next ADR is `010`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-048. The next DDR is
-`049`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-049. The next DDR is
+`050`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Twenty-one accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -618,6 +618,7 @@ at the section concerned:
   declined scroll-triggered edge, which DDR-034 adopts, per #114, with its hairline row and its
   shadow row. DDR-042 takes the "no current-section state" it carried forward from DDR-010.
   DDR-045 adds a Home link before the sections' and takes its narrow link gap from 16px to 8px.
+  DDR-049 puts the links at the left of the column and the site's title at its right.
 * **DDR-042** keeps everything but its unmarked introduction: DDR-045 marks Home there.
 * **DDR-034** keeps its hairline's colour and `--shadow-bar`. DDR-048 takes its two states: the edge
   is drawn at all times, with no threshold, no transition and no script-off rule.
@@ -1219,6 +1220,20 @@ Two things about it are worth knowing before touching it.
   sideways and no pair fails 2.5.8. A new label or section means rerunning that sweep.
 
 Paper is untouched: under print emulation every box is identical to the tree before.
+
+**#149 has landed, as DDR-049: the contents bar shows the site's title.** "Andreu’s site", as
+`title` in `content/contents.ts`, stands at the right of the bar's column in bold, after the links
+in the markup. The column is `.bar`, a wrapping flex row of the list and the title; the list is not
+indented, and the title's auto margin takes it to the right edge.
+
+Two things about it are worth knowing before touching it.
+
+* **Where the two cannot share a row, the title takes one of its own**, at the right, which the
+  owner chose on #149. That is below 410px at the default text size and below 790px at 200%, and
+  the bar is one row taller there: 75.3px rather than 48.8px on a phone.
+* **Headings now land closer beneath the narrow bar**: 8px below it at 320px to 390px with text at
+  200%, where it was 63px. The clearance was deliberately not raised. A new label, section or a
+  longer title means rerunning DDR-049's sweep and this check.
 
 **#115 has landed, as DDR-035: every link and control answers the pointer.** A contact pill takes
 `--color-surface-hover` and `--color-border-accent-hover`, the CV control darkens to
