@@ -59,7 +59,8 @@ and a certification has no body at all.
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
 row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
-the name, the one-sentence `summary`, and at most four technology tags then a count such as "+2".
+the name, the one-sentence `summary`, and, since #163 and DDR-054, **every** technology the project
+states, in the content's order, where the card showed four and counted the rest as "+2".
 The page hands the section two cards at a time, as `projectRows` splits them, for the reason it
 hands the skills two groups. `--project-card-*` in `app/tokens.css` holds the 16:9 and the design's
 one 20px. The card's picture is always a still; `Media` in `components/projects.tsx`, which renders
@@ -222,7 +223,7 @@ DDR-014, the **absence** of a target minimum to DDR-027 — the name is held mis
 one moves the record with it — the photo's two widths and its ratio to DDR-021, the three tracking values to DDR-017, the four leadings — each running-text block within half a pixel a line of the design, and 1.5 on paper — to DDR-038,
 the bullet marker's 1.86:1 to DDR-019 as DDR-025 amends it, the raised shadow and its 10% ink to DDR-020 as DDR-025 amends it, and the photo's
 two lights to DDR-021, the timeline's and
-the project cards' measures to DDR-051, and the print
+the project cards' measures to DDR-051 as DDR-054 amends it, and the print
 treatment to DDR-015 as DDR-022 amends it — the 12pt base, every surface dropped and no ink touched, the 28mm photo, and
 every shadow put out — so changing a token means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
@@ -317,7 +318,8 @@ What exists, to reuse rather than reinvent:
   redesign's too, reworked on #52. The type scale and its floor are DDR-022's since #90, and
   DDR-011 keeps everything else it decides. Target sizes are DDR-027's since #95.
 * **The components.** Every section is DDR-010's: the introduction under #48, the timeline that
-  experience and education share under #49 and #51, the project cards under #154 per DDR-051, whose
+  experience and education share under #49 and #51, the project cards under #154 per DDR-051 —
+  which since #163 show every technology, per DDR-054 — whose
   view shows a gallery under #155 per DDR-053 and leads on to the projects on either side of it
   under #156 per DDR-052, and
   the skill groups and language cards under #51. The footer below them is DDR-028's, under #96. What still carries over from DDR-006 is its
@@ -538,8 +540,8 @@ condition 3 Epic #152 meets: each project is a statically generated route, and a
 is a route rather than a file, so it does not go through `asset()`, which amends ADR-004. The next
 ADR is `011`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-053. The next DDR is
-`054`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-054. The next DDR is
+`055`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Twenty-three accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -561,7 +563,11 @@ at the section concerned:
   state and does not animate" that rules out the state: the bar marks the current section's link.
   DDR-043 takes its "Links open in the same tab" for the LinkedIn and GitHub pills alone.
   DDR-050 ends the page being the site's only page: each project has a view of its own.
-  DDR-051 takes its projects pattern: each project is a card that leads to its view.
+  DDR-051 takes its projects pattern: each project is a card that leads to its view, and DDR-054
+  puts every technology on that card.
+* **DDR-051** keeps its card, its one stretched link, its grid, its spacing and how it prints.
+  DDR-054 takes its cap of four technology tags and the count that followed them: a card shows
+  every technology the project states, and the count's ink is drawn nowhere.
 * **DDR-050** keeps everything it decides about a view's address, its way back, its introduction
   and its two columns. DDR-052 adds its foot: a divider, and the projects on either side of this
   one. DDR-053 adds its middle: a gallery of further pictures and videos, between the introduction
@@ -1294,7 +1300,8 @@ from the layer at its 1195px width.
 
 **#154 has landed, as DDR-051: the projects are cards that lead to each project's view.** A card
 is the picture at the design's 16:9, the name in Lora, one sentence (`summary`, which the owner
-approved) and at most four tags then a count. There are no links out, and paper prints no address.
+approved) and its technology tags — four then a count until #163, every one of them since. There
+are no links out, and paper prints no address.
 
 Four things about it are worth knowing before touching it.
 
@@ -1305,11 +1312,30 @@ Four things about it are worth knowing before touching it.
   picture's natural height and left 117px empty under it. The project view's figure had the same
   fault, 101.75px between its picture and caption, and #159 made it a flex column too. Don't lay
   out a stretched picture as a grid item.
-* **The count's ink is the Basic badge's passing pairing**, where the design's grey is 4.34:1. The
-  owner chose it on #154.
+* **The count's ink was the Basic badge's passing pairing**, where the design's grey is 4.34:1. The
+  owner chose it on #154, and **#163 removed the count**, so nothing on a card draws it now.
 * **The printed CV is five sheets in Edge and Firefox**, where it was six. All four cards are on
   sheet 3, and headings fall on sheets 1, 3, 4, 4 and 5 in both. A longer sentence or name
   changes a card's height, so reprint.
+
+**#163 has landed, as DDR-054: a card shows every technology its project states.** The cap of four
+and the count that followed it are gone, with `more` in `content/projects.ts` and `Projects`'s prop
+for it, its field in `content/types.ts` and the `.more` rule in `components/projects.module.css`.
+The tags were already a wrapping row, so nothing was added to draw them: five technologies that
+were behind a click are on the card and on the printed CV.
+
+Three things about it are worth knowing before touching a card's tags.
+
+* **At the design's 1195px, and from 1280px up, the page is exactly as tall as it was.** Six tags
+  fit the one line five filled, because the page's card is 540px where the design's is 492px — the
+  cap was buying no line there. Where the tags do take an extra row, below about 560px, the card
+  grows 28.5px and the card beside it stretches with it; nothing above the projects moves.
+* **A new or longer technology changes how a card wraps**, and a card already takes six rows of
+  tags at 320px with text at 200%. Rerun DDR-054's sweep — every 10px from 300px to 900px at both
+  text sizes — and reprint.
+* **The printed CV is still five sheets in Edge and Firefox**, broken in the same places, with
+  background graphics on and off. `Vercel`, `Cloudflare R2` and `FastAPI` are on the sheet where no
+  reading found them before, `+1` and `+2` are on none, and no word was lost.
 
 **#156 has landed, as DDR-052: each project's view ends with the projects on either side of it.**
 Below the design's divider, a card for the project before this one at the left and one for the

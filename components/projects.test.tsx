@@ -8,7 +8,7 @@ import { Media, Projects, projectRows } from './projects';
 // Rendered with the real content, a row at a time as the page renders it, since what the cards say
 // and lead to is what #154 asks for.
 const html = projectRows(projects.projects)
-  .map((row) => renderToStaticMarkup(<Projects projects={row} more={projects.more} />))
+  .map((row) => renderToStaticMarkup(<Projects projects={row} />))
   .join('');
 
 /** The markup's text, as a reader meets it. */
@@ -21,7 +21,7 @@ const cards = html.match(/<article[^>]*>.*?<\/article>/g) ?? [];
 const linksOf = (card: string) =>
   [...card.matchAll(/<a [^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(([, href, text]) => ({ href, text }));
 
-/** A card's tags, in the order it shows them, the count included. */
+/** A card's tags, in the order it shows them. */
 const tagsOf = (card: string) =>
   [...(card.match(/<ul class="[^"]*technologies[^"]*">.*?<\/ul>/)?.[0] ?? '').matchAll(
     /<li[^>]*>([^<]+)<\/li>/g,
@@ -84,20 +84,33 @@ describe('Projects', () => {
     }
   });
 
-  it('shows at most four technologies, in their order, then a count of the rest', () => {
+  // DDR-054 takes DDR-051's cap of four and the count that followed it: a card shows the lot.
+  it('shows every technology the project states, in the content’s order', () => {
     for (const [index, { technologies }] of projects.projects.entries()) {
-      const rest = technologies.length - 4;
-
-      expect(tagsOf(cards[index]!)).toEqual([
-        ...technologies.slice(0, 4),
-        ...(rest > 0 ? [projects.more(rest)] : []),
-      ]);
+      expect(tagsOf(cards[index]!)).toEqual([...technologies]);
     }
   });
 
-  it('counts the rest as the design does, and shows no count for four or fewer', () => {
-    expect(tagsOf(cards[0]!).at(-1)).toBe('+2');
-    expect(tagsOf(cards[3]!)).toEqual(['Next.js', 'TypeScript', 'CSS Modules', 'GitHub Pages']);
+  // The two projects that had technologies hidden behind a click are the reason #163 exists, so
+  // they are named: six tags each, where both showed four and "+2".
+  it('leaves nothing behind a count, on the two cards that used to hide two', () => {
+    expect(tagsOf(cards[0]!)).toEqual([
+      'Next.js',
+      'TypeScript',
+      'PostgreSQL on Neon',
+      'OpenAI',
+      'Vercel',
+      'Cloudflare R2',
+    ]);
+    expect(tagsOf(cards[1]!)).toEqual([
+      'LangGraph',
+      'OpenAI Agents SDK',
+      'Chroma',
+      'Cohere',
+      'FastAPI',
+      'Next.js',
+    ]);
+    expect(html).not.toMatch(/>\+\d+</);
   });
 
   // The printed CV carries no project address since Epic #152, and the card has none to carry.
@@ -151,7 +164,7 @@ describe('a card’s picture', () => {
         description: 'The Digital Twin chatbot answering a question',
       },
     };
-    const markup = renderToStaticMarkup(<Projects projects={[demo]} more={projects.more} />);
+    const markup = renderToStaticMarkup(<Projects projects={[demo]} />);
 
     expect(markup).not.toContain('<video');
     expect(markup).toMatch(/<img [^>]*src="\/project-digital-twin\.webp"/);
@@ -290,11 +303,16 @@ describe('project styles', () => {
     expect(rule('.tag')).toMatch(/letter-spacing:\s*var\(--letter-spacing-loose\);/);
   });
 
-  // The design's #64748b on its grey is 4.34:1, which fails WCAG 1.4.3; the owner chose the Basic
-  // badge's passing pairing on #154.
-  it('sets the count in the Basic badge’s pairing, which passes', () => {
-    expect(rule('.more')).toMatch(/background-color:\s*var\(--color-surface-level-basic\);/);
-    expect(rule('.more')).toMatch(/color:\s*var\(--color-text-level-basic\);/);
+  // DDR-054 removed the count, so the rule that drew it goes with it rather than lingering as a
+  // class nothing renders.
+  it('draws no count, since a card leaves no technology out', () => {
+    expect(rule('.more')).toBe('');
+  });
+
+  // A card with more tags than fit one line takes a second, at the same 8px the tags are apart.
+  it('wraps the tags rather than letting a card scroll, per DDR-054', () => {
+    expect(rule('.technologies')).toMatch(/flex-wrap:\s*wrap;/);
+    expect(rule('.technologies')).toMatch(/gap:\s*var\(--space-x-small\);/);
   });
 
   it('leaves a tag nothing to say on paper, since the tint is dropped by the token, per DDR-015', () => {

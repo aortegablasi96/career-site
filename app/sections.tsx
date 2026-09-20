@@ -49,7 +49,7 @@ export const sections: readonly PageSection[] = [
     link: projects.link,
     // A row of two cards rather than one, for the reason the skills below give, per DDR-051.
     items: projectRows(projects.projects).map((row) => (
-      <Projects key={row[0]!.slug} projects={row} more={projects.more} />
+      <Projects key={row[0]!.slug} projects={row} />
     )),
   },
   {

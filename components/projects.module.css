@@ -112,8 +112,10 @@ section > .row {
   line-height: var(--line-height-prose-small);
 }
 
-/* The tags, the design's 20px below the sentence, in a row that wraps where the design's does not,
-   so a narrow card never scrolls. */
+/* Every technology the project states, per DDR-054, the design's 20px below the sentence, in a row
+   that wraps where the design's does not — so a narrow card never scrolls, and a card with more
+   tags than fit one line takes a second. The wrapped row is the same 8px apart as the tags in it,
+   which is the gap the design leaves between two tags. */
 .technologies {
   display: flex;
   flex-wrap: wrap;
@@ -134,14 +136,6 @@ section > .row {
   font-size: var(--font-size-xxx-small);
   font-weight: var(--font-weight-medium);
   letter-spacing: var(--letter-spacing-loose);
-}
-
-/* The count of what the card leaves out is not a technology, so it is grey rather than indigo. The
-   surface is the design's; the ink is a step darker than its #64748b, which is 4.34:1 there, so it
-   is the Basic level badge's pairing, 6.92:1, which the owner chose on #154. */
-.more {
-  background-color: var(--color-surface-level-basic);
-  color: var(--color-text-level-basic);
 }
 
 /* From here two cards stand in a row, per DDR-051, and on paper too, per DDR-015. This is the one
