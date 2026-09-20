@@ -88,6 +88,50 @@ section > .row {
   color: var(--color-accent);
 }
 
+/* And the card itself rises, per DDR-055, which is the site's one piece of expressive motion: the
+   whole card is one link, and nothing at rest says so except the ink of its name, so the card
+   answers a pointer anywhere on it by lifting off the page it is already raised off.
+
+   Both the movement and its transition are written here, inside the query, rather than the
+   transition alone as DDR-035 writes the colours': the movement is the motion, so a reader who has
+   asked for less gets the card exactly as it is today, accent and all, and nothing to turn off.
+
+   It moves with `translate` rather than a margin or an offset, so no layout is disturbed and no
+   other card, heading or section shifts. It rises into the 20px the design leaves above every
+   card, so it overlaps nothing; it grows nothing sideways at any width or text size, so nothing
+   scrolls; and the link's box, the focus outline it draws and the picture and text all travel with
+   it, since they are the card's own. */
+@media (prefers-reduced-motion: no-preference) {
+  .card {
+    transition-property: translate;
+    transition-duration: var(--hover-transition);
+  }
+
+  /* Pointing anywhere on the card, which is what the stretched link already means, and keyboard
+     focus, which draws everything the pointer draws, per DDR-035. The focus half is `:has()` rather
+     than `:focus-within` so that a click, which focuses the link too, does not leave the card
+     raised behind the pointer. */
+  .card:hover,
+  .card:has(.link:focus-visible) {
+    translate: 0 calc(-1 * var(--project-card-lift));
+  }
+
+  /* A lifted card leaves the bottom of its resting footprint empty, and a pointer resting in that
+     4px strip would fall off the card, drop it and pick it up again for as long as it stayed
+     there. So the link's box reaches 4px below the card: it travels up with the card, and once
+     lifted it reaches back down to exactly where the card's edge was.
+
+     It is the link's rather than the card's so that the strip is the link in every respect — the
+     name takes the accent there and a click there opens the view, as they do anywhere else on the
+     card. It is a second pseudo-element because the first draws the focus outline, which has to
+     stay the size of the card. */
+  .link::before {
+    position: absolute;
+    inset: 0 0 calc(-1 * var(--project-card-lift));
+    content: '';
+  }
+}
+
 /* Keyboard focus outlines the whole card rather than the name alone, since the card is what the
    link opens, in the outline every focused element has. */
 .link:focus-visible {
@@ -182,6 +226,13 @@ section > .row {
   /* The link leads to a view, which paper cannot follow, so it prints no address, and there is no
      card to stretch it over. */
   .link::after {
+    content: none;
+  }
+
+  /* A sheet is never pointed at, so a card never lifts on one and the box that holds a lifted card
+     under the pointer, per DDR-055, is not drawn either. The movement itself needs no print rule:
+     it is written on `:hover` and `:focus-visible`, which paper cannot be in. */
+  .link::before {
     content: none;
   }
 }

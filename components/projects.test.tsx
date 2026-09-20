@@ -284,6 +284,62 @@ describe('project styles', () => {
     expect(hovered).toMatch(/color:\s*var\(--color-accent\);/);
   });
 
+  // DDR-055: the card itself rises, which is the site's one piece of expressive motion. These hold
+  // the whole of it — where it is written, what moves, how far, how long for, and what a reader who
+  // has asked for less motion gets — because every one of #164's criteria rests on one of them.
+  describe('the lift, per DDR-055', () => {
+    const motion = media('(prefers-reduced-motion: no-preference)');
+
+    it('rises under a pointer anywhere on the card, and on keyboard focus, per DDR-035', () => {
+      const lifted = motion.match(/\.card:hover,\s*\.card:has\(\.link:focus-visible\)\s*\{([^}]*)\}/)?.[1] ?? '';
+
+      expect(lifted).toMatch(/translate:\s*0 calc\(-1 \* var\(--project-card-lift\)\);/);
+      // Only the movement. The card is not restyled: its surface, edge, radius and shadow stand.
+      expect(lifted.match(/[\w-]+:/g)).toEqual(['translate:']);
+    });
+
+    // A translation moves no layout, so no other card, heading or section shifts with it.
+    it('moves the card with `translate`, and moves nothing else', () => {
+      expect(motion).not.toMatch(/margin|inset-block-start|scale|rotate/);
+      expect(css.match(/translate:/g)).toHaveLength(1);
+    });
+
+    it('takes the 150ms every link’s colour takes, so the two are one change, per DDR-035', () => {
+      expect(rule('.card', motion)).toMatch(/transition-property:\s*translate;/);
+      expect(rule('.card', motion)).toMatch(/transition-duration:\s*var\(--hover-transition\);/);
+    });
+
+    // The movement itself is inside the query, not merely its transition as DDR-035 writes the
+    // colours', so a reader who prefers reduced motion gets the card exactly as it was.
+    it('writes the movement, not only its transition, where motion is welcome', () => {
+      expect(motion).not.toBe('');
+      expect(css.replace(motion, '')).not.toMatch(/translate:|transition/);
+    });
+
+    // A lifted card vacates the bottom 4px of its resting footprint. Without this the pointer would
+    // fall off the card there, drop it and pick it up again for as long as it stayed.
+    it('holds the link’s box under a pointer at the card’s resting edge', () => {
+      expect(rule('.link::before', motion)).toMatch(
+        /inset:\s*0 0 calc\(-1 \* var\(--project-card-lift\)\);/,
+      );
+      expect(rule('.link::before', motion)).toMatch(/position:\s*absolute;/);
+    });
+
+    // The other pseudo-element draws the focus outline, which stays the size of the card.
+    it('leaves the focus outline the size of the card', () => {
+      expect(rule('.link::after')).toMatch(/inset:\s*0;/);
+    });
+
+    // The movement needs no print rule, as DDR-035's hover colours need none: paper cannot be
+    // pointed at or focused. The buffer is put out, since there is no pointer to hold anything
+    // under, and it is the one thing this adds to a sheet if it is left drawn.
+    it('draws neither the movement nor its buffer on paper', () => {
+      expect(rule('.card', paper)).toBe('');
+      expect(rule('.link::before', paper)).toMatch(/content:\s*none;/);
+      expect(paper).not.toMatch(/translate|transition/);
+    });
+  });
+
   // DDR-051 amends DDR-023 for this one heading: the design sets a card's name in Lora.
   it('sets the name in the serif, per DDR-051', () => {
     expect(rule('.name')).toMatch(/font-family:\s*var\(--font-family-heading\);/);

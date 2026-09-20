@@ -804,8 +804,15 @@ describe('spacing tokens', () => {
     expect(rem(token('project-card-space')!) * 16).toBe(20);
   });
 
+  // DDR-055: a card rises 4px under the pointer, which is a step of DDR-013's scale. It is the one
+  // distance anything on the site travels, so it is held here by its value rather than by a
+  // reference: widening it is a decision about how far a card moves, not about a space.
+  it('lifts a project card by 4px, per DDR-055', () => {
+    expect(rem(token('project-card-lift')!) * 16).toBe(4);
+  });
+
   it('lays the cards out in the components rather than here, so the wide breakpoint stays theirs', () => {
-    for (const name of ['project-card-media-ratio', 'project-card-space']) {
+    for (const name of ['project-card-media-ratio', 'project-card-space', 'project-card-lift']) {
       expect(atBreakpoint.has(name), name).toBe(false);
     }
   });
