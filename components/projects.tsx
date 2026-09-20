@@ -47,14 +47,15 @@ export function projectHref(slug: string): string {
   return `/projects/${slug}`;
 }
 
-/** How many technologies a card shows before it counts the rest, per DDR-051. */
-const shown = 4;
-
 /**
  * Two projects, which are one row of the section's grid, each as a card that leads to its view, per
  * DDR-051, laid out as `career-site-main` draws them (node 58:938): the project's picture, its name,
- * the one sentence that says what it is, and its first four technologies followed by a count of the
- * rest.
+ * the one sentence that says what it is, and every technology it states, in the content's order.
+ *
+ * The design draws four tags and a count of the rest. DDR-054 takes that cap: a card shows them
+ * all, because they are the fastest read of what the owner builds with and three of the four
+ * projects had one or two hidden behind a click. The tags wrap, so a card that needs a second row
+ * takes one.
  *
  * The whole card is one link, and the link is the name. Its box is stretched over the card by a
  * pseudo-element, so a pointer anywhere on the card follows it, while the link's accessible name is
@@ -74,12 +75,11 @@ const shown = 4;
  * Each card is an article, which print keeps whole, and it prints as it shows, with no address:
  * the link is a route of this site, which paper cannot follow, per Epic #152.
  */
-export function Projects({ projects, more }: { projects: readonly Project[]; more: (count: number) => string }) {
+export function Projects({ projects }: { projects: readonly Project[] }) {
   return (
     <div className={styles.row}>
       {projects.map(({ name, slug, media, summary, technologies }) => {
         const still = 'poster' in media ? { src: media.poster, alt: media.description } : { src: media.file, alt: media.alt };
-        const left = technologies.length - shown;
 
         return (
           <article key={slug} className={styles.card}>
@@ -92,12 +92,11 @@ export function Projects({ projects, more }: { projects: readonly Project[]; mor
               </h3>
               <p className={styles.summary}>{summary}</p>
               <ul className={styles.technologies}>
-                {technologies.slice(0, shown).map((technology) => (
+                {technologies.map((technology) => (
                   <li key={technology} className={styles.tag}>
                     {technology}
                   </li>
                 ))}
-                {left > 0 && <li className={`${styles.tag} ${styles.more}`}>{more(left)}</li>}
               </ul>
             </div>
           </article>

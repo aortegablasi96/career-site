@@ -40,6 +40,10 @@ const liveSite = 'Live site';
  * what the project is in one sentence, its `summary`, rather than the full description. The four are
  * the ones the design proposes, which the owner approved on #154; each says nothing the full
  * description does not.
+ *
+ * Since #163 a card shows every technology stated here, per DDR-054, where it showed the first four
+ * and counted the rest. So the order below is the order a card and a view both read in, and no
+ * technology is hidden behind a click; the wording of that count is gone with it.
  */
 export const projects: Projects = {
   title: 'Projects',
@@ -112,5 +116,4 @@ export const projects: Projects = {
     next: 'Next',
     neighbour: (direction, project) => `${direction} project: ${project}`,
   },
-  more: (count) => `+${count}`,
 };

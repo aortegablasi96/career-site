@@ -14,6 +14,11 @@ a video still has a poster still, and the draft's gradient placeholders are stil
 Every other item title stays in DM Sans. No file is added, because Lora SemiBold is already loaded
 for `h1` and `h2`.
 
+**Amended by DDR-054 in one respect**: a card shows **every** technology the project states, in the
+content's order, where this record showed the first four and counted the rest in a grey tag such as
+"+2". Point 4 below and the count's ink are DDR-054's since #163; everything else this record
+decides stands, and the printed CV is still five sheets, broken in the same places.
+
 **Amends DDR-015 and DDR-032 in one respect each.** DDR-015's table of what prints loses its
 project row: the printed CV shows each project as its card, with no source or live address. DDR-032
 measured five sheets. The CV was six since DDR-037 and is now five again, in both browsers and
@@ -37,7 +42,8 @@ The owner decided four things on #154:
   re-exported, as the view crops them to 16:10.
 * **The name's face**: Lora, as drawn, which amends DDR-023.
 * **The count's ink**: the Basic level badge's `#475569` on the design's grey, at 6.92:1. The
-  design's `#64748b` is 4.34:1 there and fails WCAG 1.4.3.
+  design's `#64748b` is 4.34:1 there and fails WCAG 1.4.3. **There is no count since DDR-054**, so
+  this pairing is no longer drawn anywhere on a card.
 
 ## Decision
 
@@ -56,6 +62,11 @@ Each project is an `article`, in the content's order. From the top:
    such as "+2". A project with four or fewer shows no count. The count's wording is `more` in
    `content/projects.ts`. The first four are chosen by order, so the content's order is also which
    four a card shows.
+
+   **DDR-054 takes this point, per #163**: a card shows every technology the project states, the
+   tags wrap onto a second line where they do not fit one, and the count, its wording and its rule
+   are gone. The order is still the content's. Nothing else about the card moved, and at the
+   design's width the cards are exactly as tall as this record measured them.
 
 The card is a language card's surface: white, a 1px `--color-border` edge, `--shadow-raised` and
 `--radius-large`. The design draws a 16px radius and a shadow of its own. DDR-013 has three radii
@@ -231,7 +242,7 @@ Against the built page served locally.
 
 ## Related Documents
 
-* Issue #154 and Epic #152
+* Issue #154 and Epic #152, and issue #163, which DDR-054 records
 * DDR-010, whose projects pattern this supersedes in part
 * DDR-050, the project view the cards lead to, and ADR-010, its route
 * DDR-023, amended for the card's name

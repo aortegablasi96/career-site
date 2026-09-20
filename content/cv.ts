@@ -32,11 +32,14 @@ import type { Cv } from './types';
  * projects on either side of it show, and what those links are called, per DDR-052.
  * It moved again with #155, because the projects gained the word above a view's gallery, per
  * DDR-053; no project states gallery media yet, so nothing the page shows changed at all.
- * None of the eleven is a fact ADR-005 lists as shared, so none of them moved the CV; the nine
+ * It moved again with #163, because the projects lost the wording of a card's count of the
+ * technologies it left out, per DDR-054: a card now shows every technology the project states, and
+ * the technologies themselves did not change.
+ * None of the twelve is a fact ADR-005 lists as shared, so none of them moved the CV; the nine
  * differences are the ones #59 records, unchanged.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '32abee87948b249a344ee2ffb794db44297c9a67be912d702a7a520e3b29a194',
+  contentDigest: 'f707369c817d6abeccb1ee33fc119b8e1f872a79fffe7f40a610e87acfc24532',
 };
