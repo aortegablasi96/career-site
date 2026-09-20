@@ -561,6 +561,16 @@
   --project-card-media-ratio: 16 / 9;
   --project-card-space: 1.25rem;
 
+  /* How far a card rises under the pointer and on keyboard focus, per DDR-055. It is a step of
+     DDR-013's scale, `--space-x-small`, written here rather than read from the scale because it
+     is a distance a surface travels rather than a space between two things: nothing is separated
+     by it, and a change to the smallest space on the page should not change how far a card moves.
+
+     In rem, so the movement keeps its proportion to the card as the reader's text grows, as the
+     card's own measures do. It is the only length on the site that is a distance travelled, so a
+     second piece of motion is a decision to take rather than this token to reach for. */
+  --project-card-lift: 0.25rem;
+
   /* A project's view, per DDR-050, measured off `career-site-project`. The lead media is the
      design's 16:10 (node 59:71), which crops 8% off the top and the bottom of a 4:3 picture rather
      than distorting it; its width is its column's, so it has none here. The rule above the title

@@ -223,7 +223,7 @@ DDR-014, the **absence** of a target minimum to DDR-027 — the name is held mis
 one moves the record with it — the photo's two widths and its ratio to DDR-021, the three tracking values to DDR-017, the four leadings — each running-text block within half a pixel a line of the design, and 1.5 on paper — to DDR-038,
 the bullet marker's 1.86:1 to DDR-019 as DDR-025 amends it, the raised shadow and its 10% ink to DDR-020 as DDR-025 amends it, and the photo's
 two lights to DDR-021, the timeline's and
-the project cards' measures to DDR-051 as DDR-054 amends it, and the print
+the project cards' measures to DDR-051 as DDR-054 amends it and DDR-055 adds its lift, and the print
 treatment to DDR-015 as DDR-022 amends it — the 12pt base, every surface dropped and no ink touched, the 28mm photo, and
 every shadow put out — so changing a token means revising its decision record too. The spacing and print rules in `app/globals.css` are wrapped in `:where()`, so they have no
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
@@ -321,7 +321,7 @@ What exists, to reuse rather than reinvent:
   experience and education share under #49 and #51, the project cards under #154 per DDR-051 —
   which since #163 show every technology, per DDR-054 — whose
   view shows a gallery under #155 per DDR-053 and leads on to the projects on either side of it
-  under #156 per DDR-052, and
+  under #156 per DDR-052, and which rise under the pointer since #164, per DDR-055, and
   the skill groups and language cards under #51. The footer below them is DDR-028's, under #96. What still carries over from DDR-006 is its
   outline, its contents row, and the metadata line — which DDR-010 narrows to a single part, so the
   timeline's dates, place and company each get a line set the same way. The contents, the section
@@ -540,8 +540,8 @@ condition 3 Epic #152 meets: each project is a statically generated route, and a
 is a route rather than a file, so it does not go through `asset()`, which amends ADR-004. The next
 ADR is `011`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-054. The next DDR is
-`055`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-055. The next DDR is
+`056`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Twenty-three accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -565,9 +565,11 @@ at the section concerned:
   DDR-050 ends the page being the site's only page: each project has a view of its own.
   DDR-051 takes its projects pattern: each project is a card that leads to its view, and DDR-054
   puts every technology on that card.
-* **DDR-051** keeps its card, its one stretched link, its grid, its spacing and how it prints.
+* **DDR-051** keeps its card, its one link, its grid, its spacing and how it prints.
   DDR-054 takes its cap of four technology tags and the count that followed them: a card shows
-  every technology the project states, and the count's ink is drawn nowhere.
+  every technology the project states, and the count's ink is drawn nowhere. DDR-055 adds the
+  card's movement, and a second pseudo-element stretched over it: the first still draws the focus
+  outline, and the second holds a lifted card under the pointer.
 * **DDR-050** keeps everything it decides about a view's address, its way back, its introduction
   and its two columns. DDR-052 adds its foot: a divider, and the projects on either side of this
   one. DDR-053 adds its middle: a gallery of further pictures and videos, between the introduction
@@ -1336,6 +1338,46 @@ Three things about it are worth knowing before touching a card's tags.
 * **The printed CV is still five sheets in Edge and Firefox**, broken in the same places, with
   background graphics on and off. `Vercel`, `Cloudflare R2` and `FastAPI` are on the sheet where no
   reading found them before, `+1` and `+2` are on none, and no word was lost.
+
+**#164 has landed, as DDR-055: a project card rises under the pointer.** Pointing anywhere on a
+card, or reaching it with the keyboard, lifts it 4px — `--project-card-lift` — over the 150ms every
+link's colour already takes, per DDR-035, so the movement and the name's accent are one change. It
+is the site's one piece of expressive motion, and the page's project cards are the only place it is
+drawn: the neighbour cards on a view, the language cards, the pills, the CV control and the contents
+links keep the hover DDR-035 gives them.
+
+Four things about it are worth knowing before touching it.
+
+* **The owner proposed a rotation, and the measurement is why it is a lift.** A rotation's sideways
+  growth scales with the card's **height**, which is what grows most as a reader enlarges their
+  text: at 320px with text at 200% a card is 995px tall inside a 16px gutter, so 1° adds 8.7px each
+  side and fits while 2° adds 17.3px and puts the page into horizontal scroll, which DDR-014
+  forbids. 1° was the whole budget, with nothing left for a taller card. The owner was shown that
+  and chose the lift on #164. DDR-055 has the table.
+* **The movement itself is inside `prefers-reduced-motion: no-preference`, not only its
+  transition.** DDR-035 puts only the transition inside the query, because a colour is not motion;
+  here the change *is* the motion, so a reader who prefers less gets the card exactly as it was,
+  accent, outline and tab stops included. It moves with `translate`, so no layout is disturbed.
+* **A second pseudo-element is stretched over the card**, `.link::before`, reaching
+  `--project-card-lift` below it. A lifted card vacates the bottom 4px of its resting footprint, and
+  without it a pointer resting there would drop the card and pick it up again for as long as it
+  stayed. It is the link's rather than the card's, so that strip is the link in every respect — the
+  accent and the click. `.link::after` still draws the focus outline, at the size of the card, which
+  is why there are two.
+* **Paper is pixel-identical**, in Edge and Firefox with background graphics on and off, against the
+  tree this branched from: same sheets, same text, same pixels. The movement needs no print rule,
+  since a sheet can be in neither `:hover` nor `:focus-visible`; the print block puts the buffer out
+  beside the stretched box it already put out. **The sheet count measured on #164 was six in both
+  browsers**, where #163 records five — it is six on the tree before this change too, so it is the
+  measuring recipe that differs rather than the page.
+
+Swept every 10px from 300px to 900px, and at 1195px, 1280px and 1536px, at the browser's default
+text size and at 200%, pointing at each of the four cards in turn — 512 measurements: every card
+rises exactly 4px, or 8px at 200%, nothing scrolls sideways at rest or lifted, no card overlaps
+another or reaches past the window, and no pair of targets fails WCAG 2.5.8. Compared box by box at
+eight of those widths, **nothing on the page outside the pointed-at card moves or changes size**, and
+each card keeps at least 24px between it and the heading or row above. The built stylesheet gains
+the token, four declarations and the print rule, and differs in nothing else.
 
 **#156 has landed, as DDR-052: each project's view ends with the projects on either side of it.**
 Below the design's divider, a card for the project before this one at the left and one for the
