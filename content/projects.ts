@@ -15,7 +15,9 @@ const liveSite = 'Live site';
  * CV-style, without pronouns.
  *
  * Each project gained its media on #50, per DDR-010, and since #63 each is a picture of the
- * application itself running, supplied by the owner and cropped to 4:3. The alternative text says
+ * application itself running, supplied by the owner and cropped to 4:3. Since #167 each is the
+ * owner's newer picture of the application on a laptop, kept at its own 3:2 at 1080 by 720, which
+ * the card's 16:9 and the view's 16:10 crop. The alternative text says
  * what each picture shows, so a reader who cannot see it learns what a sighted reader does; it
  * leaves out the figures on screen, which are the application's data rather than the project.
  *
@@ -52,7 +54,7 @@ export const projects: Projects = {
     {
       name: 'NumisBook',
       slug: 'numisbook',
-      media: { file: '/project-numisbook.webp', alt: 'NumisBook showing a coin’s record: its details beside a photograph of a silver denarius inscribed EID MAR, with the coin’s invoice below' },
+      media: { file: '/project-numisbook.webp', alt: 'NumisBook on a laptop, showing a coin’s record: the details of a silver tetradrachm of Mark Antony and Cleopatra beside its photograph, with the coin’s invoice below the photograph' },
       caption: 'A coin’s record',
       summary: 'AI-assisted SaaS for managing a coin collection, built end-to-end with Claude Code.',
       technologies: ['Next.js', 'TypeScript', 'PostgreSQL on Neon', 'OpenAI', 'Vercel', 'Cloudflare R2'],
@@ -66,7 +68,7 @@ export const projects: Projects = {
     {
       name: 'Digital Twin',
       slug: 'digital-twin',
-      media: { file: '/project-digital-twin.webp', alt: 'The Digital Twin as Andreu’s Career Bot in a chat, introducing itself, suggesting questions to ask, and answering which roles fit Andreu’s experience' },
+      media: { file: '/project-digital-twin.webp', alt: 'The Digital Twin on a laptop, as Andreu’s AI assistant in a chat, introducing itself and answering a question about Andreu’s AI expertise' },
       caption: 'The chatbot answering a question',
       summary: 'Agentic RAG chatbot that answers questions about this career in the visitor’s language.',
       technologies: ['LangGraph', 'OpenAI Agents SDK', 'Chroma', 'Cohere', 'FastAPI', 'Next.js'],
@@ -80,7 +82,7 @@ export const projects: Projects = {
     {
       name: 'Stock Portfolio Viewer',
       slug: 'stock-portfolio-viewer',
-      media: { file: '/project-stock-portfolio-viewer.webp', alt: 'The Stock Portfolio Viewer’s Allocation view: the invested value, the number of positions and the largest holding, above a world map with donut charts for each country' },
+      media: { file: '/project-stock-portfolio-viewer.webp', alt: 'The Stock Portfolio Viewer on a laptop, showing its Allocation view: the invested value, the number of positions and the largest holding, above a map of Europe with donut charts for each country' },
       caption: 'The Allocation view',
       summary: 'Local desktop app for analysing an Interactive Brokers portfolio with an AI assistant.',
       technologies: ['Electron', 'React', 'TypeScript', 'SQLite', 'OpenAI'],
@@ -91,7 +93,7 @@ export const projects: Projects = {
     {
       name: 'This site',
       slug: 'career-site',
-      media: { file: '/project-career-site.webp', alt: 'This site’s introduction: the owner’s photo, name, positioning line and summary, above the contact and CV controls' },
+      media: { file: '/project-career-site.webp', alt: 'This site on a laptop, showing its introduction: the owner’s photo, name, positioning line and summary, above the contact and CV controls' },
       caption: 'The introduction',
       summary: 'A career site that doubles as a printed CV, built through a skill-driven Claude Code workflow.',
       technologies: ['Next.js', 'TypeScript', 'CSS Modules', 'GitHub Pages'],

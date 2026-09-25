@@ -35,11 +35,13 @@ import type { Cv } from './types';
  * It moved again with #163, because the projects lost the wording of a card's count of the
  * technologies it left out, per DDR-054: a card now shows every technology the project states, and
  * the technologies themselves did not change.
- * None of the twelve is a fact ADR-005 lists as shared, so none of them moved the CV; the nine
+ * It moved again with #167, because all four project pictures were replaced with the owner's
+ * new ones, and their alternative text now describes them.
+ * None of the thirteen is a fact ADR-005 lists as shared, so none of them moved the CV; the nine
  * differences are the ones #59 records, unchanged.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'f707369c817d6abeccb1ee33fc119b8e1f872a79fffe7f40a610e87acfc24532',
+  contentDigest: '8dc876edd24a60fee8f5addd925c1ba82358c2f7ceb1af94705771ed199c1b0d',
 };

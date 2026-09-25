@@ -94,12 +94,13 @@ Two things about the introduction are worth knowing before changing it:
 
 * **The photo and the four project pictures are real since #63.** The owner supplied them and each
   was cropped once, by hand, to the ratio the page draws — the photo 3:4, the media 4:3 — and saved
-  as WebP, per ADR-004. The project stills are 560 × 420, twice the 280px column. **The photo is
-  300 × 400**, which is all a 3:4 crop of the owner's 400px square original holds: it is sharp
-  everywhere at 1× and up to 150px wide at 2×, and soft on a high-density screen from the wide
-  breakpoint, where DDR-040 draws it up to 300px. A larger original is the fix, and replacing the
-  file is the whole of it. The stylesheet clips the photo to a capsule, so a replacement's corners
-  are cropped away on the page. The five files weigh 110 KB together, each far inside its budget.
+  as WebP, per ADR-004. The project stills were 560 × 420, twice the 280px column; since #167 all
+  four are the owner's newer laptop pictures at their own 3:2, 1080 × 720, which the card and
+  the view crop. **The photo is 600 × 800** since #167, from the owner's larger 3:4 original, so it
+  is sharp at 2× everywhere DDR-040 draws it, up to 300px wide. It was 300 × 400 before, all a crop
+  of a 400px square held, and soft on a high-density screen from the wide breakpoint. The
+  stylesheet clips the photo to a capsule, so a replacement's corners are cropped away on the page.
+  Each file is far inside its budget.
   The owner's full-size originals are kept outside the repository, not in `public/`, because
   everything in `public/` is copied into the built site. Do not draw a monogram or a gradient in
   the photo's place — DDR-010 rejects both — and do not capture a picture of the owner or their
