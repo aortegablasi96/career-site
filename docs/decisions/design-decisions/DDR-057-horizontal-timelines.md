@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-059**, on 2026-09-26: each role's card is now a link to the role's view, and the
+hint "Click any role to read the full description" now stands above the experience row, which then
+takes no tab stop of its own. Everything else here stands, including the education row.
+
 **Supersedes in part DDR-010**, in its timeline. DDR-010 draws experience and education as one
 vertical timeline pattern: a date column, a spine and the content, newest first, with a role's
 points and a degree's thesis in the content. On screen that pattern is now the design's horizontal
@@ -48,6 +52,8 @@ It is drawn only at 1195px, and it does not say what a narrow screen does or wha
 The owner decided five things on #173:
 - **The role view** is a later story. Until then the cards are not links, and the design's hint,
   "Click any role to read the full description", is not shown.
+  > **Amended by DDR-059.** The view landed on #176: each role's card leads to it, and the hint is
+  > shown.
 - **Below the design's width** the row scrolls sideways rather than stacking.
 - **On paper** each role keeps its points.
 - **The thesis** is removed from the content entirely, not only from the screen.

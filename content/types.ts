@@ -179,8 +179,15 @@ export interface DateLabels {
 
 /** A role in the experience section, per the Content Brief on #25. */
 export interface Role {
-  /** The job title, which is the entry's heading, per DDR-006. */
+  /** The job title, which is the entry's heading, per DDR-006, and its view's `h1`. */
   title: string;
+  /**
+   * The last part of the role view's address, per ADR-011: `/experience/<slug>`. It is content
+   * rather than something worked out from the company, for the reason a project's slug is: an
+   * address someone has been sent must not change when a name is reworded. Lowercase words joined
+   * by hyphens.
+   */
+  slug: string;
   company: string;
   place: string;
   start: Month;
@@ -188,6 +195,12 @@ export interface Role {
   end?: Month;
   /** Two to four points on what the owner did, CV-style, without pronouns. */
   points: readonly string[];
+  /**
+   * The skills and technologies the role drew on, which its view shows as tags, per DDR-059. The
+   * owner supplies them, per #176; a role without them shows no such row. Screen only: the printed
+   * CV does not carry them.
+   */
+  skills?: readonly string[];
 }
 
 /** The experience section. */
@@ -203,6 +216,37 @@ export interface Experience {
   link: string;
   /** Oldest first, per DDR-057. The page shows them in this order, per ADR-002. */
   roles: readonly Role[];
+  /**
+   * The line above the timeline that says a role's card leads to its view, per DDR-059. Screen
+   * only, since paper has nothing to click.
+   */
+  hint: string;
+  view: RoleView;
+}
+
+/** The strings a role's view shows that are not the role's own, per DDR-059. */
+export interface RoleView {
+  /** The link at the top of the view, which returns the reader to the experience section. */
+  back: string;
+  /** The label above the role's points. */
+  points: string;
+  /** The label above the role's skills. A role without skills shows neither. */
+  skills: string;
+  /** The browser tab's title and the link preview's, from the job title and the company. */
+  title: (role: string, company: string) => string;
+  /**
+   * The words above the company of the role before this one, the older, at the foot of the view.
+   * The oldest role's view shows no such link, because the roles are an order rather than a ring.
+   */
+  previous: string;
+  /** The words above the company of the role after this one, the newer. The current role's view shows none. */
+  next: string;
+  /**
+   * What a link to a neighbouring role is called, from the words above it and that role's company
+   * and title: "Next role: ABB, Global Product Specialist, Digital Solutions". The visible words
+   * come first, per WCAG 2.5.3.
+   */
+  neighbour: (direction: string, company: string, role: string) => string;
 }
 
 /** A project in the projects section, per the Content Brief on #25. */

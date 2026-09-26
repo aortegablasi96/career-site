@@ -34,6 +34,23 @@
   margin-block-start: var(--space-small);
 }
 
+/* The hint above the timeline, per DDR-059, as the design draws it (node 170:71): 11px in the faint
+   ink, after the design's clock. A mark is 1em square, so the clock is 11px beside the words where
+   the design draws it at 12px, rather than a length of its own. The design's 6px between the two is not on the scale; it takes the nearest step, as a level's
+   badge takes it above its skills, per DDR-037. The timeline follows 24px below it. The heading
+   step above it is the section's own. */
+.hint {
+  display: flex;
+  gap: var(--space-small);
+  align-items: center;
+  color: var(--color-text-faint);
+  font-size: var(--font-size-xxx-small);
+}
+
+.hint + * {
+  margin-block-start: var(--timeline-hint-space);
+}
+
 /* The screen does not show a role's points, per DDR-057: the design leads from the role's card to
    a view of its own for them, which is still to come. Paper has nothing to lead to, so the printed
    CV shows them below the card's text, set to the start edge rather than centred as the card is on
@@ -43,5 +60,15 @@
   .points {
     display: block;
     text-align: start;
+  }
+
+  /* Paper has nothing to click, so the hint is the screen's alone, and the timeline takes the place
+     it had below the heading before the hint was drawn. */
+  .hint {
+    display: none;
+  }
+
+  .hint + * {
+    margin-block-start: 0;
   }
 }

@@ -124,6 +124,52 @@
   margin-block: 0;
 }
 
+/* A card that leads to a view, per DDR-059, is the box its link is stretched over, as a project
+   card is, per DDR-051: that is all `relative` does here, and nothing in it moves. */
+.card:has(.link) {
+  position: relative;
+}
+
+/* The link is the title, in the heading's ink and without an underline: what says the card is a
+   link is the card itself, which answers the pointer anywhere on it, and the hint above the row. */
+.link {
+  color: inherit;
+  text-decoration-line: none;
+}
+
+.link::after {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-large);
+  content: '';
+}
+
+/* Under the pointer, anywhere on the card, and on keyboard focus, the title takes the accent and
+   the card the accent's edge, as a project view's neighbouring card answers it, per DDR-035. The
+   card does not rise: DDR-055 keeps that for the project cards. */
+.link:hover,
+.link:focus-visible {
+  color: var(--color-accent);
+}
+
+.card:has(.link:hover),
+.card:has(.link:focus-visible) {
+  border-color: var(--color-border-accent-hover);
+}
+
+/* Keyboard focus outlines the whole card rather than the title alone, since the card is what the
+   link opens. The outline is drawn inside the card's edge rather than offset outside it, because
+   the row scrolls, and a scrolling box clips what reaches past it: offset out, the outline lost its
+   foot to the row's own edge. */
+.link:focus-visible {
+  outline: none;
+}
+
+.link:focus-visible::after {
+  outline: var(--focus-outline-width) solid var(--color-focus);
+  outline-offset: calc(-1 * var(--focus-outline-width));
+}
+
 /* The company opens a role's card in the accent, and the institution a credential's in the muted
    ink, both bold, per DDR-057. The design's 12px is not a step of DDR-022's scale, so the nearest,
    12.8px, is taken, as the footer takes it. */
@@ -223,6 +269,12 @@
 
   .title {
     font-size: var(--font-size-item-title);
+  }
+
+  /* A card's link leads to a view, which paper cannot follow, so it prints no address, and there is
+     no card to stretch it over, as a project card's does not, per DDR-051. */
+  .link::after {
+    content: none;
   }
 
   .place {

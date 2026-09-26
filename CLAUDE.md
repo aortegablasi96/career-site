@@ -57,14 +57,28 @@ the title as the `h3`, and a role's place. The line runs from the first dot to t
 row: the columns meet with no gap, and the design's 24px between cards is the dates' and the card's
 `--timeline-entry-inset`. **There is no breakpoint**: the columns share the row and none is
 narrower than `--timeline-entry-width`, so where they do not fit the `ol` scrolls sideways inside
-itself, which DDR-057 lets it do and the page still may not. The `ol` is `tabindex="0"` and
-`aria-labelledby` its section's heading, so the keyboard scrolls it. The cards are not links yet:
-the role view the design leads to, and its hint "Click any role to read the full description", are
-a later story. **A role's points are hidden on screen and print**, per DDR-057, which is the page's
+itself, which DDR-057 lets it do and the page still may not. The `ol` is `aria-labelledby` its
+section's heading. **Since #176, per DDR-059, each role's card is a link to the role's view**: the
+title is the link, stretched over the card as a project card's name is, and the hint "Click any role
+to read the full description" stands above the row, screen only. A timeline whose entries have an
+`href` takes no tab stop of its own, since tabbing to a card scrolls the row; education's has none,
+so its `ol` is still `tabindex="0"` and the keyboard scrolls it. **A role's points are hidden on the
+page and print**, per DDR-057, which is the page's
 one print-only content; `experience.module.css` holds them. **On paper the timeline is DDR-010's
 vertical one** — date column, spine, the card's text and the points — written in the print block
 of `timeline.module.css`, with the old 12px dot restored in `app/tokens.css`'s print block. The
 degrees' theses are gone from the content, and DM Sans Italic with them.
+
+**Each role has a view of its own since #176**, per ADR-011 and DDR-059, at `/experience/<slug>`,
+laid out as the Figma layer `career-site-experience` (177:1196) draws it: the way back, a tinted
+header with the company's pill, the dates, the place and the job title as the `h1`, every point as
+a numbered list, the role's skills as pills, and the roles on either side in the timeline's order,
+older at the left. It is a project view's route and pattern: `app/experience/[slug]/page.tsx`,
+`components/role-view.tsx`, `roleHref` beside the experience component, and a `slug` on each role
+that is an address someone may have been sent. **No role has skills yet**: `skills` on a `Role` is
+the owner's to supply, per #176, and a role without them draws no label and no row. The skills do
+not print. The view's panel carries two pairings that fail WCAG 1.4.3, which `app/tokens.test.ts`
+holds by name with DDR-025's and DDR-035's.
 
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
@@ -540,7 +554,7 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001 to ADR-010 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
+ADR-001 to ADR-011 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
 separate CV file, and ADR-005 superseding the part of ADR-004 that makes the CV a PDF saved from the
 page's print output; the rest of both records stands. ADR-006 supersedes nothing: it refines
 ADR-001's styling boundary by saying which literal values a component stylesheet may write: `0`,
@@ -553,13 +567,14 @@ ADR-007 again, in its boundary: the component renders the contents links itself,
 section's id and word, so that it can mark the current section's, per DDR-042. It is still the one
 Client Component. ADR-010 supersedes ADR-002's "There are no detail pages", whose revisit
 condition 3 Epic #152 meets: each project is a statically generated route, and a `next/link` href
-is a route rather than a file, so it does not go through `asset()`, which amends ADR-004. The next
-ADR is `011`.
+is a route rather than a file, so it does not go through `asset()`, which amends ADR-004. ADR-011
+extends ADR-010 to the roles, at `/experience/<slug>`, and supersedes nothing. The next ADR is
+`012`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-058. The next DDR is
-`059`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-059. The next DDR is
+`060`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Twenty-five accepted records are superseded or amended **in part**, and each says so at the top and again
+Twenty-six accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -585,6 +600,9 @@ at the section concerned:
   where the summary and the availability sentence were.
   DDR-057 takes its timeline on screen: a horizontal row of cards, oldest first, with no points and
   no thesis. Its vertical timeline survives on paper alone.
+* **DDR-057** keeps its row, its order, its scrolling, its print treatment and its education row.
+  DDR-059 makes each role's card a link to the role's view and shows the hint above the row, which
+  then takes no tab stop of its own.
 * **DDR-029** keeps its short labels, its footer and its print rule. DDR-058 takes the email
   pill's word: it reads "Email me", per #175, and the two profiles still name their service.
 * **DDR-051** keeps its card, its one link, its grid, its spacing and how it prints.

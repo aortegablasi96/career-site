@@ -1,0 +1,323 @@
+/*
+ * A role's view, per DDR-059, measured off `career-site-experience` (node 177:1206).
+ *
+ * The view is one child of `main`, so the base styles inset it to the page's column, as they inset
+ * a project's view. It sets its own space above and below, as a project view does, because it is
+ * the whole of `main`: 48px under the contents bar, as the design draws it, and the page's own
+ * space above the footer's hairline at its foot.
+ *
+ * The view does not print. Only the page is the printed CV, so nothing here has a print rule; the
+ * bar is hidden on paper by the base styles, and the rest prints as the browser lays it out.
+ *
+ * Much of it is a project view's, per DDR-050 and DDR-052 — the way back, the labels and the
+ * neighbouring cards — and it is written again here rather than shared, because a module is one
+ * component's, and the two views are free to part.
+ */
+.view {
+  display: grid;
+  padding-block-start: var(--space-view-top);
+  padding-block-end: var(--page-padding-block-end);
+}
+
+/* The way back, as a project view's is (node 177:1207): the muted ink and medium weight at the
+   label step, with no underline, set apart as a link by its chevron and its place above everything
+   else, and taking the accent under the pointer, per DDR-035. */
+.back {
+  display: inline-flex;
+  justify-self: start;
+  gap: var(--space-small);
+  align-items: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-x-small);
+  font-weight: var(--font-weight-medium);
+  text-decoration-line: none;
+}
+
+.back:hover,
+.back:focus-visible {
+  color: var(--color-accent);
+}
+
+.backMark {
+  display: inline-flex;
+  font-size: var(--font-size-large);
+}
+
+/* The header, on the design's tinted panel (node 177:1213): the accent's palest tint, edged in its
+   border tint, at the large radius, where the design draws 16px — DDR-013 has three radii, and a
+   panel that holds a block is what the large one is for, as a project card takes it. The design's
+   40px below the way back is the heading step.
+
+   Its padding is the design's 48px from the wide breakpoint. Below it, the flow step: 48px each
+   side of a phone's column with enlarged text leaves the job title too little room for its words. */
+.header {
+  margin-block-start: var(--space-heading);
+  padding: var(--space-medium);
+  border: 1px solid var(--color-border-accent);
+  border-radius: var(--radius-large);
+  background-color: var(--color-surface-tag);
+}
+
+.header > * {
+  margin-block: 0;
+}
+
+/* The company, the dates and the place, 12px apart, in the muted ink at 11px (node 177:1214). It
+   wraps where a phone runs out of room, rather than pushing the panel sideways. The spaces between
+   the parts are text for a screen reader; the flex container draws the gap instead.
+
+   `anywhere` keeps the company's pill inside the panel, as the introduction's pills keep their
+   labels: measured at 320px with text at 200%, "ELECTRÓNICA" in capitals is wider than the panel
+   leaves it, and without it the panel ran 1px past the column and the page scrolled sideways. */
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
+  gap: var(--role-view-pill-inline);
+  align-items: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xxx-small);
+}
+
+/* The company, as the design's pill (node 177:1215): bold capitals in the accent on the accent's
+   border tint, tracked as the page's other labels are, per DDR-017 and DDR-018. The case is drawn,
+   so a screen reader is still handed the company's own name.
+
+   Its corners are the large radius rather than the pill's. On one line the two are the same shape,
+   since the large radius is half the pill's height at any text size; but a long company wraps on a
+   phone with enlarged text, and the pill's radius turned that into an ellipse around the words. */
+.company {
+  padding-block: var(--space-x-small);
+  padding-inline: var(--role-view-pill-inline);
+  border-radius: var(--radius-large);
+  background-color: var(--color-border-accent);
+  color: var(--color-accent);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-x-loose);
+  text-transform: uppercase;
+}
+
+/* The dates, in medium, as the design sets them beside the place's regular (node 177:1218). */
+.company + span {
+  font-weight: var(--font-weight-medium);
+}
+
+/* The dot between the dates and the place, larger and paler, as the design draws it (node
+   177:1222). It is decoration and hidden from assistive technology. */
+.separator {
+  color: var(--color-rule);
+  font-size: var(--font-size-large);
+}
+
+/* The job title is the view's h1, in the serif the base styles give it, at a project view's title
+   size, per DDR-050 as DDR-059 extends it to a role: the design's 38.4px is not a step, and the two
+   views' titles are one role. The design's 16px above it is the flow step. */
+.header > .title {
+  margin-block-start: var(--space-medium);
+  font-size: var(--font-size-project-title-narrow);
+}
+
+/* "Responsibilities & achievements" and "Skills & technologies", set as a project view's labels
+   are: 10px bold capitals, tracked and in the faint ink (nodes 177:1233 and 177:1272). Both are h2,
+   so neither takes a section title's serif, size or tracking. The first stands the design's 48px
+   below the panel. */
+.label {
+  margin-block-start: var(--space-view-top);
+  color: var(--color-text-faint);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xxxx-small);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-body);
+  letter-spacing: var(--letter-spacing-x-loose);
+  text-transform: uppercase;
+}
+
+/* The second label stands the design's 40px below the last point, which is the heading step. */
+.skillsLabel {
+  margin-block-start: var(--space-heading);
+}
+
+/* The points, 24px below their label and 20px apart (node 177:1235), held to the design's 800px so
+   a line of them is as long as the design draws it. The browser's own marker and indent go: the
+   number in its circle is what marks each point. */
+.points {
+  max-inline-size: var(--role-view-measure);
+  margin-block-start: var(--role-view-label-gap);
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+/* A point is its number, then its words 16px beside it, which wrap under themselves rather than
+   under the number. The words are running text, in the body's ink at body size and the prose
+   leading, which is the design's 15px on 26.25px within half a pixel a line, per DDR-038.
+
+   The list holds the design's 800px, so a point lifts the measure the base styles give every list
+   item, and its words stand level with its number rather than a flow step below it. */
+.point {
+  display: grid;
+  max-inline-size: none;
+  grid-template-columns: var(--role-view-number-size) minmax(0, 1fr);
+  column-gap: var(--space-medium);
+  align-items: start;
+  color: var(--color-text);
+  line-height: var(--line-height-prose);
+}
+
+.point > * {
+  margin-block: 0;
+}
+
+.point + .point {
+  margin-block-start: var(--role-view-point-gap);
+}
+
+/* The number, bold in the accent at 11px, centred in a 24px circle of the accent's border tint
+   (node 177:1237), as the company's pill is drawn. */
+.number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  block-size: var(--role-view-number-size);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-border-accent);
+  color: var(--color-accent);
+  font-size: var(--font-size-xxx-small);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-body);
+}
+
+/* The skills, as tags that wrap, 16px below their label and 8px apart (node 177:1274). */
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-small);
+  margin-block-start: var(--space-medium);
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+/* A skill, as the design's pill (node 177:1275): medium in the accent on the accent's palest tint,
+   edged in its border tint. The design's 12px is not a step, so it takes the nearest, 12.8px, as a
+   project view's tag does. */
+.skill {
+  padding-block: var(--space-x-small);
+  padding-inline: var(--role-view-pill-inline);
+  border: 1px solid var(--color-border-accent);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-tag);
+  color: var(--color-accent);
+  font-size: var(--font-size-xx-small);
+  font-weight: var(--font-weight-medium);
+}
+
+/* The foot of the view: the roles on either side of this one, below the design's hairline (node
+   177:1317), which is a border on this block, as a project view's is. The design puts a section
+   boundary on each side of the line, 56px and 56px.
+
+   One column below the wide breakpoint, in the markup order — the older role, then the newer — and
+   two equal halves from it, 24px apart, as a project view's are. A half's minimum is zero, so a
+   long company or title can never widen it. */
+.neighbours {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--project-neighbour-gap);
+  margin-block-start: var(--space-boundary);
+  border-block-start: 1px solid var(--color-border);
+  padding-block-start: var(--space-boundary);
+}
+
+/* A card, as the design draws it (node 177:1302), which is a project view's neighbouring card:
+   white, edged by the hairline at the large radius, 16px in all round, with the chevron 12px from
+   the words. The whole card is the link, so it is not underlined. */
+.neighbour {
+  display: flex;
+  gap: var(--project-neighbour-mark-gap);
+  align-items: center;
+  padding: var(--space-medium);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background-color: var(--color-surface-card);
+  color: var(--color-text-heading);
+  text-decoration-line: none;
+}
+
+/* The newer role stands at the right of its card, as the design draws it. The older is its mirror,
+   at the left, which is where a card's content already sits. */
+.next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+/* The empty half beside the oldest role's link, as the design draws it beside its one card (node
+   177:1301). Below the wide breakpoint the halves are one column, so it is drawn only where there
+   are two halves to keep. */
+.half {
+  display: none;
+}
+
+/* The three lines of a card. `anywhere` keeps a long company inside the card at the narrowest
+   widths with enlarged text, as a project view's card keeps a long name. */
+.neighbourText {
+  display: flex;
+  flex-direction: column;
+  overflow-wrap: anywhere;
+}
+
+/* "NEXT ROLE", set as the view's labels are (node 177:1305). */
+.direction {
+  color: var(--color-text-faint);
+  font-size: var(--font-size-xxxx-small);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-body);
+  letter-spacing: var(--letter-spacing-x-loose);
+  text-transform: uppercase;
+}
+
+/* The company in the card's ink, semibold at 14px, and the job title below it in the muted ink at
+   11px (nodes 177:1308 and 177:1311). */
+.neighbourCompany {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+}
+
+.neighbourTitle {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xxx-small);
+}
+
+/* The chevron, 16px, a step above the company, as a project view's is. It never shrinks, so the
+   words wrap before it does. */
+.neighbourMark {
+  display: inline-flex;
+  flex-shrink: 0;
+  font-size: var(--font-size-large);
+}
+
+/* Under the pointer and on keyboard focus, as a project view's card answers it, per DDR-035. */
+.neighbour:hover,
+.neighbour:focus-visible {
+  border-color: var(--color-border-accent-hover);
+  background-color: var(--color-surface-hover);
+  color: var(--color-accent);
+}
+
+/* From here the panel takes the design's padding, the title the design's size, and the two
+   neighbouring roles stand side by side. This is the one width a component may write, per
+   DDR-014. */
+@media (min-width: 48em) {
+  .header {
+    padding: var(--role-view-panel-padding);
+  }
+
+  .header > .title {
+    font-size: var(--font-size-project-title);
+  }
+
+  .neighbours {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .half {
+    display: block;
+  }
+}

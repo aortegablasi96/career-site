@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-19
 
+**Extended by ADR-011**, on 2026-09-26: each role has a view of its own too, at
+`/experience/<slug>`, built by every rule this record sets.
+
 **Supersedes in part ADR-002**: its content-shape finding "A single scrolling page. Nothing has, or
 needs, a URL of its own. There are no detail pages." ADR-002 named this as its revisit condition 3,
 "Content needs individually addressable URLs", and Epic #152 meets it: each project now has a view

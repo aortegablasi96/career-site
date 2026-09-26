@@ -48,6 +48,7 @@ export const sections: readonly PageSection[] = [
       <Experience
         key="experience"
         roles={experience.roles}
+        hint={experience.hint}
         dateLabels={dateLabels}
         labelledBy={headingId('experience')}
       />,

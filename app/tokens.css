@@ -564,6 +564,10 @@
   --timeline-entry-inset: 0.75rem;
   --timeline-date-height: 4rem;
   --timeline-card-space: 1.25rem;
+  /* The space between the hint above the experience timeline and the row, per DDR-059: the
+     design's 24px (node 170:186). It is not a step of DDR-013's scale, so it is the timeline's own,
+     as the measures above are. */
+  --timeline-hint-space: 1.5rem;
 
   /* The projects' cards, per DDR-051, measured off `career-site-main` (node 58:938). The picture
      is the design's 16:9, which crops 12.5% off the top and the bottom of a 4:3 picture rather than
@@ -609,6 +613,23 @@
      scale either, for the reason the two above are not. */
   --project-neighbour-gap: 1.5rem;
   --project-neighbour-mark-gap: 0.75rem;
+
+  /* A role's view, per DDR-059, measured off `career-site-experience` (node 177:1206). Its header
+     is a tinted panel padded by the design's 48px (node 177:1213) from the wide breakpoint; below
+     it the panel is padded by the flow step, so a phone with enlarged text keeps its width for the
+     job title. The company pill and each skill tag are padded 12px either side (nodes 177:1215 and
+     177:1275), and each point's number is a 24px circle, with 20px between two points (node
+     177:1235). None of 48px, 12px, 24px or 20px is a step of DDR-013's scale, and the view is the
+     design's to the pixel at its width, so they are measures of the view's own, as a project
+     view's are. */
+  --role-view-panel-padding: 3rem;
+  --role-view-pill-inline: 0.75rem;
+  --role-view-number-size: 1.5rem;
+  --role-view-point-gap: 1.25rem;
+  /* Its points stand 24px below their label (node 177:1235) and are held to the design's 800px
+     (node 177:1231), in rem so the measure follows the reader's text, as the summary's does. */
+  --role-view-label-gap: 1.5rem;
+  --role-view-measure: 50rem;
 
   /* How many language cards stand side by side below the wide breakpoint, per DDR-010: one at the
      narrowest, two from the narrow breakpoint. It is a count rather than a length, so it has no
