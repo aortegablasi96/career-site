@@ -124,14 +124,19 @@ export interface Introduction {
    * positioning line or the contact controls below the fold on a phone.
    */
   photo: Image;
+  /**
+   * The words before the name, per DDR-056. They are on screen only: the printed CV opens with the
+   * name, as a CV does.
+   */
+  greeting: string;
   /** The page title. */
   name: string;
   /** One line saying what the owner does. */
   positioning: string;
+  /** Where the owner is based, beside a location symbol, per DDR-056. */
   location: string;
-  relocation: string;
+  /** The owner's own description of what they build and how they like to work, per #171. */
   summary: string;
-  availability: string;
   /**
    * Each link shows its short label here and its address in the footer, per DDR-029. Neither is
    * printed twice: the pill prints its label with no address after it, and the footer prints the

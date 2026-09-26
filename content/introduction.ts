@@ -4,8 +4,13 @@ import type { Introduction } from './types';
  * The introduction, per the Content Brief on #25 and issue #28.
  *
  * Every statement traces to the owner's knowledge base or their answers on #26 and #28. The
- * summary gives no number of years, as the brief requires. The ABB role is current, and the page
- * is public, so availability is an invitation to talk rather than an announced job search.
+ * summary gives no number of years, as the brief requires.
+ *
+ * Since #171 the summary is the description in the owner's knowledge base, in the wording the
+ * owner approved on that story, and the knowledge base was updated to match it. It replaces the
+ * two paragraphs that were here — a summary of the roles, which the experience section already
+ * gives, and an availability sentence — and the relocation note, which the owner removed. The
+ * greeting before the name is the owner's own, and is on screen only, per DDR-056.
  *
  * Each contact carries two strings, per DDR-029: the label the pill shows, which names the service
  * rather than the address, and the address itself, which the footer shows and which is what the
@@ -22,14 +27,12 @@ import type { Introduction } from './types';
  */
 export const introduction: Introduction = {
   photo: { file: '/home/andreu-ortega-blasi-photo.webp', alt: 'Andreu Ortega Blasi' },
+  greeting: 'Hi there, I’m',
   name: 'Andreu Ortega Blasi',
   positioning: 'Product manager for AI and IoT products',
   location: 'Lugano, Switzerland',
-  relocation: 'Open to relocation',
   summary:
-    'I am a product manager with an engineering background. At ABB I manage a portfolio of digital SaaS solutions for connectivity and monitoring, and drive its market development in more than 20 countries; before that, at Ponera Group, I led four IoT SaaS products as Product Owner. Earlier, I managed data and digital projects for clients as a consultant, and built hardware and software as an engineer.',
-  availability:
-    'Alongside my role at ABB, in 2026 I earned the PMI-CPMAI certification and built three AI applications of my own, using RAG, agents, and MCP. I am happy to talk about AI and IoT product roles.',
+    'I’m a product manager focused on building AI and IoT products that turn complex technology into useful, scalable solutions. A passionate strategist and ambitious hard worker, I would rather work on high-potential but little-known solutions than on settled, easy-going ones.',
   contact: [
     {
       label: 'Email',

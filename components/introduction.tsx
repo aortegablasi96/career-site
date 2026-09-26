@@ -5,8 +5,16 @@ import { MetadataLine } from './metadata-line';
 import styles from './introduction.module.css';
 
 /**
- * The introduction at the top of the page, per DDR-010: who the owner is, that they are available,
- * and how to reach them, without scrolling.
+ * The introduction at the top of the page, per DDR-010: who the owner is, in their own words, and
+ * how to reach them, without scrolling.
+ *
+ * Since DDR-056 a greeting stands before the name. It is a paragraph of its own rather than part
+ * of the `h1`, so the heading and the page's outline still carry the name alone, and a screen
+ * reader meets the greeting and then the heading, once each. The two are an `hgroup`, which is
+ * HTML's element for a heading and the words that go with it, and which lets them sit beside the
+ * photo or below it together, never one on each side of it. It is on screen only: the printed CV
+ * opens with the name. The location carries a map pin, which is decoration like every other mark
+ * here, so the place is still read as its words.
  *
  * The photo sits beside the name from the wide breakpoint and above it below, which is also the
  * order of the markup, so nothing is reordered to suit a width, per DDR-014. Placing it beside the
@@ -59,12 +67,11 @@ export function Introduction({
 }) {
   const {
     photo,
+    greeting,
     name,
     positioning,
     location,
-    relocation,
     summary,
-    availability,
     contact,
     newTab,
   } = introduction;
@@ -75,11 +82,21 @@ export function Introduction({
         <img className={styles.photo} src={asset(photo.file)} alt={photo.alt} />
       </span>
       <div className={styles.text}>
-        <h1>{name}</h1>
+        <hgroup className={styles.heading}>
+          <p className={styles.greeting}>{greeting}</p>
+          <h1>{name}</h1>
+        </hgroup>
         <p className={styles.positioning}>{positioning}</p>
-        <MetadataLine parts={[location, relocation]} className={styles.location} />
+        <MetadataLine
+          parts={[
+            <>
+              <Icon name="location" />
+              {location}
+            </>,
+          ]}
+          className={styles.location}
+        />
         <p className={styles.summary}>{summary}</p>
-        <p className={styles.summary}>{availability}</p>
         <ul className={styles.controls}>
           {/* A profile opens in a new tab, so the page stays open behind it, per DDR-043. `noopener`
               keeps the new tab from reaching back to this one through `window.opener`; browsers

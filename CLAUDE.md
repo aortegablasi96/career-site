@@ -41,6 +41,13 @@ contact pill reads "Email", "LinkedIn" or "GitHub", per DDR-029, and the address
 written out in the footer instead. A `ContactLink` therefore carries both strings: `label`, which
 the pill shows, and `text`, which is the address and which only the footer shows.
 
+**Since #171, per DDR-056, "Hi there, I’m" stands before the name**, on screen only, and the two
+are one `hgroup`, so the page's one heading is still the name alone. The location is the place
+alone, after a map pin, since the relocation note went; and the summary is one paragraph, the
+owner's own description from their knowledge base, where there were two — a summary of the roles
+and an availability sentence. `Introduction` in `content/types.ts` lost `relocation` and
+`availability` and gained `greeting`.
+
 **The experience and education sections are the redesign's timeline, under #49 and #51.** A role and
 a credential share one pattern, per DDR-010, and `components/timeline.tsx` is it. A row is one
 `article`: below the wide breakpoint a single column with its dates, and a role's place, above the
@@ -116,7 +123,9 @@ Two things about the introduction are worth knowing before changing it:
   while the room beside it shrinks; before #68 the name was squeezed to 119px at 390px and 200% and
   broke mid-word onto seven lines, and to 49px at 320px, where it took seventeen.
   `min-inline-size: min-content` on the `h1` is what fixes it: a block that establishes its own
-  formatting context and cannot fit beside a float moves below it instead. So the name drops under
+  formatting context and cannot fit beside a float moves below it instead. **Since #171 the rule
+  is on the `hgroup` that holds the greeting and the name**, per DDR-056: on the name alone, the
+  greeting stayed beside the photo while the name dropped below it. So the name drops under
   the photo, at the full column, once its longest word no longer fits beside it — at 360px and
   390px nothing changes at any text size the page was checked at, and at 320px the name now sits
   below the photo at the default size too, which is three whole words rather than four broken lines.
@@ -327,8 +336,8 @@ What exists, to reuse rather than reinvent:
   outline, its contents row, and the metadata line — which DDR-010 narrows to a single part, so the
   timeline's dates, place and company each get a line set the same way. The contents, the section
   wrapper, the metadata line and the date range are shared by the sections that need them.
-* **The icons**, in `components/icon.tsx`: one per contact address, one for the CV, and the view's
-  own chevrons and arrow. They are
+* **The icons**, in `components/icon.tsx`: one per contact address, one for the CV, the view's
+  own chevrons and arrow, and since #171 the map pin before the introduction's location. They are
   inline SVG rather than committed files, sized in em. Since #135 the three contact marks are the
   services' own, per DDR-044: Gmail's M in its own four colours, and LinkedIn's [in] and GitHub's
   Invertocat in `currentColor`, which the stylesheet only ever sets to a colour the brand
@@ -541,8 +550,8 @@ condition 3 Epic #152 meets: each project is a statically generated route, and a
 is a route rather than a file, so it does not go through `asset()`, which amends ADR-004. The next
 ADR is `011`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-055. The next DDR is
-`056`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-056. The next DDR is
+`057`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Twenty-three accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -565,7 +574,9 @@ at the section concerned:
   DDR-043 takes its "Links open in the same tab" for the LinkedIn and GitHub pills alone.
   DDR-050 ends the page being the site's only page: each project has a view of its own.
   DDR-051 takes its projects pattern: each project is a card that leads to its view, and DDR-054
-  puts every technology on that card.
+  puts every technology on that card. DDR-056 takes the introduction's text column: a greeting
+  before the name on screen, a map pin before the location, no relocation note, and one paragraph
+  where the summary and the availability sentence were.
 * **DDR-051** keeps its card, its one link, its grid, its spacing and how it prints.
   DDR-054 takes its cap of four technology tags and the count that followed them: a card shows
   every technology the project states, and the count's ink is drawn nowhere. DDR-055 adds the
