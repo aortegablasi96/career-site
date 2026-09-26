@@ -333,6 +333,12 @@ describe('introduction styles', () => {
     expect(rule('.frame', wide)).toMatch(/float:\s*none;/);
   });
 
+  // DDR-059: the photo is centred on the text column, not level with its top, so a text column
+  // taller than the photo no longer leaves the space all below it.
+  it('centres the photo and the text on each other from the wide breakpoint, per DDR-059', () => {
+    expect(rule('.introduction', wide)).toMatch(/align-items:\s*center;/);
+  });
+
   // DDR-040: the design's proportions. 64px between the photo and the text, the summary held to
   // 680px, and the summary and the controls set further apart from what precedes them than the
   // flow step, by two spaces of the rhythm.

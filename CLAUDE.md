@@ -556,8 +556,8 @@ condition 3 Epic #152 meets: each project is a statically generated route, and a
 is a route rather than a file, so it does not go through `asset()`, which amends ADR-004. The next
 ADR is `011`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-058. The next DDR is
-`059`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-059. The next DDR is
+`060`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Twenty-five accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -1088,6 +1088,12 @@ smallest and clear 24 by 24 outright, as they did at 203.2 by 37.5 — and nothi
 controls row takes one more row at 490px and 500px, and at 450px and 460px with text at 200%, and
 nowhere else from 300px to 900px. On paper the pills stand one to a line, so only the word changes:
 five sheets in Edge and Firefox, broken where they were.
+
+**#178 has landed, as DDR-059: from the wide breakpoint the photo and the text are centred on each
+other.** One declaration, `align-items: center` on the introduction's grid, where it was `start`.
+The row is as tall as the taller of the two, so the band does not move; up to about 1125px the text
+is taller and the photo moves down, and from there the photo is taller and the text moves down, up
+to 35.3px at 1536px. Below the breakpoint the float is untouched, and paper is pixel-identical.
 
 **The weight gap #97 found is closed by #109**, below.
 

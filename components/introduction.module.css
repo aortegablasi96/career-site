@@ -78,8 +78,9 @@
 
 /* The text column is a div, which the base styles' flow rule does not reach, so it sets the rhythm
    between its own blocks. Every step is the flow step, and the two that sit tighter and the two
-   that stand further apart say so below. It adds no space above itself, so the name starts level
-   with the top of the photo. */
+   that stand further apart say so below. It adds no space above itself, so below the wide
+   breakpoint the greeting starts level with the top of the photo, and from it the column is centred
+   on the photo with nothing added to either half. */
 .text {
   margin-block-start: 0;
 }
@@ -308,7 +309,11 @@
        the scale. It is a gap between two columns rather than a space between blocks, so it takes
        the scale as it is rather than the rhythm's factor, which is 1 from here anyway. */
     gap: var(--space-x-large);
-    align-items: start;
+    /* The photo is centred on the text beside it, per DDR-059: level with the middle of the column
+       from the greeting to the controls, so the space above it and below it is the same. The row is
+       as tall as the taller of the two, so the band is as tall as it was, and whichever is shorter
+       is the one centred — the text, if the photo is ever the taller. */
+    align-items: center;
   }
 
   /* The grid places the frame, so it stops floating and the text no longer runs past it: from here
