@@ -93,6 +93,12 @@ past it: it pads its foot by `--timeline-shadow-room` and takes that back with a
 so the page is laid out exactly as before, and paper sets both back to 0. A larger blur or offset
 needs more room, and `app/tokens.test.ts` holds the two together.
 
+**Since #184, per DDR-062, a project card on the page takes the same shadow** in place of its
+resting `--shadow-raised`, under the pointer and on keyboard focus, and it comes in with DDR-055's
+lift over the same 150ms. It is written outside the reduced-motion query, so a reader who prefers
+less motion gets the shadow at once and no lift. Its reach stays inside the 20px round every card,
+which `app/tokens.test.ts` holds, so a change to `--shadow-card-hover` now moves both kinds of card.
+
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
 row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
@@ -261,7 +267,7 @@ spacing scale, column and radii to DDR-013, the rhythm — each space the design
 factor, and paper's steps as they were — to DDR-039, the narrow breakpoint and what it adapts to
 DDR-014, the **absence** of a target minimum to DDR-027 — the name is held missing, so reinstating
 one moves the record with it — the photo's two widths and its ratio to DDR-021, the three tracking values to DDR-017, the four leadings — each running-text block within half a pixel a line of the design, and 1.5 on paper — to DDR-038,
-the bullet marker's 1.86:1 to DDR-019 as DDR-025 amends it, the raised shadow and its 10% ink to DDR-020 as DDR-025 amends it, the role card's hover shadow and the row's room for it to DDR-061, and the photo's
+the bullet marker's 1.86:1 to DDR-019 as DDR-025 amends it, the raised shadow and its 10% ink to DDR-020 as DDR-025 amends it, the role card's hover shadow and the row's room for it to DDR-061, the same shadow's reach round a lifted project card to DDR-062, and the photo's
 two lights to DDR-021, the timeline's and
 the project cards' measures to DDR-051 as DDR-054 amends it and DDR-055 adds its lift, and the print
 treatment to DDR-015 as DDR-022 amends it — the 12pt base, every surface dropped and no ink touched, the 28mm photo, and
@@ -584,10 +590,10 @@ is a route rather than a file, so it does not go through `asset()`, which amends
 extends ADR-010 to the roles, at `/experience/<slug>`, and supersedes nothing. The next ADR is
 `012`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-061. The next DDR is
-`062`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-062. The next DDR is
+`063`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Twenty-seven accepted records are superseded or amended **in part**, and each says so at the top and again
+Twenty-eight accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -613,6 +619,8 @@ at the section concerned:
   where the summary and the availability sentence were.
   DDR-057 takes its timeline on screen: a horizontal row of cards, oldest first, with no points and
   no thesis. Its vertical timeline survives on paper alone.
+* **DDR-061** keeps its shadow and its row's room. DDR-062 gives the shadow a second reader: a
+  project card on the page, as it lifts.
 * **DDR-057** keeps its row, its order, its scrolling, its print treatment and its education row.
   DDR-059 makes each role's card a link to the role's view and shows the hint above the row, which
   then takes no tab stop of its own.
@@ -624,7 +632,8 @@ at the section concerned:
   DDR-054 takes its cap of four technology tags and the count that followed them: a card shows
   every technology the project states, and the count's ink is drawn nowhere. DDR-055 adds the
   card's movement, and a second pseudo-element stretched over it: the first still draws the focus
-  outline, and the second holds a lifted card under the pointer.
+  outline, and the second holds a lifted card under the pointer. DDR-062 adds a light shadow to the
+  lifted card, which a reader who prefers reduced motion gets without the lift.
 * **DDR-050** keeps everything it decides about a view's address, its way back, its introduction
   and its two columns. DDR-052 adds its foot: a divider, and the projects on either side of this
   one. DDR-053 adds its middle: a gallery of further pictures and videos, between the introduction

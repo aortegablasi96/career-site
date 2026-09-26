@@ -305,7 +305,8 @@ describe('project styles', () => {
     });
 
     it('takes the 150ms every link’s colour takes, so the two are one change, per DDR-035', () => {
-      expect(rule('.card', motion)).toMatch(/transition-property:\s*translate;/);
+      // The shadow DDR-062 adds comes in with the lift, so the two are one change as well.
+      expect(rule('.card', motion)).toMatch(/transition-property:\s*translate, box-shadow;/);
       expect(rule('.card', motion)).toMatch(/transition-duration:\s*var\(--hover-transition\);/);
     });
 
@@ -328,6 +329,17 @@ describe('project styles', () => {
     // The other pseudo-element draws the focus outline, which stays the size of the card.
     it('leaves the focus outline the size of the card', () => {
       expect(rule('.link::after')).toMatch(/inset:\s*0;/);
+    });
+
+    // DDR-062: the card takes the light shadow DDR-061 gives a role's card, in place of its resting
+    // one, under a pointer anywhere on it and on keyboard focus. It is a state rather than motion, so
+    // it is written outside the query and a reader who prefers less motion still gets it.
+    it('lights the card under the pointer and on focus, with or without motion, per DDR-062', () => {
+      const lit = css.replace(motion, '').match(/\.card:hover,\s*\.card:has\(\.link:focus-visible\)\s*\{([^}]*)\}/)?.[1] ?? '';
+
+      expect(lit).toMatch(/box-shadow:\s*var\(--shadow-card-hover\);/);
+      expect(lit.match(/[\w-]+:/g)).toEqual(['box-shadow:']);
+      expect(rule('.card')).toMatch(/box-shadow:\s*var\(--shadow-raised\);/);
     });
 
     // The movement needs no print rule, as DDR-035's hover colours need none: paper cannot be

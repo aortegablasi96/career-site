@@ -88,6 +88,17 @@ section > .row {
   color: var(--color-accent);
 }
 
+/* And the card takes a light shadow all round it in place of its resting one, per DDR-062, the same
+   the role cards take under DDR-061, so the lift below reads as the card coming off the page. It is
+   written outside the motion query: a shadow is a state rather than a movement, so a reader who
+   prefers less motion still gets it, at once, as they get the accent. Where motion is welcome it
+   comes in with the lift. It reaches 12px beside and above the card and 16px below it, inside the
+   20px the design leaves round every card, so it touches no other card and no heading. */
+.card:hover,
+.card:has(.link:focus-visible) {
+  box-shadow: var(--shadow-card-hover);
+}
+
 /* And the card itself rises, per DDR-055, which is the site's one piece of expressive motion: the
    whole card is one link, and nothing at rest says so except the ink of its name, so the card
    answers a pointer anywhere on it by lifting off the page it is already raised off.
@@ -103,7 +114,7 @@ section > .row {
    it, since they are the card's own. */
 @media (prefers-reduced-motion: no-preference) {
   .card {
-    transition-property: translate;
+    transition-property: translate, box-shadow;
     transition-duration: var(--hover-transition);
   }
 
