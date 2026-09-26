@@ -105,7 +105,7 @@ export type ContactIcon = 'gmail' | 'linkedin' | 'github';
 export interface ContactLink extends Link {
   /** The address, such as `aortegablasi@gmail.com`. The footer shows it; the pill does not. */
   text: string;
-  /** What the pill shows, per DDR-029: "Email", "LinkedIn" or "GitHub". */
+  /** What the pill shows, per DDR-029 and DDR-058: "Email me", "LinkedIn" or "GitHub". */
   label: string;
   icon: ContactIcon;
   /**

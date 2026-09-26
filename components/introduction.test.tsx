@@ -172,7 +172,7 @@ describe('Introduction', () => {
 
     // Nothing visible says it: no mark on a pill is named, and the visible labels are DDR-029's.
     expect(html).not.toMatch(/role="img"/);
-    expect(links.slice(0, 3).map(({ text }) => text)).toEqual(['Email', 'LinkedIn', 'GitHub']);
+    expect(links.slice(0, 3).map(({ text }) => text)).toEqual(['Email me', 'LinkedIn', 'GitHub']);
   });
 
   // DDR-044: the three contact marks are solid shapes, where the download beside them is still a
@@ -415,7 +415,7 @@ describe('introduction styles', () => {
   // DDR-044: Gmail's M is drawn in its own four colours, which are the mark, and nothing on the pill
   // sets them; the other two marks have one colour each, which their pill decides.
   it('draws Gmail’s M in its own colours, and the other marks in their pill’s ink, per DDR-044', () => {
-    const gmail = links.find(({ text }) => text === 'Email')!.markup;
+    const gmail = links.find(({ text }) => text === 'Email me')!.markup;
 
     for (const colour of ['#4285f4', '#34a853', '#fbbc04', '#ea4335']) {
       expect(gmail).toContain(`fill="${colour}"`);
@@ -492,8 +492,8 @@ describe('introduction styles', () => {
   });
 
   // The pill prints its label and nothing after it, per DDR-029. The base styles would otherwise
-  // print `(mailto:…)` after "Email", which is the prefix DDR-006 removed; the address itself is on
-  // the sheet once, from the footer.
+  // print `(mailto:…)` after "Email me", which is the prefix DDR-006 removed; the address itself is
+  // on the sheet once, from the footer.
   it('prints the label with no address after it, per DDR-029', () => {
     expect(rule('.contact::after', paper)).toMatch(/content:\s*none;/);
     expect(rule('.contact', paper)).toMatch(/border:\s*none;/);
@@ -515,16 +515,21 @@ describe('introduction content', () => {
     }
   });
 
-  // DDR-029 takes the design's own three words. Each names a service rather than describing the
-  // owner, and each is shorter than the address it replaces, which is the whole point of it.
-  it('labels each contact pill with the service the design names, per DDR-029', () => {
-    expect(introduction.contact.map(({ label }) => label)).toEqual(['Email', 'LinkedIn', 'GitHub']);
+  // DDR-029 takes the design's short labels, each shorter than the address it replaces, which is
+  // the whole point of it. The two profiles name their service; the email pill asks to be written
+  // to, per DDR-058, because it is the one control that starts a message to the owner.
+  it('labels each contact pill as DDR-029 and DDR-058 decide', () => {
+    expect(introduction.contact.map(({ label }) => label)).toEqual([
+      'Email me',
+      'LinkedIn',
+      'GitHub',
+    ]);
   });
 
   // DDR-043: the two profiles open a new tab and the email address does not.
   it('opens the two profiles in a new tab and the email address in the mail client, per DDR-043', () => {
     expect(introduction.contact.map(({ label, newTab }) => [label, newTab])).toEqual([
-      ['Email', false],
+      ['Email me', false],
       ['LinkedIn', true],
       ['GitHub', true],
     ]);

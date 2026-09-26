@@ -37,7 +37,7 @@ DDR-022's since #90, below: ten steps rather than seven.
 
 **The introduction is the redesign's, under #48**: the photo, the positioning line in the accent,
 and four pill controls — the three contact addresses and the "Get my CV" download. Since #97 each
-contact pill reads "Email", "LinkedIn" or "GitHub", per DDR-029, and the address it links to is
+contact pill reads "Email me", "LinkedIn" or "GitHub", per DDR-029 and DDR-058, and the address it links to is
 written out in the footer instead. A `ContactLink` therefore carries both strings: `label`, which
 the pill shows, and `text`, which is the address and which only the footer shows.
 
@@ -556,10 +556,10 @@ condition 3 Epic #152 meets: each project is a statically generated route, and a
 is a route rather than a file, so it does not go through `asset()`, which amends ADR-004. The next
 ADR is `011`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-057. The next DDR is
-`058`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-058. The next DDR is
+`059`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Twenty-four accepted records are superseded or amended **in part**, and each says so at the top and again
+Twenty-five accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -585,6 +585,8 @@ at the section concerned:
   where the summary and the availability sentence were.
   DDR-057 takes its timeline on screen: a horizontal row of cards, oldest first, with no points and
   no thesis. Its vertical timeline survives on paper alone.
+* **DDR-029** keeps its short labels, its footer and its print rule. DDR-058 takes the email
+  pill's word: it reads "Email me", per #175, and the two profiles still name their service.
 * **DDR-051** keeps its card, its one link, its grid, its spacing and how it prints.
   DDR-054 takes its cap of four technology tags and the count that followed them: a card shows
   every technology the project states, and the count's ink is drawn nowhere. DDR-055 adds the
@@ -1080,6 +1082,12 @@ same five missing from the same PDFs before this change. On screen, swept every 
 900px at both text sizes, no pair of targets fails WCAG 2.5.8 — the pills are 87 by 37.5 at their
 smallest and clear 24 by 24 outright, as they did at 203.2 by 37.5 — and nothing overflows at 320px,
 360px, 390px or 1536px at either text size.
+
+**#175 has landed, as DDR-058: the email pill reads "Email me".** One string in
+`content/introduction.ts`; the two profiles keep their names. The pill is 22.7px wider, so the
+controls row takes one more row at 490px and 500px, and at 450px and 460px with text at 200%, and
+nowhere else from 300px to 900px. On paper the pills stand one to a line, so only the word changes:
+five sheets in Edge and Firefox, broken where they were.
 
 **The weight gap #97 found is closed by #109**, below.
 
