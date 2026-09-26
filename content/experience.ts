@@ -10,6 +10,10 @@ import type { Experience } from './types';
  * DDR-057, so the timeline reads left to right through time, and the two engineering roles are
  * shorter, as the brief sets. Points are CV-style, without pronouns,
  * and the current role's are in the present tense.
+ *
+ * Each role's title is its heading in the owner's knowledge base, per #181. The timeline's cards
+ * show it without its qualifier, and only a role's view shows it whole, as `fullTitle`, per
+ * DDR-060; a role whose title has no qualifier states it once.
  */
 export const experience: Experience = {
   title: 'Experience',
@@ -40,7 +44,8 @@ export const experience: Experience = {
       ],
     },
     {
-      title: 'Project Manager, Data and Digital Projects',
+      title: 'Project Manager',
+      fullTitle: 'Project Manager in Data & Digital Projects',
       slug: 'randstad',
       company: 'Randstad',
       place: 'Leuven, Belgium',
@@ -53,7 +58,7 @@ export const experience: Experience = {
       ],
     },
     {
-      title: 'Digital Solutions Manager',
+      title: 'Product Manager',
       slug: 'ponera-group',
       company: 'Ponera Group',
       place: 'Lugano, Switzerland',
@@ -67,7 +72,8 @@ export const experience: Experience = {
       ],
     },
     {
-      title: 'Global Product Specialist, Digital Solutions',
+      title: 'Global Product Manager',
+      fullTitle: 'Global Product Manager - Digital Solutions',
       slug: 'abb',
       company: 'ABB',
       place: 'Quartino, Switzerland',

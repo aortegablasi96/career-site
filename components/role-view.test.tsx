@@ -29,9 +29,10 @@ describe('RoleView', () => {
   const html = render(abb, { previous: ponera });
 
   // DDR-059: the way back, the header, the points, the skills where there are any, and the foot.
-  it('reads as the way back, the company, dates and place, then the job title', () => {
+  // DDR-060: the view's heading is the job title in full, where the timeline's card shortens it.
+  it('reads as the way back, the company, dates and place, then the job title in full', () => {
     expect(text(html)).toMatch(
-      /^Back to experience ABB Oct 2024 – Present · Quartino, Switzerland Global Product Specialist, Digital Solutions Responsibilities &amp; achievements/,
+      /^Back to experience ABB Oct 2024 – Present · Quartino, Switzerland Global Product Manager - Digital Solutions Responsibilities &amp; achievements/,
     );
   });
 
@@ -77,8 +78,23 @@ describe('RoleView', () => {
   it('leads to the older role at the left, and shows its direction, company and title', () => {
     const link = html.match(/<a [^>]*href="\/experience\/ponera-group"[^>]*>/)?.[0] ?? '';
 
-    expect(link).toContain('aria-label="Previous role: Ponera Group, Digital Solutions Manager"');
-    expect(text(html)).toMatch(/Previous role Ponera Group Digital Solutions Manager$/);
+    expect(link).toContain('aria-label="Previous role: Ponera Group, Product Manager"');
+    expect(text(html)).toMatch(/Previous role Ponera Group Product Manager$/);
+  });
+
+  // DDR-060: a neighbouring card is a card, so it shows the short title the timeline's card does.
+  it('names a neighbouring role by its short title, not its full one', () => {
+    const randstad = roles.find(({ company }) => company === 'Randstad')!;
+    const after = render(ponera, { previous: randstad });
+
+    expect(randstad.fullTitle).toBeDefined();
+    expect(after).toContain(`aria-label="Previous role: Randstad, ${randstad.title}"`);
+    expect(text(after)).toMatch(new RegExp(`Previous role Randstad ${randstad.title}$`));
+  });
+
+  it('shows the one title a role without a full title states', () => {
+    expect(ponera.fullTitle).toBeUndefined();
+    expect(render(ponera)).toMatch(/<h1[^>]*>Product Manager<\/h1>/);
   });
 
   it('keeps the empty left half for the oldest role, so the newer role is on the right', () => {

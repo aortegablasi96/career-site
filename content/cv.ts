@@ -48,9 +48,14 @@ import type { Cv } from './types';
  * experience section the hint above its timeline and the strings of a role's view, per DDR-059.
  * None of them is a fact ADR-005 lists as shared, so none of them moved the CV; the nine
  * differences are the ones #59 records, unchanged.
+ * It moved again with #181, because each role's title is now its heading in the owner's knowledge
+ * base, shortened on its card and given in full on its view, per DDR-060. The job titles are facts
+ * ADR-005 lists as shared, so the CV file is behind the page on them until the owner updates it:
+ * the current role reads "Global Product Manager - Digital Solutions" on the page's view and
+ * "Global Product Manager" on its card and on paper, and Ponera Group's reads "Product Manager".
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '16ea5cf9e499bb0c1e948f8c62e65fc6782b9ed906e3e1e65d57fbb16cb12bbb',
+  contentDigest: 'c8ffb91193e9229323e5bffa7488a50b8a4d7c5e8fa50f768c2d29a63f25fb48',
 };

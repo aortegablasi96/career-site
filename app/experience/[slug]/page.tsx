@@ -42,18 +42,19 @@ function roleAt(slug: string) {
   };
 }
 
-// The browser tab and a link preview name the role and the company, per #176, and describe it by
-// its first point, which is what the owner did in it in their own words.
+// The browser tab and a link preview name the role and the company, per #176, the role by its full
+// title, per DDR-060, and describe it by its first point, which is what the owner did in it in their
+// own words.
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { title: role, company, points } = roleAt((await params).slug).role;
-  const title = experience.view.title(role, company);
+  const { title, fullTitle = title, company, points } = roleAt((await params).slug).role;
+  const tab = experience.view.title(fullTitle, company);
   const description = points[0];
 
-  return { title, description, openGraph: { title, description } };
+  return { title: tab, description, openGraph: { title: tab, description } };
 }
 
 export default async function RolePage({ params }: { params: Promise<{ slug: string }> }) {

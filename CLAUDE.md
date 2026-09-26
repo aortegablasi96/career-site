@@ -80,6 +80,12 @@ the owner's to supply, per #176, and a role without them draws no label and no r
 not print. The view's panel carries two pairings that fail WCAG 1.4.3, which `app/tokens.test.ts`
 holds by name with DDR-025's and DDR-035's.
 
+**Since #181, per DDR-060, a role can have two titles**, both its heading in the owner's knowledge
+base: `title`, without its qualifier, which the timeline's card, the view's neighbouring cards and
+the printed CV show, and an optional `fullTitle`, which only the view's `h1`, tab and link preview
+show. A role whose title has no qualifier states only `title`. The job titles are facts ADR-005 says
+the CV file shares, so that file is behind the page on them until the owner updates it.
+
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
 row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
@@ -571,10 +577,10 @@ is a route rather than a file, so it does not go through `asset()`, which amends
 extends ADR-010 to the roles, at `/experience/<slug>`, and supersedes nothing. The next ADR is
 `012`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-059. The next DDR is
-`060`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-060. The next DDR is
+`061`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Twenty-six accepted records are superseded or amended **in part**, and each says so at the top and again
+Twenty-seven accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -603,6 +609,8 @@ at the section concerned:
 * **DDR-057** keeps its row, its order, its scrolling, its print treatment and its education row.
   DDR-059 makes each role's card a link to the role's view and shows the hint above the row, which
   then takes no tab stop of its own.
+* **DDR-059** keeps its view, its card, its hint and its neighbours. DDR-060 gives a role two
+  titles: the view's `h1`, tab and preview give it in full, and every card and paper give it short.
 * **DDR-029** keeps its short labels, its footer and its print rule. DDR-058 takes the email
   pill's word: it reads "Email me", per #175, and the two profiles still name their service.
 * **DDR-051** keeps its card, its one link, its grid, its spacing and how it prints.

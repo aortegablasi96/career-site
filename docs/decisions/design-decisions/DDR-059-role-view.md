@@ -18,6 +18,10 @@ DDR-052's neighbouring cards in both directions, with no ring.
 `--font-size-project-title`, the one size on the site that is not a step, rather than a size of its
 own. The two views' titles are one role.
 
+**Amended by DDR-060**: a role can have a short title and a full one. The view's `h1`, its tab and
+its link preview give the full title; the timeline's card, the neighbouring cards and the printed CV
+give the short one. Everything else here stands.
+
 **Extends DDR-025's failing pairings** by two, below. `app/tokens.test.ts` holds eight by name.
 
 ## Context
@@ -60,6 +64,8 @@ From the top, in one column, as the layer draws it:
   with a third line: the direction, the company semibold at 14px, and the job title at 11px in the
   muted ink (node 177:1302). Its accessible name is "Next role: ABB, Global Product Specialist,
   Digital Solutions", with the visible words first. The oldest role keeps the empty left half.
+  **Since DDR-060** the card's third line and its name give the role's short title, "Next role:
+  ABB, Global Product Manager", and the view's `h1` gives the full one.
 
 Every word is in `content/experience.ts`: the role's own record and `experience.view`.
 

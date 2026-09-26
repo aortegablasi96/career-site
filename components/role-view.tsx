@@ -11,9 +11,10 @@ import styles from './role-view.module.css';
  * leads. It is a project view's neighbouring card, per DDR-052, with the job title as a third line.
  *
  * The whole card is the link, so it is one stop in the tab order, and its accessible name is the
- * three lines together — "Next role: ABB, Global Product Specialist, Digital Solutions" — with the
- * visible words first, per WCAG 2.5.3. The chevron repeats what the card says and is hidden from
- * assistive technology, as every other mark is.
+ * three lines together — "Next role: ABB, Global Product Manager" — with the visible words first,
+ * per WCAG 2.5.3. The job title is the short one the timeline's card shows, per DDR-060. The
+ * chevron repeats what the card says and is hidden from assistive technology, as every other mark
+ * is.
  */
 function Neighbour({
   role: { title, slug, company },
@@ -57,8 +58,8 @@ function Neighbour({
  * 177:1206).
  *
  * At the top, a way back to the experience section on the page. Below it, the role's header on a
- * tinted panel: the company in a pill, the dates and the place, then the job title, which is the
- * view's one `h1`. Below that, every point the role states as a numbered list, and, where the
+ * tinted panel: the company in a pill, the dates and the place, then the job title in full, which
+ * is the view's one `h1`, per DDR-060. Below that, every point the role states as a numbered list, and, where the
  * owner has supplied them, the role's skills as tags. At the foot, below a divider, the roles on
  * either side of this one, in the timeline's order.
  *
@@ -76,7 +77,7 @@ function Neighbour({
  * view's does not: prefetching the page would fetch its photo and every project's picture.
  */
 export function RoleView({
-  role: { title, company, place, start, end, points, skills },
+  role: { title, fullTitle = title, company, place, start, end, points, skills },
   strings: { back, points: pointsLabel, skills: skillsLabel, previous: previousWords, next: nextWords, neighbour },
   dateLabels,
   backHref,
@@ -115,7 +116,7 @@ export function RoleView({
           </span>{' '}
           <span>{place}</span>
         </p>
-        <h1 className={styles.title}>{title}</h1>
+        <h1 className={styles.title}>{fullTitle}</h1>
       </header>
       <h2 className={styles.label}>{pointsLabel}</h2>
       <ol className={styles.points}>
