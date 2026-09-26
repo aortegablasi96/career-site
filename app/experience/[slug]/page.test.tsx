@@ -19,8 +19,9 @@ describe('a role’s view', () => {
     expect(dynamicParams).toBe(false);
   });
 
-  it.each(roles.map(({ slug, title, company }) => [slug, title, company]))(
-    'names %s’s role and company in the browser tab and the link preview',
+  // DDR-060: the tab and the preview give the job title in full, as the view's heading does.
+  it.each(roles.map(({ slug, title, fullTitle = title, company }) => [slug, fullTitle, company]))(
+    'names %s’s role, in full, and company in the browser tab and the link preview',
     async (slug, title, company) => {
       const metadata = await generateMetadata(params(slug));
       const expected = view.title(title, company);
@@ -33,12 +34,12 @@ describe('a role’s view', () => {
     },
   );
 
-  it.each(roles.map(({ slug }) => slug))('%s has one h1, the job title', async (slug) => {
+  it.each(roles.map(({ slug }) => slug))('%s has one h1, the job title in full', async (slug) => {
     const html = await render(slug);
-    const { title } = roles.find((role) => role.slug === slug)!;
+    const { title, fullTitle = title } = roles.find((role) => role.slug === slug)!;
 
     expect(html.match(/<h1/g)).toHaveLength(1);
-    expect(html).toMatch(new RegExp(`<h1[^>]*>${title}</h1>`));
+    expect(html).toMatch(new RegExp(`<h1[^>]*>${fullTitle.replace(/&/g, '&amp;')}</h1>`));
   });
 
   // DDR-059, as DDR-050 has it for a project: the site's own contents bar, every link leading back
@@ -82,7 +83,7 @@ describe('a role’s view', () => {
   it('shows ABB’s previous role as Ponera Group and no next role, since ABB is current', async () => {
     const html = await render('abb');
 
-    expect(html).toContain('aria-label="Previous role: Ponera Group, Digital Solutions Manager"');
+    expect(html).toContain('aria-label="Previous role: Ponera Group, Product Manager"');
     expect(html).not.toContain('Next role');
   });
 

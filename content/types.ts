@@ -179,8 +179,17 @@ export interface DateLabels {
 
 /** A role in the experience section, per the Content Brief on #25. */
 export interface Role {
-  /** The job title, which is the entry's heading, per DDR-006, and its view's `h1`. */
+  /**
+   * The job title as the timeline's card shows it, which is the entry's heading, per DDR-006. It is
+   * also what the cards on either side of a role's view and the printed CV show, per DDR-060.
+   */
   title: string;
+  /**
+   * The job title in full, qualifier and all, which only the role's view shows: its `h1`, its
+   * browser tab and its link preview, per DDR-060. Left out where the title has no qualifier, so a
+   * title the two would share is stated once.
+   */
+  fullTitle?: string;
   /**
    * The last part of the role view's address, per ADR-011: `/experience/<slug>`. It is content
    * rather than something worked out from the company, for the reason a project's slug is: an

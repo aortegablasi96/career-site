@@ -52,9 +52,20 @@ describe('Experience', () => {
       expect(html).toMatch(new RegExp(`<h3[^>]*><a [^>]*>${title}</a></h3>`));
     }
 
-    expect(text).toContain('Jun 2023 – Oct 2024 Ponera Group Digital Solutions Manager Lugano, Switzerland');
-    expect(text).toContain('Oct 2024 – Present ABB Global Product Specialist, Digital Solutions Quartino, Switzerland');
+    expect(text).toContain('Jun 2023 – Oct 2024 Ponera Group Product Manager Lugano, Switzerland');
+    expect(text).toContain('Oct 2024 – Present ABB Global Product Manager Quartino, Switzerland');
     expect(text).not.toContain('Ponera Group ·');
+  });
+
+  // DDR-060: a card shows the short title, on screen and on paper alike. The full one is the view's.
+  it('shows each role by its short title and none by its full one', () => {
+    const full = roles.flatMap(({ fullTitle }) => (fullTitle ? [fullTitle] : []));
+
+    expect(full.length).toBeGreaterThan(0);
+
+    for (const title of full) {
+      expect(html).not.toContain(title.replace(/&/g, '&amp;'));
+    }
   });
 
   it('shows one role, and only one, as running to the present', () => {
