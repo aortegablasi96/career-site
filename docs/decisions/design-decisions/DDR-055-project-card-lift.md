@@ -8,6 +8,9 @@ Date: 2026-09-20
 shadow, per #184, and a reader who prefers reduced motion gets the shadow without the lift. The lift
 itself, its distance, its timing and its buffer stand.
 
+**Added to by DDR-063**: the lifted card's edge also takes `--color-border-accent-hover`, which
+joins the transition, and a reader who prefers reduced motion gets it without the lift, per #187.
+
 Supersedes nothing. It adds a movement to the card DDR-051 draws, beside the colour change DDR-035
 already gives its name.
 

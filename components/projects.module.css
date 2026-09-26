@@ -88,14 +88,17 @@ section > .row {
   color: var(--color-accent);
 }
 
-/* And the card takes a light shadow all round it in place of its resting one, per DDR-062, the same
-   the role cards take under DDR-061, so the lift below reads as the card coming off the page. It is
-   written outside the motion query: a shadow is a state rather than a movement, so a reader who
-   prefers less motion still gets it, at once, as they get the accent. Where motion is welcome it
-   comes in with the lift. It reaches 12px beside and above the card and 16px below it, inside the
-   20px the design leaves round every card, so it touches no other card and no heading. */
+/* And the card takes the role card's answer, per DDR-063: its edge in the accent's hover edge, as a
+   role's card takes it under DDR-061, and a light shadow all round it in place of its resting one,
+   per DDR-062, so the lift below reads as the card coming off the page. Both are written outside
+   the motion query: an edge and a shadow are states rather than movements, so a reader who prefers
+   less motion still gets them, at once, as they get the accent. Where motion is welcome they come
+   in with the lift. The edge is a colour, so it takes no space and moves nothing. The shadow reaches
+   12px beside and above the card and 16px below it, inside the 20px the design leaves round every
+   card, so it touches no other card and no heading. */
 .card:hover,
 .card:has(.link:focus-visible) {
+  border-color: var(--color-border-accent-hover);
   box-shadow: var(--shadow-card-hover);
 }
 
@@ -114,7 +117,7 @@ section > .row {
    it, since they are the card's own. */
 @media (prefers-reduced-motion: no-preference) {
   .card {
-    transition-property: translate, box-shadow;
+    transition-property: translate, border-color, box-shadow;
     transition-duration: var(--hover-transition);
   }
 

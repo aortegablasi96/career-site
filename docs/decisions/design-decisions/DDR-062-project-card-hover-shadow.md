@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-063**: the card's edge takes `--color-border-accent-hover` alongside the shadow,
+in the same rule and the same transition, per #187. Everything else here stands.
+
 **Amends DDR-061 by giving its shadow a second reader.** `--shadow-card-hover`, its ink and its
 geometry do not change. DDR-061 said a second reader would need that record amended; this is it.
 DDR-020 is not amended again: the site still has four named shadows, not five.

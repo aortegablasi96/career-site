@@ -99,6 +99,12 @@ lift over the same 150ms. It is written outside the reduced-motion query, so a r
 less motion gets the shadow at once and no lift. Its reach stays inside the 20px round every card,
 which `app/tokens.test.ts` holds, so a change to `--shadow-card-hover` now moves both kinds of card.
 
+**Since #187, per DDR-063, a project card's edge takes `--color-border-accent-hover` too**, in the
+same rule as that shadow, so the two kinds of card that lead to a view answer the pointer with the
+same edge, light and accent. The project card alone still lifts, as the owner chose on #187: its
+edge joins the lift's transition, `translate, border-color, box-shadow`, and a reader who prefers
+less motion gets the edge and the shadow at once. The views' neighbour cards already matched.
+
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
 row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
@@ -590,10 +596,10 @@ is a route rather than a file, so it does not go through `asset()`, which amends
 extends ADR-010 to the roles, at `/experience/<slug>`, and supersedes nothing. The next ADR is
 `012`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-062. The next DDR is
-`063`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-063. The next DDR is
+`064`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Twenty-eight accepted records are superseded or amended **in part**, and each says so at the top and again
+Twenty-nine accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -621,6 +627,8 @@ at the section concerned:
   no thesis. Its vertical timeline survives on paper alone.
 * **DDR-061** keeps its shadow and its row's room. DDR-062 gives the shadow a second reader: a
   project card on the page, as it lifts.
+* **DDR-062** keeps its shadow, its reduced-motion rule and its reach. DDR-063 adds the role card's
+  accent edge to the same rule and the same transition.
 * **DDR-057** keeps its row, its order, its scrolling, its print treatment and its education row.
   DDR-059 makes each role's card a link to the role's view and shows the hint above the row, which
   then takes no tab stop of its own.
@@ -633,7 +641,8 @@ at the section concerned:
   every technology the project states, and the count's ink is drawn nowhere. DDR-055 adds the
   card's movement, and a second pseudo-element stretched over it: the first still draws the focus
   outline, and the second holds a lifted card under the pointer. DDR-062 adds a light shadow to the
-  lifted card, which a reader who prefers reduced motion gets without the lift.
+  lifted card, which a reader who prefers reduced motion gets without the lift. DDR-063 adds the
+  role card's accent edge beside it.
 * **DDR-050** keeps everything it decides about a view's address, its way back, its introduction
   and its two columns. DDR-052 adds its foot: a divider, and the projects on either side of this
   one. DDR-053 adds its middle: a gallery of further pictures and videos, between the introduction
