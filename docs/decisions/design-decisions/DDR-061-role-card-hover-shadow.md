@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-062**, which gives `--shadow-card-hover` a second reader: a project card on the
+page takes it as it lifts, per #184. Its value and everything else here stand.
+
 **Amends DDR-020 by adding a fourth named elevation**, `--shadow-card-hover`. DDR-020 named its
 one level for what it does, so that a second would be "a decision to take rather than the next
 number to reach for". DDR-021 took the second and third, the photo's two lights, and DDR-034 the
