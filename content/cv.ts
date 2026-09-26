@@ -37,11 +37,13 @@ import type { Cv } from './types';
  * the technologies themselves did not change.
  * It moved again with #167, because all four project pictures were replaced with the owner's
  * new ones, and their alternative text now describes them.
- * None of the thirteen is a fact ADR-005 lists as shared, so none of them moved the CV; the nine
+ * It moved again when `public/` was arranged by view: the photo and the CV under `home/`, and each
+ * project's picture under `projects/<slug>/`. Only the paths changed.
+ * None of the fourteen is a fact ADR-005 lists as shared, so none of them moved the CV; the nine
  * differences are the ones #59 records, unchanged.
  */
 export const cv: Cv = {
   label: 'Get my CV',
-  file: '/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '8dc876edd24a60fee8f5addd925c1ba82358c2f7ceb1af94705771ed199c1b0d',
+  file: '/home/andreu-ortega-blasi-cv.pdf',
+  contentDigest: '66945eef33f45b464745019b2c1d84597fdb95cc6a76ae4188183e7c300eb8e7',
 };

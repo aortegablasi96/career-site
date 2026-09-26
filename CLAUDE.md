@@ -1773,10 +1773,17 @@ spells out from Firefox, as DDR-024 recorded. "Get" is no longer counted, becaus
 change to what the page shows. #120 closed it, per DDR-040, below.
 
 ADR-004 and ADR-005 together decide the downloadable CV and the site's first binary assets. The CV
-itself has landed, under #56: `public/andreu-ortega-blasi-cv.pdf` is a separately designed document,
+itself has landed, under #56: `public/home/andreu-ortega-blasi-cv.pdf` is a separately designed document,
 and `content/cv.ts` carries a digest over the content modules that `content/cv.test.ts` checks, so a
 change to any fact on the page fails the test suite until the CV is brought back into step. ADR-005
 lists the facts the two documents must share and makes the site the one that wins when they disagree.
+
+`public/` is arranged by view: `home/` holds what only the page uses, the photo and the CV, and
+`projects/<slug>/` holds a project's pictures, named for their role — `lead.webp` is the one its
+card and its view both show — so a project's gallery files go beside it. Moving a file changes its
+address, and the CV's is one people may have been sent. The owner may keep a PNG original beside
+the file made from it; `.gitignore` excludes `public/**/*.png`, so none is ever committed or
+deployed, though a local build still copies them into `out/`.
 
 Both halves of the reference machinery have landed. `app/asset.ts`, under #47, is the one route a
 binary's path takes so that it resolves under `PAGES_BASE_PATH` as well as locally, and
