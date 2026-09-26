@@ -39,9 +39,10 @@ describe('RootLayout', () => {
   // DDR-011: Firefox draws a variable font as outlines when it saves a PDF, so the printed CV
   // would lose its text (#22). Each font is one static file per weight and style, and a weight or
   // a style with no file would be synthesised, so the files are exactly what the page sets.
-  // DDR-023 lists them: four weights and one italic for the body face, because the design draws
-  // three labels bold and a thesis sentence italic, and semibold for the heading face, which is the
-  // page title and the section titles, with regular beside it since #96 for the footer's name.
+  // DDR-023 lists them: four weights for the body face, because the design draws its labels bold —
+  // the italic it listed went with the theses on #173, per DDR-057 — and semibold for the heading
+  // face, which is the page title and the section titles, with regular beside it since #96 for the
+  // footer's name.
   it('loads each font as one static file per weight and style, which a PDF keeps as text', () => {
     expect(fontOptions.map(({ variable }) => variable)).toEqual(['--font-dm-sans', '--font-lora']);
 
@@ -54,7 +55,7 @@ describe('RootLayout', () => {
     const [body, heading] = fontOptions;
 
     expect(Array.isArray(body.src) && body.src.map(({ weight, style }) => `${weight} ${style}`))
-      .toEqual(['400 normal', '500 normal', '600 normal', '700 normal', '400 italic']);
+      .toEqual(['400 normal', '500 normal', '600 normal', '700 normal']);
     expect(Array.isArray(heading.src) && heading.src.map(({ weight, style }) => `${weight} ${style}`))
       .toEqual(['400 normal', '600 normal']);
   });

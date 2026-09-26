@@ -48,21 +48,24 @@ owner's own description from their knowledge base, where there were two — a su
 and an availability sentence. `Introduction` in `content/types.ts` lost `relocation` and
 `availability` and gained `greeting`.
 
-**The experience and education sections are the redesign's timeline, under #49 and #51.** A role and
-a credential share one pattern, per DDR-010, and `components/timeline.tsx` is it. A row is one
-`article`: below the wide breakpoint a single column with its dates, and a role's place, above the
-title, and from the breakpoint a three-column grid of a date column, a decorative spine, and the
-content. The spine is `aria-hidden` and not rendered at all below the breakpoint. Since #116, per
-DDR-036, each row's spine is three pieces — a lead line down into the dot, the design's ringed dot
-with its accent core, and the line leaving it — so the rows join into one unbroken line from the
-first dot to the last; the first row's lead is left undrawn. The space between
-two rows is padding at the foot of the content column rather than a margin between the rows, so the
-spine's line runs through it to the next dot; the last row in a section, which
-`timeline.module.css` finds as `section > .row:last-child`, drops both. `--timeline-*` in
-`app/tokens.css` holds its measures. `experience.module.css` holds what is a role's alone, which is
-the bullet points — indented one step of the scale and marked by the browser's own disc recoloured
-through `::marker`, per DDR-019; a credential has no place, a degree's body is its thesis sentence,
-and a certification has no body at all.
+**The experience and education sections are horizontal timelines of cards, under #173, per
+DDR-057**, from the Figma layer `career-site-main`, nodes 170:65 and 170:439. A role and a credential
+still share one pattern, per DDR-010, and `components/timeline.tsx` is it: `Timeline` renders one
+`ol` of entries, **oldest first** as `content/` now lists both, each a column of its dates, an
+`aria-hidden` spine (lead line, ringed dot, line) and a white card with the company or institution,
+the title as the `h3`, and a role's place. The line runs from the first dot to the last across the
+row: the columns meet with no gap, and the design's 24px between cards is the dates' and the card's
+`--timeline-entry-inset`. **There is no breakpoint**: the columns share the row and none is
+narrower than `--timeline-entry-width`, so where they do not fit the `ol` scrolls sideways inside
+itself, which DDR-057 lets it do and the page still may not. The `ol` is `tabindex="0"` and
+`aria-labelledby` its section's heading, so the keyboard scrolls it. The cards are not links yet:
+the role view the design leads to, and its hint "Click any role to read the full description", are
+a later story. **A role's points are hidden on screen and print**, per DDR-057, which is the page's
+one print-only content; `experience.module.css` holds them. **On paper the timeline is DDR-010's
+vertical one** — date column, spine, the card's text and the points — written in the print block
+of `timeline.module.css`, with the old 12px dot restored in `app/tokens.css`'s print block. The
+degrees' theses are gone from the content, and DM Sans Italic with them.
+
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
 row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
@@ -172,9 +175,9 @@ Tooling notes that are easy to trip over:
   to `app/fonts/`, with their licences, and loaded by `next/font/local` in `app/layout.tsx`, so
   builds need no network access for fonts. Each is one static file per weight and style, not a
   variable font: Firefox draws variable fonts as outlines when it saves a PDF, so the printed CV's
-  text could not be selected (#22). **There are seven files and all seven are loaded**, per DDR-023
-  as DDR-028 completes it — DM Sans at 400, 500, 600 and 700 plus a 400 italic, and Lora at 400 and
-  600. Lora Regular was committed and deliberately unlisted until #96, because it is the footer's
+  text could not be selected (#22). **There are six files and all six are loaded**, per DDR-023
+  as DDR-028 completes it and DDR-057 amends it — DM Sans at 400, 500, 600 and 700, and Lora at 400
+  and 600. The DM Sans italic went with the theses on #173. Lora Regular was committed and deliberately unlisted until #96, because it is the footer's
   name and `next/font` preloads every file it is given; the footer now draws it.
   `app/layout.test.tsx` holds the two sets **equal**, so a file committed for a story still to come
   fails the suite rather than shipping as bytes nobody fetches on purpose.
@@ -274,15 +277,15 @@ Print follows DDR-015, which supersedes DDR-005 and DDR-008. ADR-002 makes the p
 so what a browser prints, or saves as a PDF, is designed rather than left to defaults.
 
 **Paper is the wide surface.** A component that lays out in columns writes
-`@media (min-width: 48em), print`, so the sheet gets the layout the wide screen gets: the timeline's
-date column, two project cards to a row, two columns of skill groups, four language cards
+`@media (min-width: 48em), print`, so the sheet gets the layout the wide screen gets: two project cards to a row, two columns of skill groups, four language cards
 in a row. A sheet of A4 inside its margins is about 40em and an em in a media query is the browser's
 default font size, which paper does not have, so the width alone never matches on paper; writing the
 grid twice would leave the two free to drift. `components/stylesheets.test.ts` admits that one
 variation and no other. **The introduction is the exception**: at 28mm the printed photo is short,
 so a column of its own would leave three quarters of it empty, and the UI Review asks for the photo
 beside the *name* — which is the float the narrow layout already uses. Its print block writes no
-layout at all.
+layout at all. **The timeline is the other exception**, per DDR-057: the screen's row of cards
+cannot scroll on a sheet or hold the points, so its print block draws DDR-010's vertical timeline.
 
 The `@media print` block in `app/tokens.css` sets `--root-font-size` to 12pt, which DDR-022 raised
 from DDR-015's 11pt when the scale changed, so every rem, type and space alike, is measured from a
@@ -297,7 +300,10 @@ DDR-028, because since #97 labelled the contact pills it is the only place the p
 address at all. It prints each link's address after it,
 keeps entries whole, and keeps headings with what follows. Firefox does not honour that last rule,
 so `components/section.tsx` holds each section's heading and first item in one block that print
-keeps whole, per DDR-015. A component hides its own screen-only elements in print, and may drop
+keeps whole, per DDR-015. A timeline section is `breakable`, per DDR-057: its one item is the whole
+timeline, and kept whole it pushed experience onto sheet 2, so paper breaks inside it and only the
+heading's `break-after: avoid` keeps it with the first entry — which Firefox ignores. Reprint after
+changing anything above experience or education. A component hides its own screen-only elements in print, and may drop
 screen-only sizing such as the row gap that holds two links apart for a finger, per DDR-027 — which
 is the projects' one remaining use of that allowance, since DDR-027 took the target minimum it used
 to name — but adds no print-only content. What the base
@@ -550,10 +556,10 @@ condition 3 Epic #152 meets: each project is a statically generated route, and a
 is a route rather than a file, so it does not go through `asset()`, which amends ADR-004. The next
 ADR is `011`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-056. The next DDR is
-`057`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-057. The next DDR is
+`058`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Twenty-three accepted records are superseded or amended **in part**, and each says so at the top and again
+Twenty-four accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -577,6 +583,8 @@ at the section concerned:
   puts every technology on that card. DDR-056 takes the introduction's text column: a greeting
   before the name on screen, a map pin before the location, no relocation note, and one paragraph
   where the summary and the availability sentence were.
+  DDR-057 takes its timeline on screen: a horizontal row of cards, oldest first, with no points and
+  no thesis. Its vertical timeline survives on paper alone.
 * **DDR-051** keeps its card, its one link, its grid, its spacing and how it prints.
   DDR-054 takes its cap of four technology tags and the count that followed them: a card shows
   every technology the project states, and the count's ink is drawn nowhere. DDR-055 adds the
@@ -593,6 +601,7 @@ at the section concerned:
   `--font-size-project-title-narrow`. DDR-027 takes its 44 by 44 pixel
   minimum target, and `--target-size-min` with it. The one sentence of that bullet which survives is
   the one letting a component drop screen-only sizing on paper.
+  DDR-057 lets a timeline scroll sideways inside itself; the page still may not.
 * **DDR-013** keeps its scale, `--space-flow` and every other value. DDR-039 takes its rhythm: the
   space between sections, from a heading to its first item and between entries is the design's own,
   off the scale. DDR-026 amends the sentence that makes whitespace and a heading the whole section
@@ -613,6 +622,7 @@ at the section concerned:
   had the weight, and left out the CV control, which did. It now names the positioning line, the
   four pill controls and the tags. DDR-031 adds the contents links, which were #98's. DDR-051
   sets one `h3` in Lora: a project card's name, as the design draws it.
+  DDR-057 takes its italic with the theses, so there are six files.
 * **DDR-011** is superseded three times over. DDR-022 takes its type scale and its 13px floor; DDR-023
   takes which elements each typeface is used on, the three weights, the four files and the
   no-italics rule; DDR-038 adds two running-text leadings to its 1.5 and 1.2, which stand. What
@@ -627,6 +637,8 @@ at the section concerned:
   running text at 1.5 on paper, where the screen now sets it looser, and DDR-039 keeps the rhythm
   at its old steps on paper, where the screen now takes the design's. DDR-051 prints a project as
   its card, with no address, and the CV is five sheets again, in both browsers.
+  DDR-057 prints a role's points, which the screen does not show, and draws the timeline on paper
+  as DDR-010's vertical one rather than the screen's row.
 * **DDR-018** keeps its case and its ink. DDR-023 takes its "semibold, not bold" decision, and
   corrects its measurement of the tracking fault: at the 10px badge DDR-022 left, +0.1em splits the
   word in a Firefox PDF at **every** weight the site ships, 400 included, where DDR-018 concluded
@@ -664,7 +676,10 @@ at the section concerned:
 * **DDR-034** keeps its hairline's colour and `--shadow-bar`. DDR-048 takes its two states: the edge
   is drawn at all times, with no threshold, no transition and no script-off rule.
 * **DDR-036** keeps its ring, its core, its line and its offset. DDR-046 takes the dot's fill, so the
-  inside of the ring is the band the timeline is on.
+  inside of the ring is the band the timeline is on. DDR-057 sizes the dot on screen at the design's
+  16px with a 10px core, across a horizontal row; paper keeps the 12px dot.
+* **DDR-039** keeps its rhythm. DDR-057 leaves `--space-role` and `--space-credential` to paper
+  alone, since the screen spaces a timeline's cards across a row.
 * **DDR-033** keeps every contents link at rest without an underline. DDR-042 underlines the one
   link of the section the reader is in, as a state rather than as what identifies a link, per #133.
 * **DDR-043** keeps its new tab, its `noopener` and its two pills. DDR-044 takes its arrow: the tab

@@ -16,9 +16,9 @@ import './globals.css';
 // unchanged.
 //
 // A weight or a style with no file is synthesised by the browser, so the list is exactly what the
-// page sets and no more. DM Sans carries four weights, because the design draws its three labels
-// bold, and the one italic a degree's thesis sentence is set in. Lora carries semibold, which is
-// the page title and the section titles.
+// page sets and no more. DM Sans carries four weights, because the design draws its labels bold.
+// It carried an italic too, for a degree's thesis sentence, until the owner removed the theses on
+// #173, per DDR-057. Lora carries semibold, which is the page title and the section titles.
 //
 // Lora carries regular as well since #96: the footer's name is the one place on the page the serif
 // is neither the page title nor a section title, per DDR-023, and it is the file that record
@@ -29,7 +29,6 @@ const dmSans = localFont({
     { path: './fonts/dm-sans-latin-500-normal.woff2', weight: '500', style: 'normal' },
     { path: './fonts/dm-sans-latin-600-normal.woff2', weight: '600', style: 'normal' },
     { path: './fonts/dm-sans-latin-700-normal.woff2', weight: '700', style: 'normal' },
-    { path: './fonts/dm-sans-latin-400-italic.woff2', weight: '400', style: 'italic' },
   ],
   variable: '--font-dm-sans',
   adjustFontFallback: 'Arial',

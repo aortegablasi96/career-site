@@ -28,6 +28,9 @@ depends on hover, and its rule that nothing scrolls horizontally from 320px all 
 unchanged. What does not carry forward is its central promise: **one layout at every width**. The
 timeline is precisely what breaks it, and a second breakpoint is the cost of the redesign.
 
+**Superseded in part by DDR-057**, which lets a timeline scroll sideways inside itself where its
+entries do not fit, from 320px up. The page itself still never scrolls sideways.
+
 ## Context
 
 Epic #42 adopts the redesign the owner made in Figma, and the UI Review on #43 is its contract.
@@ -130,6 +133,9 @@ DDR-004's rule, unchanged, and the redesign is built around it rather than again
 * `components/stylesheets.test.ts` checks for the properties that would break this.
 
 ### Targets, hover and overflow
+
+**Superseded in part by DDR-057**: a timeline's list may scroll sideways inside itself. The page may
+not.
 
 All three carry forward from DDR-004 unchanged:
 

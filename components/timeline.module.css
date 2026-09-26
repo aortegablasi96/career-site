@@ -1,106 +1,90 @@
 /*
- * The timeline, per DDR-010, which experience and education share.
+ * The timeline, per DDR-057, which experience and education share, as DDR-010 has them share one
+ * pattern.
  *
- * A row is one role or one credential. Below the wide breakpoint the row is a single column: the
- * dates, and a role's place, sit above the title, and the spine is not rendered, so assistive
- * technology never meets it. From the wide breakpoint the row becomes three columns — the dates,
- * the spine, and the content — and the dates move beside the row. Nothing is reordered to do it:
- * the markup order is the visual order at both widths, per DDR-014, which is why the dates sit
- * above the title on a narrow screen rather than being moved there.
+ * On screen it is the design's horizontal row (`career-site-main`, nodes 170:65 and 170:439) at
+ * every width: each entry a column of its dates, its dot on the line and its card, oldest on the
+ * left. The columns share the row equally and none is narrower than --timeline-entry-width, so
+ * where they do not fit the row scrolls sideways inside itself and the page never does, which is
+ * what DDR-057 amends DDR-014's rule to allow. There is no breakpoint in it: the owner chose on
+ * #173 that a phone scrolls the same row rather than stacking it.
  *
- * The space between two rows is padding at the foot of the content column rather than a margin
- * between the rows, so the spine's line runs through that space to the next dot instead of breaking
- * at it. Rows after the first therefore take no margin from the section's rhythm.
+ * On paper it is the vertical timeline DDR-010 drew, in the print block below, because a sheet
+ * cannot scroll and DDR-057 prints each role's points, which a column of cards has no room for.
  */
 
-/* The dates read above the title on a narrow screen, as close to it as the metadata line sat below
-   it before, since they describe what follows rather than open a block of their own. */
-.row > * + * {
-  margin-block-start: var(--space-x-small);
+.timeline {
+  display: flex;
+  overflow-x: auto;
+  /* The base styles indent every list and mark its items; the entries are columns of a row, and
+     their dots are what marks them. */
+  padding-inline-start: 0;
+  list-style: none;
 }
 
-/* A row after the first in a section takes its space from the row above instead, which is the
-   padding below. The first row is inside the block the section keeps whole with its heading, per
-   DDR-008, so it is not a child of the section and keeps the space that block gives it. */
-section > .row {
-  margin-block-start: 0;
+/* Each entry is a column of the row: its dates, its dot and its card, one above the other and
+   centred on one another, as the design draws them. The columns meet with no gap between them, so
+   the line runs straight across from one to the next; the design holds two cards 24px apart by
+   insetting the dates and the card 12px from each side of their column instead. */
+.entry {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  min-inline-size: var(--timeline-entry-width);
+  text-align: center;
 }
 
-.dates > * + * {
-  margin-block-start: var(--space-x-small);
+.entry > * {
+  margin-block: 0;
 }
 
-/* The dates are a label for the row rather than a piece of its prose, so they are set as one, per
-   DDR-018: uppercase, semibold, and in the accent, which is what makes the column scannable down
-   the edge it shares with the content. The case is drawn here rather than written into `content/`,
-   so a screen reader still announces "Oct 2024 – Present" and the `time` element keeps its
-   machine-readable value. The place below them is none of those things: it is a proper name, and it
-   reads as the words it is. That is why this is the date line's own class and not the date
-   column's.
+/* The dates sit at the foot of a band the height the design gives it, just above the dot, so the
+   dots of every entry are level whatever the dates wrap to. They are a label rather than prose, per
+   DDR-018: uppercase, bold and in the accent, and at the design's 10px and 1px of tracking, which is
+   the x-loose step. The case is drawn here, so a screen reader is still handed "Oct 2024 – Present"
+   and the `time` element keeps its value.
 
-   The selector names the column as well as the line so that the ink is settled here rather than by
-   the order the bundler happens to emit two stylesheets in: `.metadata`, in another module, sets
-   the secondary ink on the same element at the same specificity. The tracking, which DDR-017 added
-   and nothing else sets, rides along in the same rule. The weight is the design's bold, per
-   DDR-023, where DDR-018 could only reach semibold because the site shipped no file for 700. */
-.dates .dateRange {
+   The dates are one span, so the paragraph can hold it at the foot of the band as a flex item
+   without trimming the spaces around the dash. */
+.dates {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-block-size: var(--timeline-date-height);
+  padding-block-end: var(--space-small);
+  padding-inline: var(--timeline-entry-inset);
   color: var(--color-accent);
+  font-size: var(--font-size-xxxx-small);
   font-weight: var(--font-weight-bold);
-  letter-spacing: var(--letter-spacing-loose);
+  letter-spacing: var(--letter-spacing-x-loose);
   text-transform: uppercase;
 }
 
-/* Both lines in the date column are the smallest metadata on the page, per DDR-022: the design
-   sets a date range and a place at 11px where it sets a company at 14px. They are the faintest too,
-   per DDR-025: the design sets a place in #94a3b8 where it sets a company in #64748b, which is the
-   ink `.metadata` carries. The rule above puts the date range in the accent instead, at a
-   specificity this one cannot reach, so what is left in the faint ink is the place — which is
-   2.39:1 on the page and fails WCAG 1.4.3.
-
-   The selector names the element rather than adding a class to the place, so it outranks
-   `.metadata`, which sets both from another module, without making the place carry a class it has
-   nothing else to say with. `.dates .dateRange` above stays the one class pair. */
-.dates p {
-  color: var(--color-text-faint);
-  font-size: var(--font-size-xxx-small);
-}
-
-/* The space to the next row, carried inside this one so the spine can run through it. The design
-   draws the two timelines at different intervals, 44px between roles and 36px between credentials,
-   so the row is told which it is, per DDR-039. */
-.role .content {
-  padding-block-end: var(--space-role);
-}
-
-.credential .content {
-  padding-block-end: var(--space-credential);
-}
-
-.content > * + * {
-  margin-block-start: var(--space-small);
-}
-
-/* The company or institution sits closest of all to the title it belongs to. It comes after the
-   rule above, which it overrides at the same specificity. */
-.subtitle {
-  margin-block-start: var(--space-x-small);
-}
-
-/* The spine is decoration, and there is no room for a column of it on a narrow screen. It is not
-   rendered at all below the wide breakpoint, so it is absent from the accessibility tree there as
-   well as from the page. */
+/* The line runs across the row at the dot's centre: each entry draws the half that comes in from
+   the entry before and the half that leaves for the next, so the halves meet at every column's
+   edge. The first entry's lead and the last entry's line are left undrawn, because the line runs
+   from the first dot to the last, per DDR-036. */
 .spine {
-  display: none;
+  display: flex;
+  align-items: center;
 }
 
-/* The dot is the design's ringed marker, per DDR-036 (node 2:260): a circle in the page's own
-   surface, a 3px ring of the line's tint around it, and an accent core at its centre. The core is
-   what makes the dot a stop on the path rather than a bead on it. The line runs into the ring and
-   out of it rather than behind it, so nothing is drawn under the dot and it takes no fill of its
-   own: the surface inside the ring is whichever band the timeline is on, per DDR-046, so the dot
-   looks the same on either. The ring is a border, so it takes space the way
-   the design's ring does not; the offset above the dot, which is measured with the ring in it,
-   accounts for that. The core is a pseudo-element, so the spine gains no element for it. */
+.lead,
+.line {
+  flex: 1 0 0;
+  block-size: var(--timeline-line-width);
+  background-color: var(--color-border-accent);
+}
+
+.entry:first-child .lead,
+.entry:last-child .line {
+  background-color: transparent;
+}
+
+/* The dot is the design's ringed marker, per DDR-036 as DDR-057 sizes it (node 170:175): a 16px
+   circle with a 10px accent core and a 3px ring of the line's tint around it. It takes no fill, so
+   the surface inside the ring is whichever band the timeline is on, per DDR-046. The ring is a
+   border, so it sits outside the circle, as the design's ring does. */
 .dot {
   display: flex;
   flex: none;
@@ -120,70 +104,128 @@ section > .row {
   background-color: var(--color-accent);
 }
 
-/* The line coming down into the dot. It is the space that brings the dot level with the centre of
-   the title's first line, and in every row but the first it is also the end of the line the row
-   above sends down, so the two meet at the ring with no break between them. The first row's is
-   left undrawn, because the line starts at the first dot, per DDR-036. */
-.lead {
-  flex: none;
-  inline-size: var(--timeline-line-width);
-  block-size: var(--timeline-dot-offset);
-}
-
-section > .row .lead {
-  background-color: var(--color-border-accent);
-}
-
-/* The line leaving the dot fills whatever the dot leaves of the row, which reaches through the
-   padding below the content to the top of the next row, where that row's lead takes it on. */
-.line {
+/* The card, below its dot: white, a hairline edge and the large radius, as a project card is. The
+   cards of a row are one height, as the design draws the roles', with their text centred in it. */
+.card {
+  display: flex;
   flex: 1;
-  inline-size: var(--timeline-line-width);
-  background-color: var(--color-border-accent);
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-x-small);
+  margin-block-start: var(--timeline-card-space);
+  margin-inline: var(--timeline-entry-inset);
+  padding: var(--space-medium);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background-color: var(--color-surface-card);
 }
 
-/* The last row in a section has no next row to reach, so it adds no space below itself and draws
-   no line past its dot, per DDR-010 and DDR-036. The first row is inside the block the section
-   keeps whole with its heading, so it is the last child of that block rather than of the section:
-   naming the section is what tells the two apart. The same is why `section > .row` above draws
-   the lead in every row but the first. */
-section > .row:last-child .content {
-  padding-block-end: 0;
+.card > * {
+  margin-block: 0;
 }
 
-section > .row:last-child .line {
-  display: none;
+/* The company opens a role's card in the accent, and the institution a credential's in the muted
+   ink, both bold, per DDR-057. The design's 12px is not a step of DDR-022's scale, so the nearest,
+   12.8px, is taken, as the footer takes it. */
+.subtitle {
+  font-size: var(--font-size-xx-small);
+  font-weight: var(--font-weight-bold);
 }
 
-/* From here the row is the timeline's three columns, per DDR-010. This is the one width a
-   component may write, per DDR-014, and paper takes it too, per DDR-015: a sheet is a wide surface,
-   and DDR-010 prints the dates in the date column. The spine keeps its column there, but its
-   line, its ring and the surface inside the ring are hairline and surface tokens, which print makes
-   transparent. The accent core is not, so each entry keeps a small accent dot beside its title on
-   paper, per DDR-036, as it keeps its accent dates. */
-@media (min-width: 48em), print {
-  .row {
+.role .subtitle {
+  color: var(--color-accent);
+}
+
+.credential .subtitle {
+  color: var(--color-text-muted);
+}
+
+/* The title is the entry's heading, at the design's 11px. */
+.title {
+  font-size: var(--font-size-xxx-small);
+}
+
+/* A role's place is the faintest line on the card, at the design's 10px, per DDR-025. */
+.place {
+  color: var(--color-text-faint);
+  font-size: var(--font-size-xxxx-small);
+}
+
+/*
+ * Paper: the vertical timeline DDR-010 drew, with the spacing, the date label and the dot it had
+ * before DDR-057, so the printed CV reads as it did but for the order and what each entry says.
+ * Each entry is three columns: its dates, the spine and the card's text, with the spine's line
+ * reaching down through the space below each entry to the next. The line, the ring and the card's
+ * surface and edge are hairline and surface tokens, which print makes transparent; the accent core
+ * is not, so each entry keeps a small accent dot beside it, per DDR-036.
+ */
+@media print {
+  .timeline {
+    display: block;
+    overflow-x: visible;
+  }
+
+  .entry {
     display: grid;
     grid-template-columns: var(--timeline-date-width) var(--timeline-spine-width) 1fr;
     column-gap: var(--space-medium);
+    min-inline-size: 0;
+    text-align: start;
   }
 
-  /* The columns sit beside one another, so none of them is pushed down by the rhythm the single
-     column needs. The spine is left to stretch to the full height of the row, which is what gives
-     its line something to fill. */
-  .row > * + * {
-    margin-block-start: 0;
-  }
-
-  /* The date column is read against the row beside it, so it is set to the edge the two share. */
+  /* The dates are read against the entry beside them, so they are set to the edge the two share,
+     at the size and tracking they had before DDR-057: at the design's 10px and 0.1em, the same
+     label splits into letters in a Firefox PDF, per DDR-024. */
   .dates {
+    display: block;
+    min-block-size: 0;
+    padding: 0;
+    font-size: var(--font-size-xxx-small);
+    letter-spacing: var(--letter-spacing-loose);
     text-align: end;
   }
 
-  /* The three pieces of the spine stack with no space between them, so the line is unbroken. */
   .spine {
-    display: flex;
     flex-direction: column;
-    align-items: center;
+  }
+
+  /* The lead brings the dot level with the first line of the card; the line fills the rest of the
+     entry, which reaches through the space below it to the next entry's lead. */
+  .lead {
+    flex: none;
+    inline-size: var(--timeline-line-width);
+    block-size: var(--timeline-dot-offset);
+  }
+
+  .line {
+    inline-size: var(--timeline-line-width);
+    block-size: auto;
+  }
+
+  .card {
+    justify-content: flex-start;
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  .role .card {
+    padding-block-end: var(--space-role);
+  }
+
+  .credential .card {
+    padding-block-end: var(--space-credential);
+  }
+
+  .entry:last-child .card {
+    padding-block-end: 0;
+  }
+
+  .title {
+    font-size: var(--font-size-item-title);
+  }
+
+  .place {
+    font-size: var(--font-size-xxx-small);
   }
 }

@@ -3,6 +3,7 @@ import { Credentials } from '@/components/credentials';
 import { Experience } from '@/components/experience';
 import { Languages } from '@/components/languages';
 import { Projects, projectRows } from '@/components/projects';
+import { headingId } from '@/components/section';
 import { Skills, skillRows } from '@/components/skills';
 import { credentials } from '@/content/credentials';
 import { dateLabels } from '@/content/dates';
@@ -20,6 +21,8 @@ export interface PageSection {
   title: string;
   link: string;
   items: readonly ReactNode[];
+  /** Whether paper may break inside the heading's block, which a timeline needs, per DDR-057. */
+  breakable?: boolean;
 }
 
 /**
@@ -31,17 +34,24 @@ export interface PageSection {
  * the same sections in its contents bar, per DDR-050, and a page module may export nothing but what
  * Next.js reads from it. The view takes each section's id and word and never renders its items.
  *
- * Each item, such as a role, is its own element, which its section's component renders as a list
- * of one. The section can then keep its heading with its first item on paper, per DDR-008.
+ * Each item, such as a project row, is its own element, so the section can keep its heading with
+ * its first item on paper, per DDR-008. A timeline is one item, since DDR-057: on screen its entries
+ * are one row that scrolls, and a row needs one parent.
  */
 export const sections: readonly PageSection[] = [
   {
     id: 'experience',
     title: experience.title,
     link: experience.link,
-    items: experience.roles.map((role) => (
-      <Experience key={`${role.company} ${role.start}`} roles={[role]} dateLabels={dateLabels} />
-    )),
+    breakable: true,
+    items: [
+      <Experience
+        key="experience"
+        roles={experience.roles}
+        dateLabels={dateLabels}
+        labelledBy={headingId('experience')}
+      />,
+    ],
   },
   {
     id: 'projects',
@@ -68,9 +78,15 @@ export const sections: readonly PageSection[] = [
     id: 'education',
     title: credentials.title,
     link: credentials.link,
-    items: credentials.credentials.map((credential) => (
-      <Credentials key={credential.name} credentials={[credential]} dateLabels={dateLabels} />
-    )),
+    breakable: true,
+    items: [
+      <Credentials
+        key="education"
+        credentials={credentials.credentials}
+        dateLabels={dateLabels}
+        labelledBy={headingId('education')}
+      />,
+    ],
   },
   {
     id: 'languages',
