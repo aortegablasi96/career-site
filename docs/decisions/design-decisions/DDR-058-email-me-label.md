@@ -24,8 +24,9 @@ The email pill is different. It is the one control on the page that starts a mes
 "Email" only labels a way to reach them. The owner asked on #175 for it to say what it does and ask
 the visitor to write.
 
-Epic #152 excludes the introduction and the contact pills from its scope. The owner placed #175 in
-that epic regardless, as an exception they chose.
+The story belongs to Epic #170, which reworks the introduction's content. That epic excludes the
+contact pills from its scope, so #175 is an exception the owner chose. It was first filed on Epic
+#152, and the owner moved it.
 
 ## Decision
 
@@ -146,4 +147,4 @@ pixel-identical, and sheet 1 differs only in a 20 by 8 pixel patch where "me" is
   label is content
 * docs/decisions/architecture-decisions/ADR-005-separately-designed-cv.md — the facts the page and
   the downloadable CV share, which a pill's label is not
-* GitHub issue #175, and Epic #152
+* GitHub issue #175, and Epic #170
