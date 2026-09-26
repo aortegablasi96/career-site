@@ -8,7 +8,12 @@ import { Experience } from './experience';
 // Rendered with the real content, since what the roles say is what #29 asks for and how they are
 // laid out is what #49 asks for.
 const html = renderToStaticMarkup(
-  <Experience roles={experience.roles} dateLabels={dateLabels} labelledBy="experience-title" />,
+  <Experience
+    roles={experience.roles}
+    hint={experience.hint}
+    dateLabels={dateLabels}
+    labelledBy="experience-title"
+  />,
 );
 
 /** The markup's text, as a reader meets it. */
@@ -33,9 +38,9 @@ function rule(selector: string): string {
 describe('Experience', () => {
   it('renders each role as an entry of the timeline, in the order the content gives', () => {
     const entries = html.match(/<li class=/g) ?? [];
-    const titles = [...html.matchAll(/<h3[^>]*>([^<]+)<\/h3>/g)].map(([, title]) => title);
+    const titles = [...html.matchAll(/<h3[^>]*><a [^>]*>([^<]+)<\/a><\/h3>/g)].map(([, title]) => title);
 
-    expect(html).toMatch(/^<ol /);
+    expect(html).toMatch(/<\/p><ol /);
     expect(entries).toHaveLength(roles.length);
     expect(titles).toEqual(roles.map(({ title }) => title));
   });
@@ -44,7 +49,7 @@ describe('Experience', () => {
   // then the place, and the dates stand above the card.
   it('reads each role as its dates, company, title and place, in that order', () => {
     for (const { title } of roles) {
-      expect(html).toMatch(new RegExp(`<h3[^>]*>${title}</h3>`));
+      expect(html).toMatch(new RegExp(`<h3[^>]*><a [^>]*>${title}</a></h3>`));
     }
 
     expect(text).toContain('Jun 2023 – Oct 2024 Ponera Group Digital Solutions Manager Lugano, Switzerland');
@@ -69,6 +74,27 @@ describe('Experience', () => {
     expect(lists.map((list) => list.match(/<li>/g)?.length)).toEqual(roles.map(({ points }) => points.length));
   });
 
+  // DDR-059: each card leads to its role's view, and the job title is the link, so the card is one
+  // tab stop named by the title.
+  it('leads from each role’s card to its view, by the job title', () => {
+    const links = [...html.matchAll(/<a [^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(([, href, title]) => ({
+      href,
+      title,
+    }));
+
+    expect(links).toEqual(roles.map(({ slug, title }) => ({ href: `/experience/${slug}`, title })));
+  });
+
+  // A timeline whose cards are links needs no tab stop of its own: tabbing to a card scrolls the
+  // row to it, per DDR-059.
+  it('does not make the row a tab stop of its own, since its cards are', () => {
+    expect(html).not.toContain('tabindex');
+  });
+
+  it('says above the timeline that a role’s card leads to its description, beside a hidden clock', () => {
+    expect(html).toMatch(/^<div><p class="[^"]*"><svg [^>]*aria-hidden="true"[^>]*>.*<\/svg>Click any role to read the full description<\/p><ol /);
+  });
+
   // The spine draws the path from one role to the next and says nothing the text does not, so a
   // screen reader never meets it, per DDR-010.
   it('hides the timeline’s ornament from assistive technology, and gives it no text', () => {
@@ -89,6 +115,14 @@ describe('experience styles', () => {
   it('hides the points on screen and shows them on paper', () => {
     expect(rule('.points')).toMatch(/display:\s*none;/);
     expect(styles).toMatch(/@media print\s*\{\s*\.points\s*\{[^}]*display:\s*block;/);
+  });
+
+  // DDR-059: paper has nothing to click, so the hint is the screen's alone, and the timeline takes
+  // back the place it had below the heading.
+  it('hides the hint on paper, and the space below it', () => {
+    expect(styles).toMatch(/@media print\s*\{[\s\S]*\.hint\s*\{\s*display:\s*none;\s*\}/);
+    expect(rule('.hint + *')).toMatch(/margin-block-start:\s*var\(--timeline-hint-space\);/);
+    expect(styles).toMatch(/@media print\s*\{[\s\S]*\.hint \+ \*\s*\{\s*margin-block-start:\s*0;\s*\}/);
   });
 
   it('sets bullet text at the small step, as DDR-011 records', () => {
@@ -126,6 +160,18 @@ describe('experience content', () => {
       ['Ponera Group', '2023-06', '2024-10'],
       ['ABB', '2024-10', undefined],
     ]);
+  });
+
+  // ADR-011: a role's address is its slug, which someone may have been sent, so each is its own and
+  // is written as an address is.
+  it('gives every role an address of its own', () => {
+    const slugs = roles.map(({ slug }) => slug);
+
+    expect(new Set(slugs).size).toBe(slugs.length);
+
+    for (const slug of slugs) {
+      expect(slug).toMatch(/^[a-z\d]+(?:-[a-z\d]+)*$/);
+    }
   });
 
   it('writes every month as a real year and month', () => {

@@ -33,6 +33,24 @@ const roles = renderToStaticMarkup(
   />,
 );
 
+// DDR-059: the same entries, each leading to a view of its own, as a role's does.
+const linked = renderToStaticMarkup(
+  <Timeline
+    kind="role"
+    labelledBy="experience-title"
+    entries={[
+      {
+        key: 'ABB',
+        dates: 'Oct 2024 – Present',
+        subtitle: 'ABB',
+        title: 'Global Product Specialist, Digital Solutions',
+        place: 'Quartino, Switzerland',
+        href: '/experience/abb',
+      },
+    ]}
+  />,
+);
+
 const credentials = renderToStaticMarkup(
   <Timeline
     kind="credential"
@@ -86,9 +104,19 @@ describe('Timeline', () => {
     expect(credentials).toMatch(/^<ol [^>]*aria-labelledby="education-title"/);
   });
 
-  it('holds no link, since the role view the design leads to is still to come', () => {
+  it('holds no link for an entry with no view of its own', () => {
     expect(roles).not.toMatch(/<a[ >]/);
-    expect(roles).not.toMatch(/Click any role/i);
+    expect(credentials).not.toMatch(/<a[ >]/);
+  });
+
+  // DDR-059: an entry with a view is one link, whose text is its title, and the row takes no tab
+  // stop of its own, since tabbing to a card scrolls the row to it.
+  it('makes an entry’s title the link to its view, and the row no tab stop of its own', () => {
+    expect(linked).toMatch(
+      /<h3 [^>]*><a class="[^"]*" href="\/experience\/abb">Global Product Specialist, Digital Solutions<\/a><\/h3>/,
+    );
+    expect(linked.match(/<a /g)).toHaveLength(1);
+    expect(linked).not.toContain('tabindex');
   });
 
   // The markup order is the visual order, per DDR-014: the dates stand above the card, and on the
@@ -204,6 +232,32 @@ describe('timeline styles on screen', () => {
     expect(rule('.title')).toMatch(/font-size:\s*var\(--font-size-xxx-small\);/);
     expect(rule('.place')).toMatch(/font-size:\s*var\(--font-size-xxxx-small\);/);
     expect(rule('.place')).toMatch(/color:\s*var\(--color-text-faint\);/);
+  });
+});
+
+// DDR-059: a card that leads to a view is one link, stretched over the card, as a project card is.
+describe('timeline card links', () => {
+  it('stretches the title’s link over its card', () => {
+    expect(rule('.card:has(.link)', screen)).toMatch(/position:\s*relative;/);
+    expect(rule('.link::after', screen)).toMatch(/position:\s*absolute;/);
+    expect(rule('.link::after', screen)).toMatch(/inset:\s*0;/);
+  });
+
+  it('answers the pointer and focus with the accent, and does not rise, which DDR-055 keeps for projects', () => {
+    expect(rule('.link:hover,\n.link:focus-visible', screen)).toMatch(/color:\s*var\(--color-accent\);/);
+    expect(styles).not.toMatch(/translate/);
+  });
+
+  // The row scrolls, and a scrolling box clips what reaches past it, so the outline is drawn inside
+  // the card's edge.
+  it('outlines the whole card on focus, inside its edge', () => {
+    expect(rule('.link:focus-visible::after', screen)).toMatch(
+      /outline-offset:\s*calc\(-1 \* var\(--focus-outline-width\)\);/,
+    );
+  });
+
+  it('prints no address after a card’s link, since paper cannot follow it', () => {
+    expect(rule('.link::after', paper)).toMatch(/content:\s*none;/);
   });
 });
 

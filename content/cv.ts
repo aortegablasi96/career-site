@@ -44,11 +44,13 @@ import type { Cv } from './types';
  * a CV's summary free, and relocation is not on its list.
  * It moved again with #175, because the email contact's pill now reads "Email me", per DDR-058;
  * the address did not change.
+ * It moved again with #176, because each role gained the slug of its view's address, and the
+ * experience section the hint above its timeline and the strings of a role's view, per DDR-059.
  * None of them is a fact ADR-005 lists as shared, so none of them moved the CV; the nine
  * differences are the ones #59 records, unchanged.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'a0ce16f1a0a2a3c128e6cc0bf0986c904549215c090af7485de961b2d5fbe8b6',
+  contentDigest: '16ea5cf9e499bb0c1e948f8c62e65fc6782b9ed906e3e1e65d57fbb16cb12bbb',
 };

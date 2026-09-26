@@ -1,3 +1,4 @@
+import { introduction } from './introduction';
 import type { Experience } from './types';
 
 /**
@@ -16,6 +17,7 @@ export const experience: Experience = {
   roles: [
     {
       title: 'Electronic and Software Engineer',
+      slug: 'electronica-digital-de-proteccion',
       company: 'Electrónica Digital de Protección',
       place: 'Barcelona, Spain',
       start: '2018-05',
@@ -27,6 +29,7 @@ export const experience: Experience = {
     },
     {
       title: 'Software Engineer',
+      slug: 'tobeit',
       company: 'ToBeIT',
       place: 'Barcelona, Spain',
       start: '2020-09',
@@ -38,6 +41,7 @@ export const experience: Experience = {
     },
     {
       title: 'Project Manager, Data and Digital Projects',
+      slug: 'randstad',
       company: 'Randstad',
       place: 'Leuven, Belgium',
       start: '2022-03',
@@ -50,6 +54,7 @@ export const experience: Experience = {
     },
     {
       title: 'Digital Solutions Manager',
+      slug: 'ponera-group',
       company: 'Ponera Group',
       place: 'Lugano, Switzerland',
       start: '2023-06',
@@ -63,6 +68,7 @@ export const experience: Experience = {
     },
     {
       title: 'Global Product Specialist, Digital Solutions',
+      slug: 'abb',
       company: 'ABB',
       place: 'Quartino, Switzerland',
       start: '2024-10',
@@ -74,4 +80,18 @@ export const experience: Experience = {
       ],
     },
   ],
+  // The line above the timeline, per DDR-059, which is the design's own (node 170:71).
+  hint: 'Click any role to read the full description',
+  view: {
+    back: 'Back to experience',
+    points: 'Responsibilities & achievements',
+    skills: 'Skills & technologies',
+    // The role and the company first, so a row of tabs shows which role each is, then the owner's,
+    // as a project view's title leads with the project.
+    title: (role, company) => `${role}, ${company} – ${introduction.name}`,
+    // The roles before and after this one, in the timeline's order, oldest first, per DDR-059.
+    previous: 'Previous role',
+    next: 'Next role',
+    neighbour: (direction, company, role) => `${direction}: ${company}, ${role}`,
+  },
 };

@@ -426,6 +426,14 @@ describe('colour tokens', () => {
     { foreground: 'google-ink', background: 'surface', asked: 4.5, recorded: 15.39, meets: true },
     { foreground: 'google-border', background: 'surface-card', asked: 3, recorded: 4.53, meets: true },
     { foreground: 'google-border', background: 'surface-google-hover', asked: 3, recorded: 3.9, meets: true },
+    // A role's view, per DDR-059: its header's panel, on the accent's palest tint, carries the job
+    // title and, in the muted ink, the dates and the place; the company's pill and each point's
+    // number are the accent on its border tint; and a skill is the accent on the palest tint. The
+    // design's own, and two of them fail.
+    { foreground: 'text-heading', background: 'surface-tag', asked: 4.5, recorded: 15.97, meets: true },
+    { foreground: 'text-muted', background: 'surface-tag', asked: 4.5, recorded: 4.26, meets: false },
+    { foreground: 'accent', background: 'border-accent', asked: 4.5, recorded: 4.22, meets: false },
+    { foreground: 'accent', background: 'surface-tag', asked: 4.5, recorded: 5.62, meets: true },
     // Hairlines that carry nothing, so neither criterion reaches them: the rule beside a section
     // heading, a card's edge against the page it sits on and the white it encloses, and the
     // timeline's spine and dots.
@@ -478,9 +486,10 @@ describe('colour tokens', () => {
 
   // The measurement above says what a pairing is, not whether it is enough. This says which rows
   // the records admit are failures, by name, so another cannot join them quietly and none of them
-  // can be quietly improved without its record being revised with it. The first four are DDR-025's
-  // and the last two DDR-035's.
-  it('fails exactly the six pairings DDR-025 and DDR-035 record as failures, and no others', () => {
+  // can be quietly improved without its record being revised with it. The first four are DDR-025's,
+  // the next two DDR-035's, and the last two DDR-059's: the muted ink on a role view's panel, and
+  // the accent on its pills.
+  it('fails exactly the eight pairings DDR-025, DDR-035 and DDR-059 record as failures, and no others', () => {
     for (const { foreground, background, asked, recorded, meets } of pairings) {
       expect(recorded >= asked, `${foreground} on ${background}`).toBe(meets);
     }
@@ -492,6 +501,8 @@ describe('colour tokens', () => {
       'border-accent',
       'border-accent-hover',
       'underline',
+      'text-muted',
+      'accent',
     ]);
   });
 
