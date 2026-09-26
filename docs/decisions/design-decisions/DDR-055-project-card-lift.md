@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-20
 
+**Added to by DDR-062**: the lifted card also takes `--shadow-card-hover` in place of its resting
+shadow, per #184, and a reader who prefers reduced motion gets the shadow without the lift. The lift
+itself, its distance, its timing and its buffer stand.
+
 Supersedes nothing. It adds a movement to the card DDR-051 draws, beside the colour change DDR-035
 already gives its name.
 

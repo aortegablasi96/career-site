@@ -478,17 +478,18 @@
      every other shadow is. */
   --shadow-bar: 0 2px 16px rgba(26, 26, 46, 0.1);
 
-  /* A role's card under the pointer or keyboard focus, per DDR-061: a light shadow all round it,
-     which says the whole card is the one thing the pointer will open. It is a fourth elevation and,
-     like the three above, named for what may read it rather than numbered. It is not `raised`: a
-     card at rest sits flat on its band, with a hairline edge, and only lifts into the light while
-     it is being pointed at.
+  /* A card that leads to a view, under the pointer or keyboard focus, per DDR-061: a light shadow
+     all round it, which says the whole card is the one thing the pointer will open. It is a fourth
+     elevation and, like the three above, named for what may read it rather than numbered: a role's
+     card and, since DDR-062, a project card on the page, which takes it in place of `raised` as it
+     lifts. It is not `raised`: it is only drawn while a card is being pointed at.
 
      The ink is the bar's, the heading-dark `#1a1a2e` at 10%, so the site's soft shadows share one
      ink rather than each taking its own. The geometry is sized to the room the timeline has: 12px
      of blur reaches no further than the 12px the design leaves beside a card, so the shadow fits the
      row's ends and never touches the next card, and 4px down puts its weight below the card, where
-     a light from above would. In px, as every other shadow is. */
+     a light from above would. The project cards stand 20px apart, so the same reach fits there
+     too. In px, as every other shadow is. */
   --shadow-card-hover: 0 4px 12px rgba(26, 26, 46, 0.1);
 
   /* The profile photo, per DDR-010, #71 and DDR-021: 96px wide below the wide breakpoint and, from

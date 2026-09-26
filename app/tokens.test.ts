@@ -591,6 +591,18 @@ describe('elevation tokens', () => {
     expect(token('timeline-shadow-room-back')).toBe('calc(-1 * var(--timeline-shadow-room))');
   });
 
+  // DDR-062: a project card takes the same shadow as it lifts, and every way the shadow reaches —
+  // beside the card, and below it once the lift is taken off — stays inside the 20px the design
+  // leaves round a card, so it never reaches the next card or the heading above.
+  it('lights a lifted project card within the room round it, per DDR-062', () => {
+    const [, y, blur] = token('shadow-card-hover')!.match(/^0 (\d+)px (\d+)px /)!.map(Number);
+    const room = rem(token('project-card-space')!) * 16;
+    const lift = rem(token('project-card-lift')!) * 16;
+
+    expect(blur).toBeLessThanOrEqual(room);
+    expect(y + blur - lift).toBeLessThanOrEqual(room);
+  });
+
   // DDR-048: the bar's edge never changes, so there is no transition for it to take.
   it('has no time for the bar’s edge to change over, per DDR-048', () => {
     expect(token('contents-bar-transition')).toBeUndefined();
