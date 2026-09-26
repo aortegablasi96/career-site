@@ -248,6 +248,26 @@ describe('timeline card links', () => {
     expect(styles).not.toMatch(/translate/);
   });
 
+  // DDR-061: under the pointer or focus a role's card takes a light shadow all round, at once, and
+  // only a card that leads somewhere does, since the rule reads the link.
+  it('lights a card that leads to a view under the pointer and on focus, per DDR-061', () => {
+    const lit = rule('.card:has(.link:hover),\n.card:has(.link:focus-visible)', screen);
+
+    expect(lit).toMatch(/box-shadow:\s*var\(--shadow-card-hover\);/);
+    expect(lit).toMatch(/border-color:\s*var\(--color-border-accent-hover\);/);
+    expect(rule('.card', screen)).not.toMatch(/box-shadow/);
+    expect(styles).not.toMatch(/transition/);
+  });
+
+  // The row scrolls, so it clips the shadow's foot unless it leaves room for it, and it takes that
+  // room back so that nothing on the page moves. Paper leaves none.
+  it('leaves the shadow room below the cards and takes it back, per DDR-061', () => {
+    expect(rule('.timeline', screen)).toMatch(/padding-block-end:\s*var\(--timeline-shadow-room\);/);
+    expect(rule('.timeline', screen)).toMatch(/margin-block-end:\s*var\(--timeline-shadow-room-back\);/);
+    expect(rule('.timeline', paper)).toMatch(/padding-block-end:\s*0;/);
+    expect(rule('.timeline', paper)).toMatch(/margin-block-end:\s*0;/);
+  });
+
   // The row scrolls, and a scrolling box clips what reaches past it, so the outline is drawn inside
   // the card's edge.
   it('outlines the whole card on focus, inside its edge', () => {
