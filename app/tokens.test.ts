@@ -745,17 +745,28 @@ describe('spacing tokens', () => {
     expect(atBreakpoint.has('photo-ratio')).toBe(false);
   });
 
-  // DDR-010's timeline, at the widths the UI Review on #43 measured: a 160px date column, a 28px
-  // spine, and a 12px dot. In rem, as the page column and the photo are, so the timeline keeps its
-  // proportion to the text beside it when text is enlarged.
-  it('sizes the timeline’s columns and its dot in rem, at the widths DDR-010 lays out', () => {
+  // DDR-010's timeline, at the widths the UI Review on #43 measured: a 160px date column and a 28px
+  // spine, which paper alone lays out since DDR-057. In rem, as the page column and the photo are,
+  // so the timeline keeps its proportion to the text beside it when text is enlarged. The dot is
+  // the design's 16px on screen since DDR-057 (node 170:175), and paper keeps DDR-036's 12px.
+  it('sizes the timeline’s columns and its dot in rem, at the widths DDR-010 and DDR-057 lay out', () => {
     expect(token('timeline-date-width')).toBe('10rem');
     expect(token('timeline-spine-width')).toBe('1.75rem');
-    expect(token('timeline-dot-size')).toBe('0.75rem');
+    expect(token('timeline-dot-size')).toBe('1rem');
   });
 
-  it('keeps the dot inside the spine column it sits in', () => {
-    expect(rem(token('timeline-dot-size')!)).toBeLessThan(rem(token('timeline-spine-width')!));
+  // DDR-057's row, off `career-site-main` at 1195px: no column narrower than the design's
+  // narrowest, 192px, 12px either side of each card, the dates at the foot of a 64px band, and each
+  // card 20px below its dot.
+  it('measures the horizontal row in rem, as the design draws it, per DDR-057', () => {
+    expect(token('timeline-entry-width')).toBe('12rem');
+    expect(token('timeline-entry-inset')).toBe('0.75rem');
+    expect(token('timeline-date-height')).toBe('4rem');
+    expect(token('timeline-card-space')).toBe('1.25rem');
+  });
+
+  it('keeps the dot inside the spine column it sits in on paper', () => {
+    expect(rem(inPrint.get('timeline-dot-size')!)).toBeLessThan(rem(token('timeline-spine-width')!));
   });
 
   // The line down the spine marks the path from one dot to the next and gains nothing from growing
@@ -764,12 +775,12 @@ describe('spacing tokens', () => {
     expect(token('timeline-line-width')).toBe('2px');
   });
 
-  // DDR-036: the design's ringed marker, node 2:260 — a 6px core at the centre of the 12px circle,
-  // and a 3px ring around it. The core grows with the circle; the ring is a hairline, as the line
-  // it joins is.
-  it('draws the dot’s core at half the dot, and its ring as a hairline in px, per DDR-036', () => {
-    expect(token('timeline-dot-core')).toBe('0.375rem');
-    expect(rem(token('timeline-dot-core')!) * 2).toBe(rem(token('timeline-dot-size')!));
+  // DDR-036's ringed marker, as DDR-057 sizes it on screen (node 170:175): a 10px core in a 16px
+  // circle, and a 3px ring around it. Paper keeps DDR-036's 6px core at the centre of a 12px circle.
+  // The core grows with the circle; the ring is a hairline, as the line it joins is.
+  it('draws the dot’s core inside the dot, and its ring as a hairline in px, per DDR-036 and DDR-057', () => {
+    expect(token('timeline-dot-core')).toBe('0.625rem');
+    expect(rem(inPrint.get('timeline-dot-core')!) * 2).toBe(rem(inPrint.get('timeline-dot-size')!));
     expect(token('timeline-dot-ring')).toBe('3px');
   });
 
@@ -792,6 +803,10 @@ describe('spacing tokens', () => {
       'timeline-dot-ring',
       'timeline-dot-offset',
       'timeline-line-width',
+      'timeline-entry-width',
+      'timeline-entry-inset',
+      'timeline-date-height',
+      'timeline-card-space',
     ]) {
       expect(atBreakpoint.has(name), name).toBe(false);
     }
@@ -934,6 +949,8 @@ const forPaper = [
   { name: 'space-boundary', value: 'var(--space-large)' },
   { name: 'space-summary', value: 'var(--space-flow)' },
   { name: 'space-controls', value: 'var(--space-flow)' },
+  { name: 'timeline-dot-size', value: '0.75rem' },
+  { name: 'timeline-dot-core', value: '0.375rem' },
   { name: 'color-surface', value: 'transparent' },
   { name: 'color-surface-band', value: 'transparent' },
   { name: 'color-surface-card', value: 'transparent' },

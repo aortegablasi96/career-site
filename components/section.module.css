@@ -117,6 +117,14 @@
     break-inside: avoid;
   }
 
+  /* A timeline's block is the whole timeline, per DDR-057, and kept whole it would push its section
+     onto the next sheet. It breaks between its entries instead; the heading's own break-after keeps
+     it with the first entry in Edge, and Firefox, which does not honour that, is the risk DDR-057
+     records. This comes after the rule above, which it overrides at the same specificity. */
+  .breakable {
+    break-inside: auto;
+  }
+
   /* Paper keeps the boundary where it was before DDR-046: above each divider as the section's own
      margin rather than at the foot of the part before, and nothing below the last. There is no
      band to carry on a sheet, and a margin is truncated at a page break where a padding is not, so

@@ -201,7 +201,7 @@ export interface Experience {
    * the section.
    */
   link: string;
-  /** Newest first. The page shows them in this order, per ADR-002. */
+  /** Oldest first, per DDR-057. The page shows them in this order, per ADR-002. */
   roles: readonly Role[];
 }
 
@@ -335,15 +335,13 @@ export interface Skills {
   groups: readonly SkillGroup[];
 }
 
-/** A degree, per the Content Brief on #25: the months it ran, and its thesis. */
+/** A degree, per the Content Brief on #25: the months it ran. Its thesis was removed on #173. */
 export interface Degree {
   /** The degree's name, which is the entry's heading, per DDR-006. */
   name: string;
   institution: string;
   start: Month;
   end: Month;
-  /** What the thesis was about, CV-style, without pronouns. It is the entry's body, per DDR-006. */
-  thesis: string;
 }
 
 /** A certification, per the Content Brief on #25, named and dated as its certificate states. */
@@ -356,7 +354,7 @@ export interface Certification {
   granted: Month;
 }
 
-/** A degree or a certification. Both are entries, and a certification has no body, per DDR-006. */
+/** A degree or a certification. Both are entries of the timeline, and neither has a body. */
 export type Credential = Degree | Certification;
 
 /** The education and certifications section. */
@@ -370,7 +368,7 @@ export interface Credentials {
    * the section.
    */
   link: string;
-  /** Newest first, per DDR-006. The page shows them in this order, per ADR-002. */
+  /** Oldest first, per DDR-057. The page shows them in this order, per ADR-002. */
   credentials: readonly Credential[];
 }
 

@@ -24,6 +24,9 @@ it was believed to be about weight.
 **Amended in one respect by DDR-051**: a project card's name, an `h3`, is set in Lora SemiBold, as
 the design draws it. Every other item title stays in DM Sans, and no file is added.
 
+**Amended by DDR-057** in its italic. The owner removed the degrees' thesis sentences on #173, so
+DM Sans Italic is no longer committed or loaded, and the page sets no italic. There are six files.
+
 ## Context
 
 Epic #70 closes the gap between the page and `career-site-design`, and on 2026-09-17 the owner
@@ -79,6 +82,8 @@ footer's name is not a title either. The token names the face's role in the page
 `app/tokens.css` says so where it is defined.
 
 ### Four weights and one italic
+
+**Amended by DDR-057**: the italic went with the theses on #173. Four weights remain.
 
 | Token                    | Weight | Used for                                                          |
 | ------------------------ | ------ | ----------------------------------------------------------------- |

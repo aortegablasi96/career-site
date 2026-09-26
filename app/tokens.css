@@ -536,12 +536,21 @@
      rather than in the component because it is arithmetic on tokens, as the contents bar's
      clearance is.
 
-     Only the components that lay out a timeline read these, and only from the wide breakpoint,
-     which DDR-014 keeps out of this file. */
+     Since DDR-057 the screen draws the timeline as the design's horizontal row (nodes 170:65 and
+     170:439), and the three columns, the 12px dot and the offset are paper's alone: the print block
+     below puts the dot back to 12px and its core to 6px there.
+
+     On screen the dot is the design's 16px with a 10px core (node 170:175). Each entry is a column
+     no narrower than --timeline-entry-width, 192px, which is the design's narrowest column at its
+     1195px, so the design's five roles fit its column and a narrower one scrolls. The design holds
+     the cards 24px apart by giving each column 12px on either side, the inset; it sets each date at
+     the foot of a 64px band above its dot, and each card 20px below its dot. None of the four is a
+     step of DDR-013's scale, so each is a measure of the timeline's own, as the project cards'
+     20px is. All are in rem, so the row grows with the reader's text and scrolls sooner. */
   --timeline-date-width: 10rem;
   --timeline-spine-width: 1.75rem;
-  --timeline-dot-size: 0.75rem;
-  --timeline-dot-core: 0.375rem;
+  --timeline-dot-size: 1rem;
+  --timeline-dot-core: 0.625rem;
   --timeline-dot-ring: 3px;
   --timeline-dot-offset: max(
     0px,
@@ -551,6 +560,10 @@
     )
   );
   --timeline-line-width: 2px;
+  --timeline-entry-width: 12rem;
+  --timeline-entry-inset: 0.75rem;
+  --timeline-date-height: 4rem;
+  --timeline-card-space: 1.25rem;
 
   /* The projects' cards, per DDR-051, measured off `career-site-main` (node 58:938). The picture
      is the design's 16:9, which crops 12.5% off the top and the bottom of a 4:3 picture rather than
@@ -739,6 +752,11 @@
        the one it was. */
     --space-summary: var(--space-flow);
     --space-controls: var(--space-flow);
+
+    /* Paper draws the vertical timeline DDR-010 drew, per DDR-057, with the dot it had: 12px with a
+       6px core, of which the core is all that prints. */
+    --timeline-dot-size: 0.75rem;
+    --timeline-dot-core: 0.375rem;
 
     /* Every surface is the paper. The page's own tint and its second one, per DDR-046, the white card, the contents bar's, the tag's
        tint and the three level tints all drop, so the sheet reads the same whether or not the browser prints

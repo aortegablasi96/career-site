@@ -21,8 +21,8 @@ export default function HomePage() {
       />
       <main>
         <Introduction introduction={introduction} cv={cv} />
-        {sections.map(({ id, title, items }) => (
-          <Section key={id} id={id} title={title} items={items} />
+        {sections.map(({ id, title, items, breakable }) => (
+          <Section key={id} id={id} title={title} items={items} breakable={breakable} />
         ))}
       </main>
       {/* The footer follows main rather than sitting inside it, so it is the page's contentinfo

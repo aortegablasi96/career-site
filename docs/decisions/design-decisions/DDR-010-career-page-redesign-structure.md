@@ -75,6 +75,11 @@ carries a map pin and stands alone: the relocation note is gone, and so is the a
 sentence, with the bullet that makes it text rather than a badge. The summary is one paragraph, the
 owner's own description. Marked below.
 
+**Superseded in part by DDR-057**, which takes the timeline below. On screen experience and
+education are the design's horizontal row of cards, oldest first, with no points and no thesis, and
+the row scrolls sideways where it does not fit. This record's vertical timeline survives on paper
+alone, where each role still prints its points. A role and a credential are still one pattern.
+
 This record decides the page's **structure and patterns**. The token values the structure reads are
 reworked by #44, the CV download by #45, and the print stylesheet by #52. Where this record names a
 value, such as the accent, it is because the UI Review settled it and those stories implement it
@@ -223,6 +228,9 @@ note; the summary; the availability sentence; then a wrapping row of four contro
 * **It is not printed.**
 
 ### The timeline: roles and credentials
+
+**Superseded in part by DDR-057.** On screen this is now a horizontal row of cards, oldest first.
+The three columns below survive on paper alone, and a degree has no thesis.
 
 A role and a credential share one pattern, replacing DDR-006's entry anatomy for both.
 

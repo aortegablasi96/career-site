@@ -7,7 +7,9 @@ import { Experience } from './experience';
 
 // Rendered with the real content, since what the roles say is what #29 asks for and how they are
 // laid out is what #49 asks for.
-const html = renderToStaticMarkup(<Experience roles={experience.roles} dateLabels={dateLabels} />);
+const html = renderToStaticMarkup(
+  <Experience roles={experience.roles} dateLabels={dateLabels} labelledBy="experience-title" />,
+);
 
 /** The markup's text, as a reader meets it. */
 const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
@@ -15,7 +17,7 @@ const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 const { roles } = experience;
 const role = (company: string) => roles.find((candidate) => candidate.company === company)!;
 
-// Only what is a role's alone is here. The row itself is the shared timeline, per DDR-010, and
+// Only what is a role's alone is here. The timeline itself is shared, per DDR-010, and
 // components/timeline.test.tsx holds its stylesheet.
 const styles = readFileSync(new URL('./experience.module.css', import.meta.url), 'utf8')
   .replace(/\r\n/g, '\n')
@@ -29,31 +31,25 @@ function rule(selector: string): string {
 }
 
 describe('Experience', () => {
-  it('renders each role as a row of the timeline, in the order the content gives', () => {
-    const rows = html.match(/<article[^>]*>/g) ?? [];
-    const titles = [...html.matchAll(/<h3>([^<]+)<\/h3>/g)].map(([, title]) => title);
+  it('renders each role as an entry of the timeline, in the order the content gives', () => {
+    const entries = html.match(/<li class=/g) ?? [];
+    const titles = [...html.matchAll(/<h3[^>]*>([^<]+)<\/h3>/g)].map(([, title]) => title);
 
-    expect(rows).toHaveLength(roles.length);
+    expect(html).toMatch(/^<ol /);
+    expect(entries).toHaveLength(roles.length);
     expect(titles).toEqual(roles.map(({ title }) => title));
   });
 
-  // DDR-010 makes the job title the heading and the most prominent line of the row, and moves the
-  // company out of DDR-006's middle-dot line onto one of its own.
-  it('gives each role its title as an h3, and its company on a line of its own below', () => {
+  // DDR-057: each card opens with the company, then the job title, which is the entry's heading,
+  // then the place, and the dates stand above the card.
+  it('reads each role as its dates, company, title and place, in that order', () => {
     for (const { title } of roles) {
-      expect(html).toContain(`<h3>${title}</h3>`);
+      expect(html).toMatch(new RegExp(`<h3[^>]*>${title}</h3>`));
     }
 
-    expect(text).toContain('Digital Solutions Manager Ponera Group');
+    expect(text).toContain('Jun 2023 – Oct 2024 Ponera Group Digital Solutions Manager Lugano, Switzerland');
+    expect(text).toContain('Oct 2024 – Present ABB Global Product Specialist, Digital Solutions Quartino, Switzerland');
     expect(text).not.toContain('Ponera Group ·');
-  });
-
-  // The markup order is the visual order at both widths, per DDR-014: the dates come before the
-  // title, which is where a narrow screen shows them, and the wide breakpoint moves them into a
-  // column beside it without reordering anything.
-  it('puts each role’s dates and place before its title, in the reading order', () => {
-    expect(text).toContain('Jun 2023 – Oct 2024 Lugano, Switzerland Digital Solutions Manager');
-    expect(text).toContain('Oct 2024 – Present Quartino, Switzerland Global Product Specialist');
   });
 
   it('shows one role, and only one, as running to the present', () => {
@@ -66,7 +62,7 @@ describe('Experience', () => {
     expect(months).toEqual(roles.flatMap(({ start, end }) => (end ? [start, end] : [start])));
   });
 
-  it('shows each role’s points as a bulleted list', () => {
+  it('gives each role its points as a bulleted list, which paper shows', () => {
     const lists = html.match(/<ul[^>]*>.*?<\/ul>/g) ?? [];
 
     expect(lists).toHaveLength(roles.length);
@@ -88,6 +84,13 @@ describe('Experience', () => {
 // What is a role’s alone in the timeline, per DDR-010: the bullet points. The row itself is
 // held by components/timeline.test.tsx.
 describe('experience styles', () => {
+  // DDR-057: the design leads from a role's card to a view of the role for its description, which
+  // is still to come, so the screen shows no points and paper, which cannot lead anywhere, does.
+  it('hides the points on screen and shows them on paper', () => {
+    expect(rule('.points')).toMatch(/display:\s*none;/);
+    expect(styles).toMatch(/@media print\s*\{\s*\.points\s*\{[^}]*display:\s*block;/);
+  });
+
   it('sets bullet text at the small step, as DDR-011 records', () => {
     expect(rule('.points')).toMatch(/font-size:\s*var\(--font-size-small\);/);
     expect(rule('.points > li + li')).toMatch(/margin-block-start:\s*var\(--space-small\);/);
@@ -115,13 +118,13 @@ describe('experience styles', () => {
 });
 
 describe('experience content', () => {
-  it('lists the five roles, newest first', () => {
+  it('lists the five roles, oldest first, per DDR-057', () => {
     expect(roles.map(({ company, start, end }) => [company, start, end])).toEqual([
-      ['ABB', '2024-10', undefined],
-      ['Ponera Group', '2023-06', '2024-10'],
-      ['Randstad', '2022-03', '2023-05'],
-      ['ToBeIT', '2020-09', '2021-07'],
       ['Electrónica Digital de Protección', '2018-05', '2020-07'],
+      ['ToBeIT', '2020-09', '2021-07'],
+      ['Randstad', '2022-03', '2023-05'],
+      ['Ponera Group', '2023-06', '2024-10'],
+      ['ABB', '2024-10', undefined],
     ]);
   });
 
@@ -133,13 +136,13 @@ describe('experience content', () => {
     }
   });
 
-  it('ends no role before it starts, and starts each role after the one before it', () => {
+  it('ends no role before it starts, and starts each role after the one before it in the list', () => {
     for (const [index, { start, end }] of roles.entries()) {
       if (end) {
         expect(end >= start).toBe(true);
       }
       if (index > 0) {
-        expect(start < roles[index - 1].start).toBe(true);
+        expect(start > roles[index - 1].start).toBe(true);
       }
     }
   });

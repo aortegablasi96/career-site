@@ -22,6 +22,10 @@ already in its palette and already measured.
 
 **Amended by DDR-046 in one respect: the dot has no fill.** The surface inside the ring is whichever band the timeline is on, so the dot looks the same on either. Nothing is drawn under the dot, so there is nothing for a fill to cover.
 
+**Amended by DDR-057** in the dot's size on screen: the design's 16px with a 10px core (node
+170:175), on a line that now runs across a horizontal row. Paper keeps this record's 12px dot and
+6px core. The ring, its colour and the rule that the line runs from the first dot to the last stand.
+
 ## Context
 
 Epic #70 closes the gaps between the page and the Figma design. On 2026-09-17 the owner decided

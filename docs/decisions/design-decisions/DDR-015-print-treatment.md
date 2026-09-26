@@ -51,6 +51,12 @@ that one layout serves both the screen and the sheet. DDR-008's measured claim t
 break the page in the same places does not carry forward either — with the redesigned page they no
 longer do.
 
+**Superseded in part by DDR-057**, which prints each role's points, which the screen does not
+show. It is the one print-only content on the page. It also prints the timeline as the vertical one
+DDR-010 drew, where the screen draws a horizontal row, so paper does not take the screen's layout
+there. A timeline section lets paper break inside its opening block, which relies on
+`break-after: avoid`: Firefox does not honour that rule.
+
 ## Context
 
 ADR-002 makes the page itself the CV, so what a browser prints, or saves as a PDF, is the document a
@@ -193,6 +199,8 @@ rule this record sets is therefore narrow — **a component may render the same 
 form where the medium cannot carry the first, and may not add content the screen does not have.**
 
 ### What is hidden, and what prints
+
+**Superseded in part by DDR-057**: a role's points print and are not on the screen.
 
 | Element | On paper |
 | --- | --- |

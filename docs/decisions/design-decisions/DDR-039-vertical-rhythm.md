@@ -26,6 +26,9 @@ its colour and its place are unchanged. From the wide breakpoint the space on ea
 tokens back to the steps DDR-013 gave them, so the printed CV is pixel-identical to the one before
 this record.
 
+**Amended by DDR-057** in one respect: `--space-role` and `--space-credential` space a timeline
+only on paper now. On screen the design spaces the cards across a row instead.
+
 ## Context
 
 Epic #70 closes the gaps between the page and the Figma design `career-site-design`. On 2026-09-17
