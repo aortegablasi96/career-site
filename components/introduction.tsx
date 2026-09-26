@@ -36,9 +36,10 @@ import styles from './introduction.module.css';
  * the page a link is not underlined, per DDR-010, so each is identified by its border or fill
  * together with its mark — two cues, neither of them a colour.
  *
- * Each contact pill shows the design's short label — "Email", "LinkedIn", "GitHub" — rather than the
- * address it links to, per DDR-029. The address is not lost: the footer shows all three, on screen
- * and on paper alike, which is what makes the label possible at all. So the pill prints its label
+ * Each contact pill shows a short label — "Email me", "LinkedIn", "GitHub" — rather than the
+ * address it links to, per DDR-029; the email pill's asks to be written to, per DDR-058. The
+ * address is not lost: the footer shows all three, on screen and on paper alike, which is what
+ * makes the label possible at all. So the pill prints its label
  * and nothing after it, and the printed CV still carries every address once.
  *
  * The LinkedIn and GitHub pills open a new tab, per DDR-043. Since DDR-044 nothing on the pill

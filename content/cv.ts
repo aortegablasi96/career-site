@@ -42,11 +42,13 @@ import type { Cv } from './types';
  * It moved again with #171, because the introduction gained a greeting, lost its relocation note
  * and its availability sentence, and its summary is now the owner's own description. ADR-005 leaves
  * a CV's summary free, and relocation is not on its list.
- * None of the fifteen is a fact ADR-005 lists as shared, so none of them moved the CV; the nine
+ * It moved again with #175, because the email contact's pill now reads "Email me", per DDR-058;
+ * the address did not change.
+ * None of them is a fact ADR-005 lists as shared, so none of them moved the CV; the nine
  * differences are the ones #59 records, unchanged.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '947bb8686f9f8ea2539959c8005610101946fb528df0416cb8caf42cc7f8992f',
+  contentDigest: 'a0ce16f1a0a2a3c128e6cc0bf0986c904549215c090af7485de961b2d5fbe8b6',
 };

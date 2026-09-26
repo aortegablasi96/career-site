@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-18
 
+**Amended by DDR-058 in one respect**: the email pill reads "Email me", where this record gives it
+"Email". The LinkedIn and GitHub pills and everything else this record decides stand, per #175.
+
 Supersedes **the one bullet of DDR-010** that makes each contact pill's text its own address, and
 **DDR-006's rule behind it**. The three pills now read "Email", "LinkedIn" and "GitHub", as the
 design draws them. Everything else in both records stands: the pills are still the one place on the
@@ -60,6 +63,8 @@ and the footer is where the address is written out.**
 | Pill     | Shows      | Links to                                 | Written out in |
 | -------- | ---------- | ---------------------------------------- | -------------- |
 | Email    | "Email"    | `mailto:aortegablasi@gmail.com`          | the footer     |
+
+The email pill's "Email" is "Email me" since #175, per DDR-058.
 | LinkedIn | "LinkedIn" | `https://www.linkedin.com/in/andreu-ob/` | the footer     |
 | GitHub   | "GitHub"   | `https://github.com/aortegablasi96`      | the footer     |
 

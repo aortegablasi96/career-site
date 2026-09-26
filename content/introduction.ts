@@ -35,7 +35,7 @@ export const introduction: Introduction = {
     'I’m a product manager focused on building AI and IoT products that turn complex technology into useful, scalable solutions. A passionate strategist and ambitious hard worker, I would rather work on high-potential but little-known solutions than on settled, easy-going ones.',
   contact: [
     {
-      label: 'Email',
+      label: 'Email me',
       text: 'aortegablasi@gmail.com',
       href: 'mailto:aortegablasi@gmail.com',
       icon: 'gmail',
