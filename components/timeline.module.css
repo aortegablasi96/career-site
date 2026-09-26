@@ -16,6 +16,11 @@
 .timeline {
   display: flex;
   overflow-x: auto;
+  /* A role's card draws a shadow under the pointer, per DDR-061, and the row clips what reaches
+     past it because it scrolls. So the row leaves the shadow room below the cards, and takes that
+     room back from the space after it, so that the page is laid out exactly as it was. */
+  margin-block-end: var(--timeline-shadow-room-back);
+  padding-block-end: var(--timeline-shadow-room);
   /* The base styles indent every list and mark its items; the entries are columns of a row, and
      their dots are what marks them. */
   padding-inline-start: 0;
@@ -155,6 +160,9 @@
 .card:has(.link:hover),
 .card:has(.link:focus-visible) {
   border-color: var(--color-border-accent-hover);
+  /* And it takes a light shadow all round, per DDR-061, so the whole card reads as the one thing
+     the pointer will open. It appears at once, as the edge's colour does, so nothing animates. */
+  box-shadow: var(--shadow-card-hover);
 }
 
 /* Keyboard focus outlines the whole card rather than the title alone, since the card is what the
@@ -209,6 +217,9 @@
   .timeline {
     display: block;
     overflow-x: visible;
+    /* Paper draws no shadow and cannot point at a card, so the row leaves it no room. */
+    margin-block-end: 0;
+    padding-block-end: 0;
   }
 
   .entry {

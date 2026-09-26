@@ -551,7 +551,7 @@ describe('elevation tokens', () => {
   // for the one element that may read them rather than putting them on a scale above `raised`: the
   // photo is not raised off the page the way a control or a card is, it is lit.
   it('names every shadow for what it does, so a third is a decision rather than a number', () => {
-    expect(shadows).toEqual(['raised', 'photo-glow', 'photo-inner', 'bar']);
+    expect(shadows).toEqual(['raised', 'photo-glow', 'photo-inner', 'bar', 'card-hover']);
   });
 
   // The photo's two lights are the design's own, ink and geometry both, per DDR-021. They are two
@@ -570,12 +570,25 @@ describe('elevation tokens', () => {
     expect(token('shadow-photo-glow')).not.toMatch(/\binset\b/);
     expect(token('shadow-raised')).not.toMatch(/\binset\b/);
     expect(token('shadow-bar')).not.toMatch(/\binset\b/);
+    expect(token('shadow-card-hover')).not.toMatch(/\binset\b/);
   });
 
   // DDR-034: the contents bar's edge, drawn at all times since DDR-048, ink and geometry both from the
   // Figma Make file, where the bar is `shadow-[0_2px_16px_rgba(26,26,46,0.10)]`.
   it('keeps the bar’s shadow exactly as the design draws it, per DDR-034', () => {
     expect(token('shadow-bar')).toBe('0 2px 16px rgba(26, 26, 46, 0.1)');
+  });
+
+  // DDR-061: a role's card under the pointer, in the bar's ink. Its blur reaches no further than
+  // the 12px the timeline leaves beside a card, and the row leaves room below it for the whole of
+  // its reach, the offset and the blur, so that the row's scrolling box does not clip it.
+  it('lights a card under the pointer in the bar’s ink, within the timeline’s room, per DDR-061', () => {
+    const [, y, blur, ink] = token('shadow-card-hover')!.match(/^0 (\d+)px (\d+)px (rgba\(.*\))$/)!;
+
+    expect(ink).toBe(token('shadow-bar')!.match(/rgba\(.*\)/)![0]);
+    expect(Number(blur)).toBeLessThanOrEqual(rem(token('timeline-entry-inset')!) * 16);
+    expect(token('timeline-shadow-room')).toBe(`${Number(y) + Number(blur)}px`);
+    expect(token('timeline-shadow-room-back')).toBe('calc(-1 * var(--timeline-shadow-room))');
   });
 
   // DDR-048: the bar's edge never changes, so there is no transition for it to take.
@@ -606,7 +619,7 @@ describe('elevation tokens', () => {
 
   // A shadow marks an edge and gains nothing from growing with the reader's text, so its lengths
   // are in px, as the focus outline's and the timeline's line are. DDR-021's two follow it.
-  it.each(['raised', 'photo-glow', 'photo-inner', 'bar'])(
+  it.each(['raised', 'photo-glow', 'photo-inner', 'bar', 'card-hover'])(
     'draws --shadow-%s in px, as the site’s other hairlines do',
     (name) => {
       expect(token(`shadow-${name}`)!.replace(/rgba\([^)]*\)/g, '')).not.toMatch(/\d(?:rem|em|%)/);
@@ -631,8 +644,9 @@ describe('elevation tokens', () => {
     expect(token('shadow-photo-glow')!.match(/rgba\(/g)).toHaveLength(1);
     expect(token('shadow-photo-inner')!.match(/rgba\(/g)).toHaveLength(1);
     expect(token('shadow-bar')!.match(/rgba\(/g)).toHaveLength(1);
-    // Every translucency at the root belongs to a shadow, five of them, or is the bar's surface.
-    expect(root.match(/rgba\(/g)).toHaveLength(6);
+    expect(token('shadow-card-hover')!.match(/rgba\(/g)).toHaveLength(1);
+    // Every translucency at the root belongs to a shadow, six of them, or is the bar's surface.
+    expect(root.match(/rgba\(/g)).toHaveLength(7);
   });
 });
 
@@ -984,6 +998,7 @@ const forPaper = [
   { name: 'shadow-photo-glow', value: 'none' },
   { name: 'shadow-photo-inner', value: 'none' },
   { name: 'shadow-bar', value: 'none' },
+  { name: 'shadow-card-hover', value: 'none' },
   { name: 'content-width', value: 'none' },
   { name: 'page-gutter', value: '0' },
   { name: 'page-inset', value: '0' },
@@ -1054,11 +1069,12 @@ describe('print tokens', () => {
   // DDR-021's two follow it: the glow spreads 40px of indigo across the sheet and the inner shadow
   // darkens the top of the portrait, and a reader of paper is missing neither. The photograph keeps
   // its shape, which is drawn by a radius rather than by a light.
-  it('draws no shadow on paper, per DDR-020, DDR-021 and DDR-034', () => {
+  it('draws no shadow on paper, per DDR-020, DDR-021, DDR-034 and DDR-061', () => {
     expect(inPrint.get('shadow-raised')).toBe('none');
     expect(inPrint.get('shadow-photo-glow')).toBe('none');
     expect(inPrint.get('shadow-photo-inner')).toBe('none');
     expect(inPrint.get('shadow-bar')).toBe('none');
+    expect(inPrint.get('shadow-card-hover')).toBe('none');
   });
 
   it('gives the sheet margins in a unit of the paper', () => {

@@ -86,6 +86,13 @@ the printed CV show, and an optional `fullTitle`, which only the view's `h1`, ta
 show. A role whose title has no qualifier states only `title`. The job titles are facts ADR-005 says
 the CV file shares, so that file is behind the page on them until the owner updates it.
 
+**Since #183, per DDR-061, a role's card takes a light shadow under the pointer and on keyboard
+focus**, `--shadow-card-hover`, beside the accent edge it already took. It appears at once, and an
+education card, which leads nowhere, never takes it. The row scrolls, so it clips whatever reaches
+past it: it pads its foot by `--timeline-shadow-room` and takes that back with a negative margin,
+so the page is laid out exactly as before, and paper sets both back to 0. A larger blur or offset
+needs more room, and `app/tokens.test.ts` holds the two together.
+
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
 row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
@@ -254,7 +261,7 @@ spacing scale, column and radii to DDR-013, the rhythm — each space the design
 factor, and paper's steps as they were — to DDR-039, the narrow breakpoint and what it adapts to
 DDR-014, the **absence** of a target minimum to DDR-027 — the name is held missing, so reinstating
 one moves the record with it — the photo's two widths and its ratio to DDR-021, the three tracking values to DDR-017, the four leadings — each running-text block within half a pixel a line of the design, and 1.5 on paper — to DDR-038,
-the bullet marker's 1.86:1 to DDR-019 as DDR-025 amends it, the raised shadow and its 10% ink to DDR-020 as DDR-025 amends it, and the photo's
+the bullet marker's 1.86:1 to DDR-019 as DDR-025 amends it, the raised shadow and its 10% ink to DDR-020 as DDR-025 amends it, the role card's hover shadow and the row's room for it to DDR-061, and the photo's
 two lights to DDR-021, the timeline's and
 the project cards' measures to DDR-051 as DDR-054 amends it and DDR-055 adds its lift, and the print
 treatment to DDR-015 as DDR-022 amends it — the 12pt base, every surface dropped and no ink touched, the 28mm photo, and
@@ -577,8 +584,8 @@ is a route rather than a file, so it does not go through `asset()`, which amends
 extends ADR-010 to the roles, at `/experience/<slug>`, and supersedes nothing. The next ADR is
 `012`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-060. The next DDR is
-`061`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-061. The next DDR is
+`062`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Twenty-seven accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -687,7 +694,8 @@ at the section concerned:
   meet 2.5.8 by the spacing exception, as seven of the eleven already do.
 * **DDR-020** keeps one elevation, its name, its eight elements, the design's geometry and its
   reason for holding a translucent ink inside the shadow. DDR-025 takes its ink back to the design's
-  10% black, because the hairlines the 22% was measured against no longer exist.
+  10% black, because the hairlines the 22% was measured against no longer exist. DDR-061 adds a
+  named shadow beside it, `--shadow-card-hover`, for a role's card under the pointer.
 * **DDR-025** keeps everything but one bullet: DDR-033 takes its ruling that the contents links keep
   their underline. Every other link still has one. DDR-035 amends it too: five hover and underline
   colours join the palette, and its four failing pairings become six. DDR-044 adds the three

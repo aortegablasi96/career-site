@@ -478,6 +478,19 @@
      every other shadow is. */
   --shadow-bar: 0 2px 16px rgba(26, 26, 46, 0.1);
 
+  /* A role's card under the pointer or keyboard focus, per DDR-061: a light shadow all round it,
+     which says the whole card is the one thing the pointer will open. It is a fourth elevation and,
+     like the three above, named for what may read it rather than numbered. It is not `raised`: a
+     card at rest sits flat on its band, with a hairline edge, and only lifts into the light while
+     it is being pointed at.
+
+     The ink is the bar's, the heading-dark `#1a1a2e` at 10%, so the site's soft shadows share one
+     ink rather than each taking its own. The geometry is sized to the room the timeline has: 12px
+     of blur reaches no further than the 12px the design leaves beside a card, so the shadow fits the
+     row's ends and never touches the next card, and 4px down puts its weight below the card, where
+     a light from above would. In px, as every other shadow is. */
+  --shadow-card-hover: 0 4px 12px rgba(26, 26, 46, 0.1);
+
   /* The profile photo, per DDR-010, #71 and DDR-021: 96px wide below the wide breakpoint and, from
      it, the design's width, at 3:4, drawn as a capsule by `--radius-pill` and lit by the two shadows
      above. The narrow width is in rem, as --content-width is, so the photo keeps its proportion to
@@ -568,6 +581,14 @@
      design's 24px (node 170:186). It is not a step of DDR-013's scale, so it is the timeline's own,
      as the measures above are. */
   --timeline-hint-space: 1.5rem;
+  /* The room the experience row leaves below its cards for a card's hover shadow, per DDR-061: the
+     shadow's 4px offset and its 12px of blur. The row scrolls sideways, and a box that scrolls clips
+     whatever reaches past it, so without this the shadow lost its foot to the row's own edge. The
+     row pads its foot by it and takes it back as a negative margin, the second token, so nothing on
+     the page moves; the margin is written here because it is arithmetic on a token, which a
+     component may not write. In px, because it is the reach of a shadow, which is in px. */
+  --timeline-shadow-room: 16px;
+  --timeline-shadow-room-back: calc(-1 * var(--timeline-shadow-room));
 
   /* The projects' cards, per DDR-051, measured off `career-site-main` (node 58:938). The picture
      is the design's 16:9, which crops 12.5% off the top and the bottom of a 4:3 picture rather than
@@ -828,6 +849,8 @@
        so that every light on the page is dropped in one place and none depends on the element
        carrying it being hidden. */
     --shadow-bar: none;
+    /* Nor is a card's hover shadow, per DDR-061, which a sheet can never be in the state to draw. */
+    --shadow-card-hover: none;
 
     --content-width: none;
     --page-gutter: 0;

@@ -23,6 +23,10 @@ beside it is a light that is coloured rather than neutral, and it says why the f
 is the wrong instrument for one. This record's own claim that "the photo's glow is the photo's
 question, which #77 excludes and DDR-016 has already answered without one" is what DDR-021 answers.
 
+**Amended by DDR-061**, which adds a named shadow for a role's card under the pointer and on
+keyboard focus, `--shadow-card-hover`. The card is flat at rest and lit only while it is pointed at,
+so it does not read `--shadow-raised`. Everything here stands.
+
 It **adds no colour to DDR-012's palette**, and says why: the shadow's ink is translucent black,
 which is a value only a shadow may hold, so it is written inside the shadow rather than offered to
 anything that can read a colour token. Nothing in either record is superseded.
