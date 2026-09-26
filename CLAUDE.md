@@ -1433,7 +1433,7 @@ Three things about it are worth knowing before touching a card's tags.
   reading found them before, `+1` and `+2` are on none, and no word was lost.
 
 **#164 has landed, as DDR-055: a project card rises under the pointer.** Pointing anywhere on a
-card, or reaching it with the keyboard, lifts it 4px — `--project-card-lift` — over the 150ms every
+card, or reaching it with the keyboard, lifts it 4px — `--card-lift` — over the 150ms every
 link's colour already takes, per DDR-035, so the movement and the name's accent are one change. It
 is the site's one piece of expressive motion, and the page's project cards are the only place it is
 drawn: the neighbour cards on a view, the language cards, the pills, the CV control and the contents
@@ -1452,7 +1452,7 @@ Four things about it are worth knowing before touching it.
   here the change *is* the motion, so a reader who prefers less gets the card exactly as it was,
   accent, outline and tab stops included. It moves with `translate`, so no layout is disturbed.
 * **A second pseudo-element is stretched over the card**, `.link::before`, reaching
-  `--project-card-lift` below it. A lifted card vacates the bottom 4px of its resting footprint, and
+  `--card-lift` below it. A lifted card vacates the bottom 4px of its resting footprint, and
   without it a pointer resting there would drop the card and pick it up again for as long as it
   stayed. It is the link's rather than the card's, so that strip is the link in every respect — the
   accent and the click. `.link::after` still draws the focus outline, at the size of the card, which

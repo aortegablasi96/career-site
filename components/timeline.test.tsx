@@ -243,20 +243,50 @@ describe('timeline card links', () => {
     expect(rule('.link::after', screen)).toMatch(/inset:\s*0;/);
   });
 
-  it('answers the pointer and focus with the accent, and does not rise, which DDR-055 keeps for projects', () => {
+  it('answers the pointer and focus with the accent', () => {
     expect(rule('.link:hover,\n.link:focus-visible', screen)).toMatch(/color:\s*var\(--color-accent\);/);
-    expect(styles).not.toMatch(/translate/);
   });
 
-  // DDR-061: under the pointer or focus a role's card takes a light shadow all round, at once, and
-  // only a card that leads somewhere does, since the rule reads the link.
+  // DDR-061: under the pointer or focus a role's card takes a light shadow all round, and only a
+  // card that leads somewhere does, since the rule reads the link. DDR-063 raises such a card at
+  // rest as a project card is, and leaves a credential's card flat.
   it('lights a card that leads to a view under the pointer and on focus, per DDR-061', () => {
     const lit = rule('.card:has(.link:hover),\n.card:has(.link:focus-visible)', screen);
 
     expect(lit).toMatch(/box-shadow:\s*var\(--shadow-card-hover\);/);
     expect(lit).toMatch(/border-color:\s*var\(--color-border-accent-hover\);/);
     expect(rule('.card', screen)).not.toMatch(/box-shadow/);
-    expect(styles).not.toMatch(/transition/);
+    expect(rule('.card:has(.link)', screen)).toMatch(/box-shadow:\s*var\(--shadow-raised\);/);
+  });
+
+  // DDR-063: a role's card rises as a project card does, over the same 150ms, with its edge and
+  // shadow as one change, and only where motion is welcome; the edge and shadow are not motion.
+  describe('lift, per DDR-063', () => {
+    const motion =
+      styles.match(/@media \(prefers-reduced-motion: no-preference\) \{([\s\S]*?)\n\}/)?.[1] ?? '';
+
+    it('lifts a card that leads to a view by the lift a project card takes', () => {
+      expect(rule('.card:has(.link:hover),\n  .card:has(.link:focus-visible)', motion)).toMatch(
+        /translate:\s*0 calc\(-1 \* var\(--card-lift\)\);/,
+      );
+    });
+
+    it('brings the edge, the shadow and the lift in together over 150ms', () => {
+      expect(rule('.card:has(.link)', motion)).toMatch(
+        /transition-property:\s*translate, border-color, box-shadow;/,
+      );
+      expect(rule('.card:has(.link)', motion)).toMatch(/transition-duration:\s*var\(--hover-transition\);/);
+    });
+
+    it('writes the movement and its transition only where motion is welcome', () => {
+      expect(motion).not.toBe('');
+      expect(styles.replace(motion, '')).not.toMatch(/translate:|transition/);
+    });
+
+    it('holds the link’s box under a pointer at the card’s resting edge, and not on paper', () => {
+      expect(rule('.link::before', motion)).toMatch(/inset:\s*0 0 calc\(-1 \* var\(--card-lift\)\);/);
+      expect(rule('.link::before', paper)).toMatch(/content:\s*none;/);
+    });
   });
 
   // The row scrolls, so it clips the shadow's foot unless it leaves room for it, and it takes that
@@ -268,11 +298,11 @@ describe('timeline card links', () => {
     expect(rule('.timeline', paper)).toMatch(/margin-block-end:\s*0;/);
   });
 
-  // The row scrolls, and a scrolling box clips what reaches past it, so the outline is drawn inside
-  // the card's edge.
-  it('outlines the whole card on focus, inside its edge', () => {
+  // DDR-063: outside the card's edge, as a project card's is; the row's room for the shadow and
+  // the space beside each card keep it clear of the row's clipping edge.
+  it('outlines the whole card on focus, outside its edge, per DDR-063', () => {
     expect(rule('.link:focus-visible::after', screen)).toMatch(
-      /outline-offset:\s*calc\(-1 \* var\(--focus-outline-width\)\);/,
+      /outline-offset:\s*var\(--focus-outline-offset\);/,
     );
   });
 

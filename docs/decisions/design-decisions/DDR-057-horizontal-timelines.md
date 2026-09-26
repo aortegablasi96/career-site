@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-063**, per #187: a role's card and a project card now rest, answer the pointer and take focus alike: `--shadow-raised` at rest, the accent edge, `--shadow-card-hover` and a 4px lift, `--card-lift`, where motion is welcome, and the focus outline outside the edge.
+
 **Amended by DDR-059**, on 2026-09-26: each role's card is now a link to the role's view, and the
 hint "Click any role to read the full description" now stands above the experience row, which then
 takes no tab stop of its own. Everything else here stands, including the education row.

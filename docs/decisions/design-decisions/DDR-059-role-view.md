@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-063**, per #187: a role's card and a project card now rest, answer the pointer and take focus alike: `--shadow-raised` at rest, the accent edge, `--shadow-card-hover` and a 4px lift, `--card-lift`, where motion is welcome, and the focus outline outside the edge.
+
 **Amends DDR-057** in two things it left for later: each role's card in the experience timeline is
 now a link to the role's view, and the design's hint, "Click any role to read the full
 description", now stands above the row. DDR-057's row, its order, its scrolling, its print treatment

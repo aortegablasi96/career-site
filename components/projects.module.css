@@ -127,7 +127,7 @@ section > .row {
      raised behind the pointer. */
   .card:hover,
   .card:has(.link:focus-visible) {
-    translate: 0 calc(-1 * var(--project-card-lift));
+    translate: 0 calc(-1 * var(--card-lift));
   }
 
   /* A lifted card leaves the bottom of its resting footprint empty, and a pointer resting in that
@@ -141,7 +141,7 @@ section > .row {
      stay the size of the card. */
   .link::before {
     position: absolute;
-    inset: 0 0 calc(-1 * var(--project-card-lift));
+    inset: 0 0 calc(-1 * var(--card-lift));
     content: '';
   }
 }

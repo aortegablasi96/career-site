@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-063**, per #187: a role's card and a project card now rest, answer the pointer and take focus alike: `--shadow-raised` at rest, the accent edge, `--shadow-card-hover` and a 4px lift, `--card-lift`, where motion is welcome, and the focus outline outside the edge.
+
 **Amended by DDR-062**, which gives `--shadow-card-hover` a second reader: a project card on the
 page takes it as it lifts, per #184. Its value and everything else here stand.
 

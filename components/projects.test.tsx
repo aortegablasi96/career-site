@@ -293,7 +293,7 @@ describe('project styles', () => {
     it('rises under a pointer anywhere on the card, and on keyboard focus, per DDR-035', () => {
       const lifted = motion.match(/\.card:hover,\s*\.card:has\(\.link:focus-visible\)\s*\{([^}]*)\}/)?.[1] ?? '';
 
-      expect(lifted).toMatch(/translate:\s*0 calc\(-1 \* var\(--project-card-lift\)\);/);
+      expect(lifted).toMatch(/translate:\s*0 calc\(-1 \* var\(--card-lift\)\);/);
       // Only the movement. The card is not restyled: its surface, edge, radius and shadow stand.
       expect(lifted.match(/[\w-]+:/g)).toEqual(['translate:']);
     });
@@ -324,7 +324,7 @@ describe('project styles', () => {
     // fall off the card there, drop it and pick it up again for as long as it stayed.
     it('holds the link’s box under a pointer at the card’s resting edge', () => {
       expect(rule('.link::before', motion)).toMatch(
-        /inset:\s*0 0 calc\(-1 \* var\(--project-card-lift\)\);/,
+        /inset:\s*0 0 calc\(-1 \* var\(--card-lift\)\);/,
       );
       expect(rule('.link::before', motion)).toMatch(/position:\s*absolute;/);
     });

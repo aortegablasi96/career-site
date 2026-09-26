@@ -8,8 +8,7 @@ Date: 2026-09-20
 shadow, per #184, and a reader who prefers reduced motion gets the shadow without the lift. The lift
 itself, its distance, its timing and its buffer stand.
 
-**Added to by DDR-063**: the lifted card's edge also takes `--color-border-accent-hover`, which
-joins the transition, and a reader who prefers reduced motion gets it without the lift, per #187.
+**Amended by DDR-063**, per #187: a role's card and a project card now rest, answer the pointer and take focus alike: `--shadow-raised` at rest, the accent edge, `--shadow-card-hover` and a 4px lift, `--card-lift`, where motion is welcome, and the focus outline outside the edge. The lift now moves role cards too.
 
 Supersedes nothing. It adds a movement to the card DDR-051 draws, beside the colour change DDR-035
 already gives its name.
