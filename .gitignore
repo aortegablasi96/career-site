@@ -10,3 +10,6 @@
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# The owner's full-size originals, kept beside the files made from them but never shipped
+public/**/*.png

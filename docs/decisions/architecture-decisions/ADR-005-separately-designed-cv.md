@@ -119,7 +119,7 @@ take the list above and check the CV against it"**. Refreshing is:
 1. Change the content in `content/`, as usual.
 2. The test fails. Read the list of shared facts above.
 3. Update the CV in the design tool, re-export it, and replace
-   `public/andreu-ortega-blasi-cv.pdf`.
+   `public/home/andreu-ortega-blasi-cv.pdf`.
 4. Update `contentDigest` to the value the test reports.
 
 The digest catches *change*. It cannot catch a disagreement that was there from the start, because

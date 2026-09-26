@@ -102,7 +102,7 @@ shows up on the live site and never in development.
 > unchanged and does more work than it did here.
 
 
-The file is `public/andreu-ortega-blasi-cv.pdf`. It is produced by building the site, opening the
+The file is `public/home/andreu-ortega-blasi-cv.pdf`. It is produced by building the site, opening the
 page in a browser, and saving it as a PDF through the print stylesheet — the same output any visitor
 gets by printing the page themselves. It is then committed to the repository.
 
@@ -137,7 +137,7 @@ Refreshing the CV is:
 1. `npm run build`, and serve `out/`.
 2. Save the page as a PDF, and check it as `CLAUDE.md` already requires: in Edge and Firefox, reading
    the text back out of both, with no replacement characters and no substituted apostrophe.
-3. Replace `public/andreu-ortega-blasi-cv.pdf`.
+3. Replace `public/home/andreu-ortega-blasi-cv.pdf`.
 4. Update `contentDigest` in `content/cv.ts` to the value the test reports.
 
 The digest covers the facts, not the appearance. A change to the print treatment or to a component
@@ -168,7 +168,7 @@ owns. Next.js copies it into `out/` unchanged, and GitHub Pages serves it.
 `app/asset.ts` exports a single function:
 
 ```ts
-asset('/andreu-ortega-blasi-cv.pdf'); // → '/career-site/andreu-ortega-blasi-cv.pdf' in production
+asset('/home/andreu-ortega-blasi-cv.pdf'); // → '/career-site/home/andreu-ortega-blasi-cv.pdf' in production
 ```
 
 It prefixes `process.env.PAGES_BASE_PATH`, which is the same variable `next.config.ts` reads and is

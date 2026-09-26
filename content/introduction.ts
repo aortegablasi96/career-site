@@ -21,7 +21,7 @@ import type { Introduction } from './types';
  * `components/introduction.test.tsx` holds.
  */
 export const introduction: Introduction = {
-  photo: { file: '/andreu-ortega-blasi-photo.webp', alt: 'Andreu Ortega Blasi' },
+  photo: { file: '/home/andreu-ortega-blasi-photo.webp', alt: 'Andreu Ortega Blasi' },
   name: 'Andreu Ortega Blasi',
   positioning: 'Product manager for AI and IoT products',
   location: 'Lugano, Switzerland',
