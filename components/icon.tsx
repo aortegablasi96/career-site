@@ -4,12 +4,13 @@ import type { ContactIcon } from '@/content/types';
  * The marks the introduction's controls carry: one per contact address, and one for the CV. Since
  * DDR-050 a project's view carries two more: the chevron before its way back to the projects, and
  * the arrow out of a box on each link that leaves the site. DDR-052 adds the chevron's mirror, on
- * the link to the project after this one.
+ * the link to the project after this one. DDR-056 adds a map pin, beside the introduction's
+ * location, which is the one mark that is not beside a control.
  */
-export type IconName = ContactIcon | 'download' | 'back' | 'forward' | 'external';
+export type IconName = ContactIcon | 'download' | 'back' | 'forward' | 'external' | 'location';
 
 /** The marks drawn as lines rather than filled, all on the 24 unit grid. */
-const lineDrawings: readonly IconName[] = ['download', 'back', 'forward', 'external'];
+const lineDrawings: readonly IconName[] = ['download', 'back', 'forward', 'external', 'location'];
 
 /**
  * A mark beside a control's text, per DDR-010.
@@ -110,6 +111,13 @@ const paths: Record<IconName, React.ReactNode> = {
       <path d="M15 3h6v6" />
       <path d="M10 14 21 3" />
       <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+    </>
+  ),
+  // A map pin, before the place the owner is based, per DDR-056.
+  location: (
+    <>
+      <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+      <circle cx="12" cy="10" r="3" />
     </>
   ),
 };

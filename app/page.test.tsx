@@ -11,9 +11,10 @@ describe('HomePage', () => {
   const html = renderToStaticMarkup(<HomePage />);
 
   it('opens with the introduction, inside the page’s main landmark', () => {
-    // React emits a preload link for the photo ahead of the markup, so main is not at index 0.
+    // React emits a preload link for the photo ahead of the markup, so main is not at index 0. The
+    // greeting stands before the name, per DDR-056.
     expect(html).toMatch(
-      /<main><header class="[^"]*"><span[^>]*><img [^>]*><\/span><div[^>]*><h1>Andreu Ortega Blasi<\/h1>/,
+      /<main><header class="[^"]*"><span[^>]*><img [^>]*><\/span><div[^>]*><hgroup[^>]*><p class="[^"]*">Hi there, I’m<\/p><h1>Andreu Ortega Blasi<\/h1>/,
     );
   });
 

@@ -54,15 +54,15 @@ describe('Introduction', () => {
     expect(html).toContain(`<h1>${introduction.name}</h1>`);
   });
 
-  it('follows the order DDR-010 sets: photo, name, positioning, location, summary, availability, controls', () => {
+  it('follows the order DDR-056 sets: photo, greeting, name, positioning, location, summary, controls', () => {
     const order = [
       introduction.photo.alt,
-      introduction.name,
+      introduction.greeting,
+      // The name is also the photo's alternative text, so it is found by its heading.
+      `<h1>${introduction.name}`,
       introduction.positioning,
       introduction.location,
-      introduction.relocation,
       introduction.summary,
-      introduction.availability,
       introduction.contact[0].label,
       cv.label,
     ].map((part) => html.indexOf(part));
@@ -75,9 +75,33 @@ describe('Introduction', () => {
     expect(html.match(/<h\d/g)).toEqual(['<h1']);
   });
 
-  it('shows the summary and the availability exactly as content/ writes them', () => {
+  it('shows the summary exactly as content/ writes it, as the one paragraph below the location', () => {
     expect(html).toMatch(new RegExp(`<p class="[^"]+">${literal(introduction.summary)}</p>`));
-    expect(html).toMatch(new RegExp(`<p class="[^"]+">${literal(introduction.availability)}</p>`));
+    expect(html.match(/<p class="[^"]*summary[^"]*"/g)).toHaveLength(1);
+  });
+
+  // DDR-056: the greeting is a paragraph before the heading rather than part of it, so the page
+  // title and the outline still carry the name alone. The two are one hgroup, so the layout keeps
+  // them together.
+  it('greets the visitor in a paragraph of its own, grouped with the page title', () => {
+    expect(html).toMatch(
+      new RegExp(
+        `<hgroup class="[^"]+"><p class="[^"]+">${literal(introduction.greeting)}</p><h1>${literal(introduction.name)}</h1></hgroup>`,
+      ),
+    );
+  });
+
+  // #171: the owner removed the relocation note and the availability sentence.
+  it('says nothing about relocation', () => {
+    expect(text).not.toMatch(/relocat/i);
+  });
+
+  // DDR-056: the place carries a map pin that repeats what its words say, so it is hidden from
+  // assistive technology and the place is still read as text.
+  it('marks the location with a pin hidden from assistive technology, before the place’s words', () => {
+    expect(html).toMatch(
+      new RegExp(`<p class="[^"]*location[^"]*"><svg [^>]*aria-hidden="true"[^>]*>.*?</svg>${literal(introduction.location)}</p>`),
+    );
   });
 
   // DDR-029: the pill shows the design's short label and the footer shows the address. The
@@ -284,7 +308,7 @@ describe('introduction styles', () => {
     // The frame is what floats since DDR-021, and it shrink-wraps the photo, so it is the photo's
     // box in every respect the layout cares about.
     expect(rule('.frame')).toMatch(/float:\s*inline-start;/);
-    expect(rule('.text > h1')).toMatch(/display:\s*flow-root;/);
+    expect(rule('.heading')).toMatch(/display:\s*flow-root;/);
   });
 
   // #68: the photo is sized in rem, so it grows with the reader's text while the room beside it
@@ -293,7 +317,8 @@ describe('introduction styles', () => {
   // below the photo once the longest word no longer fits beside it, which is the rule browsers
   // already apply to a block that establishes its own formatting context.
   it('drops the name below the photo rather than squeezing it, when text is enlarged, per #68', () => {
-    expect(rule('.text > h1')).toMatch(/min-inline-size:\s*min-content;/);
+    // Since DDR-056 the greeting shares the name's box, so the two move together.
+    expect(rule('.heading')).toMatch(/min-inline-size:\s*min-content;/);
   });
 
   it('gives the photo a column of its own from the wide breakpoint, per DDR-010', () => {
@@ -413,6 +438,18 @@ describe('introduction styles', () => {
     expect(rule('.location')).toMatch(/color:\s*var\(--color-text-faint\);/);
   });
 
+  // DDR-056: the greeting is smaller than the name, in the secondary ink rather than the accent,
+  // and on screen only.
+  it('sets the greeting at the positioning line’s size in the secondary ink, per DDR-056', () => {
+    expect(rule('.greeting')).toMatch(/font-size:\s*var\(--font-size-large\);/);
+    expect(rule('.greeting')).toMatch(/color:\s*var\(--color-text-secondary\);/);
+  });
+
+  it('hides the greeting on paper and adds nothing above the name there, per DDR-056', () => {
+    expect(rule('.greeting', paper)).toMatch(/display:\s*none;/);
+    expect(rule('.greeting + h1', paper)).toMatch(/margin-block-start:\s*0;/);
+  });
+
   // DDR-020 raises both kinds of pill by the one shadow the site has. It is never what identifies
   // a control — the border or the fill above, and the icon, do that — so a forced-colours mode
   // that drops every shadow drops nothing a reader needs.
@@ -508,8 +545,7 @@ describe('introduction content', () => {
     expect(text).not.toMatch(/permit/i);
   });
 
-  it('invites a conversation rather than announcing a job search, since the ABB role is current (#28)', () => {
-    expect(introduction.availability).toMatch(/happy to talk/);
+  it('announces no job search, since the ABB role is current (#28)', () => {
     expect(text).not.toMatch(/open to (?:new )?(?:product )?roles|looking for|job search/i);
   });
 });

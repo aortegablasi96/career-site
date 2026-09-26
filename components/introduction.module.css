@@ -88,11 +88,29 @@
   margin-block-start: var(--space-flow);
 }
 
-/* The name takes the width left beside the photo and keeps it, rather than letting the line that
-   falls past the foot of the photo run back out to the full column. Without this the name wraps in
-   an L around the photo, which is the one place on the page it would be most obvious. What follows
-   the name clears the photo on its own and returns to the full column, which is where the summary
-   wants to be.
+/* The greeting before the name, per DDR-056. It reads with the name as one sentence, so it sits a
+   step closer to it than the flow step and is set at the positioning line's size, a third of the
+   name's. The secondary ink rather than the accent, so the positioning line below the name stays
+   the one line in it; DM Sans rather than Lora, which DDR-023 keeps for the two headings. */
+.greeting {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-large);
+}
+
+.greeting + h1 {
+  margin-block-start: var(--space-x-small);
+}
+
+/* The name, and since DDR-056 the greeting above it, take the width left beside the photo and keep
+   it, rather than letting the line that falls past the foot of the photo run back out to the full
+   column. Without this the name wraps in an L around the photo, which is the one place on the page
+   it would be most obvious. What follows the name clears the photo on its own and returns to the
+   full column, which is where the summary wants to be.
+
+   It is the pair's group that does this, not the name alone. Measured on #171 with the rule on the
+   name: at 320px the name dropped below the photo while the greeting stayed beside it, and at 200%
+   the greeting stood one word to a line beside the photo with the name below. As one box the two
+   are beside the photo or below it together.
 
    The minimum is what stops that becoming a squeeze when text is enlarged, per #68. The photo is
    sized in rem, so it grows with the reader's text while the room beside it shrinks: at 390px and
@@ -102,7 +120,7 @@
    formatting context and cannot fit beside a float moves below it instead, so asking for at least
    the longest word is what tells the browser when beside is no longer possible. The name then takes
    the full column under the photo, and at the default size, where it fits, nothing changes. */
-.text > h1 {
+.heading {
   display: flow-root;
   min-inline-size: min-content;
 }
@@ -119,23 +137,28 @@
 
 /* The faintest line on the page, at 2.39:1, which fails WCAG 1.4.3. It is the design's, per
    DDR-025, and it is the one place the introduction's text drops below the ink `.metadata` gives
-   every other line it sets. */
+   every other line it sets.
+
+   The map pin before the place, per DDR-056, is centred on the line and a step apart from it. It
+   is drawn in the line's own ink and sized in em, so it follows the text in both. */
 .location {
+  display: flex;
+  gap: var(--space-x-small);
+  align-items: center;
   margin-block-start: var(--space-x-small);
   color: var(--color-text-faint);
 }
 
-/* The summary is the page's longest running text, and both of its paragraphs take the prose
-   leading, per DDR-038. The design sets them at 1.75, and 1.72 is within 0.45px a line of it; a
-   leading of their own would be a third running-text value for one block. They are a class rather
-   than `.text > p` because the positioning line and the location are paragraphs too, and those are
-   short lines the design sets at the body's leading.
+/* The summary is the page's longest running text, and takes the prose leading, per DDR-038. The
+   design sets it at 1.75, and 1.72 is within 0.45px a line of it; a leading of its own would be a
+   third running-text value for one block. It is a class rather than `.text > p` because the
+   greeting, the positioning line and the location are paragraphs too, and those are short lines
+   the design sets at the body's leading. It was two paragraphs until #171, which made it one.
 
    The summary is held to the design's 680px rather than to the measure every other paragraph
    takes, per DDR-040, and the space above it and below it are the design's, which set the name, the
    positioning line and the location apart from what the owner says about their work, and the
-   controls apart from both. The two paragraphs of the summary keep the flow step between them,
-   which is the design's 16px. */
+   controls apart from both. */
 .summary {
   max-inline-size: var(--measure-summary);
   line-height: var(--line-height-prose);
@@ -318,6 +341,16 @@
 
   .cvItem {
     display: none;
+  }
+
+  /* The greeting is the screen's, per DDR-056: the printed CV opens with the name, as a CV does,
+     and with nothing added above it. */
+  .greeting {
+    display: none;
+  }
+
+  .greeting + h1 {
+    margin-block-start: 0;
   }
 
   /* Nothing is tapped on paper, so a control takes the height of its text and drops the padding

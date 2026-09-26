@@ -39,11 +39,14 @@ import type { Cv } from './types';
  * new ones, and their alternative text now describes them.
  * It moved again when `public/` was arranged by view: the photo and the CV under `home/`, and each
  * project's picture under `projects/<slug>/`. Only the paths changed.
- * None of the fourteen is a fact ADR-005 lists as shared, so none of them moved the CV; the nine
+ * It moved again with #171, because the introduction gained a greeting, lost its relocation note
+ * and its availability sentence, and its summary is now the owner's own description. ADR-005 leaves
+ * a CV's summary free, and relocation is not on its list.
+ * None of the fifteen is a fact ADR-005 lists as shared, so none of them moved the CV; the nine
  * differences are the ones #59 records, unchanged.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '66945eef33f45b464745019b2c1d84597fdb95cc6a76ae4188183e7c300eb8e7',
+  contentDigest: '19c0da8037911a8917b300159b02d2096d09b3d7c45c9a345f84cb89c96b718f',
 };

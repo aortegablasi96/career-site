@@ -69,6 +69,12 @@ four technology tags then a count. The card has no links out, and it prints with
 project is still an `article` named by its `h3`, technologies are still tags, and the gradient
 placeholders are still not adopted. Marked below.
 
+**Superseded in part by DDR-056**, which takes the introduction's text column below. A greeting,
+"Hi there, I'm", stands before the name on screen only, and the two are one `hgroup`. The location
+carries a map pin and stands alone: the relocation note is gone, and so is the availability
+sentence, with the bullet that makes it text rather than a badge. The summary is one paragraph, the
+owner's own description. Marked below.
+
 This record decides the page's **structure and patterns**. The token values the structure reads are
 reworked by #44, the CV download by #45, and the print stylesheet by #52. Where this record names a
 value, such as the accent, it is because the UI Review settled it and those stories implement it
@@ -172,6 +178,10 @@ column with the photo first.
 The text column, top to bottom: the name (`h1`); the positioning line; the location and relocation
 note; the summary; the availability sentence; then a wrapping row of four controls.
 
+> **Superseded in part by DDR-056.** The column is now the greeting and the name, as one `hgroup`;
+> the positioning line; the location, after a map pin, with no relocation note; one paragraph, the
+> owner's own description; then the controls. The greeting does not print.
+
 * **The photo is adopted**, and is placed beside the name rather than above it, so it never pushes
   the positioning line or the contact controls below the fold on a phone. It has meaningful
   alternative text and is not decorative. The Content Brief on #25 had decided against a photo; the
@@ -187,7 +197,8 @@ note; the summary; the availability sentence; then a wrapping row of four contro
   a `mailto:` link, which together leave the printed CV with no email address at all. A visitor can
   read the address, copy it and type it whether or not their device opens email links, and on paper
   it prints once with no `mailto:` prefix.
-* **Availability is text, not a badge**, as DDR-006 decided. It carries the one message the page
+* **Availability is text, not a badge**, as DDR-006 decided. **Superseded by DDR-056**: the owner
+  removed the availability sentence on #171, so there is nothing left for this bullet to govern. It carries the one message the page
   most needs read, and decoration would draw the eye to itself.
 * **The CV control's placement, appearance and target size are decided here.** Whether it downloads
   a file, how that file is produced, and how binary assets are carried on a statically exported site
