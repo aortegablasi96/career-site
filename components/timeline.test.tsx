@@ -243,15 +243,53 @@ describe('timeline card links', () => {
     expect(rule('.link::after', screen)).toMatch(/inset:\s*0;/);
   });
 
-  it('answers the pointer and focus with the accent', () => {
-    expect(rule('.link:hover,\n.link:focus-visible', screen)).toMatch(/color:\s*var\(--color-accent\);/);
+  it('answers the pointer anywhere in the column, and focus, with the accent', () => {
+    expect(rule('.entry:has(.link):hover .link,\n.link:focus-visible', screen)).toMatch(
+      /color:\s*var\(--color-accent\);/,
+    );
+  });
+
+  // DDR-064: the link's box reaches from the card out to the column's edges, so a pointer on the
+  // dates or the dot follows it too. It is measured from the card's padding box: the card's edge,
+  // the space above the card, the dot with its ring and the dates' band above, and the card's edge
+  // and inset beside it.
+  it('stretches the link’s box over the whole column, per DDR-064', () => {
+    const box = rule('.link::before', screen);
+
+    expect(box).toMatch(/position:\s*absolute;/);
+    expect(box.replace(/\s+/g, ' ')).toContain(
+      'inset-block: calc( -1 * ( var(--timeline-date-height) + var(--space-small) + ' +
+        'var(--timeline-dot-size) + 2 * var(--timeline-dot-ring) + var(--timeline-card-space) + 1px ) ) -1px;',
+    );
+    expect(box).toMatch(/inset-inline:\s*calc\(-1 \* var\(--timeline-entry-inset\) - 1px\);/);
+    // The dates' band is all the height the dates take, so the box reaches the column's top.
+    expect(rule('.dates', screen)).toMatch(/min-block-size:\s*var\(--timeline-date-height\);/);
+    expect(rule('.dates', screen)).toMatch(/padding-block-end:\s*var\(--space-small\);/);
+  });
+
+  // DDR-064: the dates and the dot answer with the card, each taking the hover step of its own
+  // colour, and only in a column that leads somewhere.
+  it('darkens the dates and the dot with the card, per DDR-064', () => {
+    expect(rule('.entry:has(.link):hover .dates,\n.entry:has(.link:focus-visible) .dates', screen)).toMatch(
+      /color:\s*var\(--color-accent-hover\);/,
+    );
+    expect(rule('.entry:has(.link):hover .dot,\n.entry:has(.link:focus-visible) .dot', screen)).toMatch(
+      /border-color:\s*var\(--color-border-accent-hover\);/,
+    );
+    expect(
+      rule('.entry:has(.link):hover .dot::before,\n.entry:has(.link:focus-visible) .dot::before', screen),
+    ).toMatch(/background-color:\s*var\(--color-accent-hover\);/);
+  });
+
+  it('leaves the line between the dots as it is', () => {
+    expect(screen).not.toMatch(/:hover[^{]*\.(?:lead|line)\b/);
   });
 
   // DDR-061: under the pointer or focus a role's card takes a light shadow all round, and only a
   // card that leads somewhere does, since the rule reads the link. DDR-063 raises such a card at
   // rest as a project card is, and leaves a credential's card flat.
   it('lights a card that leads to a view under the pointer and on focus, per DDR-061', () => {
-    const lit = rule('.card:has(.link:hover),\n.card:has(.link:focus-visible)', screen);
+    const lit = rule('.entry:has(.link):hover .card,\n.entry:has(.link:focus-visible) .card', screen);
 
     expect(lit).toMatch(/box-shadow:\s*var\(--shadow-card-hover\);/);
     expect(lit).toMatch(/border-color:\s*var\(--color-border-accent-hover\);/);
@@ -266,7 +304,7 @@ describe('timeline card links', () => {
       styles.match(/@media \(prefers-reduced-motion: no-preference\) \{([\s\S]*?)\n\}/)?.[1] ?? '';
 
     it('lifts a card that leads to a view by the lift a project card takes', () => {
-      expect(rule('.card:has(.link:hover),\n  .card:has(.link:focus-visible)', motion)).toMatch(
+      expect(rule('.entry:has(.link):hover .card,\n  .entry:has(.link:focus-visible) .card', motion)).toMatch(
         /translate:\s*0 calc\(-1 \* var\(--card-lift\)\);/,
       );
     });
@@ -278,13 +316,23 @@ describe('timeline card links', () => {
       expect(rule('.card:has(.link)', motion)).toMatch(/transition-duration:\s*var\(--hover-transition\);/);
     });
 
+    it('changes the dates and the dot over the same 150ms, per DDR-064', () => {
+      expect(rule('.entry:has(.link) .dates', motion)).toMatch(/transition-property:\s*color;/);
+      expect(rule('.entry:has(.link) .dates', motion)).toMatch(/transition-duration:\s*var\(--hover-transition\);/);
+      const dot = rule('.entry:has(.link) .dot,\n  .entry:has(.link) .dot::before', motion);
+      expect(dot).toMatch(/transition-property:\s*border-color, background-color;/);
+      expect(dot).toMatch(/transition-duration:\s*var\(--hover-transition\);/);
+    });
+
     it('writes the movement and its transition only where motion is welcome', () => {
       expect(motion).not.toBe('');
       expect(styles.replace(motion, '')).not.toMatch(/translate:|transition/);
     });
 
     it('holds the link’s box under a pointer at the card’s resting edge, and not on paper', () => {
-      expect(rule('.link::before', motion)).toMatch(/inset:\s*0 0 calc\(-1 \* var\(--card-lift\)\);/);
+      expect(rule('.link::before', motion)).toMatch(
+        /inset-block-end:\s*calc\(-1 \* var\(--card-lift\) - 1px\);/,
+      );
       expect(rule('.link::before', paper)).toMatch(/content:\s*none;/);
     });
   });

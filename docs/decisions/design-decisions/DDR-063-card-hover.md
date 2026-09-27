@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-064**, per #189: a role's hover is its column's, so pointing at its dates or its dot sets it off too, and the dates and the dot answer with the card. A project card is unchanged.
+
 **Amends DDR-051, DDR-055, DDR-057, DDR-059, DDR-061 and DDR-062.** A project card on the page and a
 role's card in the experience timeline now look and behave exactly alike, at rest, under the
 pointer and on keyboard focus:

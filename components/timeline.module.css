@@ -152,21 +152,62 @@
   content: '';
 }
 
-/* Under the pointer, anywhere on the card, and on keyboard focus, the title takes the accent and
-   the card the accent's edge, as a project view's neighbouring card answers it, per DDR-035. */
-.link:hover,
+/* The link's box is stretched over the whole column, per DDR-064, so a pointer on the dates or the
+   dot follows it as one on the card does. It is measured from the card's padding box, which is what
+   the card holds it in, out to the column's edges: up through the card's edge, the space above it,
+   the dot and the dates' band, and out through its edge and its inset on each side. The columns
+   meet with no gap, so the boxes of two roles meet and do not overlap. */
+.link::before {
+  position: absolute;
+  inset-block: calc(
+      -1 *
+        (
+          var(--timeline-date-height) + var(--space-small) + var(--timeline-dot-size) + 2 *
+            var(--timeline-dot-ring) + var(--timeline-card-space) + 1px
+        )
+    )
+    -1px;
+  inset-inline: calc(-1 * var(--timeline-entry-inset) - 1px);
+  content: '';
+}
+
+/* Under the pointer, anywhere in the column, and on keyboard focus, the title takes the accent and
+   the card the accent's edge, as a project view's neighbouring card answers it, per DDR-035. The
+   state is the column's, per DDR-064, which never moves, so a pointer on the dates does not lose it
+   as the card rises away. */
+.entry:has(.link):hover .link,
 .link:focus-visible {
   color: var(--color-accent);
 }
 
-.card:has(.link:hover),
-.card:has(.link:focus-visible) {
+.entry:has(.link):hover .card,
+.entry:has(.link:focus-visible) .card {
   border-color: var(--color-border-accent-hover);
   /* And it takes a light shadow all round in place of its resting one, per DDR-061, so the whole
      card reads as the one thing the pointer will open. The edge and the shadow are states, so a
      reader who prefers less motion gets them at once; where motion is welcome they come in with
      the lift below. */
   box-shadow: var(--shadow-card-hover);
+}
+
+/* And the dates and the dot answer with it, per DDR-064, so the reader sees which of them belong to
+   the role they are about to open: each takes the hover step of its own colour, as every link and
+   control does, per DDR-035. The dates and the dot's core are in the accent and darken to
+   --color-accent-hover; the ring is the pale accent edge and takes the card's hover edge. The line
+   between the dots is the row's, not the role's, and stays. */
+.entry:has(.link):hover .dates,
+.entry:has(.link:focus-visible) .dates {
+  color: var(--color-accent-hover);
+}
+
+.entry:has(.link):hover .dot,
+.entry:has(.link:focus-visible) .dot {
+  border-color: var(--color-border-accent-hover);
+}
+
+.entry:has(.link):hover .dot::before,
+.entry:has(.link:focus-visible) .dot::before {
+  background-color: var(--color-accent-hover);
 }
 
 /* Keyboard focus outlines the whole card rather than the title alone, since the card is what the
@@ -223,18 +264,29 @@
     transition-duration: var(--hover-transition);
   }
 
-  .card:has(.link:hover),
-  .card:has(.link:focus-visible) {
+  .entry:has(.link):hover .card,
+  .entry:has(.link:focus-visible) .card {
     translate: 0 calc(-1 * var(--card-lift));
   }
 
-  /* A lifted card leaves the bottom 4px of its resting footprint empty, and a pointer resting there
-     would drop it and pick it up again for as long as it stayed. So the link's box reaches 4px below
-     the card, as a project card's does, into the row's room below it. */
+  /* The dates and the dot change with the card, over the same 150ms. */
+  .entry:has(.link) .dates {
+    transition-property: color;
+    transition-duration: var(--hover-transition);
+  }
+
+  .entry:has(.link) .dot,
+  .entry:has(.link) .dot::before {
+    transition-property: border-color, background-color;
+    transition-duration: var(--hover-transition);
+  }
+
+  /* A lifted card leaves the bottom 4px of its resting footprint empty, and the link's box rises
+     with it, so a click there would open nothing. So the box reaches 4px further below the card, as
+     a project card's does, into the row's room below it. Above, it rises past the column's top,
+     which the row clips. */
   .link::before {
-    position: absolute;
-    inset: 0 0 calc(-1 * var(--card-lift));
-    content: '';
+    inset-block-end: calc(-1 * var(--card-lift) - 1px);
   }
 }
 
@@ -321,8 +373,7 @@
     content: none;
   }
 
-  /* A sheet is never pointed at, so the box that holds a lifted card under the pointer is not
-     drawn either. */
+  /* A sheet is never pointed at, so the box stretched over the column is not drawn either. */
   .link::before {
     content: none;
   }
