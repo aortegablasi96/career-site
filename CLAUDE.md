@@ -61,8 +61,8 @@ itself, which DDR-057 lets it do and the page still may not. The `ol` is `aria-l
 section's heading. **Since #176, per DDR-059, each role's card is a link to the role's view**: the
 title is the link, stretched over the card as a project card's name is, and the hint "Click any role
 to read the full description" stands above the row, screen only. A timeline whose entries have an
-`href` takes no tab stop of its own, since tabbing to a card scrolls the row; education's has none,
-so its `ol` is still `tabindex="0"` and the keyboard scrolls it. **A role's points are hidden on the
+`href` takes no tab stop of its own, since tabbing to a card scrolls the row; since #200 both
+timelines' entries do, so neither `ol` takes `tabindex="0"`. **A role's points are hidden on the
 page and print**, per DDR-057, which is the page's
 one print-only content; `experience.module.css` holds them. **On paper the timeline is DDR-010's
 vertical one** — date column, spine, the card's text and the points — written in the print block
@@ -105,8 +105,8 @@ both are raised by `--shadow-raised`, and under the pointer and on focus both ta
 `--project-card-lift`), with the edge, the shadow and the lift brought in together over 150ms and
 the focus outline outside the edge. A reader who prefers less motion gets no lift and no transition,
 but still the edge, the shadow and the accent. A role's card rises into the 20px between its dot and
-the card, and `app/tokens.test.ts` holds the lifted shadow inside the row's room. A credential's card
-leads nowhere and stays flat and still, and the views' neighbour cards keep their own hover.
+the card, and `app/tokens.test.ts` holds the lifted shadow inside the row's room. Since #200 a credential's
+card is the same card, per DDR-069, below; the views' neighbour cards keep their own hover.
 
 **Since #189, per DDR-064, a role's dates, its dot and its card are one target**: the link's box
 reaches from the card out to the whole column, so pointing at or clicking the dates or the dot does
@@ -156,6 +156,18 @@ certifications have none: PMI's trademark guidelines allow its logo only with it
 authorization, which the owner has asked for. Do not add a PMI or PMP logo, or a Credly badge, until
 the owner says PMI has agreed. The same story sets an institution in the accent, as a company is,
 where DDR-057 set it in the muted ink, as the owner asked, on screen and on paper.
+
+**Since #200, per DDR-069, each education card is a link off the site**, and it rests, lights and
+lifts exactly as a role's card does, dates and dot included. The degrees lead to https://www.upc.edu
+and the certifications to their Credly badges; the address is `href` on a credential in
+`content/credentials.ts`. Each opens a new tab, as the profile pills do, per DDR-043: `Timeline`
+renders an entry with a `newTab` string as a plain `a` with `target="_blank"`, `rel="noopener"` and
+an `aria-label` of its title, a comma and that string, and an entry without one as a `next/link`.
+The hint "Click any credential to learn more" stands above the row, and the two are one `div`, as
+experience's are. The page links to a badge and draws none of it: DDR-068's rule on PMI's logo
+stands. **On paper a linked card is `position: static`**: positioned, it was painted after the flow,
+and both browsers wrote its text at the foot of the sheet's PDF, away from its dates — which the
+experience timeline had done since #176. Paper is pixel-identical to before.
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
 row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
@@ -647,8 +659,8 @@ is a route rather than a file, so it does not go through `asset()`, which amends
 extends ADR-010 to the roles, at `/experience/<slug>`, and supersedes nothing. The next ADR is
 `012`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-068. The next DDR is
-`069`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-069. The next DDR is
+`070`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Thirty-one accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -689,6 +701,9 @@ at the section concerned:
 * **DDR-057** keeps its row, its order, its scrolling, its print treatment and its education row.
   DDR-059 makes each role's card a link to the role's view and shows the hint above the row, which
   then takes no tab stop of its own. DDR-066 opens each role's card with its company's logo. DDR-067 shrinks its date band to one line of dates.
+* **DDR-057, DDR-059, DDR-063 and DDR-064** keep everything but what DDR-069 takes: an education
+  card leads off the site, rests raised, answers as a role's card does and has a hint above its row.
+  **DDR-043** keeps its pills; DDR-069 widens its new tab to the four education cards.
 * **DDR-066** keeps everything it decides about a role's logo. DDR-068 gives each degree's card the
   UPC's logo in the same style, where DDR-066 said education had none.
 * **DDR-059** keeps its view, its card, its hint and its neighbours. DDR-067 moves the hint to 8px above the row and gives it an information mark. DDR-060 gives a role two

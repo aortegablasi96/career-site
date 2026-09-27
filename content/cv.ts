@@ -60,9 +60,12 @@ import type { Cv } from './types';
  * DDR-067. A hint is not a fact ADR-005 lists as shared, so it did not move the CV.
  * It moved again with #197, because each degree gained the path of the UPC’s logo, per DDR-068, and then a flag that draws it tall.
  * A logo is not a fact ADR-005 lists as shared, so it did not move the CV.
+ * It moved again with #200, because each credential gained the address its card leads to, and the
+ * section the hint above its timeline and what a card says about opening a new tab, per DDR-069.
+ * None of them is a fact ADR-005 lists as shared, so none of them moved the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '1981fc3bdbf6cc097cdcf187312e38c0ada86c50092b7b8780e9309be81f05e4',
+  contentDigest: 'ac5ac6fd31abc16de8a469201343c412ed89b5d94da77a07272be66322d7c636',
 };

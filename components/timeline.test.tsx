@@ -419,6 +419,13 @@ describe('timeline styles on paper', () => {
     expect(rule('.logo', paper)).toMatch(/display:\s*none;/);
   });
 
+  // Measured on #200: a positioned card is painted after the flow, so a PDF wrote its text at the
+  // foot of the sheet, away from its dates. Paper stretches no link over it, so it is not positioned.
+  it('does not position a linked card on paper, so a PDF reads it beside its dates', () => {
+    expect(rule('.card:has(.link)')).toMatch(/position:\s*relative;/);
+    expect(rule('.card:has(.link)', paper)).toMatch(/position:\s*static;/);
+  });
+
   it('spaces roles and credentials apart by their own steps, and nothing after the last', () => {
     expect(rule('.role .card', paper)).toMatch(/padding-block-end:\s*var\(--space-role\);/);
     expect(rule('.credential .card', paper)).toMatch(/padding-block-end:\s*var\(--space-credential\);/);

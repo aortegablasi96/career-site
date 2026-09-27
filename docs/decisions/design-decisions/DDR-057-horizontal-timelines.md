@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-069**, per #200: each education card is a link off the site, and it rests raised and answers the pointer as a role's card does. A hint stands above the education row, which takes no tab stop of its own.
+
 **Amended by DDR-068**, per #197: each degree's card opens with the UPC's logo, and an institution is set in the accent, as a company is, where it was in `--color-text-muted`.
 
 **Amended by DDR-067**, per #195: the dates' band above each dot is one line of dates, where it was the design's 64px, in both timelines.

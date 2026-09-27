@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-069**, per #200: an education card leads off the site, and it rests raised and takes the same hover as a role's card.
+
 **Amended by DDR-065**, per #191: both cards keep `--shadow-raised` under the pointer and on focus, with a darker `--shadow-card-hover` beneath it. Every other part of the hover is unchanged.
 
 **Amended by DDR-064**, per #189: a role's hover is its column's, so pointing at its dates or its dot sets it off too, and the dates and the dot answer with the card. A project card is unchanged.
