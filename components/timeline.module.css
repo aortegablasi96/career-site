@@ -253,21 +253,16 @@
   margin-block-start: var(--timeline-logo-rise);
 }
 
-/* The company opens a role's card in the accent, and the institution a credential's in the muted
-   ink, both bold, per DDR-057. The design's 12px is not a step of DDR-022's scale, so the nearest,
+/* The company opens a role's card and the institution a credential's, both in the accent and bold,
+   per DDR-057 as DDR-068 amends it: the owner asked on #197 for the education cards' words to be
+   coloured as the experience cards' are, where the design sets an institution in grey. The design's 12px is not a step of DDR-022's scale, so the nearest,
    12.8px, is taken, as the footer takes it. */
 .subtitle {
   font-size: var(--font-size-xx-small);
   font-weight: var(--font-weight-bold);
-}
-
-.role .subtitle {
   color: var(--color-accent);
 }
 
-.credential .subtitle {
-  color: var(--color-text-muted);
-}
 
 /* The title is the entry's heading, at the design's 11px. */
 .title {

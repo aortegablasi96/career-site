@@ -149,13 +149,13 @@ rather than an `Image`, and is required. Each file is `public/experiences/<slug>
 trimmed to its mark, 36px tall and lossless, made from the owner's PNG beside it, which is not
 committed.
 
-**Since #197, per DDR-068, each degree's card opens with the UPC's symbol**, drawn as a company's
-logo is and marked `logoTall`, so 28px, from `public/education/upc/logo.webp`: the roundel cut,
-unaltered, from the university's official colour logo, without the name beside it, as the owner
-asked. The UPC publishes no symbol-only file. `logo` is optional on a credential, because the two PMI
+**Since #197, per DDR-068, each degree's card opens with the UPC's logo**, drawn exactly as a
+company's is, from `public/education/upc/logo.webp`: the university's official colour logo from its
+brand page, trimmed and made the same way. `logo` is optional on a credential, because the two PMI
 certifications have none: PMI's trademark guidelines allow its logo only with its written
 authorization, which the owner has asked for. Do not add a PMI or PMP logo, or a Credly badge, until
-the owner says PMI has agreed.
+the owner says PMI has agreed. The same story sets an institution in the accent, as a company is,
+where DDR-057 set it in the muted ink, as the owner asked, on screen and on paper.
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
 row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
@@ -690,7 +690,7 @@ at the section concerned:
   DDR-059 makes each role's card a link to the role's view and shows the hint above the row, which
   then takes no tab stop of its own. DDR-066 opens each role's card with its company's logo. DDR-067 shrinks its date band to one line of dates.
 * **DDR-066** keeps everything it decides about a role's logo. DDR-068 gives each degree's card the
-  UPC's symbol in the same style, drawn tall, where DDR-066 said education had none.
+  UPC's logo in the same style, where DDR-066 said education had none.
 * **DDR-059** keeps its view, its card, its hint and its neighbours. DDR-067 moves the hint to 8px above the row and gives it an information mark. DDR-060 gives a role two
   titles: the view's `h1`, tab and preview give it in full, and every card and paper give it short.
 * **DDR-029** keeps its short labels, its footer and its print rule. DDR-058 takes the email

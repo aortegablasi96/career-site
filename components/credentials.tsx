@@ -35,7 +35,6 @@ export function Credentials({
           ),
         subtitle: credential.institution,
         logo: credential.logo,
-        logoTall: credential.logoTall,
         title: credential.name,
       }))}
     />
