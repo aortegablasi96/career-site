@@ -96,7 +96,7 @@ describe('asset references', () => {
     expect(names).toContain('components/introduction.tsx');
     expect(names).toContain('components/projects.tsx');
     expect(names).toContain('app/page.tsx');
-    expect(names).toContain('app/projects/[slug]/page.tsx');
+    expect(names).toContain('app/portfolio/[slug]/page.tsx');
   });
 
   describe.each(sources)('$name', (file) => {

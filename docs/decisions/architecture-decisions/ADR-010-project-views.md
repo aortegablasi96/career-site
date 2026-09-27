@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-19
 
+**Amended by ADR-012**, on 2026-09-27, per #202: each view is at `/portfolio/<slug>` and the
+section at `#portfolio`, where this record puts them at `/projects/<slug>` and `#projects`. The
+pictures moved to `public/portfolio/<slug>/`. Every other rule here stands.
+
 **Extended by ADR-011**, on 2026-09-26: each role has a view of its own too, at
 `/experience/<slug>`, built by every rule this record sets.
 

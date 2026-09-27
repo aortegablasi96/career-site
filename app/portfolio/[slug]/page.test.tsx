@@ -60,7 +60,7 @@ describe('a project’s view', () => {
     expect(links).toEqual([
       { href: '/', word: 'Home' },
       { href: '/#experience', word: 'Experience' },
-      { href: '/#projects', word: 'Projects' },
+      { href: '/#portfolio', word: 'Portfolio' },
       { href: '/#skills', word: 'Skills' },
       { href: '/#education', word: 'Education' },
       { href: '/#languages', word: 'Languages' },
@@ -69,7 +69,7 @@ describe('a project’s view', () => {
   });
 
   it('leads back to the projects section of the page', async () => {
-    expect(await render('numisbook')).toMatch(/<a [^>]*href="\/#projects"[^>]*>.*Back to portfolio<\/a>/);
+    expect(await render('numisbook')).toMatch(/<a [^>]*href="\/#portfolio"[^>]*>.*Back to portfolio<\/a>/);
   });
 
   // DDR-052: the projects on either side of this one, in the order the page shows them, and no
@@ -81,16 +81,16 @@ describe('a project’s view', () => {
       const at = index as number;
       const expected = [
         projects.projects[at - 1] && {
-          href: `/projects/${projects.projects[at - 1]!.slug}`,
+          href: `/portfolio/${projects.projects[at - 1]!.slug}`,
           label: projects.view.neighbour(projects.view.previous, projects.projects[at - 1]!.name),
         },
         projects.projects[at + 1] && {
-          href: `/projects/${projects.projects[at + 1]!.slug}`,
+          href: `/portfolio/${projects.projects[at + 1]!.slug}`,
           label: projects.view.neighbour(projects.view.next, projects.projects[at + 1]!.name),
         },
       ].filter(Boolean);
 
-      const links = [...html.matchAll(/<a ([^>]*href="\/projects\/[^>]*)>/g)].map(
+      const links = [...html.matchAll(/<a ([^>]*href="\/portfolio\/[^>]*)>/g)].map(
         ([, attributes]) => ({
           href: attributes.match(/href="([^"]+)"/)?.[1],
           label: attributes.match(/aria-label="([^"]+)"/)?.[1],

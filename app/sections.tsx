@@ -55,7 +55,7 @@ export const sections: readonly PageSection[] = [
     ],
   },
   {
-    id: 'projects',
+    id: 'portfolio',
     title: projects.title,
     link: projects.link,
     // A row of two cards rather than one, for the reason the skills below give, per DDR-051. The

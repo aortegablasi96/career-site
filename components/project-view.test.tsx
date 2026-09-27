@@ -13,7 +13,7 @@ function render(project: Project, neighbours: { previous?: Project; next?: Proje
     <ProjectView
       project={project}
       strings={projects.view}
-      backHref="/#projects"
+      backHref="/#portfolio"
       previous={neighbours.previous}
       next={neighbours.next}
     />,
@@ -57,7 +57,7 @@ describe('ProjectView', () => {
   });
 
   it('leads back to the projects section, not the top of the page', () => {
-    expect(html).toMatch(/<a [^>]*href="\/#projects"[^>]*>.*Back to portfolio<\/a>/);
+    expect(html).toMatch(/<a [^>]*href="\/#portfolio"[^>]*>.*Back to portfolio<\/a>/);
   });
 
   it('shows every technology the content states', () => {
@@ -209,7 +209,7 @@ describe('ProjectView', () => {
   // DDR-052: the projects on either side of this one, at the foot of the view.
   describe('the projects on either side', () => {
     const links = (markup: string) =>
-      [...markup.matchAll(/<a ([^>]*href="\/projects\/[^>]*)>/g)].map(([, attributes]) => ({
+      [...markup.matchAll(/<a ([^>]*href="\/portfolio\/[^>]*)>/g)].map(([, attributes]) => ({
         href: attributes.match(/href="([^"]+)"/)?.[1],
         label: attributes.match(/aria-label="([^"]+)"/)?.[1],
       }));
@@ -218,9 +218,9 @@ describe('ProjectView', () => {
       const view = render(digitalTwin!, { previous: numisBook!, next: stockPortfolioViewer! });
 
       expect(links(view)).toEqual([
-        { href: `/projects/${numisBook!.slug}`, label: `Previous project: ${numisBook!.name}` },
+        { href: `/portfolio/${numisBook!.slug}`, label: `Previous project: ${numisBook!.name}` },
         {
-          href: `/projects/${stockPortfolioViewer!.slug}`,
+          href: `/portfolio/${stockPortfolioViewer!.slug}`,
           label: `Next project: ${stockPortfolioViewer!.name}`,
         },
       ]);

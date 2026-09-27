@@ -45,7 +45,7 @@ export function Media({ media, className }: { media: ProjectMedia; className: st
 
 /** A project view's route, per ADR-010. `next/link` puts the base path in front of it. */
 export function projectHref(slug: string): string {
-  return `/projects/${slug}`;
+  return `/portfolio/${slug}`;
 }
 
 /**

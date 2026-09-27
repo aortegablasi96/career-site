@@ -38,7 +38,7 @@ describe('HomePage', () => {
     const nav = html.match(/<nav [\s\S]*?<\/nav>/)?.[0] ?? '';
     const words = [...nav.matchAll(/<a [^>]*>([^<]+)<\/a>/g)].map(([, word]) => word);
 
-    expect(words).toEqual(['Home', 'Experience', 'Projects', 'Skills', 'Education', 'Languages']);
+    expect(words).toEqual(['Home', 'Experience', 'Portfolio', 'Skills', 'Education', 'Languages']);
     expect(html).toMatch(/<h2 id="education-title"[^>]*>Education and certifications<\/h2>/);
   });
 
@@ -46,7 +46,7 @@ describe('HomePage', () => {
     const listed = [...html.matchAll(/<a href="#([^"]+)"/g)].map(([, id]) => id);
     const shown = [...html.matchAll(/<section id="([^"]+)"/g)].map(([, id]) => id);
 
-    expect(shown).toEqual(['experience', 'projects', 'skills', 'education', 'languages']);
+    expect(shown).toEqual(['experience', 'portfolio', 'skills', 'education', 'languages']);
     expect(listed).toEqual(['top', ...shown]);
   });
 
@@ -108,7 +108,7 @@ describe('HomePage', () => {
     // education's is too.
     expect(openings).toEqual([
       ['experience', 'div'],
-      ['projects', 'div'],
+      ['portfolio', 'div'],
       ['skills', 'div'],
       ['education', 'div'],
       ['languages', 'dl'],

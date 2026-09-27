@@ -285,7 +285,7 @@ export interface Project {
   /** The project's name, which is the entry's heading, per DDR-006, and its view's `h1`. */
   name: string;
   /**
-   * The last part of the project view's address, per ADR-010: `/projects/<slug>`. It is content
+   * The last part of the project view's address, per ADR-010 as ADR-012 renames it: `/portfolio/<slug>`. It is content
    * rather than something worked out from the name, because an address someone has been sent must
    * not change when a name is reworded. Lowercase words joined by hyphens.
    */

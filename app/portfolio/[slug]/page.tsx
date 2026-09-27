@@ -9,7 +9,7 @@ import { projects } from '@/content/projects';
 import { sections } from '@/app/sections';
 
 /**
- * A project's view of its own, per ADR-010 and DDR-050, at `/projects/<slug>`.
+ * A project's view of its own, per ADR-010 and DDR-050, at `/portfolio/<slug>`, per ADR-012.
  *
  * Every view is built to a file at build time, per ADR-001: `generateStaticParams` names one per
  * project, from the slugs in `content/`, and `dynamicParams` is off, so an address no project has
