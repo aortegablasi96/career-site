@@ -5,7 +5,7 @@ Status: Accepted
 Date: 2026-09-28
 
 **Amends DDR-064**, per #206. When a timeline card is lit, under the pointer anywhere in its column
-or on keyboard focus, its dates now take a soft glow in the card's hover-shadow ink. Its dot
+or on keyboard focus, its dates now take a glow in the card's hover-shadow ink. Its dot
 darkens further: the ring takes the accent, where it took the pale hover edge, and the core takes a
 deeper indigo, where it took the accent's hover step. At rest nothing changes, and the line between
 the dots stays as it was. This applies in both timelines.
@@ -26,15 +26,18 @@ darker dot at rest.
 ## Decision
 
 * **The dates glow.** A lit entry's dates draw `text-shadow: var(--shadow-dates-hover)`, which is
-  `0 3px 6px rgba(26, 26, 46, 0.18)`. That is the ink of `--shadow-card-hover`, so the dates and the
+  `0 4px 6px rgba(26, 26, 46, 0.5)`. That is the hue of `--shadow-card-hover`, so the dates and the
   card are lit by the same light. The dates still darken to `--color-accent-hover`. A text-shadow
   takes no space, so nothing moves.
+* **The glow is at 50%.** It first shipped at the card's own 18%, `0 3px 6px`. Seen on the live site,
+  the owner found it too faint and asked for it stronger on #206. The blur cannot grow, because the
+  row would cut it, so the ink is darker instead, and the glow sits 1px lower.
 * **The glow fits inside the row.** The row scrolls, so it clips whatever passes its top, and the
-  dates' line starts at that edge. With `0 2px 6px`, the first value tried, the row cut one pixel row
-  of the glow, by 1 level in 255. `0 3px 6px` is as soft, sits a little lower and is not cut at all:
-  measured on the built page in both timelines, the pixels above the row are the same whether the row
-  clips or not. `app/tokens.test.ts` holds the glow's reach above the letters, its blur less its
-  offset, to 3px or less.
+  dates' line starts at that edge. With `0 2px 6px` at 18%, and with `0 3px 6px` at 35% or 50%, the
+  row cut one pixel row of the glow, by 1 level in 255. `0 4px 6px` at 50% is not cut at all: measured
+  on the built page, the pixels above the row are the same whether the row clips or not.
+  `app/tokens.test.ts` holds the glow's reach above the letters, its blur less its offset, to 2px or
+  less.
 * **The dot darkens.** A lit dot's ring takes `--color-accent`, `#4f46e5`, and its core takes a new
   colour, `--color-accent-deep`, `#3730a3`. That is the next step down the accent's ramp after
   `--color-accent-hover`, and it is 1.58:1 against the ring, so the core stays distinct inside it. It
@@ -51,9 +54,10 @@ darker dot at rest.
 ### Contrast
 
 The lit dates are `#4338ca`: 7.38:1 on the page and 7.64:1 on the band, as DDR-035 records. The glow
-is darkest right behind the letters, where the letters cover it. Even if it reached its full 18%
-beside them, the page under it would be `#d0cfd0`, and the dates would still measure 5.10:1 there.
-`app/tokens.test.ts` holds that above 4.5:1.
+is blurred, so it never reaches its 50% anywhere on the page. Measured on the built page with the
+letters made transparent, its darkest pixel is `#d8d7d7`, and the dates measure 5.50:1 on it.
+`app/tokens.test.ts` holds that above 4.5:1. Because it is a measurement rather than arithmetic on
+the token, a change to the glow's ink, blur or offset means measuring it again.
 
 ## Alternatives Considered
 
@@ -90,7 +94,7 @@ Benefits:
 
 Tradeoffs:
 * One more colour and one more shadow in the tokens.
-* The glow is deliberately soft, so it reads mostly as a slight darkening beneath the dates.
+* The glow is plainly visible, which makes the dates the darkest thing in the column when it is lit.
 
 Risks:
 * A larger blur or a smaller offset would reach past the row's top edge and be cut. The token test

@@ -182,10 +182,12 @@ over the first stop, is `#e7ebf7`, and a role's place fails there at 2.15:1, hel
 failing pairing. Paper drops all of it at the token layer, and is pixel-identical.
 
 **Since #206, per DDR-071, a lit entry's dates glow and its dot darkens**: the dates take
-`--shadow-dates-hover`, a `text-shadow` in the card's hover ink, `0 3px 6px`, and the dot's ring takes
-the accent and its core `--color-accent-deep`, `#3730a3`. At rest nothing changes. The row clips at
-its top edge, where the dates' line begins, so the glow may reach at most 3px above the letters:
-`0 2px 6px` was cut by one pixel row. `app/tokens.test.ts` holds that limit.
+`--shadow-dates-hover`, a `text-shadow` in the card's hover hue at 50%, `0 4px 6px`, and the dot's
+ring takes the accent and its core `--color-accent-deep`, `#3730a3`. At rest nothing changes. The row
+clips at its top edge, where the dates' line begins, so the glow may reach at most 2px above the
+letters: `0 3px 6px` at 50% was cut by one pixel row. `app/tokens.test.ts` holds that limit, and
+holds the lit dates at 5.50:1 on the glow's darkest rendered pixel, `#d8d7d7`, which is a measurement
+to redo if the glow changes.
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
 row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
