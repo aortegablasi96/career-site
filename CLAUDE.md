@@ -122,6 +122,17 @@ shadow used to replace the resting one, and `--shadow-card-hover`'s ink is `#1a1
 was the bar's 10%. Its geometry is unchanged, so every room measured for it still holds.
 `components/stylesheets.test.ts` reads a `box-shadow` as a list and holds each layer to a token.
 
+**Since #195, per DDR-067, the experience timeline and the project cards each have a hint above
+them**, "Click any role…" and "Click any project to read the full description", from one shared
+`components/hint.tsx`: 11px in the faint ink after an information mark, a circled "i", which
+replaced the design's clock. What follows a hint stands `--space-small`, 8px, below it, and
+`--timeline-hint-space` is gone. The projects hint is `hint` in `content/projects.ts`, handed to the
+first row only, which wraps the hint and the row in one `div` so the section keeps both with its
+heading. **Both timelines' date band is one line of dates**, `--timeline-date-height`, where it was
+the design's 64px: the band's empty top was most of the gap the reader saw under the hint. The dots
+stay level only while every date range sets on one line. Neither hint prints, and paper is
+pixel-identical to before.
+
 **Since #193, per DDR-066, each role's card opens with its company's logo**, centred above the
 company's name where the design's logo tile is (node 286:87), but straight on the card's white: the
 owner turned the tile down. It is `--timeline-logo-height`, 18px, tall and as wide as its own
@@ -628,8 +639,8 @@ is a route rather than a file, so it does not go through `asset()`, which amends
 extends ADR-010 to the roles, at `/experience/<slug>`, and supersedes nothing. The next ADR is
 `012`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-066. The next DDR is
-`067`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-067. The next DDR is
+`068`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Thirty accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -669,8 +680,8 @@ at the section concerned:
   lit card keeps `--shadow-raised` and draws a darker `--shadow-card-hover`, at 18%, beneath it.
 * **DDR-057** keeps its row, its order, its scrolling, its print treatment and its education row.
   DDR-059 makes each role's card a link to the role's view and shows the hint above the row, which
-  then takes no tab stop of its own. DDR-066 opens each role's card with its company's logo.
-* **DDR-059** keeps its view, its card, its hint and its neighbours. DDR-060 gives a role two
+  then takes no tab stop of its own. DDR-066 opens each role's card with its company's logo. DDR-067 shrinks its date band to one line of dates.
+* **DDR-059** keeps its view, its card, its hint and its neighbours. DDR-067 moves the hint to 8px above the row and gives it an information mark. DDR-060 gives a role two
   titles: the view's `h1`, tab and preview give it in full, and every card and paper give it short.
 * **DDR-029** keeps its short labels, its footer and its print rule. DDR-058 takes the email
   pill's word: it reads "Email me", per #175, and the two profiles still name their service.

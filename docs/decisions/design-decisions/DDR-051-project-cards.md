@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-19
 
+**Amended by DDR-067**, per #195: the hint "Click any project to read the full description" stands above the cards, as the experience hint stands above its timeline.
+
 **Supersedes, in part, DDR-010's projects pattern**: its media-and-text row, with the media beside
 the name, the technologies, the full description and the labelled links. Each project is now a card
 that leads to its view, which DDR-050 designs. The rest of DDR-010's projects section stands: a

@@ -119,6 +119,24 @@ describe('Projects', () => {
   });
 });
 
+// DDR-067: the first row carries the hint above the cards, as the experience timeline does, and
+// the two are one element so the section keeps both with its heading.
+describe('the hint above the cards', () => {
+  const [first, ...rest] = projectRows(projects.projects);
+  const withHint = renderToStaticMarkup(<Projects projects={first!} hint={projects.hint} />);
+
+  it('stands before the first row, in the same element, and says a card leads to its view', () => {
+    expect(withHint).toMatch(
+      /<div><p class="[^"]*"><svg [^>]*aria-hidden="true"[^>]*>.*<\/svg>Click any project to read the full description<\/p><div class="[^"]*row[^"]*">/,
+    );
+  });
+
+  it('is given to no row but the first, so it is drawn once', () => {
+    expect(html).not.toContain(projects.hint);
+    expect(rest.length).toBeGreaterThan(0);
+  });
+});
+
 describe('a card’s picture', () => {
   const images = cards.map((card) => card.match(/<img [^>]*>/)?.[0] ?? '');
 

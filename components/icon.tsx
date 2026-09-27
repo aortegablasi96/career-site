@@ -5,13 +5,14 @@ import type { ContactIcon } from '@/content/types';
  * DDR-050 a project's view carries two more: the chevron before its way back to the projects, and
  * the arrow out of a box on each link that leaves the site. DDR-052 adds the chevron's mirror, on
  * the link to the project after this one. DDR-056 adds a map pin, beside the introduction's
- * location, which is the one mark that is not beside a control. DDR-059 adds a clock, beside the
- * hint above the experience timeline, which is the design's own mark there (node 170:72).
+ * location, which is the one mark that is not beside a control. DDR-059 added a clock beside the
+ * hint above the experience timeline, and DDR-067 replaces it with an information mark, a circled
+ * "i", beside that hint and the projects' alike.
  */
-export type IconName = ContactIcon | 'download' | 'back' | 'forward' | 'external' | 'location' | 'clock';
+export type IconName = ContactIcon | 'download' | 'back' | 'forward' | 'external' | 'location' | 'info';
 
 /** The marks drawn as lines rather than filled, all on the 24 unit grid. */
-const lineDrawings: readonly IconName[] = ['download', 'back', 'forward', 'external', 'location', 'clock'];
+const lineDrawings: readonly IconName[] = ['download', 'back', 'forward', 'external', 'location', 'info'];
 
 /**
  * A mark beside a control's text, per DDR-010.
@@ -121,11 +122,13 @@ const paths: Record<IconName, React.ReactNode> = {
       <circle cx="12" cy="10" r="3" />
     </>
   ),
-  // A clock face, as the design draws it beside the timeline's hint (node 170:72), on our grid.
-  clock: (
+  // A circled "i", beside the hints above the experience timeline and the projects, per DDR-067.
+  // The dot is a line of no length, which the round cap draws as a circle the stroke's width.
+  info: (
     <>
       <circle cx="12" cy="12" r="10.5" />
-      <path d="M12 7.5v5.25L15 15" />
+      <path d="M12 11v5.5" />
+      <path d="M12 7.5h.01" />
     </>
   ),
 };

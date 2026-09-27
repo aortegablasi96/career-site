@@ -560,7 +560,7 @@
      no narrower than --timeline-entry-width, 192px, which is the design's narrowest column at its
      1195px, so the design's five roles fit its column and a narrower one scrolls. The design holds
      the cards 24px apart by giving each column 12px on either side, the inset; it sets each date at
-     the foot of a 64px band above its dot, and each card 20px below its dot. None of the four is a
+     the foot of a 64px band above its dot (one line of them since DDR-067) (one line since DDR-067), and each card 20px below its dot. None of the four is a
      step of DDR-013's scale, so each is a measure of the timeline's own, as the project cards'
      20px is. All are in rem, so the row grows with the reader's text and scrolls sooner. */
   --timeline-date-width: 10rem;
@@ -578,12 +578,12 @@
   --timeline-line-width: 2px;
   --timeline-entry-width: 12rem;
   --timeline-entry-inset: 0.75rem;
-  --timeline-date-height: 4rem;
+  /* The dates' band is one line of them since DDR-067, where it was the design's 64px: the empty
+     top of that band stood between the hint above the row and the dates, so the hint read as far
+     from the row it describes. A date range sets on one line, so the band holds it exactly, and
+     the dots stay level. */
+  --timeline-date-height: calc(var(--font-size-xxxx-small) * var(--line-height-body));
   --timeline-card-space: 1.25rem;
-  /* The space between the hint above the experience timeline and the row, per DDR-059: the
-     design's 24px (node 170:186). It is not a step of DDR-013's scale, so it is the timeline's own,
-     as the measures above are. */
-  --timeline-hint-space: 1.5rem;
   /* The height of a company's logo on a role's card, per DDR-066: 18px, on the card itself, with no
      tile round it, as the owner chose on #193. Its width follows the logo's own, since the owner's
      logos are wordmarks. In rem, so the logo grows with the reader's text as the card's words do. */

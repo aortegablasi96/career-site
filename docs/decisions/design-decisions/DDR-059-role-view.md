@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-067**, per #195: the hint stands 8px above the row, where it stood 24px, and opens with an information mark, a circled "i", where it had the clock. The projects section has the same hint.
+
 **Amended by DDR-064**, per #189: a role's link is stretched over its whole column, so its dates and its dot open the view as its card does. It is still one tab stop, named by the title.
 
 **Amended by DDR-063**, per #187: a role's card and a project card now rest, answer the pointer and take focus alike: `--shadow-raised` at rest, the accent edge, `--shadow-card-hover` and a 4px lift, `--card-lift`, where motion is welcome, and the focus outline outside the edge.
