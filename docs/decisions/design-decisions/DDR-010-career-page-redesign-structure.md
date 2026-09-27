@@ -279,6 +279,8 @@ Above the wide breakpoint, two columns: a media column and the text. Below it, m
   on paper as before.
 * **The draft's gradient placeholders and its monogram photo fallback are not adopted.** Both are
   scaffolding for missing assets; #47 supplies the real ones, and the brief excludes gradients.
+  DDR-070 reads this as a rule about placeholder media, which stands, and gives the timeline cards a
+  tinted surface, which the owner asked for on #204.
 
 ### Skills
 

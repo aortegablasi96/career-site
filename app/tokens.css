@@ -150,6 +150,15 @@
   --color-surface: #f8f7f4;
   --color-surface-card: #ffffff;
 
+  /* A timeline card's surface, per DDR-070, which amends DDR-057's white card: the three stops of
+     the pale gradient the owner drew on every card in both timelines (`career-site-main`, nodes
+     321:107 and 321:500), indigo to violet to pink. The gradient itself, with the grain over it, is
+     --surface-timeline-card below. The start is the darkest point of it, and app/tokens.test.ts
+     measures each ink a card carries there. */
+  --color-surface-timeline-card-start: #eef2ff;
+  --color-surface-timeline-card-middle: #f5f3ff;
+  --color-surface-timeline-card-end: #fdf4ff;
+
   /* The page's second surface, per DDR-046, which amends DDR-025's single page surface. The
      page's parts alternate between it and the page's own off-white, starting with this one on the
      introduction, so the contents bar is set apart from the first view and a reader scrolling
@@ -236,6 +245,12 @@
      --color-border-accent into this violet, as the design draws it (node 59:21). It is decoration
      beside a heading that says everything it marks, so it carries nothing and takes no pairing. */
   --color-rule-accent-end: #ddd6fe;
+
+  /* A timeline card's edge, per DDR-070. The design draws it in violet, `#a78bfa` at 30%; every
+     colour here is opaque, so it is written as that violet over the gradient's middle stop, which
+     is within 8 steps a channel of the translucent edge anywhere along it. A hairline that carries nothing,
+     as --color-border is, and paper drops it with the rest. */
+  --color-border-timeline-card: #dcd4fe;
 
   /* The marker on a role's bullet points, per DDR-019 as DDR-025 amends it. It is the design's own
      `#a5b4fc`, at 1.86:1 on the page, where DDR-019 measured that value, called it fainter than
@@ -493,6 +508,27 @@
      a light from above would. The project cards stand 20px apart, so the same reach fits there
      too. In px, as every other shadow is. */
   --shadow-card-hover: 0 4px 12px rgba(26, 26, 46, 0.18);
+
+  /* A timeline card's top edge catches the light, per DDR-070: a white line 1px deep inside the
+     card's top, at 75%, as the design draws it on every card in both timelines. It is inset, so it
+     reaches past the card nowhere and needs none of the row's room. In px, as every other shadow
+     is. Only a timeline card may read it. */
+  --shadow-card-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+
+  /* A timeline card's surface, per DDR-070: the design's grain over its gradient. The grain is the
+     design's own 200px texture, whose pixels are grey or white at 1% to 7%; it repeats at its own
+     size rather than stretching, so it looks the same on a card of any size. The design sets the
+     gradient's angle per card to suit each one's shape; this is the role card's 143deg, for every
+     card, as #204 asks. The file is imported here so the bundler gives it its address under the
+     base path, which a root-relative path in a stylesheet would not have. */
+  --surface-timeline-card:
+    url('./grain.webp'),
+    linear-gradient(
+      143deg,
+      var(--color-surface-timeline-card-start) 0%,
+      var(--color-surface-timeline-card-middle) 50%,
+      var(--color-surface-timeline-card-end) 100%
+    );
 
   /* The profile photo, per DDR-010, #71 and DDR-021: 96px wide below the wide breakpoint and, from
      it, the design's width, at 3:4, drawn as a capsule by `--radius-pill` and lit by the two shadows
@@ -825,6 +861,10 @@
     --color-surface: transparent;
     --color-surface-band: transparent;
     --color-surface-card: transparent;
+    --color-surface-timeline-card-start: transparent;
+    --color-surface-timeline-card-middle: transparent;
+    --color-surface-timeline-card-end: transparent;
+    --surface-timeline-card: none;
     --color-surface-bar: transparent;
     --color-surface-tag: transparent;
     --color-surface-level-advanced: transparent;
@@ -849,6 +889,7 @@
     --color-border: transparent;
     --color-border-accent: transparent;
     --color-border-accent-hover: transparent;
+    --color-border-timeline-card: transparent;
 
     /* Nor is the page's one shadow drawn, per DDR-020. A sheet is lit by the room it is read in,
        and the surfaces it raises are flat on paper anyway: their fills and the colour of their
@@ -868,6 +909,8 @@
     --shadow-bar: none;
     /* Nor is a card's hover shadow, per DDR-061, which a sheet can never be in the state to draw. */
     --shadow-card-hover: none;
+    /* Nor is a timeline card's highlight, per DDR-070: a card on paper has no surface to light. */
+    --shadow-card-highlight: none;
 
     --content-width: none;
     --page-gutter: 0;

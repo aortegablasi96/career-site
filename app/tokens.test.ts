@@ -291,6 +291,9 @@ describe('colour tokens', () => {
     expect([...colors.keys()]).toEqual([
       'surface',
       'surface-card',
+      'surface-timeline-card-start',
+      'surface-timeline-card-middle',
+      'surface-timeline-card-end',
       'surface-band',
       'surface-bar',
       'text-heading',
@@ -312,6 +315,7 @@ describe('colour tokens', () => {
       'border',
       'border-accent',
       'rule-accent-end',
+      'border-timeline-card',
       'marker',
       'surface-hover',
       'accent-hover',
@@ -434,6 +438,12 @@ describe('colour tokens', () => {
     { foreground: 'text-muted', background: 'surface-tag', asked: 4.5, recorded: 4.26, meets: false },
     { foreground: 'accent', background: 'border-accent', asked: 4.5, recorded: 4.22, meets: false },
     { foreground: 'accent', background: 'surface-tag', asked: 4.5, recorded: 5.62, meets: true },
+    // A timeline card, per DDR-070, measured at its gradient's darkest stop: the job title or the
+    // degree, the company or the institution and the title under the pointer, and a role's place.
+    // The place failed on the white card at 2.56:1 and fails by more here.
+    { foreground: 'text-heading', background: 'surface-timeline-card-start', asked: 4.5, recorded: 15.97, meets: true },
+    { foreground: 'accent', background: 'surface-timeline-card-start', asked: 4.5, recorded: 5.62, meets: true },
+    { foreground: 'text-faint', background: 'surface-timeline-card-start', asked: 4.5, recorded: 2.29, meets: false },
     // Hairlines that carry nothing, so neither criterion reaches them: the rule beside a section
     // heading, a card's edge against the page it sits on and the white it encloses, and the
     // timeline's spine and dots.
@@ -441,6 +451,7 @@ describe('colour tokens', () => {
     { foreground: 'border', background: 'surface', asked: 0, recorded: 1.15, meets: true },
     { foreground: 'border', background: 'surface-card', asked: 0, recorded: 1.23, meets: true },
     { foreground: 'border-accent', background: 'surface', asked: 0, recorded: 1.39, meets: true },
+    { foreground: 'border-timeline-card', background: 'surface-timeline-card-middle', asked: 0, recorded: 1.29, meets: true },
   ] as const;
 
   it.each(pairings)(
@@ -489,7 +500,7 @@ describe('colour tokens', () => {
   // can be quietly improved without its record being revised with it. The first four are DDR-025's,
   // the next two DDR-035's, and the last two DDR-059's: the muted ink on a role view's panel, and
   // the accent on its pills.
-  it('fails exactly the eight pairings DDR-025, DDR-035 and DDR-059 record as failures, and no others', () => {
+  it('fails exactly the nine pairings DDR-025, DDR-035, DDR-059 and DDR-070 record as failures, and no others', () => {
     for (const { foreground, background, asked, recorded, meets } of pairings) {
       expect(recorded >= asked, `${foreground} on ${background}`).toBe(meets);
     }
@@ -503,7 +514,27 @@ describe('colour tokens', () => {
       'underline',
       'text-muted',
       'accent',
+      'text-faint',
     ]);
+  });
+
+  // DDR-070: a timeline card's grain darkens its gradient a little further. Its darkest pixel is
+  // #777777 at 15/255, and over the gradient's darkest stop that is the darkest point of any card,
+  // where the design's inks measure as below. The title and the company still clear 4.5:1 there,
+  // and the place, which already fails, fails by that much more.
+  it('measures a timeline card’s inks where its grain is darkest, per DDR-070', () => {
+    const [grain, alpha] = [0x77, 15 / 255];
+    const start = color('surface-timeline-card-start');
+    const darkest = `#${[1, 3, 5]
+      .map((i) => Number.parseInt(start.slice(i, i + 2), 16))
+      .map((channel) => Math.round(alpha * grain + (1 - alpha) * channel).toString(16).padStart(2, '0'))
+      .join('')}`;
+
+    expect(darkest).toBe('#e7ebf7');
+    expect(contrast(color('text-heading'), darkest)).toBeCloseTo(14.96, 1);
+    expect(contrast(color('accent'), darkest)).toBeCloseTo(5.27, 1);
+    expect(contrast(color('accent'), darkest)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(color('text-faint'), darkest)).toBeCloseTo(2.15, 1);
   });
 
   // DDR-025 takes the design's #4f46e5, which DDR-012 measured at 5.87:1 and turned down in favour
@@ -551,7 +582,7 @@ describe('elevation tokens', () => {
   // for the one element that may read them rather than putting them on a scale above `raised`: the
   // photo is not raised off the page the way a control or a card is, it is lit.
   it('names every shadow for what it does, so a third is a decision rather than a number', () => {
-    expect(shadows).toEqual(['raised', 'photo-glow', 'photo-inner', 'bar', 'card-hover']);
+    expect(shadows).toEqual(['raised', 'photo-glow', 'photo-inner', 'bar', 'card-hover', 'card-highlight']);
   });
 
   // The photo's two lights are the design's own, ink and geometry both, per DDR-021. They are two
@@ -647,7 +678,7 @@ describe('elevation tokens', () => {
 
   // A shadow marks an edge and gains nothing from growing with the reader's text, so its lengths
   // are in px, as the focus outline's and the timeline's line are. DDR-021's two follow it.
-  it.each(['raised', 'photo-glow', 'photo-inner', 'bar', 'card-hover'])(
+  it.each(['raised', 'photo-glow', 'photo-inner', 'bar', 'card-hover', 'card-highlight'])(
     'draws --shadow-%s in px, as the site’s other hairlines do',
     (name) => {
       expect(token(`shadow-${name}`)!.replace(/rgba\([^)]*\)/g, '')).not.toMatch(/\d(?:rem|em|%)/);
@@ -673,8 +704,9 @@ describe('elevation tokens', () => {
     expect(token('shadow-photo-inner')!.match(/rgba\(/g)).toHaveLength(1);
     expect(token('shadow-bar')!.match(/rgba\(/g)).toHaveLength(1);
     expect(token('shadow-card-hover')!.match(/rgba\(/g)).toHaveLength(1);
-    // Every translucency at the root belongs to a shadow, six of them, or is the bar's surface.
-    expect(root.match(/rgba\(/g)).toHaveLength(7);
+    expect(token('shadow-card-highlight')!.match(/rgba\(/g)).toHaveLength(1);
+    // Every translucency at the root belongs to a shadow, seven of them, or is the bar's surface.
+    expect(root.match(/rgba\(/g)).toHaveLength(8);
   });
 });
 
@@ -1018,6 +1050,10 @@ const forPaper = [
   { name: 'color-surface', value: 'transparent' },
   { name: 'color-surface-band', value: 'transparent' },
   { name: 'color-surface-card', value: 'transparent' },
+  { name: 'color-surface-timeline-card-start', value: 'transparent' },
+  { name: 'color-surface-timeline-card-middle', value: 'transparent' },
+  { name: 'color-surface-timeline-card-end', value: 'transparent' },
+  { name: 'surface-timeline-card', value: 'none' },
   { name: 'color-surface-bar', value: 'transparent' },
   { name: 'color-surface-tag', value: 'transparent' },
   { name: 'color-surface-level-advanced', value: 'transparent' },
@@ -1033,11 +1069,13 @@ const forPaper = [
   { name: 'color-border', value: 'transparent' },
   { name: 'color-border-accent', value: 'transparent' },
   { name: 'color-border-accent-hover', value: 'transparent' },
+  { name: 'color-border-timeline-card', value: 'transparent' },
   { name: 'shadow-raised', value: 'none' },
   { name: 'shadow-photo-glow', value: 'none' },
   { name: 'shadow-photo-inner', value: 'none' },
   { name: 'shadow-bar', value: 'none' },
   { name: 'shadow-card-hover', value: 'none' },
+  { name: 'shadow-card-highlight', value: 'none' },
   { name: 'content-width', value: 'none' },
   { name: 'page-gutter', value: '0' },
   { name: 'page-inset', value: '0' },

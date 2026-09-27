@@ -224,15 +224,18 @@ describe('timeline styles on screen', () => {
     expect(rule('.dot::before')).toMatch(/background-color:\s*var\(--color-accent\);/);
   });
 
-  it('draws each card white, with a hairline edge and the large radius, below its dot', () => {
+  // DDR-070 amends DDR-057's white card with the owner's surface: the grain over the gradient, a
+  // violet edge and a highlight inside the top edge, all tokens that paper drops.
+  it('draws each card on the design’s grained gradient, with a violet edge, a top highlight and the large radius, below its dot', () => {
     const card = rule('.card');
 
     expect(card).toMatch(/margin-block-start:\s*var\(--timeline-card-space\);/);
     expect(card).toMatch(/margin-inline:\s*var\(--timeline-entry-inset\);/);
     expect(card).toMatch(/padding:\s*var\(--space-medium\);/);
-    expect(card).toMatch(/border:\s*1px solid var\(--color-border\);/);
+    expect(card).toMatch(/border:\s*1px solid var\(--color-border-timeline-card\);/);
     expect(card).toMatch(/border-radius:\s*var\(--radius-large\);/);
-    expect(card).toMatch(/background-color:\s*var\(--color-surface-card\);/);
+    expect(card).toMatch(/background:\s*var\(--surface-timeline-card\);/);
+    expect(card).toMatch(/box-shadow:\s*var\(--shadow-card-highlight\);/);
     // The cards of a row are one height, with their text centred in it.
     expect(card).toMatch(/flex:\s*1;/);
     expect(card).toMatch(/justify-content:\s*center;/);
@@ -309,10 +312,15 @@ describe('timeline card links', () => {
   it('lights a card that leads to a view under the pointer and on focus, per DDR-061', () => {
     const lit = rule('.entry:has(.link):hover .card,\n.entry:has(.link:focus-visible) .card', screen);
 
-    expect(lit).toMatch(/box-shadow:\s*var\(--shadow-raised\), var\(--shadow-card-hover\);/);
+    // The highlight stays on the lit card, per DDR-070: it is the card's surface, not a state.
+    expect(lit).toMatch(
+      /box-shadow:\s*var\(--shadow-card-highlight\), var\(--shadow-raised\), var\(--shadow-card-hover\);/,
+    );
     expect(lit).toMatch(/border-color:\s*var\(--color-border-accent-hover\);/);
-    expect(rule('.card', screen)).not.toMatch(/box-shadow/);
-    expect(rule('.card:has(.link)', screen)).toMatch(/box-shadow:\s*var\(--shadow-raised\);/);
+    expect(rule('.card', screen)).toMatch(/box-shadow:\s*var\(--shadow-card-highlight\);/);
+    expect(rule('.card:has(.link)', screen)).toMatch(
+      /box-shadow:\s*var\(--shadow-card-highlight\), var\(--shadow-raised\);/,
+    );
   });
 
   // DDR-063: a role's card rises as a project card does, over the same 150ms, with its edge and
