@@ -53,9 +53,12 @@ import type { Cv } from './types';
  * ADR-005 lists as shared, so the CV file is behind the page on them until the owner updates it:
  * the current role reads "Global Product Manager - Digital Solutions" on the page's view and
  * "Global Product Manager" on its card and on paper, and Ponera Group's reads "Product Manager".
+ * It moved again with #193, because each role gained the path of its company's logo, and ToBeIT's
+ * and EDP's a flag that draws them taller, and ToBeIT's one that raises it, per DDR-066.
+ * A logo is not a fact ADR-005 lists as shared, so it did not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'c8ffb91193e9229323e5bffa7488a50b8a4d7c5e8fa50f768c2d29a63f25fb48',
+  contentDigest: 'e348a03ec465bfe3f3622462b7b8abe59164ba3f0486257e2aff3a5bfe353794',
 };

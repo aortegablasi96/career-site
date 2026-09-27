@@ -122,6 +122,21 @@ shadow used to replace the resting one, and `--shadow-card-hover`'s ink is `#1a1
 was the bar's 10%. Its geometry is unchanged, so every room measured for it still holds.
 `components/stylesheets.test.ts` reads a `box-shadow` as a list and holds each layer to a token.
 
+**Since #193, per DDR-066, each role's card opens with its company's logo**, centred above the
+company's name where the design's logo tile is (node 286:87), but straight on the card's white: the
+owner turned the tile down. It is `--timeline-logo-height`, 18px, tall and as wide as its own
+proportions, because the owner's logos are wordmarks. ToBeIT's and EDP's, which read small at that
+height, are marked `logoTall` and drawn at `--timeline-logo-height-tall`, 28px, as the owner asked;
+their files are 56px tall where the others are 36px. The logo stands 12px above the company's name:
+the card's 4px gap and a `--space-small` margin of its own. ToBeIT's is also `logoRaised`: it
+reaches up into the card's padding by `--timeline-logo-rise`, -10px, so its name stays level with
+Randstad's, Ponera Group's and ABB's. EDP's is not, because its card is the row's tallest. Every file's ground is transparent, so a new
+logo needs one too. The logo's `alt` is empty, since the company's
+name is written beneath it; it is `loading="lazy"`, because an eager `img` is one React hoists a
+`<link rel="preload">` for, ahead of the photo; and it does not print. `logo` on a `Role` is a path
+rather than an `Image`, and is required. Each file is `public/experiences/<slug>/logo.webp`,
+trimmed to its mark, 36px tall and lossless, made from the owner's PNG beside it, which is not
+committed. Education has no logos.
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
 row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
@@ -613,8 +628,8 @@ is a route rather than a file, so it does not go through `asset()`, which amends
 extends ADR-010 to the roles, at `/experience/<slug>`, and supersedes nothing. The next ADR is
 `012`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-065. The next DDR is
-`066`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-066. The next DDR is
+`067`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Thirty accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -654,7 +669,7 @@ at the section concerned:
   lit card keeps `--shadow-raised` and draws a darker `--shadow-card-hover`, at 18%, beneath it.
 * **DDR-057** keeps its row, its order, its scrolling, its print treatment and its education row.
   DDR-059 makes each role's card a link to the role's view and shows the hint above the row, which
-  then takes no tab stop of its own.
+  then takes no tab stop of its own. DDR-066 opens each role's card with its company's logo.
 * **DDR-059** keeps its view, its card, its hint and its neighbours. DDR-060 gives a role two
   titles: the view's `h1`, tab and preview give it in full, and every card and paper give it short.
 * **DDR-029** keeps its short labels, its footer and its print rule. DDR-058 takes the email

@@ -43,6 +43,7 @@ const linked = renderToStaticMarkup(
         key: 'ABB',
         dates: 'Oct 2024 – Present',
         subtitle: 'ABB',
+        logo: '/experiences/abb/logo.webp',
         title: 'Global Product Specialist, Digital Solutions',
         place: 'Quartino, Switzerland',
         href: '/experience/abb',
@@ -102,6 +103,21 @@ describe('Timeline', () => {
   it('takes focus, and is named by its section’s heading', () => {
     expect(roles).toMatch(/^<ol [^>]*aria-labelledby="experience-title"[^>]*tabindex="0"/);
     expect(credentials).toMatch(/^<ol [^>]*aria-labelledby="education-title"/);
+  });
+
+  // DDR-066: a role's card opens with its company's logo, which repeats the name written beneath
+  // it, so it adds nothing to what a reader hears, and it waits until the row is near.
+  it('opens a card with its company’s logo, above the company, with no alternative text', () => {
+    expect(linked).toMatch(
+      /<div class="[^"]*"><img class="[^"]*" src="\/experiences\/abb\/logo\.webp" alt="" loading="lazy"\/><p class="[^"]*">ABB<\/p>/,
+    );
+    expect(text(linked)).toContain('Oct 2024 – Present ABB Global Product Specialist');
+    expect(linked).not.toContain('rel="preload"');
+  });
+
+  it('draws no logo on a card that has none', () => {
+    expect(roles).not.toContain('<img');
+    expect(credentials).not.toContain('<img');
   });
 
   it('holds no link for an entry with no view of its own', () => {
@@ -355,6 +371,20 @@ describe('timeline card links', () => {
     );
   });
 
+  // DDR-066: the logo stands centred above the company, straight on the card, scaled whole.
+  it('sets the logo straight on the card, centred, with no tile of its own', () => {
+    const logo = rule('.logo');
+
+    expect(logo).toMatch(/align-self:\s*center;/);
+    expect(logo).toMatch(/block-size:\s*var\(--timeline-logo-height\);/);
+    expect(logo).toMatch(/max-inline-size:\s*100%;/);
+    expect(logo).toMatch(/object-fit:\s*contain;/);
+    expect(logo).toMatch(/margin-block-end:\s*var\(--space-small\);/);
+    expect(logo).not.toMatch(/border|background|box-shadow|padding/);
+    expect(rule('.logoTall')).toMatch(/block-size:\s*var\(--timeline-logo-height-tall\);/);
+    expect(rule('.logoRaised')).toMatch(/margin-block-start:\s*var\(--timeline-logo-rise\);/);
+  });
+
   it('prints no address after a card’s link, since paper cannot follow it', () => {
     expect(rule('.link::after', paper)).toMatch(/content:\s*none;/);
   });
@@ -381,6 +411,11 @@ describe('timeline styles on paper', () => {
   it('levels the dot with the card’s first line, and runs the line down to the next entry', () => {
     expect(rule('.lead', paper)).toMatch(/block-size:\s*var\(--timeline-dot-offset\);/);
     expect(rule('.line', paper)).toMatch(/inline-size:\s*var\(--timeline-line-width\);/);
+  });
+
+  // DDR-066: the logo is the screen's alone, so the printed CV is unchanged.
+  it('prints no logo', () => {
+    expect(rule('.logo', paper)).toMatch(/display:\s*none;/);
   });
 
   it('spaces roles and credentials apart by their own steps, and nothing after the last', () => {

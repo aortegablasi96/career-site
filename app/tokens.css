@@ -584,6 +584,19 @@
      design's 24px (node 170:186). It is not a step of DDR-013's scale, so it is the timeline's own,
      as the measures above are. */
   --timeline-hint-space: 1.5rem;
+  /* The height of a company's logo on a role's card, per DDR-066: 18px, on the card itself, with no
+     tile round it, as the owner chose on #193. Its width follows the logo's own, since the owner's
+     logos are wordmarks. In rem, so the logo grows with the reader's text as the card's words do. */
+  --timeline-logo-height: 1.125rem;
+  /* The height of a logo the content marks as tall, per DDR-066: a nearly square one, which at 18px
+     is far smaller than the wordmarks beside it. The design's 28px, the height of its logo tile
+     (node 286:87), as the owner chose for ToBeIT's on #193. */
+  --timeline-logo-height-tall: 1.75rem;
+  /* How far a raised tall logo reaches up into its card's padding, per DDR-066: the difference
+     between the two heights, as a negative margin, so the logo takes no more of the card's height
+     than a shorter one does. Written here because it is arithmetic on tokens, which a component may
+     not write. It is -10px, well inside the card's 16px padding. */
+  --timeline-logo-rise: calc(var(--timeline-logo-height) - var(--timeline-logo-height-tall));
   /* The room the experience row leaves below its cards for a card's hover shadow, per DDR-061: the
      shadow's 4px offset and its 12px of blur. The row scrolls sideways, and a box that scrolls clips
      whatever reaches past it, so without this the shadow lost its foot to the row's own edge. The

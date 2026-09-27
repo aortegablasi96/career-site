@@ -224,6 +224,35 @@
   outline-offset: var(--focus-outline-offset);
 }
 
+/* A role's card opens with its company's logo, per DDR-066, centred above the company's name where
+   the design places it (node 286:87). It stands straight on the card's own white, with no tile of
+   its own, as the owner chose on #193. The logo is the owner's file in the brand's own form and
+   colours, so nothing here recolours it; it is scaled to its height and, where a card is too narrow
+   for it, to the card's width, and never distorted or cropped. */
+.logo {
+  align-self: center;
+  max-inline-size: 100%;
+  block-size: var(--timeline-logo-height);
+  object-fit: contain;
+  /* The card's own gap is 4px; the owner asked on #193 for more room between the logo and the
+     company's name, so the logo stands a step further off it, 12px in all. */
+  margin-block-end: var(--space-small);
+}
+
+/* A nearly square logo is far smaller than a wordmark at the same height, so one the content marks
+   is drawn at the design's 28px, the height of its logo tile, as the owner chose for ToBeIT's and
+   EDP's. */
+.logoTall {
+  block-size: var(--timeline-logo-height-tall);
+}
+
+/* A tall logo the content marks as raised takes no more of the card's height than a shorter one: it
+   reaches up into the card's padding by the difference, so the company's name and everything below
+   it sit exactly where they do on the cards beside it, as the owner asked for ToBeIT's. */
+.logoRaised {
+  margin-block-start: var(--timeline-logo-rise);
+}
+
 /* The company opens a role's card in the accent, and the institution a credential's in the muted
    ink, both bold, per DDR-057. The design's 12px is not a step of DDR-022's scale, so the nearest,
    12.8px, is taken, as the footer takes it. */
@@ -380,5 +409,11 @@
 
   .place {
     font-size: var(--font-size-xxx-small);
+  }
+
+  /* The logo is the screen's alone, per DDR-066: the printed CV is the one DDR-057 draws, and the
+     company's name beside each entry says what the logo does. */
+  .logo {
+    display: none;
   }
 }

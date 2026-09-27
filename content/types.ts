@@ -198,6 +198,28 @@ export interface Role {
    */
   slug: string;
   company: string;
+  /**
+   * Where the company's logo sits, as a path from the site's root, which the timeline's card shows
+   * above the company's name, per DDR-066. It is the owner's file, in the brand's own form and
+   * colours. It is not an `Image`, because it has no alternative text: the company's name is
+   * written beneath it, so the logo says nothing a reader would miss, and it is hidden from
+   * assistive technology.
+   */
+  logo: string;
+  /**
+   * Whether the logo is drawn taller than the others, per DDR-066: set where a logo is nearly
+   * square, or carries small text, so at the shared height it is far smaller than its neighbours.
+   * The owner chose it for ToBeIT's and EDP's on #193. A flag rather than a size, as `newTab` is on a contact: the size is the
+   * stylesheet's.
+   */
+  logoTall?: boolean;
+  /**
+   * Whether a tall logo rises into the card's padding rather than taking more of the card's height,
+   * per DDR-066, so the company's name sits level with the names on the cards beside it. The owner
+   * chose it for ToBeIT's on #193. Not for a card that is the row's tallest, whose padding the logo
+   * would eat into.
+   */
+  logoRaised?: boolean;
   place: string;
   start: Month;
   /** Left out while the role is current. */
