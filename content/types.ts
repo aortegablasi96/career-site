@@ -428,6 +428,11 @@ export interface Degree {
    * none yet.
    */
   logo?: string;
+  /**
+   * Whether the logo is drawn taller than a wordmark, per DDR-066 and DDR-068: set for the UPC's
+   * roundel, which is square and would read small at the shared height.
+   */
+  logoTall?: boolean;
   start: Month;
   end: Month;
 }
@@ -446,6 +451,11 @@ export interface Certification {
    * none yet.
    */
   logo?: string;
+  /**
+   * Whether the logo is drawn taller than a wordmark, per DDR-066 and DDR-068: set for the UPC's
+   * roundel, which is square and would read small at the shared height.
+   */
+  logoTall?: boolean;
   /** The month it was granted, which is the only date it shows, per DDR-006. */
   granted: Month;
 }

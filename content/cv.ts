@@ -58,11 +58,11 @@ import type { Cv } from './types';
  * A logo is not a fact ADR-005 lists as shared, so it did not move the CV.
  * It moved again with #195, because the projects section gained the hint above its cards, per
  * DDR-067. A hint is not a fact ADR-005 lists as shared, so it did not move the CV.
- * It moved again with #197, because each degree gained the path of the UPC's logo, per DDR-068.
+ * It moved again with #197, because each degree gained the path of the UPC’s symbol and a flag that draws it tall, per DDR-068.
  * A logo is not a fact ADR-005 lists as shared, so it did not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '73968da34bc5f544a93cd13a75730cd2292ed3234df8d7f4a1548a4eaf3a5342',
+  contentDigest: '2f8f399c3cf2af15f620acc52ba3b8c122e0c8b9117cf25aa21f2a01353c39f7',
 };
