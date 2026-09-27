@@ -199,23 +199,25 @@
 }
 
 /* And the dates and the dot answer with it, per DDR-064, so the reader sees which of them belong to
-   the role they are about to open: each takes the hover step of its own colour, as every link and
-   control does, per DDR-035. The dates and the dot's core are in the accent and darken to
-   --color-accent-hover; the ring is the pale accent edge and takes the card's hover edge. The line
-   between the dots is the row's, not the role's, and stays. */
+   the entry they are about to open. The dates darken to --color-accent-hover, as every link and
+   control does, per DDR-035, and take a soft glow in the card's hover ink beneath them, per DDR-071,
+   so they read as lit with the card. The dot darkens further than a colour step, per DDR-071: its
+   pale ring takes the accent itself, and its core a deeper indigo, so it plainly changes with the
+   card. The line between the dots is the row's, not the entry's, and stays. */
 .entry:has(.link):hover .dates,
 .entry:has(.link:focus-visible) .dates {
   color: var(--color-accent-hover);
+  text-shadow: var(--shadow-dates-hover);
 }
 
 .entry:has(.link):hover .dot,
 .entry:has(.link:focus-visible) .dot {
-  border-color: var(--color-border-accent-hover);
+  border-color: var(--color-accent);
 }
 
 .entry:has(.link):hover .dot::before,
 .entry:has(.link:focus-visible) .dot::before {
-  background-color: var(--color-accent-hover);
+  background-color: var(--color-accent-deep);
 }
 
 /* Keyboard focus outlines the whole card rather than the title alone, since the card is what the
@@ -303,7 +305,7 @@
 
   /* The dates and the dot change with the card, over the same 150ms. */
   .entry:has(.link) .dates {
-    transition-property: color;
+    transition-property: color, text-shadow;
     transition-duration: var(--hover-transition);
   }
 

@@ -282,6 +282,12 @@
   --color-surface-hover: #eef2ff;
   --color-accent-hover: #4338ca;
   --color-border-accent-hover: #a5b4fc;
+  /* A lit timeline dot's core, per DDR-071: a step deeper than --color-accent-hover, because the
+     ring takes the accent itself when lit, and a core in the ring's own ink would vanish into it. It
+     is Tailwind's indigo-800, the next step down the accent's own ramp. The dot is decoration beside
+     dates that say what it marks, so it carries nothing, and it is never drawn on paper, which
+     cannot be pointed at. */
+  --color-accent-deep: #3730a3;
   --color-underline: #a5b4fc;
   --color-underline-hover: #6366f1;
 
@@ -514,6 +520,13 @@
      reaches past the card nowhere and needs none of the row's room. In px, as every other shadow
      is. Only a timeline card may read it. */
   --shadow-card-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+
+  /* A lit timeline entry's dates, per DDR-071: a soft glow beneath the text in the card's hover
+     ink, #1a1a2e at 18%, so the dates read as lit with the card below them. It is a text-shadow,
+     so it takes no space and moves nothing. It reaches 3px above the letters, which the date band's
+     own leading holds, so the row, which clips what passes its edge, does not cut it. In px, as
+     every other shadow is. */
+  --shadow-dates-hover: 0 3px 6px rgba(26, 26, 46, 0.18);
 
   /* A timeline card's surface, per DDR-070: the design's grain over its gradient. The grain is the
      design's own 200px texture, whose pixels are grey or white at 1% to 7%; it repeats at its own
@@ -911,6 +924,8 @@
     --shadow-card-hover: none;
     /* Nor is a timeline card's highlight, per DDR-070: a card on paper has no surface to light. */
     --shadow-card-highlight: none;
+    /* Nor is a lit entry's glow on its dates, per DDR-071, which a sheet cannot be in the state to draw. */
+    --shadow-dates-hover: none;
 
     --content-width: none;
     --page-gutter: 0;

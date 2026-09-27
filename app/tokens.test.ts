@@ -320,6 +320,7 @@ describe('colour tokens', () => {
       'surface-hover',
       'accent-hover',
       'border-accent-hover',
+      'accent-deep',
       'underline',
       'underline-hover',
       'linkedin',
@@ -565,6 +566,15 @@ describe('colour tokens', () => {
     }
   });
 
+  // DDR-071: a lit dot's ring takes the accent, so its core takes a step deeper than the accent's
+  // hover step to stay distinct from it. Both are decoration beside the dates, measured on the page.
+  it('darkens a lit dot’s core past the accent’s hover step, per DDR-071', () => {
+    expect(color('accent-deep')).toBe('#3730a3');
+    expect(luminance(color('accent-deep'))).toBeLessThan(luminance(color('accent-hover')));
+    expect(contrast(color('accent-deep'), color('accent'))).toBeCloseTo(1.58, 2);
+    expect(contrast(color('accent-deep'), color('surface'))).toBeCloseTo(9.27, 2);
+  });
+
   it('keeps the focus outline in the accent, per DDR-025', () => {
     expect(colors.get('focus')).toBe('var(--color-accent)');
   });
@@ -582,7 +592,7 @@ describe('elevation tokens', () => {
   // for the one element that may read them rather than putting them on a scale above `raised`: the
   // photo is not raised off the page the way a control or a card is, it is lit.
   it('names every shadow for what it does, so a third is a decision rather than a number', () => {
-    expect(shadows).toEqual(['raised', 'photo-glow', 'photo-inner', 'bar', 'card-hover', 'card-highlight']);
+    expect(shadows).toEqual(['raised', 'photo-glow', 'photo-inner', 'bar', 'card-hover', 'card-highlight', 'dates-hover']);
   });
 
   // The photo's two lights are the design's own, ink and geometry both, per DDR-021. They are two
@@ -623,6 +633,26 @@ describe('elevation tokens', () => {
     expect(Number(blur)).toBeLessThanOrEqual(rem(token('timeline-entry-inset')!) * 16);
     expect(token('timeline-shadow-room')).toBe(`${Number(y) + Number(blur)}px`);
     expect(token('timeline-shadow-room-back')).toBe('calc(-1 * var(--timeline-shadow-room))');
+  });
+
+  // DDR-071: a lit entry's dates glow in the card's hover ink, and the glow reaches no further above
+  // the letters (its blur less its offset) than the 3px the row can hold above them, measured on #206,
+  // so the row, which clips at its edge, does not cut it.
+  it('lights the dates in the card’s hover ink, within the date band, per DDR-071', () => {
+    const [, y, blur, ink] = token('shadow-dates-hover')!.match(/^0 (\d+)px (\d+)px (rgba\(.*\))$/)!;
+
+    expect(ink).toBe(token('shadow-card-hover')!.match(/rgba\(.*\)$/)![0]);
+    expect(Number(blur) - Number(y)).toBeLessThanOrEqual(3);
+
+    // Where the glow is at its full 18% on the page's surface, the lit dates still clear 4.5:1.
+    const [r, g, b, alpha] = ink.match(/[\d.]+/g)!.map(Number);
+    const page = [1, 3, 5].map((i) => Number.parseInt(color('surface').slice(i, i + 2), 16));
+    const under = `#${[r!, g!, b!]
+      .map((channel, i) => Math.round(alpha! * channel + (1 - alpha!) * page[i]!).toString(16).padStart(2, '0'))
+      .join('')}`;
+
+    expect(contrast(color('accent-hover'), under)).toBeCloseTo(5.1, 1);
+    expect(contrast(color('accent-hover'), under)).toBeGreaterThanOrEqual(4.5);
   });
 
   // DDR-062: a project card takes the same shadow as it lifts, and every way the shadow reaches —
@@ -678,7 +708,7 @@ describe('elevation tokens', () => {
 
   // A shadow marks an edge and gains nothing from growing with the reader's text, so its lengths
   // are in px, as the focus outline's and the timeline's line are. DDR-021's two follow it.
-  it.each(['raised', 'photo-glow', 'photo-inner', 'bar', 'card-hover', 'card-highlight'])(
+  it.each(['raised', 'photo-glow', 'photo-inner', 'bar', 'card-hover', 'card-highlight', 'dates-hover'])(
     'draws --shadow-%s in px, as the site’s other hairlines do',
     (name) => {
       expect(token(`shadow-${name}`)!.replace(/rgba\([^)]*\)/g, '')).not.toMatch(/\d(?:rem|em|%)/);
@@ -705,8 +735,9 @@ describe('elevation tokens', () => {
     expect(token('shadow-bar')!.match(/rgba\(/g)).toHaveLength(1);
     expect(token('shadow-card-hover')!.match(/rgba\(/g)).toHaveLength(1);
     expect(token('shadow-card-highlight')!.match(/rgba\(/g)).toHaveLength(1);
-    // Every translucency at the root belongs to a shadow, seven of them, or is the bar's surface.
-    expect(root.match(/rgba\(/g)).toHaveLength(8);
+    expect(token('shadow-dates-hover')!.match(/rgba\(/g)).toHaveLength(1);
+    // Every translucency at the root belongs to a shadow, eight of them, or is the bar's surface.
+    expect(root.match(/rgba\(/g)).toHaveLength(9);
   });
 });
 
@@ -1076,6 +1107,7 @@ const forPaper = [
   { name: 'shadow-bar', value: 'none' },
   { name: 'shadow-card-hover', value: 'none' },
   { name: 'shadow-card-highlight', value: 'none' },
+  { name: 'shadow-dates-hover', value: 'none' },
   { name: 'content-width', value: 'none' },
   { name: 'page-gutter', value: '0' },
   { name: 'page-inset', value: '0' },

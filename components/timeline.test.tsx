@@ -287,18 +287,22 @@ describe('timeline card links', () => {
     expect(rule('.dates', screen)).toMatch(/padding-block-end:\s*var\(--space-small\);/);
   });
 
-  // DDR-064: the dates and the dot answer with the card, each taking the hover step of its own
-  // colour, and only in a column that leads somewhere.
-  it('darkens the dates and the dot with the card, per DDR-064', () => {
-    expect(rule('.entry:has(.link):hover .dates,\n.entry:has(.link:focus-visible) .dates', screen)).toMatch(
-      /color:\s*var\(--color-accent-hover\);/,
-    );
+  // DDR-064: the dates and the dot answer with the card, and only in a column that leads somewhere.
+  // DDR-071 lights the dates with a glow and darkens the dot further: the ring takes the accent and
+  // the core a deeper indigo.
+  it('lights the dates and darkens the dot with the card, per DDR-064 as DDR-071 amends it', () => {
+    const dates = rule('.entry:has(.link):hover .dates,\n.entry:has(.link:focus-visible) .dates', screen);
+
+    expect(dates).toMatch(/color:\s*var\(--color-accent-hover\);/);
+    expect(dates).toMatch(/text-shadow:\s*var\(--shadow-dates-hover\);/);
     expect(rule('.entry:has(.link):hover .dot,\n.entry:has(.link:focus-visible) .dot', screen)).toMatch(
-      /border-color:\s*var\(--color-border-accent-hover\);/,
+      /border-color:\s*var\(--color-accent\);/,
     );
     expect(
       rule('.entry:has(.link):hover .dot::before,\n.entry:has(.link:focus-visible) .dot::before', screen),
-    ).toMatch(/background-color:\s*var\(--color-accent-hover\);/);
+    ).toMatch(/background-color:\s*var\(--color-accent-deep\);/);
+    // At rest the dates draw no glow.
+    expect(rule('.dates', screen)).not.toMatch(/text-shadow/);
   });
 
   it('leaves the line between the dots as it is', () => {
@@ -343,7 +347,7 @@ describe('timeline card links', () => {
     });
 
     it('changes the dates and the dot over the same 150ms, per DDR-064', () => {
-      expect(rule('.entry:has(.link) .dates', motion)).toMatch(/transition-property:\s*color;/);
+      expect(rule('.entry:has(.link) .dates', motion)).toMatch(/transition-property:\s*color, text-shadow;/);
       expect(rule('.entry:has(.link) .dates', motion)).toMatch(/transition-duration:\s*var\(--hover-transition\);/);
       const dot = rule('.entry:has(.link) .dot,\n  .entry:has(.link) .dot::before', motion);
       expect(dot).toMatch(/transition-property:\s*border-color, background-color;/);

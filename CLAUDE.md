@@ -111,8 +111,8 @@ card is the same card, per DDR-069, below; the views' neighbour cards keep their
 **Since #189, per DDR-064, a role's dates, its dot and its card are one target**: the link's box
 reaches from the card out to the whole column, so pointing at or clicking the dates or the dot does
 what the card does, and the state is read from the column (`.entry:has(.link):hover`), which never
-moves, so the card's lift cannot lose it. The dates and the dot's core darken to
-`--color-accent-hover`, and the ring takes the card's hover edge, `--color-border-accent-hover`. The
+moves, so the card's lift cannot lose it. The dates darken to `--color-accent-hover`; since #206,
+per DDR-071, they also glow, and the dot's ring takes the accent and its core `--color-accent-deep`. The
 line between the dots does not change. The box is written from the dates' band, the dot, the space
 above the card and the card's inset, so a change to any of them moves it.
 
@@ -180,6 +180,12 @@ address under the base path. Do not move it to `public/`, where the stylesheet w
 root-relative path that 404s on the live site. The card's darkest point, where the grain is darkest
 over the first stop, is `#e7ebf7`, and a role's place fails there at 2.15:1, held by name as a ninth
 failing pairing. Paper drops all of it at the token layer, and is pixel-identical.
+
+**Since #206, per DDR-071, a lit entry's dates glow and its dot darkens**: the dates take
+`--shadow-dates-hover`, a `text-shadow` in the card's hover ink, `0 3px 6px`, and the dot's ring takes
+the accent and its core `--color-accent-deep`, `#3730a3`. At rest nothing changes. The row clips at
+its top edge, where the dates' line begins, so the glow may reach at most 3px above the letters:
+`0 2px 6px` was cut by one pixel row. `app/tokens.test.ts` holds that limit.
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
 row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
@@ -673,8 +679,8 @@ ADR-010's address: since #202 the projects section is "Portfolio", at `#portfoli
 `/portfolio/<slug>` and its pictures are in `public/portfolio/<slug>/`; the old `/projects/…`
 addresses are not kept, as the owner chose. The next ADR is `013`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-070. The next DDR is
-`071`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-071. The next DDR is
+`072`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Thirty-one accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -710,6 +716,8 @@ at the section concerned:
   now rests raised, lifts as a project card does, and draws its focus outline outside its edge.
 * **DDR-036, DDR-059 and DDR-063** keep everything but what DDR-064 adds: a role's link covers its
   whole column, its state is the column's, and its dates and dot answer with its card.
+* **DDR-064** keeps its one target and its column's state. DDR-071 takes how its dates and dot
+  answer: the dates also glow, and the dot's ring takes the accent and its core a deeper indigo.
 * **DDR-061, DDR-062 and DDR-063** keep everything but the lit card's shadow, which DDR-065 takes: a
   lit card keeps `--shadow-raised` and draws a darker `--shadow-card-hover`, at 18%, beneath it.
 * **DDR-057** keeps its row, its order, its scrolling, its print treatment and its education row.

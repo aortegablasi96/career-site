@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-27
 
+**Amended by DDR-071**, per #206: when the card is lit, its dates take a soft glow in the card's hover ink, `--shadow-dates-hover`. Its dot's ring takes `--color-accent`, where it took `--color-border-accent-hover`, and its core takes `--color-accent-deep`, where it took `--color-accent-hover`. At rest nothing changes.
+
 **Amended by DDR-069**, per #200: an education card's dates, dot and card are one target too.
 
 **Amends DDR-036, DDR-059 and DDR-063.** In the experience timeline, a role's dates, its dot on the
