@@ -183,11 +183,11 @@
 .entry:has(.link):hover .card,
 .entry:has(.link:focus-visible) .card {
   border-color: var(--color-border-accent-hover);
-  /* And it takes a light shadow all round in place of its resting one, per DDR-061, so the whole
-     card reads as the one thing the pointer will open. The edge and the shadow are states, so a
-     reader who prefers less motion gets them at once; where motion is welcome they come in with
-     the lift below. */
-  box-shadow: var(--shadow-card-hover);
+  /* And it takes a light shadow all round beneath its resting one, per DDR-061 as DDR-065 amends
+     it, so the whole card reads as the one thing the pointer will open and keeps the crisp, darker
+     edge of light it rests with. The edge and the shadow are states, so a reader who prefers less
+     motion gets them at once; where motion is welcome they come in with the lift below. */
+  box-shadow: var(--shadow-raised), var(--shadow-card-hover);
 }
 
 /* And the dates and the dot answer with it, per DDR-064, so the reader sees which of them belong to

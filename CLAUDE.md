@@ -116,6 +116,12 @@ moves, so the card's lift cannot lose it. The dates and the dot's core darken to
 line between the dots does not change. The box is written from the dates' band, the dot, the space
 above the card and the card's inset, so a change to any of them moves it.
 
+**Since #191, per DDR-065, a lit card keeps its resting shadow**: under the pointer and on focus, a
+role's card and a project card draw `var(--shadow-raised), var(--shadow-card-hover)`, where the hover
+shadow used to replace the resting one, and `--shadow-card-hover`'s ink is `#1a1a2e` at 18%, where it
+was the bar's 10%. Its geometry is unchanged, so every room measured for it still holds.
+`components/stylesheets.test.ts` reads a `box-shadow` as a list and holds each layer to a token.
+
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
 row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
@@ -607,10 +613,10 @@ is a route rather than a file, so it does not go through `asset()`, which amends
 extends ADR-010 to the roles, at `/experience/<slug>`, and supersedes nothing. The next ADR is
 `012`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-064. The next DDR is
-`065`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-065. The next DDR is
+`066`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Twenty-nine accepted records are superseded or amended **in part**, and each says so at the top and again
+Thirty accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -644,6 +650,8 @@ at the section concerned:
   now rests raised, lifts as a project card does, and draws its focus outline outside its edge.
 * **DDR-036, DDR-059 and DDR-063** keep everything but what DDR-064 adds: a role's link covers its
   whole column, its state is the column's, and its dates and dot answer with its card.
+* **DDR-061, DDR-062 and DDR-063** keep everything but the lit card's shadow, which DDR-065 takes: a
+  lit card keeps `--shadow-raised` and draws a darker `--shadow-card-hover`, at 18%, beneath it.
 * **DDR-057** keeps its row, its order, its scrolling, its print treatment and its education row.
   DDR-059 makes each role's card a link to the role's view and shows the hint above the row, which
   then takes no tab stop of its own.

@@ -65,7 +65,9 @@ const minimum = /^min-(?:inline|block)-size$/;
  * `box-shadow` is here because DDR-020 puts the site's one elevation in a token: it is lengths and
  * an ink, and a component that wrote its own would be deciding both how far off the page a surface
  * sits and how dark the page goes under it. The literal-colour rule above already catches the ink;
- * this catches a shadow drawn at lengths of its own in a colour that is already a token.
+ * this catches a shadow drawn at lengths of its own in a colour that is already a token. A shadow
+ * may be a list of layers, and since DDR-065 a lit card draws two elevations at once, so each layer
+ * of the list is held to the same rule: a token, never a length.
  *
  * The underline's offset and thickness are here because DDR-035 puts the one offset the design
  * draws in a token: a component that wrote its own would be deciding how far a link's line sits
@@ -110,6 +112,8 @@ describe('component stylesheets', () => {
           expect(value).toMatch(tokensOrRoom);
         } else if (minimum.test(property)) {
           expect(value).toMatch(tokensOrWord);
+        } else if (property === 'box-shadow') {
+          for (const layer of value.split(',')) expect(layer.trim()).toMatch(tokensOnly);
         } else {
           expect(value).toMatch(tokensOnly);
         }

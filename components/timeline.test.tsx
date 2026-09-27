@@ -285,13 +285,14 @@ describe('timeline card links', () => {
     expect(screen).not.toMatch(/:hover[^{]*\.(?:lead|line)\b/);
   });
 
-  // DDR-061: under the pointer or focus a role's card takes a light shadow all round, and only a
-  // card that leads somewhere does, since the rule reads the link. DDR-063 raises such a card at
+  // DDR-061: under the pointer or focus a role's card takes a light shadow all round, beneath its
+  // resting one since DDR-065, and only a card that leads somewhere does, since the rule reads the
+  // link. DDR-063 raises such a card at
   // rest as a project card is, and leaves a credential's card flat.
   it('lights a card that leads to a view under the pointer and on focus, per DDR-061', () => {
     const lit = rule('.entry:has(.link):hover .card,\n.entry:has(.link:focus-visible) .card', screen);
 
-    expect(lit).toMatch(/box-shadow:\s*var\(--shadow-card-hover\);/);
+    expect(lit).toMatch(/box-shadow:\s*var\(--shadow-raised\), var\(--shadow-card-hover\);/);
     expect(lit).toMatch(/border-color:\s*var\(--color-border-accent-hover\);/);
     expect(rule('.card', screen)).not.toMatch(/box-shadow/);
     expect(rule('.card:has(.link)', screen)).toMatch(/box-shadow:\s*var\(--shadow-raised\);/);
