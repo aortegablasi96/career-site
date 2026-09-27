@@ -26,19 +26,22 @@ to ask PMI for authorization and to ship the UPC's logo alone meanwhile.
 ## Decision
 
 * **Each degree's card opens with the UPC's logo**, in DDR-066's style: centred above the
-  institution's name, 12px above it, 18px tall and as wide as its own proportions, straight on the
+  institution's name, 12px above it, as wide as its own proportions, straight on the
   card's white with no tile. It is hidden from assistive technology, it loads lazily, and it does not
   print. The timeline draws it through the same code path as a role's logo, so the two cannot drift
   apart.
 * **The file is the UPC's official colour logo**, the positive version in Pantone 3005 with a white
   interior. It is the "UPC" roundel beside the name "Universitat Politècnica de Catalunya ·
   BarcelonaTech", about 4.5:1 wide. As DDR-066 does with the company logos, the file is trimmed to
-  the mark's edges, scaled to 36px tall (twice its displayed height) and saved as a lossless WebP at
+  the mark's edges, scaled to 56px tall (twice its displayed height, as for the other tall logos) and saved as a lossless WebP at
   `public/education/upc/logo.webp`. Its ground is transparent. The downloaded PNG sits beside it,
   and `.gitignore` keeps it out of the repository. Nothing about the mark is recoloured or redrawn,
   per DDR-044.
-* **It is not drawn tall.** At 4.5:1 it is a wordmark like Randstad's, not a nearly square mark like
-  ToBeIT's, so it takes the shared 18px.
+* **It is drawn tall, at 28px, `--timeline-logo-height-tall`**, as ToBeIT's and EDP's are. It first
+  shipped at the shared 18px, where its second and third lines, "de Catalunya" and "BarcelonaTech",
+  were very small, and the owner asked for it bigger. At 28px it is 127px wide, inside the
+  narrowest card. It is not raised: the degree cards are the row's tallest, and the certification
+  cards have no logo to be level with.
 * **The certifications have no logo**, until PMI authorizes one. `logo` is optional on a credential
   for that reason, where it is required on a role.
 * **An institution is set in the accent, bold, as a company is**, where DDR-057 took the design's
@@ -96,9 +99,8 @@ Tradeoffs:
 * The row is uneven until PMI answers: two cards with a logo, two without. Every card in a row is as
   tall as the tallest, so the certification cards grow with the degree cards and their text stays
   centred.
-* The logo's second and third lines, "de Catalunya" and "BarcelonaTech", are very small at 18px,
-  like EDP's full name in its logo. That is the logo's own form. `logoTall` would draw it at 28px if
-  the owner asks for that.
+* The logo's second and third lines are still small at 28px, and the degree cards are 10px taller
+  than at 18px. That is the logo's own form.
 
 Risks:
 * A PMI logo, if PMI authorizes one, is the approved artwork PMI supplies, used unaltered. A later
@@ -107,7 +109,7 @@ Risks:
 The printed CV's layout and text do not change; only the institution's ink does.
 
 Measured on the built page in Edge at 320px, 360px, 390px, 768px, 1280px and 1536px, at the
-browser's default text size and at 200%: each UPC logo is 81.5 × 18px (163 × 36px at 200%),
+browser's default text size and at 200%: each UPC logo is 127 × 28px (254 × 56px at 200%),
 12px (24px) above the institution's name, and inside its card. Nothing scrolls sideways. Printed to
 A4 in Edge and Firefox with background graphics on and off: five sheets in both, with text
 identical to the tree before, and the pixels differing only in the institution's ink.

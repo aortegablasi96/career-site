@@ -149,8 +149,8 @@ rather than an `Image`, and is required. Each file is `public/experiences/<slug>
 trimmed to its mark, 36px tall and lossless, made from the owner's PNG beside it, which is not
 committed.
 
-**Since #197, per DDR-068, each degree's card opens with the UPC's logo**, drawn exactly as a
-company's is, from `public/education/upc/logo.webp`: the university's official colour logo from its
+**Since #197, per DDR-068, each degree's card opens with the UPC's logo**, drawn as a
+company's is and marked `logoTall`, so 28px, as the owner asked, from `public/education/upc/logo.webp`: the university's official colour logo from its
 brand page, trimmed and made the same way. `logo` is optional on a credential, because the two PMI
 certifications have none: PMI's trademark guidelines allow its logo only with its written
 authorization, which the owner has asked for. Do not add a PMI or PMP logo, or a Credly badge, until

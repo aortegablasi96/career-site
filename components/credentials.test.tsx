@@ -119,9 +119,10 @@ describe('credentials content', () => {
   // DDR-068: the UPC's official logo, as a WebP beside the others, per ADR-004. PMI allows its logo
   // only with its written authorization, which the owner has asked for on #197, so neither
   // certification carries one yet.
-  it('gives both degrees the UPC’s logo, and neither certification a logo', () => {
-    for (const { logo } of degrees) {
+  it('gives both degrees the UPC’s logo, drawn tall, and neither certification a logo', () => {
+    for (const { logo, logoTall } of degrees) {
       expect(logo).toBe('/education/upc/logo.webp');
+      expect(logoTall).toBe(true);
       expect(existsSync(new URL(`../public${logo}`, import.meta.url))).toBe(true);
     }
     expect(certifications.map(({ logo }) => logo)).toEqual([undefined, undefined]);
