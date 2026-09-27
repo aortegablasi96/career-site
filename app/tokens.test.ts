@@ -579,13 +579,16 @@ describe('elevation tokens', () => {
     expect(token('shadow-bar')).toBe('0 2px 16px rgba(26, 26, 46, 0.1)');
   });
 
-  // DDR-061: a role's card under the pointer, in the bar's ink. Its blur reaches no further than
-  // the 12px the timeline leaves beside a card, and the row leaves room below it for the whole of
-  // its reach, the offset and the blur, so that the row's scrolling box does not clip it.
-  it('lights a card under the pointer in the bar’s ink, within the timeline’s room, per DDR-061', () => {
+  // DDR-061: a role's card under the pointer, in the bar's hue, at 18% since DDR-065, where the bar
+  // is at 10%. Its blur reaches no further than the 12px the timeline leaves beside a card, and the
+  // row leaves room below it for the whole of its reach, the offset and the blur, so that the row's
+  // scrolling box does not clip it.
+  it('lights a card under the pointer in the bar’s hue, within the timeline’s room, per DDR-061', () => {
     const [, y, blur, ink] = token('shadow-card-hover')!.match(/^0 (\d+)px (\d+)px (rgba\(.*\))$/)!;
+    const hue = (shadow: string) => shadow.match(/rgba\((\d+, \d+, \d+),/)![1];
 
-    expect(ink).toBe(token('shadow-bar')!.match(/rgba\(.*\)/)![0]);
+    expect(hue(ink)).toBe(hue(token('shadow-bar')!));
+    expect(ink).toBe('rgba(26, 26, 46, 0.18)');
     expect(Number(blur)).toBeLessThanOrEqual(rem(token('timeline-entry-inset')!) * 16);
     expect(token('timeline-shadow-room')).toBe(`${Number(y) + Number(blur)}px`);
     expect(token('timeline-shadow-room-back')).toBe('calc(-1 * var(--timeline-shadow-room))');

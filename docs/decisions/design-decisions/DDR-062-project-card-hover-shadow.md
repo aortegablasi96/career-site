@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-065**, per #191: a lifted card keeps `--shadow-raised` and draws `--shadow-card-hover` beneath it, rather than in its place, and the hover shadow's ink is 18%, where it was 10%.
+
 **Amended by DDR-063**, per #187: a role's card and a project card now rest, answer the pointer and take focus alike: `--shadow-raised` at rest, the accent edge, `--shadow-card-hover` and a 4px lift, `--card-lift`, where motion is welcome, and the focus outline outside the edge.
 
 **Amends DDR-061 by giving its shadow a second reader.** `--shadow-card-hover`, its ink and its

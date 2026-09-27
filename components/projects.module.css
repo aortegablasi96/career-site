@@ -89,17 +89,18 @@ section > .row {
 }
 
 /* And the card takes the role card's answer, per DDR-063: its edge in the accent's hover edge, as a
-   role's card takes it under DDR-061, and a light shadow all round it in place of its resting one,
-   per DDR-062, so the lift below reads as the card coming off the page. Both are written outside
-   the motion query: an edge and a shadow are states rather than movements, so a reader who prefers
-   less motion still gets them, at once, as they get the accent. Where motion is welcome they come
+   role's card takes it under DDR-061, and a light shadow all round it beneath its resting one,
+   per DDR-062 as DDR-065 amends it, so the lift below reads as the card coming off the page and the
+   card keeps the crisp, darker edge of light it rests with. Both are written outside the motion
+   query: an edge and a shadow are states rather than movements, so a reader who prefers less
+   motion still gets them, at once, as they get the accent. Where motion is welcome they come
    in with the lift. The edge is a colour, so it takes no space and moves nothing. The shadow reaches
    12px beside and above the card and 16px below it, inside the 20px the design leaves round every
    card, so it touches no other card and no heading. */
 .card:hover,
 .card:has(.link:focus-visible) {
   border-color: var(--color-border-accent-hover);
-  box-shadow: var(--shadow-card-hover);
+  box-shadow: var(--shadow-raised), var(--shadow-card-hover);
 }
 
 /* And the card itself rises, per DDR-055, which is the site's one piece of expressive motion: the

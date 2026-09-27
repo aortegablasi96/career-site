@@ -334,15 +334,16 @@ describe('project styles', () => {
       expect(rule('.link::after')).toMatch(/inset:\s*0;/);
     });
 
-    // DDR-062: the card takes the light shadow DDR-061 gives a role's card, in place of its resting
-    // one, under a pointer anywhere on it and on keyboard focus. It is a state rather than motion, so
-    // it is written outside the query and a reader who prefers less motion still gets it.
+    // DDR-062: the card takes the light shadow DDR-061 gives a role's card, beneath its resting
+    // one since DDR-065, under a pointer anywhere on it and on keyboard focus. It is a state rather
+    // than motion, so it is written outside the query and a reader who prefers less motion still
+    // gets it.
     // DDR-063: it also takes the edge a role's card takes, so the two kinds of card that lead to a
     // view answer the pointer alike, and the card's resting edge stays the hairline.
     it('lights the card and draws the role card’s edge, with or without motion, per DDR-062 and DDR-063', () => {
       const lit = css.replace(motion, '').match(/\.card:hover,\s*\.card:has\(\.link:focus-visible\)\s*\{([^}]*)\}/)?.[1] ?? '';
 
-      expect(lit).toMatch(/box-shadow:\s*var\(--shadow-card-hover\);/);
+      expect(lit).toMatch(/box-shadow:\s*var\(--shadow-raised\), var\(--shadow-card-hover\);/);
       expect(lit).toMatch(/border-color:\s*var\(--color-border-accent-hover\);/);
       expect(lit.match(/[\w-]+:/g)).toEqual(['border-color:', 'box-shadow:']);
       expect(rule('.card')).toMatch(/box-shadow:\s*var\(--shadow-raised\);/);
