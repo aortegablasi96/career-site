@@ -24,6 +24,7 @@ export const experience: Experience = {
       slug: 'electronica-digital-de-proteccion',
       company: 'Electrónica Digital de Protección',
       logo: '/experiences/electronica-digital-de-proteccion/logo.webp',
+      logoTall: true,
       place: 'Barcelona, Spain',
       start: '2018-05',
       end: '2020-07',

@@ -125,9 +125,10 @@ was the bar's 10%. Its geometry is unchanged, so every room measured for it stil
 **Since #193, per DDR-066, each role's card opens with its company's logo**, centred above the
 company's name where the design's logo tile is (node 286:87), but straight on the card's white: the
 owner turned the tile down. It is `--timeline-logo-height`, 18px, tall and as wide as its own
-proportions, because the owner's logos are wordmarks. ToBeIT's, which is nearly square, is marked
-`logoTall` and drawn at `--timeline-logo-height-tall`, 28px, as the owner asked; its file is 56px
-tall where the others are 36px. Every file's ground is transparent, so a new
+proportions, because the owner's logos are wordmarks. ToBeIT's and EDP's, which read small at that
+height, are marked `logoTall` and drawn at `--timeline-logo-height-tall`, 28px, as the owner asked;
+their files are 56px tall where the others are 36px. The logo stands 12px above the company's name:
+the card's 4px gap and a `--space-small` margin of its own. Every file's ground is transparent, so a new
 logo needs one too. The logo's `alt` is empty, since the company's
 name is written beneath it; it is `loading="lazy"`, because an eager `img` is one React hoists a
 `<link rel="preload">` for, ahead of the photo; and it does not print. `logo` on a `Role` is a path

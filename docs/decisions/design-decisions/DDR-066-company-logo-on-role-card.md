@@ -29,14 +29,14 @@ is a wordmark or a mark beside a wordmark, from 1.4:1 (ToBeIT) to 4.8:1 (Randsta
 * **The logo is 18px tall, `--timeline-logo-height`, and as wide as its own proportions.** Every
   logo is a wordmark, so a square would shrink it past reading: Randstad's would be under 5px tall.
   18px is the height the logo had inside the design's 28px tile.
-* **A nearly square logo is drawn taller, at the design's 28px, `--timeline-logo-height-tall`.**
-  At 18px ToBeIT's, 1.4:1 with a tagline beneath it, was 31px wide, far smaller than the wordmarks
-  beside it, and the owner asked on #193 for it to be larger. The content marks it with
-  `logoTall`, a flag rather than a size, so the size stays the stylesheet's. It is the only one:
-  EDP's, at 2.4:1, keeps the shared height. Its file is 56px tall, twice that height. It adds no
-  height to the row, because the card whose company name wraps is still the tallest.
-* **It stands first on the card, centred**, and the card's own gap, `--space-x-small`, is the space
-  below it, where the design has 6px. The card's text, spacing and states are unchanged, and the
+* **A logo that reads small is drawn taller, at the design's 28px, `--timeline-logo-height-tall`.**
+  At 18px ToBeIT's, 1.4:1 with a tagline beneath it, was 31px wide, and EDP's, whose company name
+  is set small beside its mark, was 44px: both far smaller than the wordmarks beside them. The
+  owner asked on #193 for both to be larger. The content marks each with `logoTall`, a flag rather
+  than a size, so the size stays the stylesheet's. Their files are 56px tall, twice that height.
+* **It stands first on the card, centred, 12px above the company's name**: the card's own gap,
+  `--space-x-small`, and a `--space-small` margin of the logo's, where the design has 6px. The owner
+  asked on #193 for more room there than the card's 4px gap alone. The card's text, spacing and states are unchanged, and the
   logo rises with the card under the pointer, per DDR-063.
 * **The logo is the owner's file, in the brand's own form and colours**, per DDR-044's rule that a
   brand's mark is never recoloured. It is scaled to its height, and to the card's width
@@ -100,7 +100,8 @@ Benefits:
 
 Tradeoffs:
 * The logos differ in width from card to card, where the design's tiles are one square, and
-  ToBeIT's is taller than the rest.
+  ToBeIT's and EDP's are taller than the rest. The logos and their margin make the row about 18px
+  taller than it was, since EDP's card, the tallest, grew with its logo.
 * EDP's and ToBeIT's logos carry small secondary text, the company's full name and a tagline, which
   is unreadable at 18px. That is the logos' own form, and a simpler file from the owner would read
   better.

@@ -234,10 +234,14 @@
   max-inline-size: 100%;
   block-size: var(--timeline-logo-height);
   object-fit: contain;
+  /* The card's own gap is 4px; the owner asked on #193 for more room between the logo and the
+     company's name, so the logo stands a step further off it, 12px in all. */
+  margin-block-end: var(--space-small);
 }
 
 /* A nearly square logo is far smaller than a wordmark at the same height, so one the content marks
-   is drawn at the design's 28px, the height of its logo tile, as the owner chose for ToBeIT's. */
+   is drawn at the design's 28px, the height of its logo tile, as the owner chose for ToBeIT's and
+   EDP's. */
 .logoTall {
   block-size: var(--timeline-logo-height-tall);
 }

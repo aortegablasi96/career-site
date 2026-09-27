@@ -47,10 +47,14 @@ describe('Experience', () => {
     expect(html.match(/<img /g)).toHaveLength(roles.length);
   });
 
-  // DDR-066: ToBeIT's logo is nearly square, so the owner chose on #193 to draw it taller.
-  it('draws ToBeIT’s logo taller than the others, and only that one', () => {
-    expect(roles.filter(({ logoTall }) => logoTall).map(({ company }) => company)).toEqual(['ToBeIT']);
-    expect(html.match(/<img class="[^"]* [^"]*"/g)).toHaveLength(1);
+  // DDR-066: ToBeIT's and EDP's logos read small at the shared height, so the owner chose on #193
+  // to draw them taller.
+  it('draws ToBeIT’s and EDP’s logos taller than the others, and only those', () => {
+    expect(roles.filter(({ logoTall }) => logoTall).map(({ company }) => company)).toEqual([
+      'Electrónica Digital de Protección',
+      'ToBeIT',
+    ]);
+    expect(html.match(/<img class="[^"]* [^"]*"/g)).toHaveLength(2);
   });
 
   it('renders each role as an entry of the timeline, in the order the content gives', () => {

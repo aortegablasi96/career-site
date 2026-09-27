@@ -208,8 +208,8 @@ export interface Role {
   logo: string;
   /**
    * Whether the logo is drawn taller than the others, per DDR-066: set where a logo is nearly
-   * square, so at the shared height it is far smaller than its neighbours. The owner chose it for
-   * ToBeIT's on #193. A flag rather than a size, as `newTab` is on a contact: the size is the
+   * square, or carries small text, so at the shared height it is far smaller than its neighbours.
+   * The owner chose it for ToBeIT's and EDP's on #193. A flag rather than a size, as `newTab` is on a contact: the size is the
    * stylesheet's.
    */
   logoTall?: boolean;

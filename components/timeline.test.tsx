@@ -379,6 +379,7 @@ describe('timeline card links', () => {
     expect(logo).toMatch(/block-size:\s*var\(--timeline-logo-height\);/);
     expect(logo).toMatch(/max-inline-size:\s*100%;/);
     expect(logo).toMatch(/object-fit:\s*contain;/);
+    expect(logo).toMatch(/margin-block-end:\s*var\(--space-small\);/);
     expect(logo).not.toMatch(/border|background|box-shadow|padding/);
     expect(rule('.logoTall')).toMatch(/block-size:\s*var\(--timeline-logo-height-tall\);/);
   });
