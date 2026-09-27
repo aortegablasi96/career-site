@@ -63,9 +63,12 @@ import type { Cv } from './types';
  * It moved again with #200, because each credential gained the address its card leads to, and the
  * section the hint above its timeline and what a card says about opening a new tab, per DDR-069.
  * None of them is a fact ADR-005 lists as shared, so none of them moved the CV.
+ * It moved again with #202, because the projects section is now called Portfolio, per ADR-012, and
+ * each project's picture moved from `projects/<slug>/` to `portfolio/<slug>/`. A section's name is
+ * not a fact ADR-005 lists as shared, so it did not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'ac5ac6fd31abc16de8a469201343c412ed89b5d94da77a07272be66322d7c636',
+  contentDigest: '9946dee8465f865daec1358f333619834ddd4ba8e5d4cb841b779f389e1cbfae',
 };

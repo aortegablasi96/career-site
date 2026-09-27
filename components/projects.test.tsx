@@ -68,7 +68,7 @@ describe('Projects', () => {
   // the project's name rather than by every word on the card run together.
   it('makes each card one link to its project’s view, named by the project alone', () => {
     for (const [index, { name, slug }] of projects.projects.entries()) {
-      expect(linksOf(cards[index]!)).toEqual([{ href: `/projects/${slug}`, text: name }]);
+      expect(linksOf(cards[index]!)).toEqual([{ href: `/portfolio/${slug}`, text: name }]);
     }
   });
 

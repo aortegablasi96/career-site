@@ -48,13 +48,14 @@ const liveSite = 'Live site';
  * technology is hidden behind a click; the wording of that count is gone with it.
  */
 export const projects: Projects = {
-  title: 'Projects',
-  link: 'Projects',
+  // The owner renamed the section on #202, per ADR-012: it is their portfolio.
+  title: 'Portfolio',
+  link: 'Portfolio',
   projects: [
     {
       name: 'NumisBook',
       slug: 'numisbook',
-      media: { file: '/projects/numisbook/lead.webp', alt: 'NumisBook on a laptop, showing a coin’s record: the details of a silver tetradrachm of Mark Antony and Cleopatra beside its photograph, with the coin’s invoice below the photograph' },
+      media: { file: '/portfolio/numisbook/lead.webp', alt: 'NumisBook on a laptop, showing a coin’s record: the details of a silver tetradrachm of Mark Antony and Cleopatra beside its photograph, with the coin’s invoice below the photograph' },
       caption: 'A coin’s record',
       summary: 'AI-assisted SaaS for managing a coin collection, built end-to-end with Claude Code.',
       technologies: ['Next.js', 'TypeScript', 'PostgreSQL on Neon', 'OpenAI', 'Vercel', 'Cloudflare R2'],
@@ -68,7 +69,7 @@ export const projects: Projects = {
     {
       name: 'Digital Twin',
       slug: 'digital-twin',
-      media: { file: '/projects/digital-twin/lead.webp', alt: 'The Digital Twin on a laptop, as Andreu’s AI assistant in a chat, introducing itself and answering a question about Andreu’s AI expertise' },
+      media: { file: '/portfolio/digital-twin/lead.webp', alt: 'The Digital Twin on a laptop, as Andreu’s AI assistant in a chat, introducing itself and answering a question about Andreu’s AI expertise' },
       caption: 'The chatbot answering a question',
       summary: 'Agentic RAG chatbot that answers questions about this career in the visitor’s language.',
       technologies: ['LangGraph', 'OpenAI Agents SDK', 'Chroma', 'Cohere', 'FastAPI', 'Next.js'],
@@ -82,7 +83,7 @@ export const projects: Projects = {
     {
       name: 'Stock Portfolio Viewer',
       slug: 'stock-portfolio-viewer',
-      media: { file: '/projects/stock-portfolio-viewer/lead.webp', alt: 'The Stock Portfolio Viewer on a laptop, showing its Allocation view: the invested value, the number of positions and the largest holding, above a map of Europe with donut charts for each country' },
+      media: { file: '/portfolio/stock-portfolio-viewer/lead.webp', alt: 'The Stock Portfolio Viewer on a laptop, showing its Allocation view: the invested value, the number of positions and the largest holding, above a map of Europe with donut charts for each country' },
       caption: 'The Allocation view',
       summary: 'Local desktop app for analysing an Interactive Brokers portfolio with an AI assistant.',
       technologies: ['Electron', 'React', 'TypeScript', 'SQLite', 'OpenAI'],
@@ -93,7 +94,7 @@ export const projects: Projects = {
     {
       name: 'This site',
       slug: 'career-site',
-      media: { file: '/projects/career-site/lead.webp', alt: 'This site on a laptop, showing its introduction: the owner’s photo, name, positioning line and summary, above the contact and CV controls' },
+      media: { file: '/portfolio/career-site/lead.webp', alt: 'This site on a laptop, showing its introduction: the owner’s photo, name, positioning line and summary, above the contact and CV controls' },
       caption: 'The introduction',
       summary: 'A career site that doubles as a printed CV, built through a skill-driven Claude Code workflow.',
       technologies: ['Next.js', 'TypeScript', 'CSS Modules', 'GitHub Pages'],

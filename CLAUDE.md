@@ -642,7 +642,7 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001 to ADR-011 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
+ADR-001 to ADR-012 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
 separate CV file, and ADR-005 superseding the part of ADR-004 that makes the CV a PDF saved from the
 page's print output; the rest of both records stands. ADR-006 supersedes nothing: it refines
 ADR-001's styling boundary by saying which literal values a component stylesheet may write: `0`,
@@ -656,8 +656,10 @@ section's id and word, so that it can mark the current section's, per DDR-042. I
 Client Component. ADR-010 supersedes ADR-002's "There are no detail pages", whose revisit
 condition 3 Epic #152 meets: each project is a statically generated route, and a `next/link` href
 is a route rather than a file, so it does not go through `asset()`, which amends ADR-004. ADR-011
-extends ADR-010 to the roles, at `/experience/<slug>`, and supersedes nothing. The next ADR is
-`012`.
+extends ADR-010 to the roles, at `/experience/<slug>`, and supersedes nothing. ADR-012 amends
+ADR-010's address: since #202 the projects section is "Portfolio", at `#portfolio`, each view is at
+`/portfolio/<slug>` and its pictures are in `public/portfolio/<slug>/`; the old `/projects/…`
+addresses are not kept, as the owner chose. The next ADR is `013`.
 
 The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-069. The next DDR is
 `070`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
@@ -1438,14 +1440,14 @@ Two things about it are worth knowing before touching it.
   means rerunning DDR-049's sweep and its heading check.
 
 **#153 has landed, as ADR-010 and DDR-050: each project has a view of its own**, at
-`/projects/<slug>`, laid out as the Figma layer `career-site-project` draws it: a way back to the
+`/projects/<slug>` (`/portfolio/<slug>` since #202, per ADR-012), laid out as the Figma layer `career-site-project` draws it: a way back to the
 projects, then the name, description, "Built with" and every technology, and the links beside the
 lead picture and its caption. It is the first story of Epic #152; the cards that lead to a view are
 #154's, below.
 
 Five things about it are worth knowing before touching it.
 
-* **Each view is a static route**, `app/projects/[slug]/page.tsx`, with `generateStaticParams` and
+* **Each view is a static route**, `app/portfolio/[slug]/page.tsx` since #202, with `generateStaticParams` and
   `dynamicParams = false`. The slug and the caption are fields on each project in
   `content/projects.ts`, and the view's words are `projects.view`. A slug is an address someone may
   have been sent, so do not rename one lightly.
@@ -1945,7 +1947,7 @@ change to any fact on the page fails the test suite until the CV is brought back
 lists the facts the two documents must share and makes the site the one that wins when they disagree.
 
 `public/` is arranged by view: `home/` holds what only the page uses, the photo and the CV, and
-`projects/<slug>/` holds a project's pictures, named for their role — `lead.webp` is the one its
+`portfolio/<slug>/` (since #202, per ADR-012) holds a project's pictures, named for their role — `lead.webp` is the one its
 card and its view both show — so a project's gallery files go beside it. Moving a file changes its
 address, and the CV's is one people may have been sent. The owner may keep a PNG original beside
 the file made from it; `.gitignore` excludes `public/**/*.png`, so none is ever committed or
