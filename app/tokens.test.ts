@@ -818,12 +818,9 @@ describe('spacing tokens', () => {
     expect(token('timeline-card-space')).toBe('1.25rem');
   });
 
-  // DDR-066: the logo's tile is the design's 28px tall (node 286:87), which is the logo, the space
-  // the tile pads it by above and below, and its 1px edge.
-  it('sizes a company’s logo so its tile is the design’s 28px tall, per DDR-066', () => {
-    const tile = rem(token('timeline-logo-height')!) * 16 + 2 * rem(token('space-x-small')!) * 16 + 2 * 1;
-
-    expect(tile).toBe(28);
+  // DDR-066: a company's logo is 18px tall on its card, in rem, so it grows with the text.
+  it('sizes a company’s logo in rem, per DDR-066', () => {
+    expect(token('timeline-logo-height')).toBe('1.125rem');
   });
 
   it('keeps the dot inside the spine column it sits in on paper', () => {

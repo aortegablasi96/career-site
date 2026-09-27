@@ -584,12 +584,9 @@
      design's 24px (node 170:186). It is not a step of DDR-013's scale, so it is the timeline's own,
      as the measures above are. */
   --timeline-hint-space: 1.5rem;
-  /* The height of a company's logo on a role's card, per DDR-066. The design's tile is 28px tall
-     (node 286:87), and the logo inside it is 18px: the tile pads it by --space-x-small above and
-     below and draws its 1px edge round that, so 18 + 2 × 4 + 2 × 1 is the design's 28. The tile's
-     width follows the logo's own, since the owner's logos are wordmarks and a square would shrink
-     them past reading, as the owner chose on #193. In rem, so the logo grows with the reader's text
-     as the card's words do. */
+  /* The height of a company's logo on a role's card, per DDR-066: 18px, on the card itself, with no
+     tile round it, as the owner chose on #193. Its width follows the logo's own, since the owner's
+     logos are wordmarks. In rem, so the logo grows with the reader's text as the card's words do. */
   --timeline-logo-height: 1.125rem;
   /* The room the experience row leaves below its cards for a card's hover shadow, per DDR-061: the
      shadow's 4px offset and its 12px of blur. The row scrolls sideways, and a box that scrolls clips

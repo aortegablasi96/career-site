@@ -224,25 +224,13 @@
   outline-offset: var(--focus-outline-offset);
 }
 
-/* A role's card opens with its company's logo, per DDR-066, as the design draws it (node 286:87): a
-   small tile centred above the company's name, white, with a hairline edge, the small radius and the
-   site's one elevation. The tile is as tall as the design's 28px and as wide as the logo, since the
-   owner's logos are wordmarks. The logo is the owner's file in the brand's own form and colours, so
-   nothing here recolours it; it is scaled to the tile's height and, where a card is too narrow for
-   it, to the card's width, and never distorted or cropped. */
+/* A role's card opens with its company's logo, per DDR-066, centred above the company's name where
+   the design places it (node 286:87). It stands straight on the card's own white, with no tile of
+   its own, as the owner chose on #193. The logo is the owner's file in the brand's own form and
+   colours, so nothing here recolours it; it is scaled to its height and, where a card is too narrow
+   for it, to the card's width, and never distorted or cropped. */
 .logo {
-  display: flex;
   align-self: center;
-  max-inline-size: 100%;
-  padding: var(--space-x-small) var(--space-small);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-small);
-  background-color: var(--color-surface-card);
-  box-shadow: var(--shadow-raised);
-}
-
-.logoImage {
-  min-inline-size: 0;
   max-inline-size: 100%;
   block-size: var(--timeline-logo-height);
   object-fit: contain;

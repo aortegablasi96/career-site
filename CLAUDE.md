@@ -122,11 +122,11 @@ shadow used to replace the resting one, and `--shadow-card-hover`'s ink is `#1a1
 was the bar's 10%. Its geometry is unchanged, so every room measured for it still holds.
 `components/stylesheets.test.ts` reads a `box-shadow` as a list and holds each layer to a token.
 
-**Since #193, per DDR-066, each role's card opens with its company's logo**, in a tile centred above
-the company's name: `--timeline-logo-height`, 18px, inside `--space-x-small` of padding and a 1px
-edge, which is the design's 28px tall (node 286:87), and as wide as the logo, because the owner's
-logos are wordmarks and the design's square shrank them past reading. The tile is white, with the
-hairline, `--radius-small` and `--shadow-raised`. The logo's `alt` is empty, since the company's
+**Since #193, per DDR-066, each role's card opens with its company's logo**, centred above the
+company's name where the design's logo tile is (node 286:87), but straight on the card's white: the
+owner turned the tile down. It is `--timeline-logo-height`, 18px, tall and as wide as its own
+proportions, because the owner's logos are wordmarks. Every file's ground is transparent, so a new
+logo needs one too. The logo's `alt` is empty, since the company's
 name is written beneath it; it is `loading="lazy"`, because an eager `img` is one React hoists a
 `<link rel="preload">` for, ahead of the photo; and it does not print. `logo` on a `Role` is a path
 rather than an `Image`, and is required. Each file is `public/experiences/<slug>/logo.webp`,

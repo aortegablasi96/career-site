@@ -42,7 +42,7 @@ export interface TimelineEntry {
  * no links — education's — is focusable itself instead, so a reader can still scroll it from the
  * keyboard, per DDR-057; one that has links does not take a tab stop of its own as well.
  *
- * A role's card opens with its company's logo, per DDR-066, in a small tile above the company's
+ * A role's card opens with its company's logo, per DDR-066, on the card itself, above the company's
  * name. The name is written beneath it, so the logo is hidden from assistive technology, and the
  * card reads as it did without it. Paper does not show it.
  *
@@ -87,13 +87,9 @@ export function Timeline({
             <span className={styles.line} />
           </div>
           <div className={styles.card}>
-            {logo && (
-              <span className={styles.logo}>
-                {/* Lazy, because the timeline is below the fold, and an eager image is one React
-                    also asks the browser to preload, ahead of the introduction's photo. */}
-                <img className={styles.logoImage} src={asset(logo)} alt="" loading="lazy" />
-              </span>
-            )}
+            {/* Lazy, because the timeline is below the fold, and an eager image is one React also
+                asks the browser to preload, ahead of the introduction's photo. */}
+            {logo && <img className={styles.logo} src={asset(logo)} alt="" loading="lazy" />}
             <p className={styles.subtitle}>{subtitle}</p>
             <h3 className={styles.title}>
               {href ? (

@@ -5,8 +5,8 @@ Status: Accepted
 Date: 2026-09-27
 
 **Amends DDR-057.** On screen, each role's card in the experience timeline opens with its company's
-logo in a small tile, centred above the company's name. Nothing else about the card, the timeline
-or the printed CV changes. The education timeline's cards have no logo.
+logo, straight on the card's own white and centred above the company's name, where the design puts
+its logo tile. Nothing else about the card, the timeline or the printed CV changes. The education timeline's cards have no logo.
 
 ## Context
 
@@ -16,27 +16,24 @@ section 286:65. Each is a 28px square tile with an 8px radius, a white fill, a `
 and a light shadow, centred at the top of the card, 6px above the company's name. Inside it the
 layer draws the company's initial in the accent, which is a placeholder.
 
-The owner asked, on #193, for that tile on the page with each company's real logo in it, and for
-nothing else in the layer to be adopted: the layer's card also differs from the page in its type
+The owner asked, on #193, for each company's real logo in that place, and for nothing else in the
+layer to be adopted: the layer's card also differs from the page in its type
 sizes and inks, and those stay as the DDRs leave them. The owner supplied the five logos. Every one
 is a wordmark or a mark beside a wordmark, from 1.4:1 (ToBeIT) to 4.8:1 (Randstad) wide.
 
 ## Decision
 
-* **The tile is the design's height, and as wide as the logo.** It is 28px tall: an 18px logo,
-  `--timeline-logo-height`, padded by `--space-x-small` above and below inside a 1px edge.
-  Across, it pads the logo by `--space-small`. The owner chose on #193 to let the width follow the
-  logo, because a 28px square would shrink a wordmark past reading: Randstad's would be under 5px
-  tall.
-* **It is drawn as the design draws it, from the site's tokens**: `--color-surface-card`, a 1px
-  `--color-border` edge and `--shadow-raised`, the site's one elevation. The design's 8px radius
-  falls between DDR-013's 4px and 12px, and the tile takes `--radius-small`, because a 12px radius
-  on a 28px box is nearly a capsule. DDR-013 keeps its three radii.
+* **There is no tile.** The logo stands straight on the card's white, with no fill, edge, radius,
+  shadow or padding of its own. The page first shipped the design's tile, 28px tall and as wide as
+  the logo, and the owner turned it down on #193: the logos should sit on the card itself.
+* **The logo is 18px tall, `--timeline-logo-height`, and as wide as its own proportions.** Every
+  logo is a wordmark, so a square would shrink it past reading: Randstad's would be under 5px tall.
+  18px is the height the logo had inside the design's 28px tile.
 * **It stands first on the card, centred**, and the card's own gap, `--space-x-small`, is the space
   below it, where the design has 6px. The card's text, spacing and states are unchanged, and the
-  tile rises with the card under the pointer, per DDR-063.
+  logo rises with the card under the pointer, per DDR-063.
 * **The logo is the owner's file, in the brand's own form and colours**, per DDR-044's rule that a
-  brand's mark is never recoloured. It is scaled to the tile's height, and to the card's width
+  brand's mark is never recoloured. It is scaled to its height, and to the card's width
   where a card is narrower than the logo, and never cropped or distorted.
 * **It is hidden from assistive technology.** The company's name is written directly beneath it, so
   the logo says nothing a reader would miss: its `alt` is empty, and a screen reader reads the card
@@ -44,14 +41,24 @@ is a wordmark or a mark beside a wordmark, from 1.4:1 (ToBeIT) to 4.8:1 (Randsta
 * **It is lazy.** The timeline is below the fold, and an eager image is one React also asks the
   browser to preload, ahead of the introduction's photo.
 * **It does not print.** The printed CV is DDR-057's vertical timeline, with the company's name
-  beside each entry, and the tile takes no box on paper, so no sheet moves.
+  beside each entry, and the logo takes no box on paper, so no sheet moves.
 * **Each logo is one WebP**, per ADR-004, at `public/experiences/<slug>/logo.webp`, beside the
   owner's PNG original, which `.gitignore` keeps out of the repository. Each file is the original
   trimmed to its mark, at twice the displayed height, 36px, and lossless. Ponera Group's original
   had a white ground. The owner asked for it to be taken out, so it was converted to transparency
-  by colour-to-alpha, which draws the same on white.
+  by colour-to-alpha, which draws the same on white. Every file's ground is transparent, so each
+  logo is drawn on the card's own white.
 
 ## Alternatives Considered
+
+### The design's tile, as wide as the logo
+
+Pros:
+* The layer's tile: a white fill, a hairline edge, a radius and a light shadow round each logo.
+
+Cons:
+* It shipped first on #193, and the owner turned it down: they did not want the logos surrounded by
+  a square background, and asked for them straight on the card's own.
 
 ### The design's 28px square
 
@@ -86,11 +93,10 @@ Benefits:
 * The card, its states and the printed CV are otherwise exactly as they were.
 
 Tradeoffs:
-* The tiles differ in width from card to card, where the design's are one square.
+* The logos differ in width from card to card, where the design's tiles are one square.
 * EDP's and ToBeIT's logos carry small secondary text, the company's full name and a tagline, which
   is unreadable at 18px. That is the logos' own form, and a simpler file from the owner would read
   better.
-* The site has more raised elements than DDR-020's eight: five tiles join the cards DDR-063 raised.
 
 Risks:
 * A logo much wider than Randstad's 4.8:1 would be scaled down to the card's width and read smaller.
@@ -102,9 +108,7 @@ Risks:
 
 * #193, and Epic #170
 * DDR-057: the horizontal timeline, which this amends
-* DDR-063: the role card's hover, which the tile moves with
+* DDR-063: the role card's hover, which the logo moves with
 * DDR-044: a brand's mark is never recoloured
-* DDR-013: the three radii
-* DDR-020: the site's one elevation
 * DDR-015: print
 * ADR-004: binary assets as WebP, reached through `asset()`

@@ -4,7 +4,7 @@ Status: Accepted
 
 Date: 2026-09-26
 
-**Amended by DDR-066**, per #193: on screen, each role's card opens with its company's logo, in a tile as tall as the design's 28px and as wide as the logo, centred above the company's name. It is hidden from assistive technology and does not print, and the education row has none.
+**Amended by DDR-066**, per #193: on screen, each role's card opens with its company's logo, 18px tall and straight on the card, centred above the company's name. It is hidden from assistive technology and does not print, and the education row has none.
 
 **Amended by DDR-063**, per #187: a role's card and a project card now rest, answer the pointer and take focus alike: `--shadow-raised` at rest, the accent edge, `--shadow-card-hover` and a 4px lift, `--card-lift`, where motion is welcome, and the focus outline outside the edge.
 

@@ -109,7 +109,7 @@ describe('Timeline', () => {
   // it, so it adds nothing to what a reader hears, and it waits until the row is near.
   it('opens a card with its company’s logo, above the company, with no alternative text', () => {
     expect(linked).toMatch(
-      /<div class="[^"]*"><span class="[^"]*"><img class="[^"]*" src="\/experiences\/abb\/logo\.webp" alt="" loading="lazy"\/><\/span><p class="[^"]*">ABB<\/p>/,
+      /<div class="[^"]*"><img class="[^"]*" src="\/experiences\/abb\/logo\.webp" alt="" loading="lazy"\/><p class="[^"]*">ABB<\/p>/,
     );
     expect(text(linked)).toContain('Oct 2024 – Present ABB Global Product Specialist');
     expect(linked).not.toContain('rel="preload"');
@@ -371,24 +371,15 @@ describe('timeline card links', () => {
     );
   });
 
-  // DDR-066: the design's 28px tile, centred above the company, as wide as the logo inside it, and
-  // the logo scaled into it whole.
-  it('holds the logo in a small white tile, centred and raised, as tall as the design’s', () => {
-    const tile = rule('.logo');
+  // DDR-066: the logo stands centred above the company, straight on the card, scaled whole.
+  it('sets the logo straight on the card, centred, with no tile of its own', () => {
+    const logo = rule('.logo');
 
-    expect(tile).toMatch(/align-self:\s*center;/);
-    expect(tile).toMatch(/max-inline-size:\s*100%;/);
-    expect(tile).toMatch(/padding:\s*var\(--space-x-small\) var\(--space-small\);/);
-    expect(tile).toMatch(/border:\s*1px solid var\(--color-border\);/);
-    expect(tile).toMatch(/border-radius:\s*var\(--radius-small\);/);
-    expect(tile).toMatch(/background-color:\s*var\(--color-surface-card\);/);
-    expect(tile).toMatch(/box-shadow:\s*var\(--shadow-raised\);/);
-
-    const image = rule('.logoImage');
-
-    expect(image).toMatch(/block-size:\s*var\(--timeline-logo-height\);/);
-    expect(image).toMatch(/max-inline-size:\s*100%;/);
-    expect(image).toMatch(/object-fit:\s*contain;/);
+    expect(logo).toMatch(/align-self:\s*center;/);
+    expect(logo).toMatch(/block-size:\s*var\(--timeline-logo-height\);/);
+    expect(logo).toMatch(/max-inline-size:\s*100%;/);
+    expect(logo).toMatch(/object-fit:\s*contain;/);
+    expect(logo).not.toMatch(/border|background|box-shadow|padding/);
   });
 
   it('prints no address after a card’s link, since paper cannot follow it', () => {
