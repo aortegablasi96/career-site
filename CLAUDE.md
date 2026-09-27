@@ -52,7 +52,7 @@ and an availability sentence. `Introduction` in `content/types.ts` lost `relocat
 DDR-057**, from the Figma layer `career-site-main`, nodes 170:65 and 170:439. A role and a credential
 still share one pattern, per DDR-010, and `components/timeline.tsx` is it: `Timeline` renders one
 `ol` of entries, **oldest first** as `content/` now lists both, each a column of its dates, an
-`aria-hidden` spine (lead line, ringed dot, line) and a white card with the company or institution,
+`aria-hidden` spine (lead line, ringed dot, line) and a card (on DDR-070's surface) with the company or institution,
 the title as the `h3`, and a role's place. The line runs from the first dot to the last across the
 row: the columns meet with no gap, and the design's 24px between cards is the dates' and the card's
 `--timeline-entry-inset`. **There is no breakpoint**: the columns share the row and none is
@@ -168,6 +168,18 @@ experience's are. The page links to a badge and draws none of it: DDR-068's rule
 stands. **On paper a linked card is `position: static`**: positioned, it was painted after the flow,
 and both browsers wrote its text at the foot of the sheet's PDF, away from its dates — which the
 experience timeline had done since #176. Paper is pixel-identical to before.
+
+**Since #204, per DDR-070, every timeline card is on the design's surface**, from `career-site-main`,
+now node 321:2 (cards 321:107 and 321:500): `--surface-timeline-card`, the design's grain over a
+gradient of `--color-surface-timeline-card-start`, `-middle` and `-end`, at 143° on every card; a
+`--color-border-timeline-card` edge, the design's violet at 30% written opaque; and
+`--shadow-card-highlight`, a white line inside the top edge, which comes first in every shadow the card
+draws. The grain is `app/grain.webp`, the design's 200px texture, lossless, and the one binary a
+stylesheet reads: `app/tokens.css` imports it with a relative `url()`, so the bundler gives it its
+address under the base path. Do not move it to `public/`, where the stylesheet would need a
+root-relative path that 404s on the live site. The card's darkest point, where the grain is darkest
+over the first stop, is `#e7ebf7`, and a role's place fails there at 2.15:1, held by name as a ninth
+failing pairing. Paper drops all of it at the token layer, and is pixel-identical.
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
 row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
@@ -661,8 +673,8 @@ ADR-010's address: since #202 the projects section is "Portfolio", at `#portfoli
 `/portfolio/<slug>` and its pictures are in `public/portfolio/<slug>/`; the old `/projects/…`
 addresses are not kept, as the owner chose. The next ADR is `013`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-069. The next DDR is
-`070`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-070. The next DDR is
+`071`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Thirty-one accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -702,7 +714,7 @@ at the section concerned:
   lit card keeps `--shadow-raised` and draws a darker `--shadow-card-hover`, at 18%, beneath it.
 * **DDR-057** keeps its row, its order, its scrolling, its print treatment and its education row.
   DDR-059 makes each role's card a link to the role's view and shows the hint above the row, which
-  then takes no tab stop of its own. DDR-066 opens each role's card with its company's logo. DDR-067 shrinks its date band to one line of dates.
+  then takes no tab stop of its own. DDR-066 opens each role's card with its company's logo. DDR-067 shrinks its date band to one line of dates. DDR-070 draws every card on the design's tinted, grained surface.
 * **DDR-057, DDR-059, DDR-063 and DDR-064** keep everything but what DDR-069 takes: an education
   card leads off the site, rests raised, answers as a role's card does and has a hint above its row.
   **DDR-043** keeps its pills; DDR-069 widens its new tab to the four education cards.

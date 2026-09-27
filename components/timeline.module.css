@@ -109,8 +109,12 @@
   background-color: var(--color-accent);
 }
 
-/* The card, below its dot: white, a hairline edge and the large radius, as a project card is. The
-   cards of a row are one height, as the design draws the roles', with their text centred in it. */
+/* The card, below its dot, with the large radius, as a project card is. The cards of a row are one
+   height, as the design draws the roles', with their text centred in it.
+
+   Its surface is the owner's, per DDR-070, which amends DDR-057's white card with a hairline edge:
+   the design's pale indigo-to-pink gradient with a faint grain over it, a violet edge, and a white
+   highlight inside its top edge. */
 .card {
   display: flex;
   flex: 1;
@@ -120,9 +124,10 @@
   margin-block-start: var(--timeline-card-space);
   margin-inline: var(--timeline-entry-inset);
   padding: var(--space-medium);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-timeline-card);
   border-radius: var(--radius-large);
-  background-color: var(--color-surface-card);
+  background: var(--surface-timeline-card);
+  box-shadow: var(--shadow-card-highlight);
 }
 
 .card > * {
@@ -134,10 +139,11 @@
    one elevation, as a project card does, per DDR-063, so the two kinds of card that open a view look
    alike at rest as well as under the pointer. Since DDR-069 a credential's card leads off the site,
    to its institution or its badge, and is the same card in every respect, at rest and in every state
-   below. */
+   below. Its highlight comes first, as it does on every card, per DDR-070. On paper both tokens are
+   `none`, and a list of two `none`s is no valid shadow, so the card draws none, as it did. */
 .card:has(.link) {
   position: relative;
-  box-shadow: var(--shadow-raised);
+  box-shadow: var(--shadow-card-highlight), var(--shadow-raised);
 }
 
 /* The link is the title, in the heading's ink and without an underline: what says the card is a
@@ -189,7 +195,7 @@
      it, so the whole card reads as the one thing the pointer will open and keeps the crisp, darker
      edge of light it rests with. The edge and the shadow are states, so a reader who prefers less
      motion gets them at once; where motion is welcome they come in with the lift below. */
-  box-shadow: var(--shadow-raised), var(--shadow-card-hover);
+  box-shadow: var(--shadow-card-highlight), var(--shadow-raised), var(--shadow-card-hover);
 }
 
 /* And the dates and the dot answer with it, per DDR-064, so the reader sees which of them belong to
@@ -227,7 +233,7 @@
 }
 
 /* A role's card opens with its company's logo, per DDR-066, centred above the company's name where
-   the design places it (node 286:87), and a degree's card with its institution's, per DDR-068. It stands straight on the card's own white, with no tile of
+   the design places it (node 286:87), and a degree's card with its institution's, per DDR-068. It stands straight on the card's own surface, with no tile of
    its own, as the owner chose on #193. The logo is the owner's file in the brand's own form and
    colours, so nothing here recolours it; it is scaled to its height and, where a card is too narrow
    for it, to the card's width, and never distorted or cropped. */

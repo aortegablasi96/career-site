@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-070**, per #204: every card in both timelines is drawn on the design's surface, a pale indigo-to-pink gradient with a faint grain, a violet edge and a white highlight inside its top edge, where it was white with a `--color-border` hairline. Paper is unchanged.
+
 **Amended by DDR-069**, per #200: each education card is a link off the site, and it rests raised and answers the pointer as a role's card does. A hint stands above the education row, which takes no tab stop of its own.
 
 **Amended by DDR-068**, per #197: each degree's card opens with the UPC's logo, and an institution is set in the accent, as a company is, where it was in `--color-text-muted`.
