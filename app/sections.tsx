@@ -85,6 +85,8 @@ export const sections: readonly PageSection[] = [
       <Credentials
         key="education"
         credentials={credentials.credentials}
+        hint={credentials.hint}
+        newTab={credentials.newTab}
         dateLabels={dateLabels}
         labelledBy={headingId('education')}
       />,

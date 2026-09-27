@@ -433,6 +433,11 @@ export interface Degree {
    * the UPC's logo bigger, since its second and third lines are very small at the shared height.
    */
   logoTall?: boolean;
+  /**
+   * Where the degree's card leads, off the site, per DDR-069: the institution's own site. It opens
+   * in a new tab, as a profile pill does, per DDR-043.
+   */
+  href: string;
   start: Month;
   end: Month;
 }
@@ -456,6 +461,11 @@ export interface Certification {
    * the UPC's logo bigger, since its second and third lines are very small at the shared height.
    */
   logoTall?: boolean;
+  /**
+   * Where the certification's card leads, off the site, per DDR-069: its digital badge, where its
+   * issuer verifies it. It opens in a new tab, as a profile pill does, per DDR-043.
+   */
+  href: string;
   /** The month it was granted, which is the only date it shows, per DDR-006. */
   granted: Month;
 }
@@ -474,6 +484,13 @@ export interface Credentials {
    * the section.
    */
   link: string;
+  /** The line above the timeline that says a card leads somewhere, per DDR-069, as DDR-067 draws it. */
+  hint: string;
+  /**
+   * What a card says about opening a new tab, per DDR-069 as DDR-043 has it said. Since DDR-044 it
+   * is said only to assistive technology, after the card's title.
+   */
+  newTab: string;
   /** Oldest first, per DDR-057. The page shows them in this order, per ADR-002. */
   credentials: readonly Credential[];
 }

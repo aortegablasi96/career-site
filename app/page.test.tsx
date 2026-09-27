@@ -104,12 +104,13 @@ describe('HomePage', () => {
     // Projects and skills open with a div because each item is a row of two rather than one: the
     // two columns DDR-010 and DDR-051 give them have to be one grid, and a grid needs one parent.
     // A timeline is one item since DDR-057, its whole list, because on screen it is one row; since
-    // DDR-059 experience's is the hint above the row and the row, in one div.
+    // DDR-059 experience's is the hint above the row and the row, in one div, and since DDR-069
+    // education's is too.
     expect(openings).toEqual([
       ['experience', 'div'],
       ['projects', 'div'],
       ['skills', 'div'],
-      ['education', 'ol'],
+      ['education', 'div'],
       ['languages', 'dl'],
     ]);
   });

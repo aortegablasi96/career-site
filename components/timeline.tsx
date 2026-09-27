@@ -23,8 +23,17 @@ export interface TimelineEntry {
   place?: string;
   /** What only paper shows of the entry: a role's points, per DDR-057. */
   children?: ReactNode;
-  /** The route of the entry's view, where it has one: a role's, per DDR-059. A credential has none. */
+  /**
+   * Where the entry's card leads, where it leads anywhere: a role's view, per DDR-059, or, for a
+   * credential, an address off the site, per DDR-069.
+   */
   href?: string;
+  /**
+   * What the card's link says about opening a new tab, where its href is off the site, per DDR-069:
+   * such a link opens one, as a profile pill does, per DDR-043, and says so only to assistive
+   * technology, after its title, per DDR-044.
+   */
+  newTab?: string;
 }
 
 /**
@@ -42,9 +51,11 @@ export interface TimelineEntry {
  * project card is, per DDR-051: the link is the title, and its box is stretched over the card by a
  * pseudo-element, so a pointer anywhere on the card follows it, the card is one tab stop, and its
  * accessible name is the title rather than every word on the card run together. Tabbing to a card
- * scrolls the row to it, and the arrow keys scroll the row while a card has focus. A timeline with
- * no links — education's — is focusable itself instead, so a reader can still scroll it from the
- * keyboard, per DDR-057; one that has links does not take a tab stop of its own as well.
+ * scrolls the row to it, and the arrow keys scroll the row while a card has focus. A credential's
+ * card leads off the site instead, per DDR-069, and is the same link in every other respect: it
+ * looks, moves and answers as a role's does, and opens a new tab. A timeline with no links is
+ * focusable itself instead, so a reader can still scroll it from the keyboard, per DDR-057; one
+ * that has links does not take a tab stop of its own as well.
  *
  * A role's card opens with its company's logo, per DDR-066, on the card itself, above the company's
  * name, and a degree's with its institution's, per DDR-068. The name is written beneath it, so the logo is hidden from assistive technology, and the
@@ -79,7 +90,7 @@ export function Timeline({
       aria-labelledby={labelledBy}
       tabIndex={linked ? undefined : 0}
     >
-      {entries.map(({ key, dates, subtitle, logo, logoTall, logoRaised, title, place, children, href }) => (
+      {entries.map(({ key, dates, subtitle, logo, logoTall, logoRaised, title, place, children, href, newTab }) => (
         <li key={key} className={styles.entry}>
           {/* One span, so the dates are one flex item and the spaces around their dash survive. */}
           <p className={styles.dates}>
@@ -105,7 +116,20 @@ export function Timeline({
             )}
             <p className={styles.subtitle}>{subtitle}</p>
             <h3 className={styles.title}>
-              {href ? (
+              {href && newTab ? (
+                // An address off the site opens a new tab, per DDR-069 as DDR-043 has it, and says
+                // so after the title, which the name still leads with, per WCAG 2.5.3. `noopener`
+                // keeps the new tab from reaching back to this one, as a profile pill's does.
+                <a
+                  href={href}
+                  className={styles.link}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={`${title}, ${newTab}`}
+                >
+                  {title}
+                </a>
+              ) : href ? (
                 // A route of this site, per ADR-011, so it goes through `next/link` and does not
                 // prefetch, as a project card's does not.
                 <Link href={href} className={styles.link} prefetch={false}>

@@ -8,7 +8,13 @@ import { Credentials } from './credentials';
 
 // Rendered with the real content, since the exact names and dates are what #32 asks for.
 const html = renderToStaticMarkup(
-  <Credentials credentials={credentials.credentials} dateLabels={dateLabels} labelledBy="education-title" />,
+  <Credentials
+    credentials={credentials.credentials}
+    hint={credentials.hint}
+    newTab={credentials.newTab}
+    dateLabels={dateLabels}
+    labelledBy="education-title"
+  />,
 );
 
 /** The markup's text, as a reader meets it. */
@@ -25,9 +31,10 @@ const degrees = credentials.credentials.filter(isDegree);
 
 describe('Credentials', () => {
   it('renders each credential as an entry of the timeline, in the order the content gives', () => {
-    const titles = entries.map((entry) => entry.match(/<h3[^>]*>([^<]+)<\/h3>/)?.[1]);
+    // The name is its card's link, per DDR-069, so the title is the heading's text whatever is in it.
+    const titles = entries.map((entry) => entry.match(/<h3[^>]*>(.*?)<\/h3>/)?.[1]?.replace(/<[^>]+>/g, ''));
 
-    expect(html).toMatch(/^<ol /);
+    expect(html).toMatch(/<ol /);
     expect(entries).toHaveLength(credentials.credentials.length);
     expect(titles).toEqual(credentials.credentials.map(({ name }) => name));
   });
@@ -67,6 +74,27 @@ describe('Credentials', () => {
         );
       }
     }
+  });
+
+  // DDR-069: the hint stands above the row, as the experience timeline's does, and every card is
+  // one link off the site that opens a new tab and says so after its name, so the row takes no tab
+  // stop of its own.
+  it('stands the hint above the row, in the words the owner chose on #200', () => {
+    expect(html).toMatch(/^<div><p class="[^"]*"><svg[^>]*>.*?<\/svg>Click any credential to learn more<\/p><ol /);
+  });
+
+  it('makes each credential’s name one link to its address, in a new tab it announces', () => {
+    for (const [index, { name, href }] of credentials.credentials.entries()) {
+      const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+      expect(entries[index]).toMatch(
+        new RegExp(
+          `<h3 [^>]*><a href="${href}" class="[^"]*" target="_blank" rel="noopener" aria-label="${escaped}, opens in a new tab">${escaped}</a></h3>`,
+        ),
+      );
+      expect(entries[index]!.match(/<a /g)).toHaveLength(1);
+    }
+    expect(html).not.toContain('tabindex');
   });
 
   // The owner removed each degree's thesis on #173, per DDR-057, so no credential has a body.
@@ -126,6 +154,17 @@ describe('credentials content', () => {
       expect(existsSync(new URL(`../public${logo}`, import.meta.url))).toBe(true);
     }
     expect(certifications.map(({ logo }) => logo)).toEqual([undefined, undefined]);
+  });
+
+  // DDR-069: a degree leads to the UPC's site, and a certification to its Credly badge, the
+  // addresses in the owner's knowledge base. The page links to the badge and draws none of it.
+  it('leads each degree to the UPC’s site and each certification to its own badge', () => {
+    expect(degrees.map(({ href }) => href)).toEqual(['https://www.upc.edu', 'https://www.upc.edu']);
+    expect(certifications.map(({ href }) => href)).toEqual([
+      'https://www.credly.com/badges/0453ee02-59fe-441b-9481-48ca4030662d',
+      'https://www.credly.com/badges/a8e7a58f-ee8d-4f21-9b7a-136d353ffc6a',
+    ]);
+    expect(html).not.toMatch(/<img[^>]*credly/i);
   });
 
   it('lists the credentials oldest first, per DDR-057, so the certifications come last', () => {

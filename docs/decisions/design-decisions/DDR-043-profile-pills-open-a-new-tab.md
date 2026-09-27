@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-19
 
+**Amended by DDR-069** in its scope: the four education cards open a new tab too, announced as DDR-044 announces the pills'.
+
 **Amended by DDR-050** in its scope: a project view's "Source code" and "Live site" controls open a
 new tab as well, announced as DDR-044 announces the pills'. The project links on the page, the
 footer's addresses and the CV control still open in the same tab.

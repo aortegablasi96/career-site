@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-069**, per #200: an education card is a link too, off the site, and the education row has a hint of its own and no tab stop.
+
 **Amended by DDR-067**, per #195: the hint stands 8px above the row, where it stood 24px, and opens with an information mark, a circled "i", where it had the clock. The projects section has the same hint.
 
 **Amended by DDR-064**, per #189: a role's link is stretched over its whole column, so its dates and its dot open the view as its card does. It is still one tab stop, named by the title.

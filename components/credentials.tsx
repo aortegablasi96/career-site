@@ -1,5 +1,6 @@
 import type { Credential, DateLabels } from '@/content/types';
 import { DateRange, MonthDate } from './date-range';
+import { Hint } from './hint';
 import { Timeline } from './timeline';
 
 /**
@@ -10,34 +11,49 @@ import { Timeline } from './timeline';
  * A degree shows the months it ran; a certification shows the single month it was granted. Neither
  * has a place or a body. A credential whose institution's logo the content gives opens its card
  * with it, per DDR-068, as a role's card opens with its company's.
+ *
+ * Each card leads off the site, per DDR-069 — a degree's to its institution's site and a
+ * certification's to its badge — and looks, moves and answers as a role's card does. The hint above
+ * the row says so, as the experience timeline's does.
  */
 export function Credentials({
   credentials,
+  hint,
+  newTab,
   dateLabels,
   labelledBy,
 }: {
   credentials: readonly Credential[];
+  /** The line above the timeline that says a card leads somewhere. */
+  hint: string;
+  /** What a card says about opening a new tab, to assistive technology alone. */
+  newTab: string;
   dateLabels: DateLabels;
   /** The id of the section heading that names the timeline. */
   labelledBy: string;
 }) {
   return (
-    <Timeline
-      kind="credential"
-      labelledBy={labelledBy}
-      entries={credentials.map((credential) => ({
-        key: credential.name,
-        dates:
-          'granted' in credential ? (
-            <MonthDate month={credential.granted} labels={dateLabels} />
-          ) : (
-            <DateRange start={credential.start} end={credential.end} labels={dateLabels} />
-          ),
-        subtitle: credential.institution,
-        logo: credential.logo,
-        logoTall: credential.logoTall,
-        title: credential.name,
-      }))}
-    />
+    <div>
+      <Hint text={hint} />
+      <Timeline
+        kind="credential"
+        labelledBy={labelledBy}
+        entries={credentials.map((credential) => ({
+          key: credential.name,
+          dates:
+            'granted' in credential ? (
+              <MonthDate month={credential.granted} labels={dateLabels} />
+            ) : (
+              <DateRange start={credential.start} end={credential.end} labels={dateLabels} />
+            ),
+          subtitle: credential.institution,
+          logo: credential.logo,
+          logoTall: credential.logoTall,
+          title: credential.name,
+          href: credential.href,
+          newTab,
+        }))}
+      />
+    </div>
   );
 }

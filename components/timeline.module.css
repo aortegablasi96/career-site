@@ -132,7 +132,9 @@
 /* A card that leads to a view, per DDR-059, is the box its link is stretched over, as a project
    card is, per DDR-051: that is all `relative` does here. It rests raised off the page by the site's
    one elevation, as a project card does, per DDR-063, so the two kinds of card that open a view look
-   alike at rest as well as under the pointer. A credential's card leads nowhere and stays flat. */
+   alike at rest as well as under the pointer. Since DDR-069 a credential's card leads off the site,
+   to its institution or its badge, and is the same card in every respect, at rest and in every state
+   below. */
 .card:has(.link) {
   position: relative;
   box-shadow: var(--shadow-raised);
@@ -375,6 +377,14 @@
     border: none;
   }
 
+  /* Paper stretches no link over a card, so a linked card is not positioned there. A positioned card
+     is painted after everything in flow, so the browsers wrote its text at the foot of the sheet's
+     PDF, away from its dates, which a reader copying or listening to the PDF met out of order,
+     measured on #200. Unpositioned, it is written in the order it reads, and draws the same. */
+  .card:has(.link) {
+    position: static;
+  }
+
   .role .card {
     padding-block-end: var(--space-role);
   }
@@ -391,8 +401,9 @@
     font-size: var(--font-size-item-title);
   }
 
-  /* A card's link leads to a view, which paper cannot follow, so it prints no address, and there is
-     no card to stretch it over, as a project card's does not, per DDR-051. */
+  /* A card's link leads to a view, or off the site for a credential, per DDR-069, and paper
+     follows neither, so it prints no address, and there is no card to stretch it over, as a project
+     card's does not, per DDR-051. */
   .link::after {
     content: none;
   }
