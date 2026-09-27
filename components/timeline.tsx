@@ -11,7 +11,7 @@ export interface TimelineEntry {
   dates: ReactNode;
   /** The company or the institution, which opens the entry's card, per DDR-057. */
   subtitle: string;
-  /** The path of the company's logo, which stands above the subtitle, per DDR-066. A credential has none. */
+  /** The path of the company's or institution's logo, which stands above the subtitle, per DDR-066 and DDR-068. */
   logo?: string;
   /** Whether the logo is drawn taller than the others, per DDR-066. */
   logoTall?: boolean;
@@ -47,7 +47,7 @@ export interface TimelineEntry {
  * keyboard, per DDR-057; one that has links does not take a tab stop of its own as well.
  *
  * A role's card opens with its company's logo, per DDR-066, on the card itself, above the company's
- * name. The name is written beneath it, so the logo is hidden from assistive technology, and the
+ * name, and a degree's with its institution's, per DDR-068. The name is written beneath it, so the logo is hidden from assistive technology, and the
  * card reads as it did without it. Paper does not show it.
  *
  * On paper it is the vertical timeline DDR-010 drew: the dates in a column of their own, the spine,

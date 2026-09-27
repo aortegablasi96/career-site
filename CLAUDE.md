@@ -147,7 +147,14 @@ name is written beneath it; it is `loading="lazy"`, because an eager `img` is on
 `<link rel="preload">` for, ahead of the photo; and it does not print. `logo` on a `Role` is a path
 rather than an `Image`, and is required. Each file is `public/experiences/<slug>/logo.webp`,
 trimmed to its mark, 36px tall and lossless, made from the owner's PNG beside it, which is not
-committed. Education has no logos.
+committed.
+
+**Since #197, per DDR-068, each degree's card opens with the UPC's logo**, drawn exactly as a
+company's is, from `public/education/upc/logo.webp`: the university's official colour logo from its
+brand page, trimmed and made the same way. `logo` is optional on a credential, because the two PMI
+certifications have none: PMI's trademark guidelines allow its logo only with its written
+authorization, which the owner has asked for. Do not add a PMI or PMP logo, or a Credly badge, until
+the owner says PMI has agreed.
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
 row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
@@ -639,10 +646,10 @@ is a route rather than a file, so it does not go through `asset()`, which amends
 extends ADR-010 to the roles, at `/experience/<slug>`, and supersedes nothing. The next ADR is
 `012`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-067. The next DDR is
-`068`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-068. The next DDR is
+`069`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Thirty accepted records are superseded or amended **in part**, and each says so at the top and again
+Thirty-one accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -681,6 +688,8 @@ at the section concerned:
 * **DDR-057** keeps its row, its order, its scrolling, its print treatment and its education row.
   DDR-059 makes each role's card a link to the role's view and shows the hint above the row, which
   then takes no tab stop of its own. DDR-066 opens each role's card with its company's logo. DDR-067 shrinks its date band to one line of dates.
+* **DDR-066** keeps everything it decides about a role's logo. DDR-068 gives each degree's card the
+  UPC's logo in the same style, where DDR-066 said education had none.
 * **DDR-059** keeps its view, its card, its hint and its neighbours. DDR-067 moves the hint to 8px above the row and gives it an information mark. DDR-060 gives a role two
   titles: the view's `h1`, tab and preview give it in full, and every card and paper give it short.
 * **DDR-029** keeps its short labels, its footer and its print rule. DDR-058 takes the email

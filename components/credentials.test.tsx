@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { credentials } from '@/content/credentials';
@@ -54,6 +55,20 @@ describe('Credentials', () => {
     }
   });
 
+  // DDR-068: a degree's card opens with the UPC's logo, above the institution, as a role's card
+  // opens with its company's. It repeats the name beneath it, so it has no alternative text.
+  it('opens each degree’s card with its institution’s logo, and no certification’s', () => {
+    for (const [index, credential] of credentials.credentials.entries()) {
+      if (isCertification(credential)) {
+        expect(entries[index]).not.toContain('<img');
+      } else {
+        expect(entries[index]).toMatch(
+          /<div class="[^"]*"><img class="[^"]*" src="\/education\/upc\/logo\.webp" alt="" loading="lazy"\/><p class="[^"]*">Universitat Politècnica de Catalunya<\/p>/,
+        );
+      }
+    }
+  });
+
   // The owner removed each degree's thesis on #173, per DDR-057, so no credential has a body.
   it('closes every credential’s card at its name, with no body and no place', () => {
     for (const entry of entries) {
@@ -99,6 +114,17 @@ describe('credentials content', () => {
       ['Bachelor’s degree in IT', 'Universitat Politècnica de Catalunya', '2014-09', '2019-02'],
       ['Master’s degree in IoT', 'Universitat Politècnica de Catalunya', '2020-09', '2022-02'],
     ]);
+  });
+
+  // DDR-068: the UPC's official logo, as a WebP beside the others, per ADR-004. PMI allows its logo
+  // only with its written authorization, which the owner has asked for on #197, so neither
+  // certification carries one yet.
+  it('gives both degrees the UPC’s logo, and neither certification a logo', () => {
+    for (const { logo } of degrees) {
+      expect(logo).toBe('/education/upc/logo.webp');
+      expect(existsSync(new URL(`../public${logo}`, import.meta.url))).toBe(true);
+    }
+    expect(certifications.map(({ logo }) => logo)).toEqual([undefined, undefined]);
   });
 
   it('lists the credentials oldest first, per DDR-057, so the certifications come last', () => {
