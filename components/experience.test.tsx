@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { dateLabels } from '@/content/dates';
@@ -36,6 +36,17 @@ function rule(selector: string): string {
 }
 
 describe('Experience', () => {
+  // DDR-066: every role's card opens with its company's logo, which the owner supplied, as a WebP
+  // beside the role's other files, per ADR-004.
+  it('opens every role’s card with its company’s logo', () => {
+    for (const { logo } of roles) {
+      expect(logo).toMatch(/^\/experiences\/[a-z-]+\/logo\.webp$/);
+      expect(existsSync(new URL(`../public${logo}`, import.meta.url))).toBe(true);
+    }
+
+    expect(html.match(/<img /g)).toHaveLength(roles.length);
+  });
+
   it('renders each role as an entry of the timeline, in the order the content gives', () => {
     const entries = html.match(/<li class=/g) ?? [];
     const titles = [...html.matchAll(/<h3[^>]*><a [^>]*>([^<]+)<\/a><\/h3>/g)].map(([, title]) => title);

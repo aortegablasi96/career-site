@@ -198,6 +198,14 @@ export interface Role {
    */
   slug: string;
   company: string;
+  /**
+   * Where the company's logo sits, as a path from the site's root, which the timeline's card shows
+   * above the company's name, per DDR-066. It is the owner's file, in the brand's own form and
+   * colours. It is not an `Image`, because it has no alternative text: the company's name is
+   * written beneath it, so the logo says nothing a reader would miss, and it is hidden from
+   * assistive technology.
+   */
+  logo: string;
   place: string;
   start: Month;
   /** Left out while the role is current. */

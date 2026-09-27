@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { asset } from '@/app/asset';
 import type { ReactNode } from 'react';
 import styles from './timeline.module.css';
 
@@ -10,6 +11,8 @@ export interface TimelineEntry {
   dates: ReactNode;
   /** The company or the institution, which opens the entry's card, per DDR-057. */
   subtitle: string;
+  /** The path of the company's logo, which stands above the subtitle, per DDR-066. A credential has none. */
+  logo?: string;
   /** The job title or the credential's name, which is the entry's heading. */
   title: string;
   /** Where a role was held. A credential has none. */
@@ -38,6 +41,10 @@ export interface TimelineEntry {
  * scrolls the row to it, and the arrow keys scroll the row while a card has focus. A timeline with
  * no links — education's — is focusable itself instead, so a reader can still scroll it from the
  * keyboard, per DDR-057; one that has links does not take a tab stop of its own as well.
+ *
+ * A role's card opens with its company's logo, per DDR-066, in a small tile above the company's
+ * name. The name is written beneath it, so the logo is hidden from assistive technology, and the
+ * card reads as it did without it. Paper does not show it.
  *
  * On paper it is the vertical timeline DDR-010 drew: the dates in a column of their own, the spine,
  * and the card's text beside them, with each role's points below, which the screen does not show.
@@ -68,7 +75,7 @@ export function Timeline({
       aria-labelledby={labelledBy}
       tabIndex={linked ? undefined : 0}
     >
-      {entries.map(({ key, dates, subtitle, title, place, children, href }) => (
+      {entries.map(({ key, dates, subtitle, logo, title, place, children, href }) => (
         <li key={key} className={styles.entry}>
           {/* One span, so the dates are one flex item and the spaces around their dash survive. */}
           <p className={styles.dates}>
@@ -80,6 +87,13 @@ export function Timeline({
             <span className={styles.line} />
           </div>
           <div className={styles.card}>
+            {logo && (
+              <span className={styles.logo}>
+                {/* Lazy, because the timeline is below the fold, and an eager image is one React
+                    also asks the browser to preload, ahead of the introduction's photo. */}
+                <img className={styles.logoImage} src={asset(logo)} alt="" loading="lazy" />
+              </span>
+            )}
             <p className={styles.subtitle}>{subtitle}</p>
             <h3 className={styles.title}>
               {href ? (
