@@ -54,11 +54,11 @@ import type { Cv } from './types';
  * the current role reads "Global Product Manager - Digital Solutions" on the page's view and
  * "Global Product Manager" on its card and on paper, and Ponera Group's reads "Product Manager".
  * It moved again with #193, because each role gained the path of its company's logo, and ToBeIT's
- * and EDP's a flag that draws them taller, per DDR-066.
+ * and EDP's a flag that draws them taller, and ToBeIT's one that raises it, per DDR-066.
  * A logo is not a fact ADR-005 lists as shared, so it did not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '5b37cbbcd8fbedd849d9a32448d5109168093389096553e4abe17e5358b01b4d',
+  contentDigest: 'e348a03ec465bfe3f3622462b7b8abe59164ba3f0486257e2aff3a5bfe353794',
 };

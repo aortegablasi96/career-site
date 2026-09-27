@@ -128,7 +128,9 @@ owner turned the tile down. It is `--timeline-logo-height`, 18px, tall and as wi
 proportions, because the owner's logos are wordmarks. ToBeIT's and EDP's, which read small at that
 height, are marked `logoTall` and drawn at `--timeline-logo-height-tall`, 28px, as the owner asked;
 their files are 56px tall where the others are 36px. The logo stands 12px above the company's name:
-the card's 4px gap and a `--space-small` margin of its own. Every file's ground is transparent, so a new
+the card's 4px gap and a `--space-small` margin of its own. ToBeIT's is also `logoRaised`: it
+reaches up into the card's padding by `--timeline-logo-rise`, -10px, so its name stays level with
+Randstad's, Ponera Group's and ABB's. EDP's is not, because its card is the row's tallest. Every file's ground is transparent, so a new
 logo needs one too. The logo's `alt` is empty, since the company's
 name is written beneath it; it is `loading="lazy"`, because an eager `img` is one React hoists a
 `<link rel="preload">` for, ahead of the photo; and it does not print. `logo` on a `Role` is a path

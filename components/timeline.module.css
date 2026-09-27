@@ -246,6 +246,13 @@
   block-size: var(--timeline-logo-height-tall);
 }
 
+/* A tall logo the content marks as raised takes no more of the card's height than a shorter one: it
+   reaches up into the card's padding by the difference, so the company's name and everything below
+   it sit exactly where they do on the cards beside it, as the owner asked for ToBeIT's. */
+.logoRaised {
+  margin-block-start: var(--timeline-logo-rise);
+}
+
 /* The company opens a role's card in the accent, and the institution a credential's in the muted
    ink, both bold, per DDR-057. The design's 12px is not a step of DDR-022's scale, so the nearest,
    12.8px, is taken, as the footer takes it. */

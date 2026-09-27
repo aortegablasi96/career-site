@@ -39,6 +39,7 @@ export const experience: Experience = {
       company: 'ToBeIT',
       logo: '/experiences/tobeit/logo.webp',
       logoTall: true,
+      logoRaised: true,
       place: 'Barcelona, Spain',
       start: '2020-09',
       end: '2021-07',

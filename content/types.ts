@@ -213,6 +213,13 @@ export interface Role {
    * stylesheet's.
    */
   logoTall?: boolean;
+  /**
+   * Whether a tall logo rises into the card's padding rather than taking more of the card's height,
+   * per DDR-066, so the company's name sits level with the names on the cards beside it. The owner
+   * chose it for ToBeIT's on #193. Not for a card that is the row's tallest, whose padding the logo
+   * would eat into.
+   */
+  logoRaised?: boolean;
   place: string;
   start: Month;
   /** Left out while the role is current. */

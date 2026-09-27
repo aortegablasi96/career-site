@@ -55,6 +55,8 @@ describe('Experience', () => {
       'ToBeIT',
     ]);
     expect(html.match(/<img class="[^"]* [^"]*"/g)).toHaveLength(2);
+    // Only ToBeIT's rises, so its name is level with its neighbours'; EDP's card is the tallest.
+    expect(roles.filter(({ logoRaised }) => logoRaised).map(({ company }) => company)).toEqual(['ToBeIT']);
   });
 
   it('renders each role as an entry of the timeline, in the order the content gives', () => {

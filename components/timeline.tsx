@@ -15,6 +15,8 @@ export interface TimelineEntry {
   logo?: string;
   /** Whether the logo is drawn taller than the others, per DDR-066. */
   logoTall?: boolean;
+  /** Whether a tall logo rises into the card's padding, so the name below it stays level, per DDR-066. */
+  logoRaised?: boolean;
   /** The job title or the credential's name, which is the entry's heading. */
   title: string;
   /** Where a role was held. A credential has none. */
@@ -77,7 +79,7 @@ export function Timeline({
       aria-labelledby={labelledBy}
       tabIndex={linked ? undefined : 0}
     >
-      {entries.map(({ key, dates, subtitle, logo, logoTall, title, place, children, href }) => (
+      {entries.map(({ key, dates, subtitle, logo, logoTall, logoRaised, title, place, children, href }) => (
         <li key={key} className={styles.entry}>
           {/* One span, so the dates are one flex item and the spaces around their dash survive. */}
           <p className={styles.dates}>
@@ -93,7 +95,9 @@ export function Timeline({
                 asks the browser to preload, ahead of the introduction's photo. */}
             {logo && (
               <img
-                className={logoTall ? `${styles.logo} ${styles.logoTall}` : styles.logo}
+                className={[styles.logo, logoTall && styles.logoTall, logoRaised && styles.logoRaised]
+                  .filter(Boolean)
+                  .join(' ')}
                 src={asset(logo)}
                 alt=""
                 loading="lazy"

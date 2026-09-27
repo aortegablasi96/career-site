@@ -822,6 +822,11 @@ describe('spacing tokens', () => {
   it('sizes a company’s logo in rem, per DDR-066', () => {
     expect(token('timeline-logo-height')).toBe('1.125rem');
     expect(token('timeline-logo-height-tall')).toBe('1.75rem');
+    // A raised tall logo takes a short one's height, and reaches no further than the card's padding.
+    expect(token('timeline-logo-rise')).toBe('calc(var(--timeline-logo-height) - var(--timeline-logo-height-tall))');
+    expect(rem(token('timeline-logo-height-tall')!) - rem(token('timeline-logo-height')!)).toBeLessThan(
+      rem(token('space-medium')!),
+    );
   });
 
   it('keeps the dot inside the spine column it sits in on paper', () => {

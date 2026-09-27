@@ -34,6 +34,14 @@ is a wordmark or a mark beside a wordmark, from 1.4:1 (ToBeIT) to 4.8:1 (Randsta
   is set small beside its mark, was 44px: both far smaller than the wordmarks beside them. The
   owner asked on #193 for both to be larger. The content marks each with `logoTall`, a flag rather
   than a size, so the size stays the stylesheet's. Their files are 56px tall, twice that height.
+* **ToBeIT's tall logo rises into its card's padding**, so its company's name stays level with the
+  names beside it. A card centres its content, so a taller logo pushed ToBeIT's name, title and
+  place 5px below Randstad's, Ponera Group's and ABB's, and the owner asked on #193 for the logo to
+  move up instead. The content marks it `logoRaised`, and the logo takes a negative top margin,
+  `--timeline-logo-rise`, the difference between the two heights, so it takes no more of the card's
+  height than a shorter logo does. It reaches 10px into the card's 16px padding. EDP's is not
+  raised: its card is the row's tallest, so its padding has no room to spare, and its name wraps
+  onto two lines, so it is not level with the others anyway.
 * **It stands first on the card, centred, 12px above the company's name**: the card's own gap,
   `--space-x-small`, and a `--space-small` margin of the logo's, where the design has 6px. The owner
   asked on #193 for more room there than the card's 4px gap alone. The card's text, spacing and states are unchanged, and the
@@ -110,7 +118,8 @@ Risks:
 * A logo much wider than Randstad's 4.8:1 would be scaled down to the card's width and read smaller.
   Check a new logo in the narrowest card, 192px, at the default text size and at 200%.
 * A new logo that is nearly square will look small beside the wordmarks. Mark it `logoTall`, and
-  export it 56px tall.
+  export it 56px tall. Mark it `logoRaised` too where its card is not the row's tallest, so its
+  name stays level with its neighbours'.
 * A new role needs a logo, since `Role` requires one, and `components/experience.test.tsx` checks
   that its file exists.
 
