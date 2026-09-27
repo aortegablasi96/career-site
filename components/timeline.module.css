@@ -236,6 +236,12 @@
   object-fit: contain;
 }
 
+/* A nearly square logo is far smaller than a wordmark at the same height, so one the content marks
+   is drawn at the design's 28px, the height of its logo tile, as the owner chose for ToBeIT's. */
+.logoTall {
+  block-size: var(--timeline-logo-height-tall);
+}
+
 /* The company opens a role's card in the accent, and the institution a credential's in the muted
    ink, both bold, per DDR-057. The design's 12px is not a step of DDR-022's scale, so the nearest,
    12.8px, is taken, as the footer takes it. */

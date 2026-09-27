@@ -206,6 +206,13 @@ export interface Role {
    * assistive technology.
    */
   logo: string;
+  /**
+   * Whether the logo is drawn taller than the others, per DDR-066: set where a logo is nearly
+   * square, so at the shared height it is far smaller than its neighbours. The owner chose it for
+   * ToBeIT's on #193. A flag rather than a size, as `newTab` is on a contact: the size is the
+   * stylesheet's.
+   */
+  logoTall?: boolean;
   place: string;
   start: Month;
   /** Left out while the role is current. */

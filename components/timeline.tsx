@@ -13,6 +13,8 @@ export interface TimelineEntry {
   subtitle: string;
   /** The path of the company's logo, which stands above the subtitle, per DDR-066. A credential has none. */
   logo?: string;
+  /** Whether the logo is drawn taller than the others, per DDR-066. */
+  logoTall?: boolean;
   /** The job title or the credential's name, which is the entry's heading. */
   title: string;
   /** Where a role was held. A credential has none. */
@@ -75,7 +77,7 @@ export function Timeline({
       aria-labelledby={labelledBy}
       tabIndex={linked ? undefined : 0}
     >
-      {entries.map(({ key, dates, subtitle, logo, title, place, children, href }) => (
+      {entries.map(({ key, dates, subtitle, logo, logoTall, title, place, children, href }) => (
         <li key={key} className={styles.entry}>
           {/* One span, so the dates are one flex item and the spaces around their dash survive. */}
           <p className={styles.dates}>
@@ -89,7 +91,14 @@ export function Timeline({
           <div className={styles.card}>
             {/* Lazy, because the timeline is below the fold, and an eager image is one React also
                 asks the browser to preload, ahead of the introduction's photo. */}
-            {logo && <img className={styles.logo} src={asset(logo)} alt="" loading="lazy" />}
+            {logo && (
+              <img
+                className={logoTall ? `${styles.logo} ${styles.logoTall}` : styles.logo}
+                src={asset(logo)}
+                alt=""
+                loading="lazy"
+              />
+            )}
             <p className={styles.subtitle}>{subtitle}</p>
             <h3 className={styles.title}>
               {href ? (

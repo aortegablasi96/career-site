@@ -380,6 +380,7 @@ describe('timeline card links', () => {
     expect(logo).toMatch(/max-inline-size:\s*100%;/);
     expect(logo).toMatch(/object-fit:\s*contain;/);
     expect(logo).not.toMatch(/border|background|box-shadow|padding/);
+    expect(rule('.logoTall')).toMatch(/block-size:\s*var\(--timeline-logo-height-tall\);/);
   });
 
   it('prints no address after a card’s link, since paper cannot follow it', () => {

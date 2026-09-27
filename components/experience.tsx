@@ -45,11 +45,12 @@ export function Experience({
       <Timeline
         kind="role"
         labelledBy={labelledBy}
-        entries={roles.map(({ title, slug, company, logo, place, start, end, points }) => ({
+        entries={roles.map(({ title, slug, company, logo, logoTall, place, start, end, points }) => ({
           key: `${company} ${start}`,
           dates: <DateRange start={start} end={end} labels={dateLabels} />,
           subtitle: company,
           logo,
+          logoTall,
           title,
           place,
           href: roleHref(slug),

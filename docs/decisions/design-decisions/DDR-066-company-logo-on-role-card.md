@@ -29,6 +29,12 @@ is a wordmark or a mark beside a wordmark, from 1.4:1 (ToBeIT) to 4.8:1 (Randsta
 * **The logo is 18px tall, `--timeline-logo-height`, and as wide as its own proportions.** Every
   logo is a wordmark, so a square would shrink it past reading: Randstad's would be under 5px tall.
   18px is the height the logo had inside the design's 28px tile.
+* **A nearly square logo is drawn taller, at the design's 28px, `--timeline-logo-height-tall`.**
+  At 18px ToBeIT's, 1.4:1 with a tagline beneath it, was 31px wide, far smaller than the wordmarks
+  beside it, and the owner asked on #193 for it to be larger. The content marks it with
+  `logoTall`, a flag rather than a size, so the size stays the stylesheet's. It is the only one:
+  EDP's, at 2.4:1, keeps the shared height. Its file is 56px tall, twice that height. It adds no
+  height to the row, because the card whose company name wraps is still the tallest.
 * **It stands first on the card, centred**, and the card's own gap, `--space-x-small`, is the space
   below it, where the design has 6px. The card's text, spacing and states are unchanged, and the
   logo rises with the card under the pointer, per DDR-063.
@@ -93,7 +99,8 @@ Benefits:
 * The card, its states and the printed CV are otherwise exactly as they were.
 
 Tradeoffs:
-* The logos differ in width from card to card, where the design's tiles are one square.
+* The logos differ in width from card to card, where the design's tiles are one square, and
+  ToBeIT's is taller than the rest.
 * EDP's and ToBeIT's logos carry small secondary text, the company's full name and a tagline, which
   is unreadable at 18px. That is the logos' own form, and a simpler file from the owner would read
   better.
@@ -101,6 +108,8 @@ Tradeoffs:
 Risks:
 * A logo much wider than Randstad's 4.8:1 would be scaled down to the card's width and read smaller.
   Check a new logo in the narrowest card, 192px, at the default text size and at 200%.
+* A new logo that is nearly square will look small beside the wordmarks. Mark it `logoTall`, and
+  export it 56px tall.
 * A new role needs a logo, since `Role` requires one, and `components/experience.test.tsx` checks
   that its file exists.
 

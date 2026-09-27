@@ -821,6 +821,7 @@ describe('spacing tokens', () => {
   // DDR-066: a company's logo is 18px tall on its card, in rem, so it grows with the text.
   it('sizes a company’s logo in rem, per DDR-066', () => {
     expect(token('timeline-logo-height')).toBe('1.125rem');
+    expect(token('timeline-logo-height-tall')).toBe('1.75rem');
   });
 
   it('keeps the dot inside the spine column it sits in on paper', () => {
