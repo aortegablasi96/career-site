@@ -108,6 +108,14 @@ but still the edge, the shadow and the accent. A role's card rises into the 20px
 the card, and `app/tokens.test.ts` holds the lifted shadow inside the row's room. A credential's card
 leads nowhere and stays flat and still, and the views' neighbour cards keep their own hover.
 
+**Since #189, per DDR-064, a role's dates, its dot and its card are one target**: the link's box
+reaches from the card out to the whole column, so pointing at or clicking the dates or the dot does
+what the card does, and the state is read from the column (`.entry:has(.link):hover`), which never
+moves, so the card's lift cannot lose it. The dates and the dot's core darken to
+`--color-accent-hover`, and the ring takes the card's hover edge, `--color-border-accent-hover`. The
+line between the dots does not change. The box is written from the dates' band, the dot, the space
+above the card and the card's inset, so a change to any of them moves it.
+
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
 row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
@@ -599,8 +607,8 @@ is a route rather than a file, so it does not go through `asset()`, which amends
 extends ADR-010 to the roles, at `/experience/<slug>`, and supersedes nothing. The next ADR is
 `012`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-063. The next DDR is
-`064`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-064. The next DDR is
+`065`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Twenty-nine accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -634,6 +642,8 @@ at the section concerned:
   accent edge to the same rule and the same transition.
 * **DDR-055, DDR-057, DDR-059 and DDR-061** keep everything but what DDR-063 matches: a role's card
   now rests raised, lifts as a project card does, and draws its focus outline outside its edge.
+* **DDR-036, DDR-059 and DDR-063** keep everything but what DDR-064 adds: a role's link covers its
+  whole column, its state is the column's, and its dates and dot answer with its card.
 * **DDR-057** keeps its row, its order, its scrolling, its print treatment and its education row.
   DDR-059 makes each role's card a link to the role's view and shows the hint above the row, which
   then takes no tab stop of its own.

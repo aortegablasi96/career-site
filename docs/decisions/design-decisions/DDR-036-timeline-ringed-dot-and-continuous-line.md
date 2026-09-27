@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-18
 
+**Amended by DDR-064**, per #189: under the pointer and on focus, a role's dot answers with its card. Its ring takes `--color-border-accent-hover` and its core `--color-accent-hover`. The line stays as it is.
+
 **Amends DDR-010** in one respect: its spine. DDR-010's spine is "a dot at the top of each row, and
 a vertical line running from it to the next row", and the page built that as a plain disc with a
 line that stopped short of it on either side. The spine is now the design's: a ringed dot with an
