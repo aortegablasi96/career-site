@@ -99,11 +99,14 @@ lift over the same 150ms. It is written outside the reduced-motion query, so a r
 less motion gets the shadow at once and no lift. Its reach stays inside the 20px round every card,
 which `app/tokens.test.ts` holds, so a change to `--shadow-card-hover` now moves both kinds of card.
 
-**Since #187, per DDR-063, a project card's edge takes `--color-border-accent-hover` too**, in the
-same rule as that shadow, so the two kinds of card that lead to a view answer the pointer with the
-same edge, light and accent. The project card alone still lifts, as the owner chose on #187: its
-edge joins the lift's transition, `translate, border-color, box-shadow`, and a reader who prefers
-less motion gets the edge and the shadow at once. The views' neighbour cards already matched.
+**Since #187, per DDR-063, a role's card and a project card are one card to the reader**: at rest
+both are raised by `--shadow-raised`, and under the pointer and on focus both take the accent edge,
+`--shadow-card-hover`, the accent on the title and a 4px lift, `--card-lift` (it was
+`--project-card-lift`), with the edge, the shadow and the lift brought in together over 150ms and
+the focus outline outside the edge. A reader who prefers less motion gets no lift and no transition,
+but still the edge, the shadow and the accent. A role's card rises into the 20px between its dot and
+the card, and `app/tokens.test.ts` holds the lifted shadow inside the row's room. A credential's card
+leads nowhere and stays flat and still, and the views' neighbour cards keep their own hover.
 
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
@@ -629,6 +632,8 @@ at the section concerned:
   project card on the page, as it lifts.
 * **DDR-062** keeps its shadow, its reduced-motion rule and its reach. DDR-063 adds the role card's
   accent edge to the same rule and the same transition.
+* **DDR-055, DDR-057, DDR-059 and DDR-061** keep everything but what DDR-063 matches: a role's card
+  now rests raised, lifts as a project card does, and draws its focus outline outside its edge.
 * **DDR-057** keeps its row, its order, its scrolling, its print treatment and its education row.
   DDR-059 makes each role's card a link to the role's view and shows the hint above the row, which
   then takes no tab stop of its own.
@@ -642,7 +647,7 @@ at the section concerned:
   card's movement, and a second pseudo-element stretched over it: the first still draws the focus
   outline, and the second holds a lifted card under the pointer. DDR-062 adds a light shadow to the
   lifted card, which a reader who prefers reduced motion gets without the lift. DDR-063 adds the
-  role card's accent edge beside it.
+  role card's accent edge beside it, and gives a role's card the project card's lift.
 * **DDR-050** keeps everything it decides about a view's address, its way back, its introduction
   and its two columns. DDR-052 adds its foot: a divider, and the projects on either side of this
   one. DDR-053 adds its middle: a gallery of further pictures and videos, between the introduction
@@ -1435,8 +1440,8 @@ Three things about it are worth knowing before touching a card's tags.
 **#164 has landed, as DDR-055: a project card rises under the pointer.** Pointing anywhere on a
 card, or reaching it with the keyboard, lifts it 4px — `--card-lift` — over the 150ms every
 link's colour already takes, per DDR-035, so the movement and the name's accent are one change. It
-is the site's one piece of expressive motion, and the page's project cards are the only place it is
-drawn: the neighbour cards on a view, the language cards, the pills, the CV control and the contents
+is the site's one piece of expressive motion, and since #187, per DDR-063, the page's role cards
+share it, and nothing else on the site moves: the neighbour cards on a view, the language cards, the pills, the CV control and the contents
 links keep the hover DDR-035 gives them.
 
 Four things about it are worth knowing before touching it.
