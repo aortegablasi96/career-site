@@ -597,10 +597,23 @@ describe('elevation tokens', () => {
   it('lights a lifted project card within the room round it, per DDR-062', () => {
     const [, y, blur] = token('shadow-card-hover')!.match(/^0 (\d+)px (\d+)px /)!.map(Number);
     const room = rem(token('project-card-space')!) * 16;
-    const lift = rem(token('project-card-lift')!) * 16;
+    const lift = rem(token('card-lift')!) * 16;
 
     expect(blur).toBeLessThanOrEqual(room);
     expect(y + blur - lift).toBeLessThanOrEqual(room);
+  });
+
+  // DDR-063: a role's card lifts too. Its shadow then reaches above the card's resting edge by the
+  // blur, less the offset, plus the lift, which has to stay inside the space between the dot and the
+  // card; and the room the row leaves below still covers the foot, and the buffer below the link.
+  it('lights a lifted role card inside its row, per DDR-063', () => {
+    const [, y, blur] = token('shadow-card-hover')!.match(/^0 (\d+)px (\d+)px /)!.map(Number);
+    const lift = rem(token('card-lift')!) * 16;
+    const room = Number(token('timeline-shadow-room')!.replace('px', ''));
+
+    expect(blur - y + lift).toBeLessThanOrEqual(rem(token('timeline-card-space')!) * 16);
+    expect(y + blur - lift).toBeLessThanOrEqual(room);
+    expect(lift).toBeLessThanOrEqual(room);
   });
 
   // DDR-048: the bar's edge never changes, so there is no transition for it to take.
@@ -859,12 +872,12 @@ describe('spacing tokens', () => {
   // DDR-055: a card rises 4px under the pointer, which is a step of DDR-013's scale. It is the one
   // distance anything on the site travels, so it is held here by its value rather than by a
   // reference: widening it is a decision about how far a card moves, not about a space.
-  it('lifts a project card by 4px, per DDR-055', () => {
-    expect(rem(token('project-card-lift')!) * 16).toBe(4);
+  it('lifts a card by 4px, per DDR-055 and DDR-063', () => {
+    expect(rem(token('card-lift')!) * 16).toBe(4);
   });
 
   it('lays the cards out in the components rather than here, so the wide breakpoint stays theirs', () => {
-    for (const name of ['project-card-media-ratio', 'project-card-space', 'project-card-lift']) {
+    for (const name of ['project-card-media-ratio', 'project-card-space', 'card-lift']) {
       expect(atBreakpoint.has(name), name).toBe(false);
     }
   });

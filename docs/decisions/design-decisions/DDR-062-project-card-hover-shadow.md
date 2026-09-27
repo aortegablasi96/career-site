@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-063**, per #187: a role's card and a project card now rest, answer the pointer and take focus alike: `--shadow-raised` at rest, the accent edge, `--shadow-card-hover` and a 4px lift, `--card-lift`, where motion is welcome, and the focus outline outside the edge.
+
 **Amends DDR-061 by giving its shadow a second reader.** `--shadow-card-hover`, its ink and its
 geometry do not change. DDR-061 said a second reader would need that record amended; this is it.
 DDR-020 is not amended again: the site still has four named shadows, not five.

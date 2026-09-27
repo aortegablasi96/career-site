@@ -293,7 +293,7 @@ describe('project styles', () => {
     it('rises under a pointer anywhere on the card, and on keyboard focus, per DDR-035', () => {
       const lifted = motion.match(/\.card:hover,\s*\.card:has\(\.link:focus-visible\)\s*\{([^}]*)\}/)?.[1] ?? '';
 
-      expect(lifted).toMatch(/translate:\s*0 calc\(-1 \* var\(--project-card-lift\)\);/);
+      expect(lifted).toMatch(/translate:\s*0 calc\(-1 \* var\(--card-lift\)\);/);
       // Only the movement. The card is not restyled: its surface, edge, radius and shadow stand.
       expect(lifted.match(/[\w-]+:/g)).toEqual(['translate:']);
     });
@@ -305,8 +305,11 @@ describe('project styles', () => {
     });
 
     it('takes the 150ms every link’s colour takes, so the two are one change, per DDR-035', () => {
-      // The shadow DDR-062 adds comes in with the lift, so the two are one change as well.
-      expect(rule('.card', motion)).toMatch(/transition-property:\s*translate, box-shadow;/);
+      // The shadow DDR-062 adds and the edge DDR-063 adds come in with the lift, so the three are one
+      // change as well.
+      expect(rule('.card', motion)).toMatch(
+        /transition-property:\s*translate, border-color, box-shadow;/,
+      );
       expect(rule('.card', motion)).toMatch(/transition-duration:\s*var\(--hover-transition\);/);
     });
 
@@ -321,7 +324,7 @@ describe('project styles', () => {
     // fall off the card there, drop it and pick it up again for as long as it stayed.
     it('holds the link’s box under a pointer at the card’s resting edge', () => {
       expect(rule('.link::before', motion)).toMatch(
-        /inset:\s*0 0 calc\(-1 \* var\(--project-card-lift\)\);/,
+        /inset:\s*0 0 calc\(-1 \* var\(--card-lift\)\);/,
       );
       expect(rule('.link::before', motion)).toMatch(/position:\s*absolute;/);
     });
@@ -334,12 +337,16 @@ describe('project styles', () => {
     // DDR-062: the card takes the light shadow DDR-061 gives a role's card, in place of its resting
     // one, under a pointer anywhere on it and on keyboard focus. It is a state rather than motion, so
     // it is written outside the query and a reader who prefers less motion still gets it.
-    it('lights the card under the pointer and on focus, with or without motion, per DDR-062', () => {
+    // DDR-063: it also takes the edge a role's card takes, so the two kinds of card that lead to a
+    // view answer the pointer alike, and the card's resting edge stays the hairline.
+    it('lights the card and draws the role card’s edge, with or without motion, per DDR-062 and DDR-063', () => {
       const lit = css.replace(motion, '').match(/\.card:hover,\s*\.card:has\(\.link:focus-visible\)\s*\{([^}]*)\}/)?.[1] ?? '';
 
       expect(lit).toMatch(/box-shadow:\s*var\(--shadow-card-hover\);/);
-      expect(lit.match(/[\w-]+:/g)).toEqual(['box-shadow:']);
+      expect(lit).toMatch(/border-color:\s*var\(--color-border-accent-hover\);/);
+      expect(lit.match(/[\w-]+:/g)).toEqual(['border-color:', 'box-shadow:']);
       expect(rule('.card')).toMatch(/box-shadow:\s*var\(--shadow-raised\);/);
+      expect(rule('.card')).toMatch(/border:\s*1px solid var\(--color-border\);/);
     });
 
     // The movement needs no print rule, as DDR-035's hover colours need none: paper cannot be

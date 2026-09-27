@@ -14,6 +14,8 @@ a video still has a poster still, and the draft's gradient placeholders are stil
 Every other item title stays in DM Sans. No file is added, because Lora SemiBold is already loaded
 for `h1` and `h2`.
 
+**Amended by DDR-063**, per #187: a role's card and a project card now rest, answer the pointer and take focus alike: `--shadow-raised` at rest, the accent edge, `--shadow-card-hover` and a 4px lift, `--card-lift`, where motion is welcome, and the focus outline outside the edge.
+
 **Amended by DDR-054 in one respect**: a card shows **every** technology the project states, in the
 content's order, where this record showed the first four and counted the rest in a grey tag such as
 "+2". Point 4 below and the count's ink are DDR-054's since #163; everything else this record

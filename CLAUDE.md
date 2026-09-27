@@ -99,6 +99,15 @@ lift over the same 150ms. It is written outside the reduced-motion query, so a r
 less motion gets the shadow at once and no lift. Its reach stays inside the 20px round every card,
 which `app/tokens.test.ts` holds, so a change to `--shadow-card-hover` now moves both kinds of card.
 
+**Since #187, per DDR-063, a role's card and a project card are one card to the reader**: at rest
+both are raised by `--shadow-raised`, and under the pointer and on focus both take the accent edge,
+`--shadow-card-hover`, the accent on the title and a 4px lift, `--card-lift` (it was
+`--project-card-lift`), with the edge, the shadow and the lift brought in together over 150ms and
+the focus outline outside the edge. A reader who prefers less motion gets no lift and no transition,
+but still the edge, the shadow and the accent. A role's card rises into the 20px between its dot and
+the card, and `app/tokens.test.ts` holds the lifted shadow inside the row's room. A credential's card
+leads nowhere and stays flat and still, and the views' neighbour cards keep their own hover.
+
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
 row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
@@ -590,10 +599,10 @@ is a route rather than a file, so it does not go through `asset()`, which amends
 extends ADR-010 to the roles, at `/experience/<slug>`, and supersedes nothing. The next ADR is
 `012`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-062. The next DDR is
-`063`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-063. The next DDR is
+`064`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Twenty-eight accepted records are superseded or amended **in part**, and each says so at the top and again
+Twenty-nine accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -621,6 +630,10 @@ at the section concerned:
   no thesis. Its vertical timeline survives on paper alone.
 * **DDR-061** keeps its shadow and its row's room. DDR-062 gives the shadow a second reader: a
   project card on the page, as it lifts.
+* **DDR-062** keeps its shadow, its reduced-motion rule and its reach. DDR-063 adds the role card's
+  accent edge to the same rule and the same transition.
+* **DDR-055, DDR-057, DDR-059 and DDR-061** keep everything but what DDR-063 matches: a role's card
+  now rests raised, lifts as a project card does, and draws its focus outline outside its edge.
 * **DDR-057** keeps its row, its order, its scrolling, its print treatment and its education row.
   DDR-059 makes each role's card a link to the role's view and shows the hint above the row, which
   then takes no tab stop of its own.
@@ -633,7 +646,8 @@ at the section concerned:
   every technology the project states, and the count's ink is drawn nowhere. DDR-055 adds the
   card's movement, and a second pseudo-element stretched over it: the first still draws the focus
   outline, and the second holds a lifted card under the pointer. DDR-062 adds a light shadow to the
-  lifted card, which a reader who prefers reduced motion gets without the lift.
+  lifted card, which a reader who prefers reduced motion gets without the lift. DDR-063 adds the
+  role card's accent edge beside it, and gives a role's card the project card's lift.
 * **DDR-050** keeps everything it decides about a view's address, its way back, its introduction
   and its two columns. DDR-052 adds its foot: a divider, and the projects on either side of this
   one. DDR-053 adds its middle: a gallery of further pictures and videos, between the introduction
@@ -1424,10 +1438,10 @@ Three things about it are worth knowing before touching a card's tags.
   reading found them before, `+1` and `+2` are on none, and no word was lost.
 
 **#164 has landed, as DDR-055: a project card rises under the pointer.** Pointing anywhere on a
-card, or reaching it with the keyboard, lifts it 4px — `--project-card-lift` — over the 150ms every
+card, or reaching it with the keyboard, lifts it 4px — `--card-lift` — over the 150ms every
 link's colour already takes, per DDR-035, so the movement and the name's accent are one change. It
-is the site's one piece of expressive motion, and the page's project cards are the only place it is
-drawn: the neighbour cards on a view, the language cards, the pills, the CV control and the contents
+is the site's one piece of expressive motion, and since #187, per DDR-063, the page's role cards
+share it, and nothing else on the site moves: the neighbour cards on a view, the language cards, the pills, the CV control and the contents
 links keep the hover DDR-035 gives them.
 
 Four things about it are worth knowing before touching it.
@@ -1443,7 +1457,7 @@ Four things about it are worth knowing before touching it.
   here the change *is* the motion, so a reader who prefers less gets the card exactly as it was,
   accent, outline and tab stops included. It moves with `translate`, so no layout is disturbed.
 * **A second pseudo-element is stretched over the card**, `.link::before`, reaching
-  `--project-card-lift` below it. A lifted card vacates the bottom 4px of its resting footprint, and
+  `--card-lift` below it. A lifted card vacates the bottom 4px of its resting footprint, and
   without it a pointer resting there would drop the card and pick it up again for as long as it
   stayed. It is the link's rather than the card's, so that strip is the link in every respect — the
   accent and the click. `.link::after` still draws the focus outline, at the size of the card, which

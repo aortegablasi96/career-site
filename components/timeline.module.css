@@ -130,9 +130,12 @@
 }
 
 /* A card that leads to a view, per DDR-059, is the box its link is stretched over, as a project
-   card is, per DDR-051: that is all `relative` does here, and nothing in it moves. */
+   card is, per DDR-051: that is all `relative` does here. It rests raised off the page by the site's
+   one elevation, as a project card does, per DDR-063, so the two kinds of card that open a view look
+   alike at rest as well as under the pointer. A credential's card leads nowhere and stays flat. */
 .card:has(.link) {
   position: relative;
+  box-shadow: var(--shadow-raised);
 }
 
 /* The link is the title, in the heading's ink and without an underline: what says the card is a
@@ -150,8 +153,7 @@
 }
 
 /* Under the pointer, anywhere on the card, and on keyboard focus, the title takes the accent and
-   the card the accent's edge, as a project view's neighbouring card answers it, per DDR-035. The
-   card does not rise: DDR-055 keeps that for the project cards. */
+   the card the accent's edge, as a project view's neighbouring card answers it, per DDR-035. */
 .link:hover,
 .link:focus-visible {
   color: var(--color-accent);
@@ -160,22 +162,25 @@
 .card:has(.link:hover),
 .card:has(.link:focus-visible) {
   border-color: var(--color-border-accent-hover);
-  /* And it takes a light shadow all round, per DDR-061, so the whole card reads as the one thing
-     the pointer will open. It appears at once, as the edge's colour does, so nothing animates. */
+  /* And it takes a light shadow all round in place of its resting one, per DDR-061, so the whole
+     card reads as the one thing the pointer will open. The edge and the shadow are states, so a
+     reader who prefers less motion gets them at once; where motion is welcome they come in with
+     the lift below. */
   box-shadow: var(--shadow-card-hover);
 }
 
 /* Keyboard focus outlines the whole card rather than the title alone, since the card is what the
-   link opens. The outline is drawn inside the card's edge rather than offset outside it, because
-   the row scrolls, and a scrolling box clips what reaches past it: offset out, the outline lost its
-   foot to the row's own edge. */
+   link opens, offset outside its edge as a project card's is, per DDR-063. The row scrolls and
+   clips what reaches past it, which once cost an outline drawn outside the card its foot; since
+   DDR-061 the row leaves 16px below the cards, and 12px lie beside each one, so the outline's 4px
+   is clear of the row's edge. */
 .link:focus-visible {
   outline: none;
 }
 
 .link:focus-visible::after {
   outline: var(--focus-outline-width) solid var(--color-focus);
-  outline-offset: calc(-1 * var(--focus-outline-width));
+  outline-offset: var(--focus-outline-offset);
 }
 
 /* The company opens a role's card in the accent, and the institution a credential's in the muted
@@ -203,6 +208,34 @@
 .place {
   color: var(--color-text-faint);
   font-size: var(--font-size-xxxx-small);
+}
+
+/* And the card rises, as a project card does, per DDR-055 as DDR-063 extends it to the roles, over
+   the same 150ms and with the edge and the shadow as one change. The movement and its transition
+   are both inside the query, so a reader who has asked for less motion gets no movement at all.
+
+   It moves with `translate`, so nothing is laid out again. It rises into the 20px between the dot
+   and the card, so the row does not clip it: the shadow then reaches 12px above the card's resting
+   edge, and 12px below it, inside the row's room for it. */
+@media (prefers-reduced-motion: no-preference) {
+  .card:has(.link) {
+    transition-property: translate, border-color, box-shadow;
+    transition-duration: var(--hover-transition);
+  }
+
+  .card:has(.link:hover),
+  .card:has(.link:focus-visible) {
+    translate: 0 calc(-1 * var(--card-lift));
+  }
+
+  /* A lifted card leaves the bottom 4px of its resting footprint empty, and a pointer resting there
+     would drop it and pick it up again for as long as it stayed. So the link's box reaches 4px below
+     the card, as a project card's does, into the row's room below it. */
+  .link::before {
+    position: absolute;
+    inset: 0 0 calc(-1 * var(--card-lift));
+    content: '';
+  }
 }
 
 /*
@@ -285,6 +318,12 @@
   /* A card's link leads to a view, which paper cannot follow, so it prints no address, and there is
      no card to stretch it over, as a project card's does not, per DDR-051. */
   .link::after {
+    content: none;
+  }
+
+  /* A sheet is never pointed at, so the box that holds a lifted card under the pointer is not
+     drawn either. */
+  .link::before {
     content: none;
   }
 
