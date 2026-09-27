@@ -521,12 +521,13 @@
      is. Only a timeline card may read it. */
   --shadow-card-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.75);
 
-  /* A lit timeline entry's dates, per DDR-071: a soft glow beneath the text in the card's hover
-     ink, #1a1a2e at 18%, so the dates read as lit with the card below them. It is a text-shadow,
-     so it takes no space and moves nothing. It reaches 3px above the letters, which the date band's
-     own leading holds, so the row, which clips what passes its edge, does not cut it. In px, as
-     every other shadow is. */
-  --shadow-dates-hover: 0 3px 6px rgba(26, 26, 46, 0.18);
+  /* A lit timeline entry's dates, per DDR-071: a glow beneath the text in the card's hover ink,
+     #1a1a2e, so the dates read as lit with the card below them. It is at 50%, where the card's is at
+     18%, because the owner asked on #206 for it to be plainly visible. It is a text-shadow, so it
+     takes no space and moves nothing. It reaches 2px above the letters, which the date band's own
+     leading holds, so the row, which clips what passes its edge, does not cut it. In px, as every
+     other shadow is. */
+  --shadow-dates-hover: 0 4px 6px rgba(26, 26, 46, 0.5);
 
   /* A timeline card's surface, per DDR-070: the design's grain over its gradient. The grain is the
      design's own 200px texture, whose pixels are grey or white at 1% to 7%; it repeats at its own
