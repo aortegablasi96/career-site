@@ -169,8 +169,8 @@ describe('Timeline', () => {
     }
   });
 
-  // The design sets a company in the accent and an institution in grey, so the list carries its
-  // kind, and paper spaces roles and credentials apart by their own steps, per DDR-039.
+  // Paper spaces roles and credentials apart by their own steps, per DDR-039, so the list carries
+  // its kind.
   it('marks the list with its kind', () => {
     expect(roles).toMatch(/^<ol class="_timeline_\w+ _role_\w+"/);
     expect(credentials).toMatch(/^<ol class="_timeline_\w+ _credential_\w+"/);
@@ -238,10 +238,11 @@ describe('timeline styles on screen', () => {
     expect(card).toMatch(/justify-content:\s*center;/);
   });
 
-  it('sets a company in the accent and an institution in the muted ink, both bold', () => {
+  // DDR-068: the owner asked on #197 for an institution to be coloured as a company is.
+  it('sets a company and an institution alike, in the accent and bold', () => {
     expect(rule('.subtitle')).toMatch(/font-weight:\s*var\(--font-weight-bold\);/);
-    expect(rule('.role .subtitle')).toMatch(/color:\s*var\(--color-accent\);/);
-    expect(rule('.credential .subtitle')).toMatch(/color:\s*var\(--color-text-muted\);/);
+    expect(rule('.subtitle')).toMatch(/color:\s*var\(--color-accent\);/);
+    expect(styles).not.toMatch(/\.(role|credential) \.subtitle/);
   });
 
   it('sets the title at 11px and the place at 10px in the faint ink, as the design does', () => {

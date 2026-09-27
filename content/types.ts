@@ -420,6 +420,14 @@ export interface Degree {
   /** The degree's name, which is the entry's heading, per DDR-006. */
   name: string;
   institution: string;
+  /**
+   * Where the institution's logo sits, as a path from the site's root, which the timeline's card
+   * shows above the institution's name, per DDR-068, as a role's card shows its company's. It is the
+   * institution's official file, in its own form and colours. Optional, because PMI allows its logo
+   * only with its written authorization, which the owner has asked for, so the certifications have
+   * none yet.
+   */
+  logo?: string;
   start: Month;
   end: Month;
 }
@@ -430,6 +438,14 @@ export interface Certification {
   name: string;
   /** Who issued it, in the place a degree's institution takes, per DDR-006. */
   institution: string;
+  /**
+   * Where the institution's logo sits, as a path from the site's root, which the timeline's card
+   * shows above the institution's name, per DDR-068, as a role's card shows its company's. It is the
+   * institution's official file, in its own form and colours. Optional, because PMI allows its logo
+   * only with its written authorization, which the owner has asked for, so the certifications have
+   * none yet.
+   */
+  logo?: string;
   /** The month it was granted, which is the only date it shows, per DDR-006. */
   granted: Month;
 }

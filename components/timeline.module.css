@@ -225,7 +225,7 @@
 }
 
 /* A role's card opens with its company's logo, per DDR-066, centred above the company's name where
-   the design places it (node 286:87). It stands straight on the card's own white, with no tile of
+   the design places it (node 286:87), and a degree's card with its institution's, per DDR-068. It stands straight on the card's own white, with no tile of
    its own, as the owner chose on #193. The logo is the owner's file in the brand's own form and
    colours, so nothing here recolours it; it is scaled to its height and, where a card is too narrow
    for it, to the card's width, and never distorted or cropped. */
@@ -253,21 +253,16 @@
   margin-block-start: var(--timeline-logo-rise);
 }
 
-/* The company opens a role's card in the accent, and the institution a credential's in the muted
-   ink, both bold, per DDR-057. The design's 12px is not a step of DDR-022's scale, so the nearest,
+/* The company opens a role's card and the institution a credential's, both in the accent and bold,
+   per DDR-057 as DDR-068 amends it: the owner asked on #197 for the education cards' words to be
+   coloured as the experience cards' are, where the design sets an institution in grey. The design's 12px is not a step of DDR-022's scale, so the nearest,
    12.8px, is taken, as the footer takes it. */
 .subtitle {
   font-size: var(--font-size-xx-small);
   font-weight: var(--font-weight-bold);
-}
-
-.role .subtitle {
   color: var(--color-accent);
 }
 
-.credential .subtitle {
-  color: var(--color-text-muted);
-}
 
 /* The title is the entry's heading, at the design's 11px. */
 .title {
@@ -411,8 +406,8 @@
     font-size: var(--font-size-xxx-small);
   }
 
-  /* The logo is the screen's alone, per DDR-066: the printed CV is the one DDR-057 draws, and the
-     company's name beside each entry says what the logo does. */
+  /* The logo is the screen's alone, per DDR-066 and DDR-068: the printed CV is the one DDR-057
+     draws, and the name beside each entry says what the logo does. */
   .logo {
     display: none;
   }
