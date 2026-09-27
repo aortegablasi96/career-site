@@ -125,7 +125,7 @@ describe('Experience', () => {
     expect(html).not.toContain('tabindex');
   });
 
-  it('says above the timeline that a role’s card leads to its description, beside a hidden clock', () => {
+  it('says above the timeline that a role’s card leads to its description, beside a hidden mark', () => {
     expect(html).toMatch(/^<div><p class="[^"]*"><svg [^>]*aria-hidden="true"[^>]*>.*<\/svg>Click any role to read the full description<\/p><ol /);
   });
 
@@ -149,14 +149,6 @@ describe('experience styles', () => {
   it('hides the points on screen and shows them on paper', () => {
     expect(rule('.points')).toMatch(/display:\s*none;/);
     expect(styles).toMatch(/@media print\s*\{\s*\.points\s*\{[^}]*display:\s*block;/);
-  });
-
-  // DDR-059: paper has nothing to click, so the hint is the screen's alone, and the timeline takes
-  // back the place it had below the heading.
-  it('hides the hint on paper, and the space below it', () => {
-    expect(styles).toMatch(/@media print\s*\{[\s\S]*\.hint\s*\{\s*display:\s*none;\s*\}/);
-    expect(rule('.hint + *')).toMatch(/margin-block-start:\s*var\(--timeline-hint-space\);/);
-    expect(styles).toMatch(/@media print\s*\{[\s\S]*\.hint \+ \*\s*\{\s*margin-block-start:\s*0;\s*\}/);
   });
 
   it('sets bullet text at the small step, as DDR-011 records', () => {

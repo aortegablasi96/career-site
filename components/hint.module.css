@@ -1,0 +1,29 @@
+/* The hint above a section's cards, per DDR-059 as DDR-067 amends it: 11px in the faint ink, after
+   an information mark. A mark is 1em square, so it is the size of the words beside it rather than a
+   length of its own. The design's 6px between the two is not on the scale; it takes the nearest
+   step, as a level's badge takes it above its skills, per DDR-037. What follows stands 8px below,
+   per DDR-067, so the hint reads as the caption of the row it describes. The heading step above it
+   is the section's own. */
+.hint {
+  display: flex;
+  gap: var(--space-small);
+  align-items: center;
+  color: var(--color-text-faint);
+  font-size: var(--font-size-xxx-small);
+}
+
+.hint + * {
+  margin-block-start: var(--space-small);
+}
+
+/* Paper has nothing to click, so the hint is the screen's alone, and what follows it takes the place
+   it had below the heading before the hint was drawn. */
+@media print {
+  .hint {
+    display: none;
+  }
+
+  .hint + * {
+    margin-block-start: 0;
+  }
+}

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { asset } from '@/app/asset';
 import type { Project, ProjectMedia } from '@/content/types';
+import { Hint } from './hint';
 import styles from './projects.module.css';
 
 /**
@@ -74,9 +75,13 @@ export function projectHref(slug: string): string {
  *
  * Each card is an article, which print keeps whole, and it prints as it shows, with no address:
  * the link is a route of this site, which paper cannot follow, per Epic #152.
+ *
+ * The first row is handed the hint that says a card leads to its view, per DDR-067, as the
+ * experience timeline is. The hint and the row are then one element, so the section keeps both
+ * with its heading, and the hint's space below it is not the section's heading step.
  */
-export function Projects({ projects }: { projects: readonly Project[] }) {
-  return (
+export function Projects({ projects, hint }: { projects: readonly Project[]; hint?: string }) {
+  const row = (
     <div className={styles.row}>
       {projects.map(({ name, slug, media, summary, technologies }) => {
         const still = 'poster' in media ? { src: media.poster, alt: media.description } : { src: media.file, alt: media.alt };
@@ -102,6 +107,15 @@ export function Projects({ projects }: { projects: readonly Project[] }) {
           </article>
         );
       })}
+    </div>
+  );
+
+  return hint === undefined ? (
+    row
+  ) : (
+    <div>
+      <Hint text={hint} />
+      {row}
     </div>
   );
 }

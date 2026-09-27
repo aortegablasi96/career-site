@@ -43,7 +43,7 @@
   margin-block: 0;
 }
 
-/* The dates sit at the foot of a band the height the design gives it, just above the dot, so the
+/* The dates sit at the foot of a band one line of them tall, per DDR-067, just above the dot, so the
    dots of every entry are level whatever the dates wrap to. They are a label rather than prose, per
    DDR-018: uppercase, bold and in the accent, and at the design's 10px and 1px of tracking, which is
    the x-loose step. The case is drawn here, so a screen reader is still handed "Oct 2024 – Present"

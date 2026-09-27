@@ -337,6 +337,11 @@ export interface Projects {
   link: string;
   /** In the order the page shows them, per ADR-002. */
   projects: readonly Project[];
+  /**
+   * The line above the cards that says a project's card leads to its view, per DDR-067. Screen
+   * only, since paper has nothing to click.
+   */
+  hint: string;
   /** The words each project's view shows around the project's own, per DDR-050. */
   view: ProjectView;
 }

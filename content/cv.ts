@@ -56,9 +56,11 @@ import type { Cv } from './types';
  * It moved again with #193, because each role gained the path of its company's logo, and ToBeIT's
  * and EDP's a flag that draws them taller, and ToBeIT's one that raises it, per DDR-066.
  * A logo is not a fact ADR-005 lists as shared, so it did not move the CV.
+ * It moved again with #195, because the projects section gained the hint above its cards, per
+ * DDR-067. A hint is not a fact ADR-005 lists as shared, so it did not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'e348a03ec465bfe3f3622462b7b8abe59164ba3f0486257e2aff3a5bfe353794',
+  contentDigest: '27ff761bb629a77b42ef3142fc80bf23c536d03335926e0efa1298beaf1ddc9f',
 };

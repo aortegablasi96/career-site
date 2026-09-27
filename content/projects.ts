@@ -102,6 +102,8 @@ export const projects: Projects = {
       links: [{ text: sourceCode, href: 'https://github.com/aortegablasi96/career-site' }],
     },
   ],
+  // The line above the cards, per DDR-067, in the experience hint's words.
+  hint: 'Click any project to read the full description',
   view: {
     back: 'Back to portfolio',
     builtWith: 'Built with',

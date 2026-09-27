@@ -810,11 +810,11 @@ describe('spacing tokens', () => {
 
   // DDR-057's row, off `career-site-main` at 1195px: no column narrower than the design's
   // narrowest, 192px, 12px either side of each card, the dates at the foot of a 64px band, and each
-  // card 20px below its dot.
+  // card 20px below its dot. DDR-067 takes the band down to one line of the dates.
   it('measures the horizontal row in rem, as the design draws it, per DDR-057', () => {
     expect(token('timeline-entry-width')).toBe('12rem');
     expect(token('timeline-entry-inset')).toBe('0.75rem');
-    expect(token('timeline-date-height')).toBe('4rem');
+    expect(token('timeline-date-height')).toBe('calc(var(--font-size-xxxx-small) * var(--line-height-body))');
     expect(token('timeline-card-space')).toBe('1.25rem');
   });
 

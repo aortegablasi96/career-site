@@ -58,9 +58,10 @@ export const sections: readonly PageSection[] = [
     id: 'projects',
     title: projects.title,
     link: projects.link,
-    // A row of two cards rather than one, for the reason the skills below give, per DDR-051.
-    items: projectRows(projects.projects).map((row) => (
-      <Projects key={row[0]!.slug} projects={row} />
+    // A row of two cards rather than one, for the reason the skills below give, per DDR-051. The
+    // first carries the hint above the cards, per DDR-067.
+    items: projectRows(projects.projects).map((row, index) => (
+      <Projects key={row[0]!.slug} projects={row} hint={index === 0 ? projects.hint : undefined} />
     )),
   },
   {
