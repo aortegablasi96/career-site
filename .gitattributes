@@ -1,0 +1,2 @@
+# A PDF is binary: never convert its line endings on checkout, which would corrupt it.
+*.pdf binary
