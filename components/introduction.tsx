@@ -77,6 +77,7 @@ export function Introduction({
     location,
     summary,
     invitation,
+    callToAction,
     contact,
     newTab,
   } = introduction;
@@ -112,6 +113,9 @@ export function Introduction({
             name is still the page's one heading and the outline gains nothing; it is read after
             the summary and before the list, which is where it stands. */}
         <p className={styles.invitation}>{invitation}</p>
+        {/* What the controls below are for, per DDR-076: a quieter paragraph under the question,
+            read after it and before the list. */}
+        <p className={styles.callToAction}>{callToAction}</p>
         <ul className={styles.controls}>
           {/* A profile opens in a new tab, so the page stays open behind it, per DDR-043. `noopener`
               keeps the new tab from reaching back to this one through `window.opener`; browsers

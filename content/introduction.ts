@@ -24,6 +24,10 @@ import type { Introduction } from './types';
  * that story. It asks the reader rather than stating anything about the owner, so it is not a claim
  * and needs no source in the knowledge base. It is on screen only, per DDR-072.
  *
+ * Since #223 a line below the question says what the controls are for, in the owner's own words on
+ * that story: the contact pills to get in touch and the CV control to download the CV. It states
+ * nothing about the owner either, so it is not a claim. It is on screen only, per DDR-076.
+ *
  * Each contact carries two strings, per DDR-029: the label the pill shows, which names the service
  * rather than the address, and the address itself, which the footer shows and which is what the
  * printed CV carries. The labels are the design's own words, and each names a service a reader
@@ -52,6 +56,7 @@ export const introduction: Introduction = {
     ', I’m drawn to challenging problems, emerging opportunities, and ideas that have yet to prove their potential. I enjoy bringing strategy, technology, and people together to make them happen.',
   ],
   invitation: 'Interested in working together?',
+  callToAction: 'Get in touch or download my CV below:',
   contact: [
     {
       label: 'Email me',

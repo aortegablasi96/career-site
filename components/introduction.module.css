@@ -185,6 +185,19 @@
   font-weight: var(--font-weight-semibold);
 }
 
+/* What the controls are for, per DDR-076. It reads with the question as one invitation, so it sits
+   a step closer to it than the flow step, as the name sits under the greeting, and the controls
+   still follow at the flow step. It is the greeting's secondary ink at the body's size and weight,
+   so the question above it stays the one highlighted line and this one reads as directions to the
+   controls rather than as part of the summary. */
+.invitation + .callToAction {
+  margin-block-start: var(--space-x-small);
+}
+
+.callToAction {
+  color: var(--color-text-secondary);
+}
+
 /* The four controls wrap onto as many rows as they need, rather than being cut off or scrolled. */
 .controls {
   display: flex;
@@ -387,13 +400,18 @@
   }
 
   /* The question is the screen's too, per DDR-072: on paper the pills are words rather than links,
-     so it has nothing to lead into. The controls take back the space above them that the question
-     took on screen, so the sheet is as it was. */
+     so it has nothing to lead into. So is the line below it, per DDR-076, which points at those
+     links and at a CV control paper does not print. The controls take back the space above them
+     that the question took on screen, so the sheet is as it was. */
   .invitation {
     display: none;
   }
 
-  .invitation + .controls {
+  .callToAction {
+    display: none;
+  }
+
+  .callToAction + .controls {
     margin-block-start: var(--space-controls);
   }
 

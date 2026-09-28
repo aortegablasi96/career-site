@@ -78,9 +78,12 @@ import type { Cv } from './types';
  * It moved again with #221, because the contents bar gained the name of the button that opens its
  * links on a phone, per DDR-075. A button's name is not a fact ADR-005 lists as shared, so it did
  * not move the CV.
+ * It moved again with #223, because the introduction gained a line below its question saying what
+ * the controls are for, per DDR-076. That line is not a fact ADR-005 lists as shared, so it did not
+ * move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '2d0b9bce34cf7d4544c3a99c1db59f099573796e52c62db4aae34ca1dc6cb9f4',
+  contentDigest: '179d376d5420307dc3a01f93c6956ff8775440bd17b2fc410f4a75c9df24f9aa',
 };

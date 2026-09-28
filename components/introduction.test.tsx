@@ -69,6 +69,7 @@ describe('Introduction', () => {
       introduction.location,
       summaryHtml,
       introduction.invitation,
+      introduction.callToAction,
       introduction.contact[0].label,
       cv.label,
     ].map((part) => html.indexOf(part));
@@ -394,9 +395,28 @@ describe('introduction styles', () => {
   it('asks the question in a paragraph between the summary and the controls, per DDR-072', () => {
     expect(html).toMatch(
       new RegExp(
-        `</p><p class="[^"]*invitation[^"]*">${literal(introduction.invitation)}</p><ul class="[^"]*controls`,
+        `</p><p class="[^"]*invitation[^"]*">${literal(introduction.invitation)}</p><p class="[^"]*callToAction`,
       ),
     );
+  });
+
+  // DDR-076: what the controls are for, as content/ writes it, in a paragraph of its own between
+  // the question and the list, so a screen reader reads it after the question and before the pills.
+  it('says what the controls are for in a paragraph between the question and the list, per DDR-076', () => {
+    expect(html).toMatch(
+      new RegExp(
+        `</p><p class="[^"]*callToAction[^"]*">${literal(introduction.callToAction)}</p><ul class="[^"]*controls`,
+      ),
+    );
+  });
+
+  it('sets the line a step below the question in the secondary ink, per DDR-076', () => {
+    expect(rule('.invitation + .callToAction')).toMatch(
+      /margin-block-start:\s*var\(--space-x-small\);/,
+    );
+    expect(rule('.callToAction')).toMatch(/color:\s*var\(--color-text-secondary\);/);
+    // The body's size and weight, so it writes neither, and the question stays the highlight.
+    expect(rule('.callToAction')).not.toMatch(/font-(size|weight)/);
   });
 
   it('highlights the question in the accent at the larger step and semibold, per DDR-072', () => {
@@ -405,10 +425,12 @@ describe('introduction styles', () => {
     expect(rule('.invitation')).toMatch(/font-weight:\s*var\(--font-weight-semibold\);/);
   });
 
-  // On paper the controls take back the space the question took, so the sheet is as it was.
-  it('hides the question on paper and gives the controls its space there, per DDR-072', () => {
+  // On paper the controls take back the space the question and the line below it took, so the
+  // sheet is as it was.
+  it('hides the question and the line below it on paper and gives the controls their space there, per DDR-072 and DDR-076', () => {
     expect(rule('.invitation', paper)).toMatch(/display:\s*none;/);
-    expect(rule('.invitation + .controls', paper)).toMatch(
+    expect(rule('.callToAction', paper)).toMatch(/display:\s*none;/);
+    expect(rule('.callToAction + .controls', paper)).toMatch(
       /margin-block-start:\s*var\(--space-controls\);/,
     );
   });
