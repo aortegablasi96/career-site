@@ -311,6 +311,27 @@ export interface RoleView {
   neighbour: (direction: string, company: string, role: string) => string;
 }
 
+/** One item of a project's business case, per DDR-079: its label, such as "01 — Problem", and its text. */
+export interface BusinessCaseItem {
+  label: string;
+  text: string;
+}
+
+/**
+ * A project's business case, per DDR-079: the summary the view shows, and the full document a
+ * reader can download from it.
+ */
+export interface BusinessCase {
+  /** The "Summary of Business Case" from the owner's knowledge base, as labelled items in their order. */
+  items: readonly BusinessCaseItem[];
+  /**
+   * The full business case, a PDF the owner supplies, beside the project's pictures in
+   * `public/portfolio/<slug>/`. Its name is what lands in the reader's downloads folder, as the
+   * CV's is, per ADR-004.
+   */
+  file: string;
+}
+
 /** A project in the projects section, per the Content Brief on #25. */
 export interface Project {
   /** The project's name, which is the entry's heading, per DDR-006, and its view's `h1`. */
@@ -360,6 +381,13 @@ export interface Project {
    */
   howBuilt?: readonly (readonly (string | Strong)[])[];
   /**
+   * Why the project exists, what the owner decided and what came of it, per #231 and DDR-079. A
+   * view whose project has one lets the reader switch between it and the overview, which is the
+   * description and `howBuilt`; while it is shown, the links give way to its download. Left out
+   * where the owner has supplied none, and a view without it shows no switch.
+   */
+  businessCase?: BusinessCase;
+  /**
    * The repository first, then a live version where one exists. Each link is labelled rather than
    * showing its address, which prints after it on paper, per DDR-006.
    */
@@ -394,6 +422,17 @@ export interface ProjectView {
   back: string;
   /** The heading above how the project was built, per DDR-078. A project without `howBuilt` shows it nowhere. */
   howBuilt: string;
+  /**
+   * The name of the switch between a project's two accounts, per DDR-079. Only assistive
+   * technology is told it: the two options beside each other say what the switch does.
+   */
+  accounts: string;
+  /** The switch's first option: the description and how the project was built. */
+  overview: string;
+  /** The switch's second option: the project's business case. */
+  businessCase: string;
+  /** The control that downloads the full business case, shown in place of the links while it is. */
+  downloadBusinessCase: string;
   /** The label above the technologies. */
   builtWith: string;
   /**

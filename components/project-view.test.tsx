@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { introduction } from '@/content/introduction';
@@ -76,7 +76,13 @@ describe('ProjectView', () => {
 
       expect(paragraphs.length).toBeGreaterThan(0);
       expect(bare(view)).toContain(
-        `<p>${project.description}</p><h2>${projects.view.howBuilt}</h2>${paragraphs.join('')}<h2>${projects.view.builtWith}</h2>`,
+        `<p>${project.description}</p><h2>${projects.view.howBuilt}</h2>${paragraphs.join('')}`,
+      );
+      // A project with a business case holds both in its overview, per DDR-079, so "Built with"
+      // follows the business case rather than the last paragraph; the order is the same.
+      const shown = text(view);
+      expect(shown.indexOf(projects.view.builtWith)).toBeGreaterThan(
+        shown.indexOf(words(project.howBuilt!.at(-1)!)),
       );
       expect(view.match(/<h1/g)).toHaveLength(1);
     }
@@ -98,6 +104,165 @@ describe('ProjectView', () => {
     expect(text(view)).not.toContain(projects.view.howBuilt);
     expect(view).not.toContain('howBuilt');
     expect(bare(view)).toContain(`<p>${digitalTwin!.description}</p><h2>${projects.view.builtWith}</h2>`);
+  });
+
+  // DDR-079 and ADR-014: a project with a business case can be read as its overview or as that,
+  // through a native radio group the stylesheet draws as one pill, with no script.
+  describe('the switch between the overview and the business case', () => {
+    const view = render(stockPortfolioViewer!);
+    const radios = [...view.matchAll(/<input [^>]*>/g)].map(([input]) => input);
+
+    it('is on the Stock Portfolio Viewer alone, which is the one project with a business case', () => {
+      expect(projects.projects.filter(({ businessCase }) => businessCase).map(({ name }) => name)).toEqual([
+        stockPortfolioViewer!.name,
+      ]);
+
+      for (const project of [numisBook!, digitalTwin!, careerSite!]) {
+        expect(render(project)).not.toContain('radiogroup');
+        expect(render(project)).not.toContain('<input');
+      }
+    });
+
+    // A view without a business case reads exactly as it did before #231: no wrapper round its
+    // overview and nothing between the name and the description.
+    it('leaves a view without a business case as it was', () => {
+      const plain = bare(render({ ...stockPortfolioViewer!, businessCase: undefined }));
+
+      expect(plain).toContain(
+        `${stockPortfolioViewer!.name}</h1><p>${stockPortfolioViewer!.description}</p><h2>${projects.view.howBuilt}</h2>`,
+      );
+      expect(plain).not.toContain('<dl');
+    });
+
+    it('is a group of two radios named for what it switches, the overview first and checked', () => {
+      expect(view).toContain(`role="radiogroup" aria-label="${projects.view.accounts}"`);
+      expect(radios).toHaveLength(2);
+      for (const radio of radios) {
+        expect(radio).toContain('type="radio"');
+        expect(radio).toContain('name="account"');
+      }
+      expect(radios[0]).toContain('checked=""');
+      expect(radios[1]).not.toContain('checked');
+
+      // Each radio is inside its label, so the label's word is its accessible name and the whole
+      // label is its target.
+      expect(bare(view)).toContain(
+        `<label><input type="radio" name="account" checked=""/>${projects.view.overview}</label>` +
+          `<label><input type="radio" name="account"/>${projects.view.businessCase}</label>`,
+      );
+    });
+
+    it('stands between the name and the overview, and the business case follows the overview', () => {
+      const shown = text(view);
+      const order = [
+        stockPortfolioViewer!.name,
+        projects.view.overview,
+        projects.view.businessCase,
+        stockPortfolioViewer!.description,
+        words(stockPortfolioViewer!.howBuilt![0]!),
+        stockPortfolioViewer!.businessCase!.items[0]!.label,
+        projects.view.builtWith,
+      ];
+      const positions = order.map((part) => shown.indexOf(part));
+
+      expect(positions).not.toContain(-1);
+      expect(positions).toEqual([...positions].sort((a, b) => a - b));
+    });
+
+    it('shows each item of the business case as a term and its description, in the owner’s order', () => {
+      const items = stockPortfolioViewer!.businessCase!.items;
+
+      expect(items.map(({ label }) => label)).toEqual([
+        '01 — Problem',
+        '02 — Product',
+        '03 — Outcome',
+        '04 — My contribution',
+        'Key decisions',
+      ]);
+      expect(bare(view)).toContain(
+        `<dl>${items.map(({ label, text }) => `<div><dt>${label}</dt><dd>${text}</dd></div>`).join('')}</dl>`,
+      );
+    });
+
+    // The labels are terms, not headings, so either account leaves the outline one h1 and h2s.
+    it('keeps one h1 and skips no heading level', () => {
+      expect(view.match(/<h1/g)).toHaveLength(1);
+      expect(view).not.toMatch(/<h[3-6]/);
+    });
+
+    // The business case is hidden until its option is checked, and then the overview is. A browser
+    // without `:has()` keeps the overview, as the view read before.
+    it('shows the business case in place of the overview only while its option is checked', () => {
+      expect(css.match(/\.businessCase\s*\{([^}]*)\}/)?.[1]).toContain('display: none');
+      expect(css).toMatch(/\.text:has\(\.caseChoice:checked\) \.overview \{\s*display: none;/);
+      expect(css).toMatch(/\.text:has\(\.caseChoice:checked\) \.businessCase \{\s*display: block;/);
+      expect(view).toMatch(/<input [^>]*class="[^"]*caseChoice[^"]*"/);
+    });
+
+    // The owner asked on #231 for "Built with" and its tags to be the overview's alone.
+    it('hides "Built with" and the technologies with the overview', () => {
+      expect(view).toMatch(new RegExp(`<h2 class="[^"]*overviewOnly[^"]*">${projects.view.builtWith}</h2>`));
+      expect(view).toMatch(/<ul class="[^"]*technologies[^"]*overviewOnly[^"]*">/);
+      expect(render(numisBook!)).not.toContain('overviewOnly');
+    });
+
+    // The radio takes no room and draws nothing, and its label draws the focus it cannot.
+    it('draws each option as its label, focus included', () => {
+      const choice = css.match(/\.choice\s*\{([^}]*)\}/)?.[1] ?? '';
+
+      expect(choice).toContain('appearance: none');
+      expect(choice).toContain('inline-size: 0');
+      expect(css).toMatch(/\.option:has\(\.choice:focus-visible\) \{\s*outline: var\(--focus-outline-width\) solid var\(--color-focus\);/);
+      expect(css).toMatch(/\.option:has\(\.choice:checked\) \{\s*background-color: var\(--color-accent\);\s*color: var\(--color-on-accent\);/);
+    });
+  });
+
+  // DDR-079: while the business case is shown, the links give way to its full document, which
+  // downloads as the CV does.
+  describe('the full business case', () => {
+    const view = render(stockPortfolioViewer!);
+    const { file } = stockPortfolioViewer!.businessCase!;
+
+    it('is a PDF beside the project’s pictures, reached by the one route a binary asset takes', () => {
+      expect(file).toBe('/portfolio/stock-portfolio-viewer/stock-portfolio-viewer-business-case.pdf');
+      expect(existsSync(new URL(`../public${file}`, import.meta.url))).toBe(true);
+      expect(view).toContain(`href="${file}"`);
+    });
+
+    it('downloads in place, as the filled pill, with its own words', () => {
+      const link = view.match(new RegExp(`<a href="${file}"[^>]*>`))?.[0] ?? '';
+
+      expect(link).toContain('download=""');
+      expect(link).not.toContain('target=');
+      expect(bare(view)).toContain(
+        `<ul><li><a href="${file}" download=""><svg`,
+      );
+      expect(text(view)).toContain(projects.view.downloadBusinessCase);
+    });
+
+    it('follows the source code, which it stands in for while the business case is shown', () => {
+      const shown = text(view);
+
+      expect(shown.indexOf(projects.view.downloadBusinessCase)).toBeGreaterThan(shown.indexOf('Source code'));
+      expect(view).toMatch(/<ul class="[^"]*links[^"]*overviewOnly[^"]*">/);
+      expect(view).toMatch(/<ul class="[^"]*links[^"]*caseLinks[^"]*">/);
+      expect(css.match(/\.caseLinks\s*\{([^}]*)\}/)?.[1]).toContain('display: none');
+      // Hidden by default only if it comes after `.links`, whose `display: flex` it overrides at the
+      // same specificity.
+      expect(css.search(/^\.caseLinks\s*\{/m)).toBeGreaterThan(css.search(/^\.links\s*\{/m));
+      expect(css).toMatch(/\.text:has\(\.caseChoice:checked\) \.overviewOnly \{\s*display: none;/);
+      expect(css).toMatch(/\.text:has\(\.caseChoice:checked\) \.caseLinks \{\s*display: flex;/);
+    });
+
+    it('is on no view without a business case, whose links are as they were', () => {
+      for (const project of [numisBook!, digitalTwin!, careerSite!]) {
+        const markup = render(project);
+
+        expect(text(markup)).not.toContain(projects.view.downloadBusinessCase);
+        expect(markup).not.toContain('overviewOnly');
+        expect(markup).not.toContain('download=""');
+      }
+    });
   });
 
   it('leads back to the projects section, not the top of the page', () => {

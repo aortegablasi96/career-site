@@ -122,6 +122,113 @@
   margin-block-start: var(--space-flow);
 }
 
+/* The switch between the overview and the business case, per DDR-079: one pill on white edged in
+   the accent's tint, as the view's outlined control is, holding the two options as segments, the
+   chosen one filled in the accent as the view's filled control is. It sits as far below the name as
+   the description did, and the account it shows as far below it.
+
+   It is an inline box, so it is as wide as its two options rather than the column, and it aligns
+   to the top of its line so the line is its own height. Where the two cannot share a line, at a
+   narrow width with enlarged text, the second wraps below the first inside the pill. */
+.switch {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-x-small);
+  margin-block-start: var(--space-medium);
+  padding: var(--space-x-small);
+  border: 1px solid var(--color-border-accent);
+  border-radius: var(--radius-large);
+  background-color: var(--color-surface-card);
+  vertical-align: top;
+}
+
+/* An option is its label, a pill at the size of the view's controls' text, in the way back's muted
+   ink and medium weight. The whole label is the target, and its box is the line its word sets in
+   plus the controls' padding, per DDR-027. */
+.option {
+  display: inline-flex;
+  align-items: center;
+  padding-block: var(--space-x-small);
+  padding-inline: var(--space-medium);
+  border-radius: var(--radius-pill);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-x-small);
+  font-weight: var(--font-weight-medium);
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+/* The radio takes no room and draws nothing: its label is what the reader sees and points at, and
+   the label draws its focus, below. It is still the control, so assistive technology and the
+   keyboard reach it exactly as they would a drawn one. */
+.choice {
+  margin: 0;
+  inline-size: 0;
+  block-size: 0;
+  appearance: none;
+}
+
+.choice:focus-visible {
+  outline: none;
+}
+
+/* Under the pointer an option not chosen takes the accent and its tint, as the view's outlined
+   control does, per DDR-035. */
+.option:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-accent);
+}
+
+/* The chosen option is filled in the accent, in the ink written on it. */
+.option:has(.choice:checked) {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* Keyboard focus is on the radio, and the label draws it, as every control's focus is drawn. */
+.option:has(.choice:focus-visible) {
+  outline: var(--focus-outline-width) solid var(--color-focus);
+  outline-offset: var(--focus-outline-offset);
+}
+
+/* The business case, which shows in place of the overview while its option is checked. A browser
+   that cannot read `:has()` shows the overview alone, as the view read before the switch. */
+.businessCase {
+  display: none;
+  margin-block-start: var(--space-medium);
+}
+
+.text:has(.caseChoice:checked) .overview {
+  display: none;
+}
+
+.text:has(.caseChoice:checked) .businessCase {
+  display: block;
+}
+
+/* Each item a flow step below the one before it. */
+.caseItem + .caseItem {
+  margin-block-start: var(--space-flow);
+}
+
+/* An item's label, set as the page's other labels in the accent are, such as a timeline's dates:
+   bold capitals at the view's controls' step, lightly tracked. The capitals are drawn, never
+   written, so assistive technology is handed the owner's own words. */
+.caseLabel {
+  color: var(--color-accent);
+  font-size: var(--font-size-x-small);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-loose);
+  text-transform: uppercase;
+}
+
+/* Its text, set as the description is. */
+.caseText {
+  margin-block-start: var(--space-x-small);
+  margin-inline-start: 0;
+  line-height: var(--line-height-prose);
+}
+
 /* Every technology, as tags that wrap, 8px apart each way (node 59:32). */
 .technologies {
   display: flex;
@@ -200,6 +307,22 @@
 .secondary:focus-visible {
   border-color: var(--color-border-accent-hover);
   background-color: var(--color-surface-hover);
+}
+
+/* "Built with", the technologies and the links are the overview's, as the owner asked on #231:
+   while the business case is shown they are hidden, and the full business case's download stands
+   where the links did, as the same filled pill. `.caseLinks` follows `.links`, whose `display` it
+   overrides at the same specificity. */
+.caseLinks {
+  display: none;
+}
+
+.text:has(.caseChoice:checked) .overviewOnly {
+  display: none;
+}
+
+.text:has(.caseChoice:checked) .caseLinks {
+  display: flex;
 }
 
 /* A picture and its caption — the lead one, and each item of the gallery, per DDR-053 — in a column
