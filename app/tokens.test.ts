@@ -837,9 +837,9 @@ describe('spacing tokens', () => {
   // DDR-010's photo. Two tokens rather than one that adapts, because DDR-014 keeps the wide
   // breakpoint out of this file and a media query cannot read a custom property; the introduction
   // swaps between them. In rem, as the column is, so the photo keeps its proportion to the name
-  // beside it when text is enlarged.
+  // beside it when text is enlarged. 120px since DDR-077, which balances it against the narrow name.
   it('sizes the narrow photo in rem, and the wide one at its ratio', () => {
-    expect(token('photo-width')).toBe('6rem');
+    expect(token('photo-width')).toBe('7.5rem');
     expect(token('photo-ratio')).toBe('3 / 4');
   });
 
@@ -999,7 +999,6 @@ const atBreakpoint = redefined(breakpoints[0]?.body);
 const atWide = redefined(breakpoints[1]?.body);
 
 const adapted = [
-  { role: 'font-size-page-title', narrow: 'font-size-xx-large', wide: 'font-size-xxx-large' },
   { role: 'font-size-section-title', narrow: 'font-size-large', wide: 'font-size-x-large' },
   // DDR-050: a project view's title, below the wide breakpoint, steps down as the page title does.
   { role: 'font-size-project-title-narrow', narrow: 'font-size-x-large', wide: 'font-size-xx-large' },
@@ -1052,7 +1051,17 @@ describe('responsive tokens', () => {
     expect(token('contents-menu-max-size')).toBe('calc(100dvh - var(--contents-bar-clearance))');
   });
 
-  it('adapts only the page, section and project view titles, the gutter and the language columns, never a step of either scale', () => {
+  // DDR-077: the name is the narrow page title at every width below the wide breakpoint, so it no
+  // longer adapts here. It has two roles instead, as a project view's title has, and the
+  // introduction swaps between them from the wide breakpoint and on paper.
+  it('gives the page title a narrow role and a full one rather than adapting it, per DDR-077', () => {
+    expect(token('font-size-page-title-narrow')).toBe('var(--font-size-xx-large)');
+    expect(token('font-size-page-title')).toBe('var(--font-size-xxx-large)');
+    expect(atBreakpoint.has('font-size-page-title')).toBe(false);
+    expect(atBreakpoint.has('font-size-page-title-narrow')).toBe(false);
+  });
+
+  it('adapts only the section and project view titles, the gutter and the language columns, never a step of either scale', () => {
     expect([...atBreakpoint.keys()]).toEqual([...adapted, ...adaptedCounts].map(({ role }) => role));
   });
 

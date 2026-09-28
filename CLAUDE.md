@@ -69,6 +69,21 @@ sheets are pixel-identical. At 390 by 844 the controls now end 791.2px down, 52.
 (the contents bar is a row shorter on a phone since #221), so a longer summary, question or line is
 to be measured there again.
 
+**Since #225, per DDR-077, the photo and the name balance on a phone.** Below the wide breakpoint
+the name is `--font-size-page-title-narrow`, 36px, where it was 51.2px from 320px up, and the photo
+is `--photo-width` at `7.5rem`, 120 by 160, where it was 96 by 128. The two are one row, centred on
+each other. The introduction is a wrapping flex row, the text column is `display: contents`, the
+`hgroup` grows from a basis of 0 beside the photo, and every other block takes `flex-basis: 100%`.
+The frame and the `hgroup` carry the same 8px below them, so they are centred exactly. Three lines
+of the name with the greeting are 158px beside the 160px photo at 300px to 360px, and the name is
+beside the photo at every width from 300px up at the default size. **On paper the photo still
+floats**, and that float is now written in the print block, **which comes before the wide block**
+so that a sheet wide enough to match the wide breakpoint, such as A4 landscape, still takes the
+grid. From the wide breakpoint up and on paper every box was measured identical, and the sheets
+pixel-identical, in Edge and Firefox. At 390 by 844 the controls end 745.9px down, 98.1px above the
+fold. At 200% text the name stands beside the photo from 550px, where it did from 500px. A longer
+name or greeting changes the balance, so measure again at 300px to 767px.
+
 **Since #212 the summary is the owner's new description, with one phrase in bold**, "Curious by
 nature and ambitious by choice". `summary` is a list of parts, each a string or a `Strong`, so the
 words stay in `content/` and the component renders a `Strong` as `strong` inside the one paragraph.
@@ -305,8 +320,10 @@ Two things about the introduction are worth knowing before changing it:
   above the name below the wide breakpoint. Measured against the real copy on #48, stacking it left
   the contact controls 2px below the fold of a 390px phone, which is the very thing DDR-010 places
   the photo beside the name to prevent. The owner chose the deviation on #48; a later design story
-  records it. Below the breakpoint the photo floats and the name takes the width beside it, so the
-  summary returns to the full column underneath.
+  records it. Below the breakpoint the photo floated and the name took the width beside it, so the
+  summary returned to the full column underneath. Since #225, per DDR-077, the photo and the name
+  are one row instead, centred on each other, and the rest of the text follows at the full column.
+  The float is paper's alone.
 * **Beside is conditional, per #68.** The photo is sized in rem, so it grows with the reader's text
   while the room beside it shrinks; before #68 the name was squeezed to 119px at 390px and 200% and
   broke mid-word onto seven lines, and to 49px at 320px, where it took seventeen.
@@ -317,8 +334,9 @@ Two things about the introduction are worth knowing before changing it:
   the photo, at the full column, once its longest word no longer fits beside it — at 360px and
   390px nothing changes at any text size the page was checked at, and at 320px the name now sits
   below the photo at the default size too, which is three whole words rather than four broken lines.
-  Anything that changes the photo's size, the name's size or the float has to be rechecked at 200%,
-  not only at 100%.
+  Since DDR-077 the same minimum works on the row: an `hgroup` that cannot have it beside the photo
+  wraps onto the next line. Anything that changes the photo's size, the name's size or the row has
+  to be rechecked at 200%, not only at 100%.
 
 It is a Next.js App Router
 project in TypeScript, configured for static export, per ADR-001 and ADR-002, and deployed to
@@ -444,8 +462,10 @@ The styles are mobile-first, per DDR-014. The `:root` values in `app/tokens.css`
 narrowest viewports, and the site has two breakpoints, both in em.
 
 The **narrow** one, a `min-width: 20em` media query in that file, is the tokens'. It redefines the
-three role tokens that adapt: the page and section titles (`--font-size-page-title`,
-`--font-size-section-title`) and the page's gutter (`--page-gutter`). Since DDR-040 the space above
+role tokens that adapt: the section title (`--font-size-section-title`), a project view's narrow
+title (`--font-size-project-title-narrow`) and the page's gutter (`--page-gutter`). Since DDR-077
+the page title does not adapt there: the name reads `--font-size-page-title-narrow` below the wide
+breakpoint and `--font-size-page-title` from it and on paper. Since DDR-040 the space above
 and below the page, `--page-padding-block`, is a section boundary and follows the rhythm factor
 instead. Styles
 read those roles rather than the steps behind them. `--font-size-item-title` is body size at every
@@ -747,10 +767,10 @@ ADR-010's address: since #202 the projects section is "Portfolio", at `#portfoli
 `/portfolio/<slug>` and its pictures are in `public/portfolio/<slug>/`; the old `/projects/…`
 addresses are not kept, as the owner chose. The next ADR is `014`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-057 and DDR-059 to DDR-076. The next DDR is
-`077`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-057 and DDR-059 to DDR-077. The next DDR is
+`078`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Thirty-three accepted records are superseded or amended **in part**, and each says so at the top and again
+Thirty-four accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -821,7 +841,9 @@ at the section concerned:
   rule and its rule that nothing scrolls horizontally from 320px. DDR-039 lets the wide breakpoint
   redefine one token, `--rhythm-scale`, and DDR-049 a second, `--contents-bar-title-row`. DDR-040 takes `--page-padding-block` off the narrow
   breakpoint, which now adapts three role tokens; DDR-050 adds a fourth,
-  `--font-size-project-title-narrow`. DDR-027 takes its 44 by 44 pixel
+  `--font-size-project-title-narrow`. DDR-077 takes the page title off it again, so it adapts three:
+  the name has a narrow role and a full one, which the introduction swaps at the wide breakpoint.
+  DDR-027 takes its 44 by 44 pixel
   minimum target, and `--target-size-min` with it. The one sentence of that bullet which survives is
   the one letting a component drop screen-only sizing on paper.
   DDR-057 lets a timeline scroll sideways inside itself; the page still may not.
@@ -835,11 +857,15 @@ at the section concerned:
   the page's top and foot into the introduction and the last section.
 * **DDR-040** keeps its proportions. DDR-072 puts the question that introduces the controls in
   the space above them, `--space-controls`, and the controls follow it at the flow step.
+* **DDR-010** and **DDR-059**, for the introduction below the wide breakpoint: DDR-077 takes the
+  float off the screen. The photo and the name are one row there, centred on each other as DDR-059
+  centres the wide layout, and the float is paper's alone.
 * **DDR-072** keeps its question and everything it decides about it. DDR-076 puts a line below it
   that says what the controls are for, and the controls follow that line at the flow step.
 * **DDR-021** keeps its capsule, its two lights, its ratio and its narrow width. DDR-040 takes its
   wide width: `13rem` becomes the Make file's `clamp(180px, 22vw, 300px)`, in rem bounds. DDR-075
-  admits one more element out of the flow, the contents bar's menu panel.
+  admits one more element out of the flow, the contents bar's menu panel. DDR-077 takes its narrow
+  width from 96px to 120px, to balance the name beside it on a phone.
 * **DDR-049** keeps its title and its arrangement from the wide breakpoint and without script.
   DDR-075 puts the links behind a menu below the wide breakpoint, where the title shares its row
   with the menu's button and the clearance counts no title row.
@@ -918,7 +944,8 @@ at the section concerned:
   is announced in the link's accessible name instead, and nothing on the pill shows it. DDR-050
   widens its scope to a project view's "Source code" and "Live site" controls.
 * **DDR-022** keeps its ten steps and its floor. DDR-050 adds one size that is not a step, a project
-  view's 41.6px title, as the role `--font-size-project-title`.
+  view's 41.6px title, as the role `--font-size-project-title`. DDR-077 makes `xx-large` the name at
+  every width below the wide breakpoint, as `--font-size-page-title-narrow`.
 * **DDR-044** keeps every pill, fill, mark and label it decides, but for DDR-073's email pill,
   which shows Gmail's M alone, drawn in the square of a label's line. DDR-047 takes the GitHub pill's
   hover fill: GitHub's Gray 5 barely changed the pill, so it is now a lighter grey in GitHub's hue.

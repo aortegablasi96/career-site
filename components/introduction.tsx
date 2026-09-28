@@ -16,10 +16,11 @@ import styles from './introduction.module.css';
  * opens with the name. The location carries a map pin, which is decoration like every other mark
  * here, so the place is still read as its words.
  *
- * The photo sits beside the name from the wide breakpoint and above it below, which is also the
- * order of the markup, so nothing is reordered to suit a width, per DDR-014. Placing it beside the
- * name rather than above is what keeps the positioning line and the controls above the fold on a
- * phone.
+ * The photo sits beside the name at every width, and is first in the markup as it is first on the
+ * page, so nothing is reordered to suit a width, per DDR-014. Placing it beside the name rather than
+ * above is what keeps the positioning line and the controls above the fold on a phone. Below the
+ * wide breakpoint the two are one row, sized to balance and centred on each other, per DDR-077, and
+ * the text column's other blocks follow at the full width.
  *
  * The photo sits inside a frame, per DDR-021, because the design lights it twice: a glow outside
  * and a shadow inside its top edge. An inset box-shadow on an `<img>` paints nothing — the

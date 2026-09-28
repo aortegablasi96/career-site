@@ -337,15 +337,31 @@ describe('introduction styles', () => {
   });
 
   // DDR-010 places the photo beside the name so that it never pushes the positioning line or the
-  // contact controls below the fold on a phone. Below the wide breakpoint that is a float, so the
-  // summary returns to the full column beneath it rather than sharing a narrow one with it.
-  // Measured at 390 by 844 on #48: the name ends at 237 and two controls are above the fold, where
-  // stacking the photo above the name left the first control 2px below it.
-  it('puts the photo beside the name below the wide breakpoint too, per DDR-010', () => {
-    // The frame is what floats since DDR-021, and it shrink-wraps the photo, so it is the photo's
-    // box in every respect the layout cares about.
-    expect(rule('.frame')).toMatch(/float:\s*inline-start;/);
-    expect(rule('.heading')).toMatch(/display:\s*flow-root;/);
+  // contact controls below the fold on a phone. Since DDR-077, below the wide breakpoint, the photo
+  // and the name are one wrapping row, centred on each other, and every block after the name takes
+  // a line of its own, so the summary still has the full column. The text column draws no box, so
+  // its blocks are the row's items in their markup order.
+  it('puts the photo and the name in one row, centred on each other, below the wide breakpoint, per DDR-077', () => {
+    expect(rule('.introduction')).toMatch(/display:\s*flex;/);
+    expect(rule('.introduction')).toMatch(/flex-wrap:\s*wrap;/);
+    expect(rule('.introduction')).toMatch(/align-items:\s*center;/);
+    expect(rule('.text')).toMatch(/display:\s*contents;/);
+    expect(rule('.text > :not(.heading)')).toMatch(/flex-basis:\s*100%;/);
+    expect(rule('.heading')).toMatch(/flex:\s*1 1 0;/);
+    // The frame no longer floats on screen: only paper asks for that.
+    expect(rule('.frame')).not.toMatch(/float/);
+    // The frame and the name carry the same space below them, so they are centred exactly.
+    expect(rule('.frame')).toMatch(/margin-block-end:\s*var\(--space-small\);/);
+    expect(rule('.heading')).toMatch(/margin-block-end:\s*var\(--space-small\);/);
+  });
+
+  // DDR-077: the name is the narrow page title below the wide breakpoint, which balances it against
+  // the photo, and the full one from it and on paper, so neither of those changes.
+  it('sets the name at the narrow page title below the wide breakpoint and the full one from it and on paper, per DDR-077', () => {
+    expect(rule('.heading h1')).toMatch(/font-size:\s*var\(--font-size-page-title-narrow\);/);
+    expect(rule('.heading h1', media('(min-width: 48em), print'))).toMatch(
+      /font-size:\s*var\(--font-size-page-title\);/,
+    );
   });
 
   // #68: the photo is sized in rem, so it grows with the reader's text while the room beside it
@@ -365,9 +381,14 @@ describe('introduction styles', () => {
     expect(rule('.photo', wide)).toMatch(/inline-size:\s*var\(--photo-width-wide\);/);
     // The ratio carries the height at both widths, so the wide rule sets no height of its own.
     expect(rule('.photo', wide)).not.toMatch(/block-size/);
-    // The grid places the frame, so the text stops running past it and the whole of it takes the
-    // second column.
+    // The grid places the frame and the text column is a box again, so the whole of the text takes
+    // the second column. The frame does not float even on a sheet wide enough to match, such as A4
+    // laid landscape, which is why the wide block follows the print block.
+    expect(rule('.text', wide)).toMatch(/display:\s*block;/);
     expect(rule('.frame', wide)).toMatch(/float:\s*none;/);
+    expect(styles.indexOf('@media (min-width: 48em) {')).toBeGreaterThan(
+      styles.indexOf('@media print {'),
+    );
   });
 
   // DDR-059: the photo is centred on the text column, not level with its top, so a text column
@@ -583,14 +604,18 @@ describe('introduction styles', () => {
     expect(rule('.cvItem', paper)).toMatch(/display:\s*none;/);
   });
 
-  // The introduction is the one section whose paper layout is the narrow one rather than the wide
-  // one, per DDR-015: the photo prints at 28mm, which is short, so a column of its own would leave
-  // three quarters of it empty, and the UI Review on #43 asks for it beside the *name*. That is the
-  // float at the top of the file, so the print block writes no layout at all and the size comes
-  // from the token print redefines.
-  it('leaves the photo beside the name on paper, by the float rather than a layout of its own', () => {
-    expect(paper).not.toMatch(/grid-template-columns|float/);
-    expect(rule('.frame')).toMatch(/float:\s*inline-start;/);
+  // The introduction is the one section whose paper layout is not the screen's wide one, per
+  // DDR-015: the photo prints at 28mm, which is short, so a column of its own would leave three
+  // quarters of it empty, and the UI Review on #43 asks for it beside the *name*. That is a float,
+  // which was the narrow screen's layout too until DDR-077 made that a row; paper keeps it, so the
+  // sheet is as it was, and the size comes from the token print redefines.
+  it('floats the photo beside the name on paper, as the sheet always has, per DDR-015 and DDR-077', () => {
+    expect(paper).not.toMatch(/grid-template-columns/);
+    expect(rule('.introduction', paper)).toMatch(/display:\s*block;/);
+    expect(rule('.text', paper)).toMatch(/display:\s*block;/);
+    expect(rule('.frame', paper)).toMatch(/float:\s*inline-start;/);
+    expect(rule('.frame', paper)).toMatch(/margin-inline-end:\s*var\(--space-medium\);/);
+    expect(rule('.heading', paper)).toMatch(/margin-block-end:\s*0;/);
     expect(rule('.photo')).toMatch(/inline-size:\s*var\(--photo-width\);/);
   });
 

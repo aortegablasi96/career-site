@@ -4,6 +4,11 @@ Status: Accepted
 
 Date: 2026-09-16
 
+**Amended by DDR-077** in one respect: the narrow breakpoint no longer adapts the page title. The
+name is the narrow page title, `--font-size-page-title-narrow`, at every width below the wide
+breakpoint, and the introduction swaps it for the full one from the wide breakpoint and on paper.
+The narrow breakpoint now adapts three role tokens and the language columns.
+
 **Amended by DDR-050** in one respect: the narrow breakpoint adapts a fourth role token,
 `--font-size-project-title-narrow`, which a project view's title reads below the wide breakpoint.
 
