@@ -37,9 +37,13 @@ DDR-022's since #90, below: ten steps rather than seven.
 
 **The introduction is the redesign's, under #48**: the photo, the positioning line in the accent,
 and four pill controls — the three contact addresses and the "Get my CV" download. Since #97 each
-contact pill reads "Email me", "LinkedIn" or "GitHub", per DDR-029 and DDR-058, and the address it links to is
-written out in the footer instead. A `ContactLink` therefore carries both strings: `label`, which
-the pill shows, and `text`, which is the address and which only the footer shows.
+contact pill reads "LinkedIn" or "GitHub", per DDR-029, and the address it links to is written out
+in the footer instead. A `ContactLink` therefore carries both strings: `label`, which the pill
+shows, and `text`, which is the address and which only the footer shows. **Since #215, per DDR-073,
+the email pill shows Gmail's M alone**, in a 37.5px circle as tall as the other pills: `markOnly`
+on its `ContactLink` renders the mark in `--contact-mark-size`, the square of a label's line, with
+`--space-small` on every side, and makes its `label`, "Email me", the link's `aria-label` rather
+than its text. On paper it prints the M alone.
 
 **Since #171, per DDR-056, "Hi there, I’m" stands before the name**, on screen only, and the two
 are one `hgroup`, so the page's one heading is still the name alone. The location is the place
@@ -693,8 +697,8 @@ ADR-010's address: since #202 the projects section is "Portfolio", at `#portfoli
 `/portfolio/<slug>` and its pictures are in `public/portfolio/<slug>/`; the old `/projects/…`
 addresses are not kept, as the owner chose. The next ADR is `013`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-072. The next DDR is
-`073`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-057 and DDR-059 to DDR-073. The next DDR is
+`074`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Thirty-one accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -744,8 +748,8 @@ at the section concerned:
   UPC's logo in the same style, where DDR-066 said education had none.
 * **DDR-059** keeps its view, its card, its hint and its neighbours. DDR-067 moves the hint to 8px above the row and gives it an information mark. DDR-060 gives a role two
   titles: the view's `h1`, tab and preview give it in full, and every card and paper give it short.
-* **DDR-029** keeps its short labels, its footer and its print rule. DDR-058 takes the email
-  pill's word: it reads "Email me", per #175, and the two profiles still name their service.
+* **DDR-029** keeps its short labels, its footer and its print rule. DDR-073 takes the email
+  pill's visible label: the pill shows Gmail's M alone, and "Email me" is its accessible name.
 * **DDR-051** keeps its card, its one link, its grid, its spacing and how it prints.
   DDR-054 takes its cap of four technology tags and the count that followed them: a card shows
   every technology the project states, and the count's ink is drawn nowhere. DDR-055 adds the
@@ -853,10 +857,11 @@ at the section concerned:
   widens its scope to a project view's "Source code" and "Live site" controls.
 * **DDR-022** keeps its ten steps and its floor. DDR-050 adds one size that is not a step, a project
   view's 41.6px title, as the role `--font-size-project-title`.
-* **DDR-044** keeps every pill, fill, mark and label it decides. DDR-047 takes the GitHub pill's
+* **DDR-044** keeps every pill, fill, mark and label it decides, but for DDR-073's email pill,
+  which is a circle with Gmail's M alone, drawn in the square of a label's line. DDR-047 takes the GitHub pill's
   hover fill: GitHub's Gray 5 barely changed the pill, so it is now a lighter grey in GitHub's hue.
 
-`Superseded` are DDR-001 to DDR-009, DDR-012, and DDR-016:
+`Superseded` are DDR-001 to DDR-009, DDR-012, DDR-016 and DDR-058:
 
 | Superseded | By      | What changed                                                            |
 | ---------- | ------- | ----------------------------------------------------------------------- |
@@ -870,6 +875,7 @@ at the section concerned:
 | DDR-008    | DDR-015 | Its block survives; its claim that both browsers break alike does not    |
 | DDR-009    | DDR-011 | Its PDF guarantee is re-established for the new faces, and widened       |
 | DDR-016    | DDR-021 | The photo’s corner radius and its two lights; the ratio and widths carry over |
+| DDR-058    | DDR-073 | The email pill shows Gmail's M alone; "Email me" becomes its accessible name |
 | DDR-012    | DDR-025 | The design's palette entire: three inks below the body's, a new accent, three hairlines, and four pairings that fail WCAG |
 
 DDR-008 had superseded DDR-005's acceptance that Firefox can leave a section heading at the foot of
@@ -1247,7 +1253,8 @@ same five missing from the same PDFs before this change. On screen, swept every 
 smallest and clear 24 by 24 outright, as they did at 203.2 by 37.5 — and nothing overflows at 320px,
 360px, 390px or 1536px at either text size.
 
-**#175 has landed, as DDR-058: the email pill reads "Email me".** One string in
+**#175 has landed, as DDR-058: the email pill reads "Email me".** DDR-073 has since superseded it,
+per #215: the pill shows Gmail's M alone, and "Email me" is its accessible name. One string in
 `content/introduction.ts`; the two profiles keep their names. The pill is 22.7px wider, so the
 controls row takes one more row at 490px and 500px, and at 450px and 460px with text at 200%, and
 nowhere else from 300px to 900px. On paper the pills stand one to a line, so only the word changes:

@@ -594,8 +594,9 @@ describe('introduction content', () => {
 
   // DDR-029 takes the design's short labels, each shorter than the address it replaces, which is
   // the whole point of it. The two profiles name their service; the email pill asks to be written
-  // to, per DDR-058, because it is the one control that starts a message to the owner.
-  it('labels each contact pill as DDR-029 and DDR-058 decide', () => {
+  // to, per DDR-058, because it is the one control that starts a message to the owner. Since
+  // DDR-073 that label is the email pill's accessible name rather than what it shows.
+  it('labels each contact pill as DDR-029, DDR-058 and DDR-073 decide', () => {
     expect(introduction.contact.map(({ label }) => label)).toEqual([
       'Email me',
       'LinkedIn',

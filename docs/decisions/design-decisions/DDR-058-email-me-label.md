@@ -1,8 +1,11 @@
 # DDR-058-The Email Pill Reads "Email me"
 
-Status: Accepted
+Status: Superseded
 
 Date: 2026-09-26
+
+**Superseded by DDR-073**, per #215: the email pill shows Gmail's M alone, and "Email me" is
+its accessible name rather than its visible label. The wording carries over; where it shows does not.
 
 **Amends DDR-029 in one respect**: the email contact pill reads "Email me", where DDR-029 gave it
 the design's "Email". The LinkedIn and GitHub pills keep "LinkedIn" and "GitHub". Everything else
