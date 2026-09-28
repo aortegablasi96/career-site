@@ -131,29 +131,33 @@ export const projects: Projects = {
         ],
       ],
       // The "Summary of Business Case" from the owner's knowledge base, per #231 and DDR-079, in
-      // their order and with their labels, in British spelling as the rest of the site is.
-      businessCase: [
-        {
-          label: '01 — Problem',
-          text: 'Portfolio data is fragmented across brokers, while existing broker interfaces offer limited personalisation and cross-portfolio analysis.',
-        },
-        {
-          label: '02 — Product',
-          text: 'A local-first portfolio management application that consolidates broker data into a personalised analytics workspace, complemented by an AI portfolio assistant.',
-        },
-        {
-          label: '03 — Outcome',
-          text: 'IBKR MVP · Portfolio analytics · Dividend tracking · AI assistant · Broker-extensible architecture',
-        },
-        {
-          label: '04 — My contribution',
-          text: 'Product strategy · Data pipeline · UX/UI · Architecture · Development · AI-assisted delivery',
-        },
-        {
-          label: 'Key decisions',
-          text: 'Local-first architecture · IBKR-first MVP · Broker abstraction · AI grounded in portfolio data',
-        },
-      ],
+      // their order and with their labels, in British spelling as the rest of the site is, and the
+      // full business case the owner supplied, which the view offers as a download.
+      businessCase: {
+        items: [
+          {
+            label: '01 — Problem',
+            text: 'Portfolio data is fragmented across brokers, while existing broker interfaces offer limited personalisation and cross-portfolio analysis.',
+          },
+          {
+            label: '02 — Product',
+            text: 'A local-first portfolio management application that consolidates broker data into a personalised analytics workspace, complemented by an AI portfolio assistant.',
+          },
+          {
+            label: '03 — Outcome',
+            text: 'IBKR MVP · Portfolio analytics · Dividend tracking · AI assistant · Broker-extensible architecture',
+          },
+          {
+            label: '04 — My contribution',
+            text: 'Product strategy · Data pipeline · UX/UI · Architecture · Development · AI-assisted delivery',
+          },
+          {
+            label: 'Key decisions',
+            text: 'Local-first architecture · IBKR-first MVP · Broker abstraction · AI grounded in portfolio data',
+          },
+        ],
+        file: '/portfolio/stock-portfolio-viewer/stock-portfolio-viewer-business-case.pdf',
+      },
       links: [{ text: sourceCode, href: 'https://github.com/aortegablasi96/stock-portfolio-viewer' }],
     },
     {
@@ -184,6 +188,8 @@ export const projects: Projects = {
     accounts: 'About this project',
     overview: 'Overview',
     businessCase: 'Business case',
+    // The control that takes the links' place while the business case is shown, in the owner's words.
+    downloadBusinessCase: 'Download Full Business Case',
     builtWith: 'Built with',
     // The label above the further pictures and videos of a project, per DDR-053. No project carries
     // gallery media yet, so no view shows it; the media is the owner's to supply, as on #63.

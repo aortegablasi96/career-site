@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { introduction } from '@/content/introduction';
@@ -160,7 +160,7 @@ describe('ProjectView', () => {
         projects.view.businessCase,
         stockPortfolioViewer!.description,
         words(stockPortfolioViewer!.howBuilt![0]!),
-        stockPortfolioViewer!.businessCase![0]!.label,
+        stockPortfolioViewer!.businessCase!.items[0]!.label,
         projects.view.builtWith,
       ];
       const positions = order.map((part) => shown.indexOf(part));
@@ -170,7 +170,7 @@ describe('ProjectView', () => {
     });
 
     it('shows each item of the business case as a term and its description, in the owner’s order', () => {
-      const items = stockPortfolioViewer!.businessCase!;
+      const items = stockPortfolioViewer!.businessCase!.items;
 
       expect(items.map(({ label }) => label)).toEqual([
         '01 — Problem',
@@ -207,6 +207,54 @@ describe('ProjectView', () => {
       expect(choice).toContain('inline-size: 0');
       expect(css).toMatch(/\.option:has\(\.choice:focus-visible\) \{\s*outline: var\(--focus-outline-width\) solid var\(--color-focus\);/);
       expect(css).toMatch(/\.option:has\(\.choice:checked\) \{\s*background-color: var\(--color-accent\);\s*color: var\(--color-on-accent\);/);
+    });
+  });
+
+  // DDR-079: while the business case is shown, the links give way to its full document, which
+  // downloads as the CV does.
+  describe('the full business case', () => {
+    const view = render(stockPortfolioViewer!);
+    const { file } = stockPortfolioViewer!.businessCase!;
+
+    it('is a PDF beside the project’s pictures, reached by the one route a binary asset takes', () => {
+      expect(file).toBe('/portfolio/stock-portfolio-viewer/stock-portfolio-viewer-business-case.pdf');
+      expect(existsSync(new URL(`../public${file}`, import.meta.url))).toBe(true);
+      expect(view).toContain(`href="${file}"`);
+    });
+
+    it('downloads in place, as the filled pill, with its own words', () => {
+      const link = view.match(new RegExp(`<a href="${file}"[^>]*>`))?.[0] ?? '';
+
+      expect(link).toContain('download=""');
+      expect(link).not.toContain('target=');
+      expect(bare(view)).toContain(
+        `<ul><li><a href="${file}" download=""><svg`,
+      );
+      expect(text(view)).toContain(projects.view.downloadBusinessCase);
+    });
+
+    it('follows the source code, which it stands in for while the business case is shown', () => {
+      const shown = text(view);
+
+      expect(shown.indexOf(projects.view.downloadBusinessCase)).toBeGreaterThan(shown.indexOf('Source code'));
+      expect(view).toMatch(/<ul class="[^"]*links[^"]*overviewLinks[^"]*">/);
+      expect(view).toMatch(/<ul class="[^"]*links[^"]*caseLinks[^"]*">/);
+      expect(css.match(/\.caseLinks\s*\{([^}]*)\}/)?.[1]).toContain('display: none');
+      // Hidden by default only if it comes after `.links`, whose `display: flex` it overrides at the
+      // same specificity.
+      expect(css.search(/^\.caseLinks\s*\{/m)).toBeGreaterThan(css.search(/^\.links\s*\{/m));
+      expect(css).toMatch(/\.text:has\(\.caseChoice:checked\) \.overviewLinks \{\s*display: none;/);
+      expect(css).toMatch(/\.text:has\(\.caseChoice:checked\) \.caseLinks \{\s*display: flex;/);
+    });
+
+    it('is on no view without a business case, whose links are as they were', () => {
+      for (const project of [numisBook!, digitalTwin!, careerSite!]) {
+        const markup = render(project);
+
+        expect(text(markup)).not.toContain(projects.view.downloadBusinessCase);
+        expect(markup).not.toContain('overviewLinks');
+        expect(markup).not.toContain('download=""');
+      }
     });
   });
 

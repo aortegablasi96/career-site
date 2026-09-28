@@ -32,6 +32,9 @@ checked. There is no script, no React state and no new Client Component.**
   `.text:has(.caseChoice:checked)` hides the overview and shows the business case. What is drawn is
   what the radio says, as the contents bar draws `aria-current` and `aria-expanded` rather than a
   class.
+* **The links follow the same rule.** While the business case is shown, the view's links are hidden
+  and a plain anchor with `download` to the full business case is shown, as the CV control
+  downloads its file, per ADR-004. It needs no script either.
 * **A hidden account is out of the accessibility tree**, because `display: none` removes it, so a
   screen reader meets only the account shown.
 * **Tests stay in Node.** The markup is tested on the server as every component's is, the

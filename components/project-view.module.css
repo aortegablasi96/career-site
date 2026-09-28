@@ -309,6 +309,21 @@
   background-color: var(--color-surface-hover);
 }
 
+/* The links follow the account too: while the business case is shown, the view's links give way to
+   the full business case's download, in the same place and as the same filled pill. It follows `.links`, whose `display` it
+   overrides at the same specificity. */
+.caseLinks {
+  display: none;
+}
+
+.text:has(.caseChoice:checked) .overviewLinks {
+  display: none;
+}
+
+.text:has(.caseChoice:checked) .caseLinks {
+  display: flex;
+}
+
 /* A picture and its caption — the lead one, and each item of the gallery, per DDR-053 — in a column
    that is its grid track's width whatever the picture's own, so the picture can stretch to it
    without widening it. It is a flex column rather than a grid of one track: measured on #159,

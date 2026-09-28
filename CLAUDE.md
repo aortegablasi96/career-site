@@ -1761,11 +1761,14 @@ printed CV are unchanged. Swept every 10px from 300px to 900px on all four views
 sizes: nothing scrolls sideways.
 
 **#231 has landed, as DDR-079 and ADR-014: a view can switch between a project's overview and its
-business case.** `businessCase` on a `Project` is the owner's "Summary of Business Case", a list of
-`BusinessCaseItem`s, each a `label` and a `text`. Only the Stock Portfolio Viewer has one. Its view
+business case.** `businessCase` on a `Project` holds the owner's "Summary of Business Case" as
+`items`, each a `label` and a `text`, and `file`, the full business case as a PDF in
+`public/portfolio/<slug>/`. Only the Stock Portfolio Viewer has one. Its view
 shows a switch under the name, "Overview" and "Business case" (`accounts`, `overview` and
 `businessCase` in `projects.view`), which shows the business case as a `dl` in place of the
-description and "How I built it"; everything else on the view stays where it is. A view without a
+description and "How I built it", and replaces the links with one pill, "Download Full Business
+Case", which downloads the file as the CV control does; everything else on the view stays where it
+is. A view without a
 business case shows no switch, and its markup is as it was. The switch is a native radio group, per
 ADR-014: the radios take no room, each `label` is drawn as a segment of one pill, and
 `.text:has(.caseChoice:checked)` in `project-view.module.css` decides which account shows, so it

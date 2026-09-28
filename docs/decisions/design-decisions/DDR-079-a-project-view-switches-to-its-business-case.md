@@ -6,7 +6,8 @@ Date: 2026-09-28
 
 **Adds to DDR-050's introduction and DDR-078**: where a project has a business case, its view
 shows a switch under the name. The switch lets the reader read the business case in place of the
-description and "How I built it", and read them again. Everything DDR-050, DDR-052, DDR-053 and
+description and "How I built it", and read them again. While it does, the view's links give way to
+a pill that downloads the full business case. Everything DDR-050, DDR-052, DDR-053 and
 DDR-078 decide stands, and a view whose project has no business case is unchanged. It **adds no
 token**, and it supersedes nothing. ADR-014 records how the switch holds its state.
 
@@ -22,6 +23,9 @@ The owner chose two things on #231:
 * **What switches:** the overview, which is the description and "How I built it", together. The
   business case's "04 — My contribution" already covers how the project was built.
 * **The two options' words:** "Overview" and "Business case".
+* **The download:** while the business case is shown, the pill below "Built with" becomes "Download
+  Full Business Case", in the owner's words, and downloads the full business case, a one-page PDF
+  the owner put beside the project's pictures.
 
 The story left the switch's look, its placement and how it announces its state to the UI Designer.
 It is the site's first control that changes what a page shows without leaving it.
@@ -47,6 +51,9 @@ Nothing else on the view moves or changes.
 | An item's label   | Bold capitals at `--font-size-x-small`, `--letter-spacing-loose`, in the accent | Set as the page's other labels in the accent are, such as a timeline's dates. The capitals are drawn, so the string is the owner's "01 — Problem". |
 | An item's text    | The body's size and ink at `--line-height-prose`, 4px below its label | Set as the description it stands in for. |
 | Between items     | `--space-flow`, 16px                             | The column's step between two blocks of running text. |
+| The links, while the business case is shown | Replaced by one pill, "Download Full Business Case", with the download mark | The owner asked for the pill to change. It is the view's filled control (`.primary`), in the links' place, so only its words and mark change. |
+| The download      | A plain anchor with `download`, through `asset()`, in the same tab | As the CV control downloads, per ADR-004: a file this site carries, which needs no script and lands in the downloads folder. |
+| The file          | `public/portfolio/<slug>/<slug>-business-case.pdf`, 4 KB | Beside the project's pictures, per ADR-012. Named for what lands in the reader's downloads folder, in the site's lowercase, as the CV is. |
 | Without a business case | No switch and no list; the view's markup is as it was | A control that switches to nothing is worse than none, as DDR-053 says of an empty gallery. |
 | Where they cannot share a line | The second option wraps below the first, inside the track | At 200% text below 490px. The track's large radius, rather than a pill's, keeps both options inside its curve when it is two rows tall. |
 | Motion            | None                                             | The account changes at once. There is nothing for a reader who prefers reduced motion to lose. |
@@ -70,7 +77,9 @@ Measured on #231 in Edge (640 measurements):
   "Business case" also wraps to two lines, inside its label.
 * **Headings:** in the overview, one `h1`, then "How I built it" and "Built with". In the business
   case, one `h1` and "Built with".
-* **Other views:** no other view has a radio.
+* **The pills:** in the overview only "Source code" is shown, and in the business case only
+  "Download Full Business Case". Neither's words run out of it at any width.
+* **Other views:** no other view has a radio or a download.
 * **Keyboard and assistive technology:** Tab reaches the checked option, and the arrow keys move
   between the two and show the other account. The accessibility tree holds the radio group, each
   radio's name and state, and only the account shown.
@@ -119,14 +128,17 @@ Cons:
 
 Benefits:
 * A reader who wants why the product exists reads that in the same place, beside the same picture,
-  and the view keeps its layout.
-* Adding a business case to another project is content alone: its items on the project in
-  `content/projects.ts`.
+  and the view keeps its layout. A reader who wants the whole case downloads it from where the
+  summary ends.
+* Adding a business case to another project is content alone: its items and its file on the
+  project in `content/projects.ts`, and the PDF in `public/portfolio/<slug>/`.
 * No new token, no failing pairing beyond the edge DDR-025 already records, and paper is untouched.
 
 Tradeoffs:
 * A business case replaces "How I built it" while shown, so a reader reads the two accounts one at
-  a time, as the owner chose.
+  a time, as the owner chose. The source code is not offered beside the business case.
+* The full business case is the owner's document and is not checked against the page, as the CV
+  is by its digest. It may say more than the summary, or say it differently.
 * The site now has a control that changes the page without navigating. The reader's choice is not
   remembered across views or visits, and an account has no address of its own.
 
@@ -134,6 +146,8 @@ Risks:
 * The two accounts are shown and hidden by `:has()`. A browser without it shows the overview and a
   switch that changes nothing. Every browser the site supports has it.
 * A longer option word, or a third option, changes where the options wrap. Rerun the sweep.
+* `.caseLinks` hides the download by overriding `.links` at the same specificity, so it must come
+  after it in the stylesheet. `components/project-view.test.tsx` holds the order.
 
 ## Related Documents
 
@@ -141,5 +155,6 @@ Risks:
 * ADR-014, how the switch holds its state
 * DDR-050, the project view, and DDR-078, "How I built it", which together are the overview
 * DDR-027, target sizes, and DDR-035, hover
+* ADR-004, the CV's download and the files the site carries, and ADR-012, the portfolio's folders
 * DDR-025, the palette and its pairings
 * DDR-053, the gallery, whose rule for an empty block this follows

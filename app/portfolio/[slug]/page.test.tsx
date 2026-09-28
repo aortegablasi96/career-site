@@ -102,7 +102,8 @@ describe('a project’s view', () => {
         },
       ].filter(Boolean);
 
-      const links = [...html.matchAll(/<a ([^>]*href="\/portfolio\/[^>]*)>/g)].map(
+      // A view's route, not a file beside its pictures, such as a business case, per DDR-079.
+      const links = [...html.matchAll(/<a ([^>]*href="\/portfolio\/[\w-]+"[^>]*)>/g)].map(
         ([, attributes]) => ({
           href: attributes.match(/href="([^"]+)"/)?.[1],
           label: attributes.match(/aria-label="([^"]+)"/)?.[1],

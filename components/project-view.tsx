@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { asset } from '@/app/asset';
 import type {
   BusinessCaseItem,
   GalleryItem,
@@ -51,7 +52,8 @@ function Gallery({ title, items }: { title: string; items: readonly GalleryItem[
  * which is checked, and the keyboard reaches the group with Tab and moves between the two with the
  * arrow keys. So it needs no script, works before hydration and without script at all, and adds no
  * Client Component, per ADR-014. The stylesheet draws each option's label as a segment of one pill
- * and shows the account whose option is checked; the radio itself takes no room.
+ * and shows the account whose option is checked; the radio itself takes no room. While the business
+ * case is shown, the view's links give way to the full business case's download, by the same rule.
  *
  * The overview is checked in the markup, so a view opens on it, as it read before #231. One view
  * is one page, so the group's `name` need only be unique within it.
@@ -186,6 +188,7 @@ export function ProjectView({
     accounts: accountsName,
     overview: overviewWord,
     businessCase: businessCaseWord,
+    downloadBusinessCase,
     builtWith,
     gallery: galleryTitle,
     newTab,
@@ -239,7 +242,7 @@ export function ProjectView({
       <div className={styles.columns}>
         <div className={styles.text}>
           <h1 className={styles.name}>{name}</h1>
-          {businessCase && businessCase.length > 0 ? (
+          {businessCase ? (
             <>
               <Accounts
                 name={accountsName}
@@ -247,7 +250,7 @@ export function ProjectView({
                 businessCase={businessCaseWord}
               />
               <div className={styles.overview}>{overview}</div>
-              <BusinessCase items={businessCase} />
+              <BusinessCase items={businessCase.items} />
             </>
           ) : (
             overview
@@ -260,7 +263,7 @@ export function ProjectView({
               </li>
             ))}
           </ul>
-          <ul className={styles.links}>
+          <ul className={businessCase ? `${styles.links} ${styles.overviewLinks}` : styles.links}>
             {links.map(({ text, href }, index) => (
               <li key={href}>
                 <a
@@ -276,6 +279,19 @@ export function ProjectView({
               </li>
             ))}
           </ul>
+          {/* While the business case is shown, the links give way to its full document, per
+              DDR-079: a file this site carries, so its path goes through asset(), per ADR-004,
+              and it downloads in place, as the CV does. */}
+          {businessCase && (
+            <ul className={`${styles.links} ${styles.caseLinks}`}>
+              <li>
+                <a href={asset(businessCase.file)} className={styles.primary} download>
+                  <Icon name="download" />
+                  {downloadBusinessCase}
+                </a>
+              </li>
+            </ul>
+          )}
         </div>
         <figure className={styles.figure}>
           <Media media={media} className={styles.media} />
