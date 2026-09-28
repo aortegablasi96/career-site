@@ -69,9 +69,11 @@ import type { Cv } from './types';
  * It moved again with #210, because the positioning line now reads "Product Manager building AI,
  * SaaS and connected products". ADR-005 leaves a CV's summary and positioning free, so it did not
  * move the CV.
+ * It moved again with #212, because the summary is the owner's new description, with one phrase in
+ * bold. ADR-005 leaves a CV's summary free, so it did not move the CV either.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '8b5217a94cdda4a4339de32616fb31f443da61f4101a295ed5de63725a71a001',
+  contentDigest: 'ceae73bcb04257e636b5ebc5b4d8a3961b2cdbbef3758cc3210298b2f4a8ab53',
 };

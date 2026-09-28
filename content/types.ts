@@ -14,6 +14,11 @@ export interface Site {
   description: string;
 }
 
+/** A phrase set in bold inside running text, as `strong`, which DDR-023 sets semibold. */
+export interface Strong {
+  strong: string;
+}
+
 /** A link that stands on its own, never inside a sentence, as ADR-002 requires. */
 export interface Link {
   /** What the link shows. */
@@ -135,8 +140,12 @@ export interface Introduction {
   positioning: string;
   /** Where the owner is based, beside a location symbol, per DDR-056. */
   location: string;
-  /** The owner's own description of what they build and how they like to work, per #171. */
-  summary: string;
+  /**
+   * The owner's own description of what they build and how they like to work, per #171. It is a
+   * run of text in which a part may be strong, per #212: the owner sets one phrase in bold, and
+   * the words stay in `content/`, per ADR-002, rather than as markup in a string.
+   */
+  summary: readonly (string | Strong)[];
   /**
    * Each link shows its short label here and its address in the footer, per DDR-029. Neither is
    * printed twice: the pill prints its label with no address after it, and the footer prints the
