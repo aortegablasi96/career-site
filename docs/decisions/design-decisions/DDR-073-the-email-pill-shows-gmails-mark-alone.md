@@ -57,10 +57,12 @@ tall as every pill, and "Email me" is its accessible name.**
 Measured on #215 against the tree before, in Edge at every 10px from 300px to 900px and at 1195px,
 1280px and 1536px, at the browser's default text size and at 200%:
 
-* Nothing scrolls sideways, and the controls row never takes more rows. It takes one fewer at 440px
-  to 500px at the default size, and at 350px to 460px and 850px to 900px at 200%.
+* The email pill is within 0.014px of the GitHub pill's width, and exactly its height, at every
+  width and at both text sizes: 98.3 by 37.5px at the default size and 194.7 by 73px at 200%.
+* Nothing scrolls sideways, and the controls row never takes more rows. It takes one fewer at 500px
+  at the default size.
 * Every target clears WCAG 2.5.8's 24 by 24 outright. The smallest side of any control is 37.5px,
-  and no two centres are closer than 59.1px.
+  and no two centres are closer than 45.5px.
 * At 390 by 844 the controls end 802.9px down, as they did.
 * Printed to A4 in Edge and Firefox, with background graphics on and off: five sheets before and
   after, with the section headings on sheets 1, 3, 4, 5 and 5. Only sheet 1 changes, and sheets 2
