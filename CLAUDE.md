@@ -269,7 +269,8 @@ to redo if the glow changes.
 
 **The projects section is cards, under #154, per DDR-051**, which superseded #50's media-and-text
 row. Each project is one `article` card, and the whole card leads to its view: the picture at 16:9,
-the name, the one-sentence `summary`, and, since #163 and DDR-054, **every** technology the project
+the name, the one-sentence `summary` (since #227 the project's slogan, in the owner's words from
+their knowledge base, so it may say "my" where a description may not), and, since #163 and DDR-054, **every** technology the project
 states, in the content's order, where the card showed four and counted the rest as "+2".
 The page hands the section two cards at a time, as `projectRows` splits them, for the reason it
 hands the skills two groups. `--project-card-*` in `app/tokens.css` holds the 16:9 and the design's

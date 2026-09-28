@@ -39,9 +39,10 @@ const liveSite = 'Live site';
  * of media and captions here, and the files in `public/` — with no change to a component.
  *
  * Since #154 the page shows each project as a card leading to its view, per DDR-051, and a card says
- * what the project is in one sentence, its `summary`, rather than the full description. The four are
- * the ones the design proposes, which the owner approved on #154; each says nothing the full
- * description does not.
+ * what the project is in one sentence, its `summary`, rather than the full description. Since #227
+ * each is the project's slogan, from the owner's knowledge base, where #154 took the design's; the
+ * site has no entry there, so its slogan was written from its own description, as the owner asked.
+ * A slogan is the owner's own line, so it may say "my", which a description may not.
  *
  * Since #163 a card shows every technology stated here, per DDR-054, where it showed the first four
  * and counted the rest. So the order below is the order a card and a view both read in, and no
@@ -57,7 +58,7 @@ export const projects: Projects = {
       slug: 'numisbook',
       media: { file: '/portfolio/numisbook/lead.webp', alt: 'NumisBook on a laptop, showing a coin’s record: the details of a silver tetradrachm of Mark Antony and Cleopatra beside its photograph, with the coin’s invoice below the photograph' },
       caption: 'A coin’s record',
-      summary: 'AI-assisted SaaS for managing a coin collection, built end-to-end with Claude Code.',
+      summary: 'An intelligent coin collection management SaaS.',
       technologies: ['Next.js', 'TypeScript', 'PostgreSQL on Neon', 'OpenAI', 'Vercel', 'Cloudflare R2'],
       description:
         'A SaaS application for managing a coin collection, with an AI assistant that helps manage it and automates tasks such as adding a new coin. Built end to end with Claude Code, whose workflow, execution, governance, and project-management skills work as a simulated product team across the whole development pipeline, through to production.',
@@ -71,7 +72,7 @@ export const projects: Projects = {
       slug: 'digital-twin',
       media: { file: '/portfolio/digital-twin/lead.webp', alt: 'The Digital Twin on a laptop, as Andreu’s AI assistant in a chat, introducing itself and answering a question about Andreu’s AI expertise' },
       caption: 'The chatbot answering a question',
-      summary: 'Agentic RAG chatbot that answers questions about this career in the visitor’s language.',
+      summary: 'A chatbot to talk about my career.',
       technologies: ['LangGraph', 'OpenAI Agents SDK', 'Chroma', 'Cohere', 'FastAPI', 'Next.js'],
       description:
         'A chatbot that answers questions about the career on this page, in the visitor’s language. Demonstrates an agentic RAG system: several agents filter each question, retrieve the documents, write a professional answer, and send push notifications, while semantic vector search and BM25 lexical search run concurrently and are reranked with Cohere for precision.',
@@ -85,7 +86,7 @@ export const projects: Projects = {
       slug: 'stock-portfolio-viewer',
       media: { file: '/portfolio/stock-portfolio-viewer/lead.webp', alt: 'The Stock Portfolio Viewer on a laptop, showing its Allocation view: the invested value, the number of positions and the largest holding, above a map of Europe with donut charts for each country' },
       caption: 'The Allocation view',
-      summary: 'Local desktop app for analysing an Interactive Brokers portfolio with an AI assistant.',
+      summary: 'An on-premise AI-enabled portfolio management assistant.',
       technologies: ['Electron', 'React', 'TypeScript', 'SQLite', 'OpenAI'],
       description:
         'A local desktop application for analysing a personal stock portfolio from an Interactive Brokers account, with an AI assistant that gives feedback on it, in which every figure is computed by the application and only phrased by the model. Built with Claude Code skills and MCP servers, including shadcn’s, working from a Figma design.',
@@ -96,7 +97,7 @@ export const projects: Projects = {
       slug: 'career-site',
       media: { file: '/portfolio/career-site/lead.webp', alt: 'This site on a laptop, showing its introduction: the owner’s photo, name, positioning line and summary, above the contact and CV controls' },
       caption: 'The introduction',
-      summary: 'A career site that doubles as a printed CV, built through a skill-driven Claude Code workflow.',
+      summary: 'A career site that doubles as its own printed CV.',
       technologies: ['Next.js', 'TypeScript', 'CSS Modules', 'GitHub Pages'],
       description:
         'A career site that is also its own printed CV. Built with Claude Code through a skill-driven workflow, in which a content strategist, a UI designer, an architect, builders, and a tester are each a skill, and every significant design and architecture decision is recorded.',

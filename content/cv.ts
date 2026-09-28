@@ -81,9 +81,12 @@ import type { Cv } from './types';
  * It moved again with #223, because the introduction gained a line below its question saying what
  * the controls are for, per DDR-076. That line is not a fact ADR-005 lists as shared, so it did not
  * move the CV.
+ * It moved again with #227, because each project card's sentence is now the project's slogan. A
+ * card's sentence is not a fact ADR-005 lists as shared, and no project's name changed, so it did
+ * not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '179d376d5420307dc3a01f93c6956ff8775440bd17b2fc410f4a75c9df24f9aa',
+  contentDigest: 'dce5aec1e3c52ea16c63600e859b1d9530f907785c0877878b8b053027748b27',
 };
