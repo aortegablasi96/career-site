@@ -68,6 +68,7 @@ export default async function RolePage({ params }: { params: Promise<{ slug: str
         label={contents.label}
         home={contents.home}
         title={contents.title}
+        menu={contents.menu}
         sections={sections}
         page={page}
       />

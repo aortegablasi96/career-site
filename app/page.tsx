@@ -17,6 +17,7 @@ export default function HomePage() {
         label={contents.label}
         home={contents.home}
         title={contents.title}
+        menu={contents.menu}
         sections={sections}
       />
       <main>

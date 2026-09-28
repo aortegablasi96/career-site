@@ -105,6 +105,25 @@ card is static there and must not be translated: it lifts by a margin, `--card-l
 otherwise, so a change to how they look changes both; a change to layout does not. Desktop and paper
 were measured pixel-identical to before.
 
+**Since #221, per DDR-075 and ADR-013, the contents bar collapses behind a menu below the wide
+breakpoint.** The bar is the title and a button, one row, 48.8px at the default text size; the
+button is the 24px mark alone (`--contents-menu-icon-size`), three lines closed and a cross open,
+named "Menu" by `menu` in `content/contents.ts`, with `aria-expanded` and `aria-controls` on the
+list. `ContentsBar` holds whether it is open in React state, which is ADR-013's second reason for
+the one Client Component, and the stylesheet draws the state from `aria-expanded`. Open, the list
+is a panel `position: absolute` below the bar, over the page, on `--color-surface` with the bar's
+hairline and shadow, links one to a line at body size in 38.5px rows, never taller than
+`--contents-menu-max-size`; the current section's underline is the same `aria-current` rule. It
+closes on a chosen link, Escape (focus back to the button), a pointer down outside the bar and
+focus leaving it. **The title grows from a basis of 0 below the wide breakpoint**, so at 200% text
+its words wrap beside the button rather than the button wrapping below it; the bar is then 97px or
+126px, inside the 128px clearance, from 300px up. `--contents-bar-title-row` is `0rem` at the root
+and comes back only under `@media (scripting: none)` in `app/tokens.css`, because **without script
+the bar is DDR-049's at every width**: `@media (min-width: 48em), (scripting: none)` in
+`contents.module.css` hides the button and puts the links back in the row. From the wide breakpoint
+up the page was measured box-for-box identical to before, and paper pixel-identical in Edge and
+Firefox.
+
 **Each role has a view of its own since #176**, per ADR-011 and DDR-059, at `/experience/<slug>`,
 laid out as the Figma layer `career-site-experience` (177:1196) draws it: the way back, a tinted
 header with the company's pill, the dates, the place and the job title as the `h1`, every point as
@@ -400,11 +419,13 @@ every shadow put out — so changing a token means revising its decision record 
 specificity and a CSS Module's class overrides them. `components/stylesheets.test.ts` holds every
 component stylesheet to the same rules: tokens only — sizes, spaces, tracking since DDR-017,
 `box-shadow` since DDR-020 and leading since DDR-038 —
-no reordering, nothing but a pseudo-element taken out of the flow since DDR-021, `position: sticky`
+no reordering, nothing but a pseudo-element taken out of the flow since DDR-021 — and the contents
+bar's menu panel, `.list`, since DDR-075 — `position: sticky`
 on the contents bar alone since DDR-031, and no width media
 query but
 the wide breakpoint, which DDR-015 lets a component extend to paper as `(min-width: 48em), print`
-and no further. **ADR-006 says which literals it admits**: `0`, `auto` and `none` anywhere,
+and no further, and DDR-075 lets the contents bar alone extend to a reader without script as
+`(min-width: 48em), (scripting: none)`. **ADR-006 says which literals it admits**: `0`, `auto` and `none` anywhere,
 `100%` on `max-inline-size` and `max-block-size`, and `min-content` on `min-inline-size` and
 `min-block-size`. The shape of the rule, which a new case should be tested against rather than the
 list, is that **a limit may name the space there is or the space the content needs, and a size may
@@ -698,7 +719,7 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001 to ADR-012 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
+ADR-001 to ADR-013 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
 separate CV file, and ADR-005 superseding the part of ADR-004 that makes the CV a PDF saved from the
 page's print output; the rest of both records stands. ADR-006 supersedes nothing: it refines
 ADR-001's styling boundary by saying which literal values a component stylesheet may write: `0`,
@@ -709,18 +730,19 @@ precedent for the next one. ADR-008 amends ADR-007 in one respect: the same comp
 a click on its own links, so that a contents link's scroll is smooth, per DDR-041. ADR-009 amends
 ADR-007 again, in its boundary: the component renders the contents links itself, from each
 section's id and word, so that it can mark the current section's, per DDR-042. It is still the one
-Client Component. ADR-010 supersedes ADR-002's "There are no detail pages", whose revisit
+Client Component. ADR-013 amends ADR-007 and ADR-009 in its reason: the component also holds
+whether its menu is open below the wide breakpoint, per DDR-075. ADR-010 supersedes ADR-002's "There are no detail pages", whose revisit
 condition 3 Epic #152 meets: each project is a statically generated route, and a `next/link` href
 is a route rather than a file, so it does not go through `asset()`, which amends ADR-004. ADR-011
 extends ADR-010 to the roles, at `/experience/<slug>`, and supersedes nothing. ADR-012 amends
 ADR-010's address: since #202 the projects section is "Portfolio", at `#portfolio`, each view is at
 `/portfolio/<slug>` and its pictures are in `public/portfolio/<slug>/`; the old `/projects/…`
-addresses are not kept, as the owner chose. The next ADR is `013`.
+addresses are not kept, as the owner chose. The next ADR is `014`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-057 and DDR-059 to DDR-074. The next DDR is
-`075`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-057 and DDR-059 to DDR-075. The next DDR is
+`076`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Thirty-one accepted records are superseded or amended **in part**, and each says so at the top and again
+Thirty-two accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -735,6 +757,8 @@ at the section concerned:
   itself. DDR-035 takes its "Hover thickens the underline": hover changes colour instead.
   DDR-031 takes its "It is not sticky": the contents are the design's pinned bar, and
   DDR-031 also amends DDR-021's out-of-flow rule, DDR-025's opaque palette and DDR-030's open item.
+  DDR-075 takes its "It is not collapsed behind a toggle", which DDR-031 carried forward: below the
+  wide breakpoint the contents bar's links are behind a menu.
   DDR-036 amends its spine: a ringed dot on one unbroken line. DDR-037 amends its skills pattern:
   a level's badge stands above its skills. DDR-042 takes the half of "It has no current-section
   state and does not animate" that rules out the state: the bar marks the current section's link.
@@ -804,7 +828,11 @@ at the section concerned:
 * **DDR-040** keeps its proportions. DDR-072 puts the question that introduces the controls in
   the space above them, `--space-controls`, and the controls follow it at the flow step.
 * **DDR-021** keeps its capsule, its two lights, its ratio and its narrow width. DDR-040 takes its
-  wide width: `13rem` becomes the Make file's `clamp(180px, 22vw, 300px)`, in rem bounds.
+  wide width: `13rem` becomes the Make file's `clamp(180px, 22vw, 300px)`, in rem bounds. DDR-075
+  admits one more element out of the flow, the contents bar's menu panel.
+* **DDR-049** keeps its title and its arrangement from the wide breakpoint and without script.
+  DDR-075 puts the links behind a menu below the wide breakpoint, where the title shares its row
+  with the menu's button and the clearance counts no title row.
 * **DDR-026** keeps its divider, its colour, its place and its split. DDR-039 corrects its claim
   that the page drew the design's 56px on each side of the line: it drew 32px until #119. DDR-046
   runs the line across the window, and moves the half above it into the section before.

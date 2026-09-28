@@ -25,6 +25,10 @@ import { ContentsBar } from './contents-bar';
  * markup as it is before them on screen. It is a string in `content/` too, and plain text: Home
  * already returns to the top, so the title is not a second link there.
  *
+ * Below the wide breakpoint the links are behind a menu, per DDR-075, which supersedes DDR-010's
+ * refusal to collapse them behind a toggle: the bar shows the title and a button, and the button
+ * opens the links in a panel over the page. `menu` is the button's accessible name, from `content/`.
+ *
  * On a project's view, per DDR-050, it is handed `page`, the route of the page the sections are on,
  * and every link leads back there rather than to a fragment of the view.
  *
@@ -35,12 +39,14 @@ export function Contents({
   label,
   home,
   title,
+  menu,
   sections,
   page,
 }: {
   label: string;
   home: string;
   title: string;
+  menu: string;
   sections: readonly { id: string; link: string }[];
   /** The route of the page the sections are on, when the bar is shown on a project's view. */
   page?: string;
@@ -54,6 +60,7 @@ export function Contents({
       label={label}
       home={home}
       title={title}
+      menu={menu}
       sections={sections.map(({ id, link }) => ({ id, link }))}
       page={page}
     />

@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-19
 
+**Amended by DDR-075 below the wide breakpoint**: the links are behind a menu there, so they no
+longer wrap below the title, and the clearance counts the title's row only for a reader without
+script, whose bar is still this record's at every width.
+
 **Amends DDR-031 in two respects**:
 
 * **The bar's arrangement.** DDR-031 puts the bar's links in the page's column and nothing else in

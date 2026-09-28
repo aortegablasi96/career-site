@@ -16,7 +16,25 @@ function rule(selector: string): string {
   return styles.match(new RegExp(`(?:^|\\n)${escaped}\\s*\\{([^}]*)\\}`))?.[1] ?? '';
 }
 
+/**
+ * The declarations of the rule for `selector` inside the query that lays the links out in the
+ * bar's row: the wide breakpoint, or a reader without script, per DDR-075.
+ */
+function rowRule(selector: string): string {
+  const block = styles.match(/@media \(min-width: 48em\), \(scripting: none\)\s*\{([\s\S]*?\n)\}/)?.[1] ?? '';
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  return block.match(new RegExp(`(?:^|\\n)\\s*${escaped}\\s*\\{([^}]*)\\}`))?.[1] ?? '';
+}
+
 const title = 'Andreu’s site';
+
+/** The bar as the server renders it, with the menu's name. */
+function render(): string {
+  return renderToStaticMarkup(
+    <Contents label="Sections" home="Home" title={title} menu="Menu" sections={sections} />,
+  );
+}
 
 const sections = [
   { id: 'experience', link: 'Experience' },
@@ -25,9 +43,7 @@ const sections = [
 
 describe('Contents', () => {
   it('is navigation with an accessible name, so assistive technology can announce it', () => {
-    const html = renderToStaticMarkup(
-      <Contents label="Sections" home="Home" title="Andreu’s site" sections={sections} />,
-    );
+    const html = render();
 
     expect(html).toMatch(/^<nav aria-label="Sections"/);
   });
@@ -35,9 +51,7 @@ describe('Contents', () => {
   // DDR-031: a link shows the design's word for its section, which is not always the heading.
   // DDR-045: the first link is Home, which leads to the top of the page, before every section.
   it('links to the top of the page, then to each section by its content’s word, in order', () => {
-    const html = renderToStaticMarkup(
-      <Contents label="Sections" home="Home" title="Andreu’s site" sections={sections} />,
-    );
+    const html = render();
     const links = [...html.matchAll(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(([, href, text]) => ({
       href,
       text,
@@ -74,15 +88,13 @@ describe('Contents', () => {
   // DDR-048: nothing marks the bar and no other rule can change its edge — not a scrolled state,
   // not a rule for a reader without script — and the edge has no transition, so it never animates.
   it('has one edge, which nothing changes or animates, per DDR-048', () => {
-    const html = renderToStaticMarkup(
-      <Contents label="Sections" home="Home" title="Andreu’s site" sections={sections} />,
-    );
+    const html = render();
 
     expect(html).not.toMatch(/data-scrolled/);
     expect(styles).not.toMatch(/\.contents\[/);
-    expect(styles).not.toMatch(/scripting/);
-    expect(styles).not.toMatch(/transition/);
-    expect(styles.match(/border-block-end|box-shadow/g)).toHaveLength(2);
+    expect(rule('.contents')).not.toMatch(/transition/);
+    // DDR-075: the one query that names script is the one that lays the links out in the row.
+    expect(styles.match(/scripting/g)).toHaveLength(1);
   });
 
   it('lays the links and the title out in the page’s column, at least the design’s height tall', () => {
@@ -93,26 +105,26 @@ describe('Contents', () => {
     expect(bar).toMatch(/margin-inline:\s*auto;/);
     expect(bar).toMatch(/padding-inline:\s*var\(--page-gutter\);/);
     expect(bar).toMatch(/flex-wrap:\s*wrap;/);
-    expect(rule('.list')).toMatch(/flex-wrap:\s*wrap;/);
+    expect(rowRule('.list')).toMatch(/flex-wrap:\s*wrap;/);
   });
 
   // DDR-049: the title starts at the column's left edge, and the links follow it in the markup, as
   // they do on screen, so the reading order and the tab order are what the bar shows.
   it('shows the site’s title before the links, as text rather than a link, per DDR-049', () => {
-    const html = renderToStaticMarkup(
-      <Contents label="Sections" home="Home" title="Andreu’s site" sections={sections} />,
-    );
+    const html = render();
 
-    expect(html).toMatch(/<div class="[^"]*"><p class="[^"]*">Andreu’s site<\/p><ul /);
+    expect(html).toMatch(
+      /<div class="[^"]*"><p class="[^"]*">Andreu’s site<\/p><button [^>]*>.*<\/button><ul /,
+    );
     expect(html.match(/<a /g)).toHaveLength(3);
   });
 
   // DDR-049: the title is at the column's left edge, larger than the links and bold; the list's
   // auto margin takes the links to the other edge, and each row they wrap to is set to the right.
   it('puts the larger bold title at the left of the column and the links at its right, per DDR-049', () => {
-    expect(rule('.list')).toMatch(/padding-inline-start:\s*0;/);
-    expect(rule('.list')).toMatch(/margin-inline-start:\s*auto;/);
-    expect(rule('.list')).toMatch(/justify-content:\s*flex-end;/);
+    expect(rowRule('.list')).toMatch(/padding:\s*0;/);
+    expect(rowRule('.list')).toMatch(/margin-inline-start:\s*auto;/);
+    expect(rowRule('.list')).toMatch(/justify-content:\s*flex-end;/);
     expect(rule('.title')).toMatch(/font-size:\s*var\(--font-size-x-large\);/);
     expect(rule('.title')).toMatch(/font-weight:\s*var\(--font-weight-bold\);/);
   });
@@ -134,9 +146,7 @@ describe('Contents', () => {
   // DDR-042: the static HTML marks no section, so a reader without script gets the bar as it was,
   // and a reader with script gets the mark once the scroll position has been read.
   it('marks no link as current until script has read the scroll position, per DDR-042', () => {
-    const html = renderToStaticMarkup(
-      <Contents label="Sections" home="Home" title="Andreu’s site" sections={sections} />,
-    );
+    const html = render();
 
     expect(html).not.toMatch(/aria-current/);
   });
@@ -159,7 +169,7 @@ describe('Contents', () => {
   // Client Component, per ADR-009, or the items would be sent again as client props.
   it('hands the bar each section’s id and word and nothing else, per ADR-009', () => {
     const withItems = sections.map((section) => ({ ...section, items: [<p key="x">Item</p>] }));
-    const bar = Contents({ label: 'Sections', home: 'Home', title, sections: withItems }) as ReactElement<{
+    const bar = Contents({ label: 'Sections', home: 'Home', title, menu: 'Menu', sections: withItems }) as ReactElement<{
       sections: unknown;
     }>;
 
@@ -168,7 +178,7 @@ describe('Contents', () => {
 
   // DDR-045: Home's word is the one string the bar is handed that names no section.
   it('hands the bar the Home link’s word, per DDR-045', () => {
-    const bar = Contents({ label: 'Sections', home: 'Home', title, sections }) as ReactElement<{
+    const bar = Contents({ label: 'Sections', home: 'Home', title, menu: 'Menu', sections }) as ReactElement<{
       home: unknown;
     }>;
 
@@ -197,22 +207,98 @@ describe('Contents', () => {
   it('gives a link the box the design draws and a wrapped row a gap, per DDR-027', () => {
     expect(rule('.link')).toMatch(/display:\s*inline-flex;/);
     expect(rule('.link')).not.toMatch(/min-block-size|min-inline-size/);
-    expect(rule('.list')).toMatch(/row-gap:\s*var\(--space-small\);/);
+    expect(rowRule('.list')).toMatch(/row-gap:\s*var\(--space-small\);/);
+    expect(rowRule('.list .link')).toMatch(/padding-block:\s*0;/);
   });
 
   // DDR-045, amending DDR-031: with Home as a sixth link, the narrow gap is the small step, so the
   // bar is never taller than it was with five links; from the wide breakpoint it is 32px, as it was.
   it('holds its links a small step apart below the wide breakpoint and a large one from it', () => {
-    expect(rule('.list')).toMatch(/column-gap:\s*var\(--space-small\);/);
+    expect(rowRule('.list')).toMatch(/column-gap:\s*var\(--space-small\);/);
     expect(rule('.bar')).toMatch(/column-gap:\s*var\(--space-small\);/);
     expect(styles).toMatch(
       /@media \(min-width: 48em\)\s*\{\s*\.bar,\s*\.list\s*\{\s*column-gap:\s*var\(--space-large\);\s*\}\s*\}/,
     );
   });
 
+  // DDR-075: below the wide breakpoint the links are behind a button after the title. It is a real
+  // button, named by `content/` since its mark says nothing in words, and it says whether the
+  // links it controls are shown. The server renders the menu closed.
+  it('puts a named button that controls the links after the title, closed, per DDR-075', () => {
+    const html = render();
+    const button = html.match(/<button ([^>]*)>(.*?)<\/button>/);
+    const listId = html.match(/<ul id="([^"]+)"/)?.[1];
+
+    expect(button?.[1]).toMatch(/type="button"/);
+    expect(button?.[1]).toMatch(/aria-label="Menu"/);
+    expect(button?.[1]).toMatch(/aria-expanded="false"/);
+    expect(listId).toBeTruthy();
+    expect(button?.[1]).toContain(`aria-controls="${listId}"`);
+    expect(button?.[2]).toMatch(/^<svg [^>]*aria-hidden="true"/);
+  });
+
+  it('hands the bar the menu button’s name, per DDR-075', () => {
+    const bar = Contents({ label: 'Sections', home: 'Home', title, menu: 'Menu', sections }) as ReactElement<{
+      menu: unknown;
+    }>;
+
+    expect(bar.props.menu).toBe('Menu');
+  });
+
+  // DDR-075: below the wide breakpoint the links are not displayed until the button says the menu
+  // is open, and then hang from the bar over the page, on the page's surface under the bar's own
+  // edge, one to a line at body size. The open state is the attribute assistive technology is
+  // told, and it changes nothing but whether the panel is displayed.
+  it('shows the links in a panel over the page only while the button says the menu is open, per DDR-075', () => {
+    const panel = rule('.list');
+
+    expect(panel).toMatch(/display:\s*none;/);
+    expect(panel).toMatch(/position:\s*absolute;/);
+    expect(panel).toMatch(/inset-block-start:\s*100%;/);
+    expect(panel).toMatch(/inset-inline:\s*0;/);
+    expect(panel).toMatch(/flex-direction:\s*column;/);
+    expect(panel).toMatch(/max-block-size:\s*var\(--contents-menu-max-size\);/);
+    expect(panel).toMatch(/overflow-y:\s*auto;/);
+    expect(panel).toMatch(/padding-inline:\s*var\(--page-gutter\);/);
+    expect(panel).toMatch(/background-color:\s*var\(--color-surface\);/);
+    expect(panel).toMatch(/border-block-end:\s*1px solid var\(--color-rule\);/);
+    expect(panel).toMatch(/box-shadow:\s*var\(--shadow-bar\);/);
+    expect(panel).toMatch(/font-size:\s*var\(--font-size-medium\);/);
+    expect(rule(".menu[aria-expanded='true'] + .list").trim()).toBe('display: flex;');
+    expect(rule('.list .link')).toMatch(/padding-block:\s*var\(--space-small\);/);
+  });
+
+  // DDR-075: the button is its mark at 24px with the small step around it, in the title's ink, and
+  // takes the accent under the pointer and on focus as a contents link does, per DDR-035.
+  it('draws the button as its mark alone, and lights it as a link, per DDR-075', () => {
+    const button = rule('.menu');
+
+    expect(button).toMatch(/font-size:\s*var\(--contents-menu-icon-size\);/);
+    expect(button).toMatch(/padding-block:\s*var\(--space-small\);/);
+    expect(button).toMatch(/padding-inline:\s*0;/);
+    expect(button).toMatch(/margin-inline-start:\s*auto;/);
+    expect(button).toMatch(/color:\s*var\(--color-text-heading\);/);
+    expect(styles).toMatch(
+      /\.menu:hover,\s*\.menu:focus-visible\s*\{\s*color:\s*var\(--color-accent\);\s*\}/,
+    );
+  });
+
+  // DDR-075: from the wide breakpoint, and for a reader without script, there is no button and the
+  // links are the bar's row, in the flow, as DDR-049 draws them.
+  it('hides the button and lays the links out in the bar from the wide breakpoint and without script, per DDR-075', () => {
+    expect(rowRule('.menu')).toMatch(/display:\s*none;/);
+    expect(rowRule('.list')).toMatch(/display:\s*flex;/);
+    expect(rowRule('.list')).toMatch(/position:\s*static;/);
+    expect(rowRule('.list')).toMatch(/flex-direction:\s*row;/);
+    expect(rowRule('.list')).toMatch(/box-shadow:\s*none;/);
+    expect(rowRule('.list')).toMatch(/font-size:\s*var\(--font-size-x-small\);/);
+  });
+
   it('renders nothing when there are no sections to list', () => {
     expect(
-      renderToStaticMarkup(<Contents label="Sections" home="Home" title={title} sections={[]} />),
+      renderToStaticMarkup(
+        <Contents label="Sections" home="Home" title={title} menu="Menu" sections={[]} />,
+      ),
     ).toBe('');
   });
 });

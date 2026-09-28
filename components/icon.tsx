@@ -7,12 +7,31 @@ import type { ContactIcon } from '@/content/types';
  * the link to the project after this one. DDR-056 adds a map pin, beside the introduction's
  * location, which is the one mark that is not beside a control. DDR-059 added a clock beside the
  * hint above the experience timeline, and DDR-067 replaces it with an information mark, a circled
- * "i", beside that hint and the projects' alike.
+ * "i", beside that hint and the projects' alike. DDR-075 adds the contents bar's menu button on a
+ * phone: three lines while the menu is closed and a cross while it is open.
  */
-export type IconName = ContactIcon | 'download' | 'back' | 'forward' | 'external' | 'location' | 'info';
+export type IconName =
+  | ContactIcon
+  | 'download'
+  | 'back'
+  | 'forward'
+  | 'external'
+  | 'location'
+  | 'info'
+  | 'menu'
+  | 'close';
 
 /** The marks drawn as lines rather than filled, all on the 24 unit grid. */
-const lineDrawings: readonly IconName[] = ['download', 'back', 'forward', 'external', 'location', 'info'];
+const lineDrawings: readonly IconName[] = [
+  'download',
+  'back',
+  'forward',
+  'external',
+  'location',
+  'info',
+  'menu',
+  'close',
+];
 
 /**
  * A mark beside a control's text, per DDR-010.
@@ -131,4 +150,8 @@ const paths: Record<IconName, React.ReactNode> = {
       <path d="M12 7.5h.01" />
     </>
   ),
+  // Three lines, on the contents bar's button while its menu is closed, per DDR-075.
+  menu: <path d="M4 6h16M4 12h16M4 18h16" />,
+  // A cross, on the same button while the menu is open, which closes it.
+  close: <path d="M18 6 6 18M6 6l12 12" />,
 };

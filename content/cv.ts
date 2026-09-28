@@ -75,9 +75,12 @@ import type { Cv } from './types';
  * DDR-072. A question is not a fact ADR-005 lists as shared, so it did not move the CV.
  * It moved again with #215, because the email contact now shows its mark alone, per DDR-073; its
  * label is its accessible name and its address did not change, so it did not move the CV.
+ * It moved again with #221, because the contents bar gained the name of the button that opens its
+ * links on a phone, per DDR-075. A button's name is not a fact ADR-005 lists as shared, so it did
+ * not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'ab17088f2d5708bec0eeebc680e6d369218c68eaf0872117c1b7e0cd3e495541',
+  contentDigest: '2d0b9bce34cf7d4544c3a99c1db59f099573796e52c62db4aae34ca1dc6cb9f4',
 };

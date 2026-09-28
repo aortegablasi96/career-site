@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-16
 
+**Superseded in part by DDR-075**: the bullet "It is not collapsed behind a toggle" and the rejected
+alternative "Adopt the mobile 'Sections' toggle". Below the wide breakpoint the contents bar's links
+are behind a menu, at the owner's request on #221.
+
 **Amended by DDR-050** in one respect: the career page is no longer the site's only page. Each
 project has a view of its own, which DDR-050 designs. The projects section this record designs is
 unchanged by it.
@@ -219,7 +223,8 @@ note; the summary; the availability sentence; then a wrapping row of four contro
   are about 28px tall and not underlined; it duplicates this row; and its scroll-triggered shadow
   needs a scroll listener, which makes it a client component in a statically exported site. It
   breaks three of the brief's four hard accessibility constraints at once.
-* **It is not collapsed behind a toggle.** The draft's mobile "Sections" disclosure is rejected: it
+* **It is not collapsed behind a toggle.** *Superseded by DDR-075*: below the wide breakpoint the
+  links are behind a menu. The draft's mobile "Sections" disclosure is rejected: it
   hides navigation on exactly the screens where navigation matters most, and needs client-side
   state. A row of five links that wraps to two or three lines is always visible and needs no
   JavaScript.

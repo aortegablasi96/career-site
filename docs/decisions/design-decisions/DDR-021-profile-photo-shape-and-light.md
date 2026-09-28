@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-17
 
+**Amended by DDR-075 in one respect**: the contents bar's menu panel is `position: absolute`, the
+one element admitted out of the flow besides a pseudo-element, as DDR-031 admitted the bar's
+`sticky`.
+
 **Touched by DDR-025 in one place.** This record justifies the glow partly by noting that its indigo
 `#4f46e5` is a colour DDR-012 turned down for the accent. DDR-025 adopts that indigo as the accent,
 so the glow is now the accent's own hue rather than a near neighbour of it. Every measurement here

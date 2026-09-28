@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-18
 
+**Amended by ADR-013**: the component also renders the menu button that opens its links on a
+phone and holds whether the menu is open, per DDR-075. The boundary this record draws is unchanged.
+
 **Amends ADR-007** in one respect: where the client boundary falls. Under ADR-007, `Contents`
 rendered the links and passed them to `ContentsBar` as `children`, so the boundary was the band
 around them. Now `Contents` passes each section's id and word as plain strings, and `ContentsBar`
