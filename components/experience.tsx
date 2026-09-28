@@ -10,7 +10,8 @@ export function roleHref(slug: string): string {
 }
 
 /**
- * The owner's roles, oldest first as `content/` gives them, per DDR-057. Each is an entry of the
+ * The owner's roles, oldest first as `content/` gives them, per DDR-057, and newest first below the
+ * wide breakpoint, where the timeline runs down the page, per DDR-074. Each is an entry of the
  * timeline education shares: the dates, a dot, and a card with the company, the job title and the
  * place.
  *

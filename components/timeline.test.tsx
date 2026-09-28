@@ -67,6 +67,17 @@ const credentials = renderToStaticMarkup(
   />,
 );
 
+/**
+ * The row and the column, per DDR-074: every timeline draws its entries twice, the row oldest first
+ * for the wide screen and paper, the column newest first for a narrower screen, and only one is ever
+ * displayed.
+ */
+const lists = (html: string) => {
+  const [row, column] = html.match(/<ol [^>]*>.*?<\/ol>/g) ?? [];
+
+  return { row: row!, column: column! };
+};
+
 /** The markup's text, as a reader meets it. */
 const text = (html: string) => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').replace(/ /g, ' ');
 
@@ -91,18 +102,18 @@ function rule(selector: string, within = screen): string {
 describe('Timeline', () => {
   // DDR-057: the entries are in time order, so they are an ordered list, and each entry is a list
   // item, which the print styles keep whole on one sheet.
-  it('is an ordered list with one item per entry', () => {
-    expect(roles).toMatch(/^<ol[ >]/);
-    expect(roles).toMatch(/<\/ol>$/);
-    expect(roles.match(/<li class=/g)).toHaveLength(2);
-    expect(credentials.match(/<li class=/g)).toHaveLength(1);
+  it('is an ordered list with one item per entry, in one block with the column', () => {
+    expect(roles).toMatch(/^<div><ol[ >]/);
+    expect(roles).toMatch(/<\/ol><ol [^>]*>.*<\/ol><\/div>$/);
+    expect(lists(roles).row.match(/<li class=/g)).toHaveLength(2);
+    expect(lists(credentials).row.match(/<li class=/g)).toHaveLength(1);
   });
 
   // The row can scroll sideways, and holds no link, so it has to take focus itself for a keyboard
   // to scroll it, and it takes its name from its section's heading, per DDR-057.
   it('takes focus, and is named by its section’s heading', () => {
-    expect(roles).toMatch(/^<ol [^>]*aria-labelledby="experience-title"[^>]*tabindex="0"/);
-    expect(credentials).toMatch(/^<ol [^>]*aria-labelledby="education-title"/);
+    expect(lists(roles).row).toMatch(/^<ol [^>]*aria-labelledby="experience-title"[^>]*tabindex="0"/);
+    expect(lists(credentials).row).toMatch(/^<ol [^>]*aria-labelledby="education-title"/);
   });
 
   // DDR-066: a role's card opens with its company's logo, which repeats the name written beneath
@@ -131,7 +142,7 @@ describe('Timeline', () => {
     expect(linked).toMatch(
       /<h3 [^>]*><a class="[^"]*" href="\/experience\/abb">Global Product Specialist, Digital Solutions<\/a><\/h3>/,
     );
-    expect(linked.match(/<a /g)).toHaveLength(1);
+    expect(lists(linked).row.match(/<a /g)).toHaveLength(1);
     expect(linked).not.toContain('tabindex');
   });
 
@@ -148,7 +159,7 @@ describe('Timeline', () => {
   });
 
   it('gives a credential no place, and closes its card at its title', () => {
-    expect(credentials).toMatch(/<\/h3><\/div><\/li><\/ol>$/);
+    expect(lists(credentials).row).toMatch(/<\/h3><\/div><\/li><\/ol>$/);
   });
 
   // DDR-018 draws the case in the stylesheet, so the string a screen reader announces, and the
@@ -163,7 +174,8 @@ describe('Timeline', () => {
   it('hides the spine from assistive technology, and gives it no text', () => {
     const spines = [...roles.matchAll(/<div [^>]*aria-hidden="true"[^>]*>(.*?)<\/div>/g)];
 
-    expect(spines).toHaveLength(2);
+    // Each entry's, in each of the two lists.
+    expect(spines).toHaveLength(4);
     for (const [, inner] of spines) {
       expect(inner).toMatch(/^<span class="[^"]*lead[^"]*"><\/span><span class="[^"]*dot[^"]*"><\/span><span class="[^"]*line[^"]*"><\/span>$/);
     }
@@ -172,18 +184,62 @@ describe('Timeline', () => {
   // Paper spaces roles and credentials apart by their own steps, per DDR-039, so the list carries
   // its kind.
   it('marks the list with its kind', () => {
-    expect(roles).toMatch(/^<ol class="_timeline_\w+ _role_\w+"/);
-    expect(credentials).toMatch(/^<ol class="_timeline_\w+ _credential_\w+"/);
+    expect(lists(roles).row).toMatch(/^<ol class="_timeline_\w+ _role_\w+"/);
+    expect(lists(credentials).row).toMatch(/^<ol class="_timeline_\w+ _credential_\w+"/);
+    expect(lists(roles).column).toMatch(/^<ol class="_stack_\w+ _role_\w+"/);
+    expect(lists(credentials).column).toMatch(/^<ol class="_stack_\w+ _credential_\w+"/);
+  });
+
+  // DDR-074: the column is the row's entries newest first, as the owner chose on #218. A stylesheet
+  // may not reorder them, per DDR-014, so the markup is in the order the column shows.
+  describe('the column', () => {
+    const { column } = lists(roles);
+
+    it('holds the same entries as the row, newest first', () => {
+      expect(text(column)).toContain(
+        'Oct 2024 – Present ABB Global Product Specialist, Digital Solutions Quartino, Switzerland ' +
+          'Jun 2023 – Oct 2024 Ponera Group Digital Solutions Manager Lugano, Switzerland',
+      );
+    });
+
+    it('is named by its section’s heading and takes no tab stop, since it never scrolls', () => {
+      expect(column).toMatch(/^<ol [^>]*aria-labelledby="experience-title"/);
+      expect(column).not.toContain('tabindex');
+    });
+
+    // The spine is hidden, so a reader meets the dates and then the card, as in the row.
+    it('draws the spine first, beside the dates and the card', () => {
+      expect(column).toMatch(
+        /<li class="[^"]*"><div class="[^"]*spine[^"]*" aria-hidden="true">.*?<\/div><div class="[^"]*body[^"]*"><p class="[^"]*dates[^"]*">/,
+      );
+    });
+
+    // What only paper shows stays in the row, which paper prints.
+    it('holds no role’s points', () => {
+      expect(column).not.toContain('A point');
+      expect(lists(roles).row).toContain('A point');
+    });
+
+    it('leads where the row leads, by the same one link a card', () => {
+      expect(lists(linked).column.match(/<a /g)).toHaveLength(1);
+      expect(lists(linked).column).toContain('href="/experience/abb"');
+    });
   });
 });
 
 // DDR-057 lays the timeline out, from `career-site-main` nodes 170:65 and 170:439. These read the
 // stylesheet as written, so a later edit cannot quietly drop a rule an acceptance criterion rests on.
 describe('timeline styles on screen', () => {
-  it('is one row at every width, which scrolls inside itself rather than the page, per DDR-057', () => {
-    expect(rule('.timeline')).toMatch(/display:\s*flex;/);
+  // DDR-057's row from the wide breakpoint, and DDR-074's column below it: exactly one of the two.
+  it('is one row from the wide breakpoint, which scrolls inside itself rather than the page', () => {
+    const wide = styles.match(/@media \(min-width: 48em\) \{([\s\S]*?)\n\}/)?.[1] ?? '';
+
+    expect(rule('.timeline')).toMatch(/display:\s*none;/);
     expect(rule('.timeline')).toMatch(/overflow-x:\s*auto;/);
-    expect(styles).not.toMatch(/@media \(min-width/);
+    expect(rule('.timeline', wide)).toMatch(/display:\s*flex;/);
+    expect(rule('.stack', wide)).toMatch(/display:\s*none;/);
+    expect(rule('.stack', paper)).toMatch(/display:\s*none;/);
+    expect(rule('.timeline', paper)).toMatch(/display:\s*block;/);
   });
 
   it('shares the row equally, and holds each entry to the timeline’s width at the least', () => {
@@ -442,5 +498,71 @@ describe('timeline styles on paper', () => {
     expect(rule('.role .card', paper)).toMatch(/padding-block-end:\s*var\(--space-role\);/);
     expect(rule('.credential .card', paper)).toMatch(/padding-block-end:\s*var\(--space-credential\);/);
     expect(rule('.entry:last-child .card', paper)).toMatch(/padding-block-end:\s*0;/);
+  });
+});
+
+// DDR-074: below the wide breakpoint each entry is the spine beside its dates and card, and it looks
+// and answers as the row's does.
+describe('timeline styles in the column', () => {
+  const motion = styles.match(/@media \(prefers-reduced-motion: no-preference\) \{([\s\S]*?)\n\}/)?.[1] ?? '';
+
+  it('lays each entry out as the spine beside the dates and the card', () => {
+    expect(rule('.stack .entry')).toMatch(
+      /grid-template-columns:\s*var\(--timeline-spine-width\) minmax\(0, 1fr\);/,
+    );
+    expect(rule('.stack .entry')).toMatch(/text-align:\s*start;/);
+    expect(rule('.stack .spine')).toMatch(/flex-direction:\s*column;/);
+    expect(rule('.stack .card')).toMatch(/margin:\s*0;/);
+  });
+
+  // The dot is at the top of its entry and the dates stand on a line as tall as it, centred on it.
+  it('levels the dates with the dot beside them', () => {
+    expect(rule('.stack .lead')).toMatch(/display:\s*none;/);
+    expect(rule('.stack .dates')).toMatch(/min-block-size:\s*var\(--timeline-dot-span\);/);
+    expect(rule('.stack .dates')).toMatch(/align-items:\s*center;/);
+  });
+
+  // Paper's steps between entries, per DDR-039, inside the entry so the line reaches the next dot.
+  it('spaces roles and credentials by their own steps, and nothing after the last', () => {
+    expect(rule('.stack.role .body')).toMatch(/padding-block-end:\s*var\(--space-role\);/);
+    expect(rule('.stack.credential .body')).toMatch(/padding-block-end:\s*var\(--space-credential\);/);
+    expect(rule('.stack .entry:last-child .body')).toMatch(/padding-block-end:\s*0;/);
+  });
+
+  // DDR-064: the dates, the dot and the card are one target, measured from the block that holds the
+  // dates and the card, whatever the dates wrap to, and not the space before the next entry.
+  it('stretches the link’s box over the dates, the spine and the card, and not the space below', () => {
+    expect(rule('.body')).toMatch(/position:\s*relative;/);
+    expect(rule('.stack .card:has(.link)')).toMatch(/position:\s*static;/);
+    expect(rule('.stack .link::before')).toMatch(/inset-block:\s*0;/);
+    expect(rule('.stack .link::before')).toMatch(
+      /inset-inline:\s*calc\(-1 \* \(var\(--timeline-spine-width\) \+ var\(--space-small\)\)\) 0;/,
+    );
+    expect(rule('.stack.role .link::before')).toMatch(/inset-block-end:\s*var\(--space-role\);/);
+    expect(rule('.stack.credential .link::before')).toMatch(/inset-block-end:\s*var\(--space-credential\);/);
+    expect(rule('.stack .entry:last-child .link::before')).toMatch(/inset-block-end:\s*0;/);
+  });
+
+  it('outlines the card itself on focus, outside its edge', () => {
+    const focus = rule('.stack .entry:has(.link:focus-visible) .card');
+
+    expect(rule('.stack .link::after')).toMatch(/content:\s*none;/);
+    expect(focus).toMatch(/outline:\s*var\(--focus-outline-width\) solid var\(--color-focus\);/);
+    expect(focus).toMatch(/outline-offset:\s*var\(--focus-outline-offset\);/);
+  });
+
+  // A moved card would become what the link's box is measured from, so the column's card rises by a
+  // margin, over the same 150ms, and only where motion is welcome.
+  it('lifts a card by the same lift, as a margin, where motion is welcome', () => {
+    const lifted = rule(
+      '.stack .entry:has(.link):hover .card,\n  .stack .entry:has(.link:focus-visible) .card',
+      motion,
+    );
+
+    expect(lifted).toMatch(/translate:\s*none;/);
+    expect(lifted).toMatch(/margin-block:\s*var\(--card-lift-back\) var\(--card-lift\);/);
+    expect(rule('.stack .card:has(.link)', motion)).toMatch(
+      /transition-property:\s*margin-block-start, margin-block-end, border-color, box-shadow;/,
+    );
   });
 });

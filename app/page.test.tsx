@@ -118,8 +118,20 @@ describe('HomePage', () => {
   it('shows every item once, in the order the content gives', () => {
     // A skill group's name carries a class, per DDR-017, and a project's name is its card's link,
     // per DDR-051, so the title is the heading's text whatever is inside it.
-    const titles = [...html.matchAll(/<h3[^>]*>(.*?)<\/h3>/g)].map(([, title]) => title!.replace(/<[^>]+>/g, ''));
+    // Each timeline draws its entries twice, per DDR-074: the row the wide screen and paper show, and
+    // the column, newest first, a narrower screen shows instead. Exactly one is ever displayed, so
+    // the page shows each item once whichever it is; the column is set aside here and held on its
+    // own below.
+    const column = /<ol class="[^"]*stack[^"]*"[^>]*>.*?<\/ol>/g;
+    const heading = (markup: string) =>
+      [...markup.matchAll(/<h3[^>]*>(.*?)<\/h3>/g)].map(([, title]) => title!.replace(/<[^>]+>/g, ''));
+    const titles = heading(html.replace(column, ''));
+    const columns = (html.match(column) ?? []).map(heading);
 
+    expect(columns).toEqual([
+      experience.roles.map(({ title }) => title).reverse(),
+      credentials.credentials.map(({ name }) => name).reverse(),
+    ]);
     expect(titles).toEqual([
       ...experience.roles.map(({ title }) => title),
       ...projects.projects.map(({ name }) => name),

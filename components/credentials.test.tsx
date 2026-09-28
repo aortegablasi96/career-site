@@ -17,11 +17,18 @@ const html = renderToStaticMarkup(
   />,
 );
 
-/** The markup's text, as a reader meets it. */
-const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+/**
+ * The two lists, per DDR-074: the row, oldest first, which the wide screen and paper show, and the
+ * column, newest first, which a narrower screen shows instead. Only one is ever displayed; the tests
+ * below read the row unless they say otherwise.
+ */
+const [row, column] = html.match(/<ol [^>]*>.*?<\/ol>/g) ?? [];
 
-/** Each credential's entry, in the order the page shows them. */
-const entries = html.match(/<li class=.*?<\/li>/g) ?? [];
+/** The row's text, as a reader meets it. */
+const text = row!.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+
+/** Each credential's entry in the row, in the order the row shows them. */
+const entries = row!.match(/<li class=.*?<\/li>/g) ?? [];
 
 const isCertification = (credential: Credential): credential is Certification => 'granted' in credential;
 const isDegree = (credential: Credential): credential is Degree => !isCertification(credential);
@@ -80,7 +87,7 @@ describe('Credentials', () => {
   // one link off the site that opens a new tab and says so after its name, so the row takes no tab
   // stop of its own.
   it('stands the hint above the row, in the words the owner chose on #200', () => {
-    expect(html).toMatch(/^<div><p class="[^"]*"><svg[^>]*>.*?<\/svg>Click any credential to learn more<\/p><ol /);
+    expect(html).toMatch(/^<div><p class="[^"]*"><svg[^>]*>.*?<\/svg>Click any credential to learn more<\/p><div><ol /);
   });
 
   it('makes each credential’s name one link to its address, in a new tab it announces', () => {
@@ -118,10 +125,20 @@ describe('Credentials', () => {
   it('hides the timeline’s ornament from assistive technology, and gives it no text', () => {
     const spines = [...html.matchAll(/<div [^>]*aria-hidden="true"[^>]*>(.*?)<\/div>/g)];
 
-    expect(spines).toHaveLength(credentials.credentials.length);
+    // One for each credential in each list.
+    expect(spines).toHaveLength(2 * credentials.credentials.length);
     for (const [, inner] of spines) {
       expect(inner.replace(/<[^>]+>/g, '')).toBe('');
     }
+  });
+
+  // DDR-074: below the wide breakpoint the credentials run down the page, newest first, as the owner
+  // chose on #218, each card leading off the site as the row's does.
+  it('lists the credentials newest first in the column, each leading to its address', () => {
+    const links = [...column!.matchAll(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(([, href, name]) => ({ href, name }));
+
+    expect(links).toEqual(credentials.credentials.map(({ href, name }) => ({ href, name })).reverse());
+    expect(column).toContain('target="_blank"');
   });
 });
 

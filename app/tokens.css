@@ -637,6 +637,10 @@
         var(--timeline-dot-ring)
     )
   );
+  /* The ringed dot's whole height, its circle and its ring on either side, per DDR-074: below the
+     wide breakpoint the timeline is a column, and each entry's dates stand on a line this tall,
+     centred on the dot beside them. Written here because it is arithmetic on tokens. */
+  --timeline-dot-span: calc(var(--timeline-dot-size) + 2 * var(--timeline-dot-ring));
   --timeline-line-width: 2px;
   --timeline-entry-width: 12rem;
   --timeline-entry-inset: 0.75rem;
@@ -687,6 +691,9 @@
      card's own measures do. It is the only length on the site that is a distance travelled, so a
      second piece of motion is a decision to take rather than this token to reach for. */
   --card-lift: 0.25rem;
+  /* The lift as a margin, for a card in the timeline's column, per DDR-074, which rises by giving up
+     space above it rather than by moving: written here because it is arithmetic on a token. */
+  --card-lift-back: calc(-1 * var(--card-lift));
 
   /* A project's view, per DDR-050, measured off `career-site-project`. The lead media is the
      design's 16:10 (node 59:71), which crops 8% off the top and the bottom of a 4:3 picture rather
