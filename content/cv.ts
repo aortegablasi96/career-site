@@ -71,9 +71,11 @@ import type { Cv } from './types';
  * move the CV.
  * It moved again with #212, because the summary is the owner's new description, with one phrase in
  * bold. ADR-005 leaves a CV's summary free, so it did not move the CV either.
+ * It moved again with #214, because the introduction gained the question above its controls, per
+ * DDR-072. A question is not a fact ADR-005 lists as shared, so it did not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'ceae73bcb04257e636b5ebc5b4d8a3961b2cdbbef3758cc3210298b2f4a8ab53',
+  contentDigest: '5eea7ea3171047c2007ba1e50263550a12fd777f94e550dd7b8fae32cd1d0f1e',
 };

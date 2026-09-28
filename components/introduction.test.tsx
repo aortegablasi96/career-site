@@ -68,6 +68,7 @@ describe('Introduction', () => {
       introduction.positioning,
       introduction.location,
       summaryHtml,
+      introduction.invitation,
       introduction.contact[0].label,
       cv.label,
     ].map((part) => html.indexOf(part));
@@ -362,7 +363,33 @@ describe('introduction styles', () => {
     expect(rule('.introduction', wide)).toMatch(/gap:\s*var\(--space-x-large\);/);
     expect(rule('.summary')).toMatch(/max-inline-size:\s*var\(--measure-summary\);/);
     expect(rule('.location + .summary')).toMatch(/margin-block-start:\s*var\(--space-summary\);/);
-    expect(rule('.summary + .controls')).toMatch(
+    // Since DDR-072 the question stands in that space, and the controls follow it at the flow step.
+    expect(rule('.summary + .invitation')).toMatch(
+      /margin-block-start:\s*var\(--space-controls\);/,
+    );
+  });
+
+  // DDR-072: the question the controls answer, as content/ writes it, in a paragraph of its own
+  // between the summary and the list. It is not a heading, so the outline still holds the name
+  // alone, which the test above checks.
+  it('asks the question in a paragraph between the summary and the controls, per DDR-072', () => {
+    expect(html).toMatch(
+      new RegExp(
+        `</p><p class="[^"]*invitation[^"]*">${literal(introduction.invitation)}</p><ul class="[^"]*controls`,
+      ),
+    );
+  });
+
+  it('highlights the question in the accent at the larger step and semibold, per DDR-072', () => {
+    expect(rule('.invitation')).toMatch(/color:\s*var\(--color-accent\);/);
+    expect(rule('.invitation')).toMatch(/font-size:\s*var\(--font-size-large\);/);
+    expect(rule('.invitation')).toMatch(/font-weight:\s*var\(--font-weight-semibold\);/);
+  });
+
+  // On paper the controls take back the space the question took, so the sheet is as it was.
+  it('hides the question on paper and gives the controls its space there, per DDR-072', () => {
+    expect(rule('.invitation', paper)).toMatch(/display:\s*none;/);
+    expect(rule('.invitation + .controls', paper)).toMatch(
       /margin-block-start:\s*var\(--space-controls\);/,
     );
   });

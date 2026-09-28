@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-18
 
+**Amended by DDR-072 in one respect**: since #214 `--space-controls` stands above the question that
+introduces the controls, and the controls follow the question at the flow step. Everything else
+here stands.
+
 **Amends DDR-021's wide photo width.** DDR-021 kept the photo 208px wide, `13rem`, from the wide
 breakpoint. It is now the Make file's `clamp(180px, 22vw, 300px)`, written with rem bounds. The narrow
 width, `6rem`, the 3:4 ratio, the capsule and the two lights are unchanged.

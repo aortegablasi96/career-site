@@ -73,6 +73,7 @@ export function Introduction({
     positioning,
     location,
     summary,
+    invitation,
     contact,
     newTab,
   } = introduction;
@@ -104,6 +105,10 @@ export function Introduction({
             typeof part === 'string' ? part : <strong key={index}>{part.strong}</strong>,
           )}
         </p>
+        {/* The question the controls answer, per DDR-072. A paragraph rather than a heading, so the
+            name is still the page's one heading and the outline gains nothing; it is read after
+            the summary and before the list, which is where it stands. */}
+        <p className={styles.invitation}>{invitation}</p>
         <ul className={styles.controls}>
           {/* A profile opens in a new tab, so the page stays open behind it, per DDR-043. `noopener`
               keeps the new tab from reaching back to this one through `window.opener`; browsers
