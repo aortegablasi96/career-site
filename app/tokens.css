@@ -578,6 +578,18 @@
   --photo-width-wide: clamp(11.25rem, 22vw, 18.75rem);
   --photo-ratio: 3 / 4;
 
+  /* A contact mark shown alone, per DDR-073: the square a pill's label line takes, so a pill with no
+     word is as tall as the pills beside it. */
+  --contact-mark-size: calc(var(--font-size-x-small) * var(--line-height-body));
+
+  /* The width inside a pill that shows its mark alone, per DDR-073: the GitHub pill's content, so
+     the two pills are exactly as wide, as the owner asked on #215. It is the GitHub pill's mark, 1em
+     of the pill's step, the gap after it, and its label, "GitHub" in DM Sans Medium, which is 3.333
+     times the step: measured on the live site at 13px, 26px and 130px. Every part is in rem, so the
+     two stay equal as text grows. If the GitHub label, the pill's step, its weight or its face
+     changes, the label's width is to be measured again. */
+  --contact-mark-pill-width: calc(var(--font-size-x-small) * (1 + 3.333) + var(--space-small));
+
   /* The timeline's three columns, per DDR-010: the dates, the spine, and the content. The date
      column and the spine are the widths the UI Review on #43 measured, 160px and 28px, and the dot
      that marks each role on the spine is 12px across. All three are in rem, as the page column and

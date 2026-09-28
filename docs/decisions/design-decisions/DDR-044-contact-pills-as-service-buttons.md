@@ -2,6 +2,9 @@
 
 Status: Accepted
 
+**Amended by DDR-073**, per #215: the email pill shows Gmail's M alone, drawn in the
+square of a label's line. It is still Gmail's light button and the mark is still its own colours.
+
 Date: 2026-09-19
 
 **Amended by DDR-047 in one respect: the GitHub pill's hover fill.** It was GitHub's Gray 5,

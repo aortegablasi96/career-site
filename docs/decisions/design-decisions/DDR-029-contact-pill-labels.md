@@ -2,6 +2,10 @@
 
 Status: Accepted
 
+**Amended by DDR-073**, per #215: the email pill shows Gmail's M alone, and its label is its
+accessible name rather than the text it shows. The profiles keep their visible labels, and the footer
+is still the one place an address is written out.
+
 Date: 2026-09-18
 
 **Amended by DDR-058 in one respect**: the email pill reads "Email me", where this record gives it

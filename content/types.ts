@@ -110,9 +110,17 @@ export type ContactIcon = 'gmail' | 'linkedin' | 'github';
 export interface ContactLink extends Link {
   /** The address, such as `aortegablasi@gmail.com`. The footer shows it; the pill does not. */
   text: string;
-  /** What the pill shows, per DDR-029 and DDR-058: "Email me", "LinkedIn" or "GitHub". */
+  /**
+   * What the pill shows, per DDR-029 and DDR-058: "Email me", "LinkedIn" or "GitHub". On a pill
+   * that shows its mark alone, per DDR-073, it is the pill's accessible name and shows nowhere.
+   */
   label: string;
   icon: ContactIcon;
+  /**
+   * Whether the pill shows its service's mark and no word, per DDR-073. The email pill does: Gmail's
+   * M is a mark a visitor already reads as email.
+   */
+  markOnly?: boolean;
   /**
    * Whether the pill opens its address in a new tab, per DDR-043. The two profiles do, so the page
    * stays open behind them; an email address opens the mail client, which is no tab at all. It is

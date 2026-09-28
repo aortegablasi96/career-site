@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { introduction } from '@/content/introduction';
 
 // DDR-022 sets the type scale and its floor, where DDR-011 set the scale this one supersedes.
 // These tests read the tokens as written, so a later edit to the scale cannot quietly go below it.
@@ -876,6 +877,22 @@ describe('spacing tokens', () => {
     expect(token('timeline-entry-inset')).toBe('0.75rem');
     expect(token('timeline-date-height')).toBe('calc(var(--font-size-xxxx-small) * var(--line-height-body))');
     expect(token('timeline-card-space')).toBe('1.25rem');
+  });
+
+  // DDR-073: a contact mark shown alone is the height of a pill's label line, so the pill keeps
+  // the labelled pills' height.
+  it('sizes a contact mark shown alone to a label’s line, per DDR-073', () => {
+    expect(token('contact-mark-size')).toBe('calc(var(--font-size-x-small) * var(--line-height-body))');
+  });
+
+  // DDR-073: that pill is exactly as wide as the GitHub pill, whose content is its 1em mark, the
+  // small gap and "GitHub", measured at 3.333 of the step. A change to that label, its step, weight
+  // or face means measuring the label again.
+  it('sizes a pill that shows its mark alone to the GitHub pill’s content, per DDR-073', () => {
+    expect(token('contact-mark-pill-width')).toBe(
+      'calc(var(--font-size-x-small) * (1 + 3.333) + var(--space-small))',
+    );
+    expect(introduction.contact.find(({ icon }) => icon === 'github')!.label).toBe('GitHub');
   });
 
   // DDR-066: a company's logo is 18px tall on its card, in rem, so it grows with the text.

@@ -37,7 +37,7 @@ import styles from './introduction.module.css';
  * together with its mark — two cues, neither of them a colour.
  *
  * Each contact pill shows a short label — "Email me", "LinkedIn", "GitHub" — rather than the
- * address it links to, per DDR-029; the email pill's asks to be written to, per DDR-058. The
+ * address it links to, per DDR-029; since DDR-073 the email pill's is its name and not shown. The
  * address is not lost: the footer shows all three, on screen and on paper alike, which is what
  * makes the label possible at all. So the pill prints its label
  * and nothing after it, and the printed CV still carries every address once.
@@ -45,6 +45,9 @@ import styles from './introduction.module.css';
  * The LinkedIn and GitHub pills open a new tab, per DDR-043. Since DDR-044 nothing on the pill
  * shows it: the link's accessible name says so instead, so assistive technology still announces it
  * before the pill is chosen. The email pill opens the mail client and says nothing of a tab.
+ *
+ * Since DDR-073 the email pill shows Gmail's M and no word: the mark says email, and "Email me" is
+ * its accessible name.
  *
  * Each contact pill is its service's own button, per DDR-044: Gmail's white button with its
  * four-colour M, and LinkedIn's and GitHub's filled in the brand's colour with a white mark.
@@ -118,11 +121,14 @@ export function Introduction({
               The pill shows no sign of the tab, per DDR-044, so its name carries it: the visible
               label first, so the name a speech-input user reads off the pill is still the start of
               the name, per WCAG 2.5.3, and then the words that say a tab opens. */}
-          {contact.map(({ label, href, icon, newTab: opensNewTab }) => (
+          {/* A pill that shows its mark alone, per DDR-073, takes its label as its name instead, so a
+              screen reader still announces what it does. */}
+          {contact.map(({ label, href, icon, markOnly, newTab: opensNewTab }) => (
             <li key={href}>
               <a
                 href={href}
-                className={`${styles.contact} ${brandButton[icon]}`}
+                className={`${styles.contact} ${brandButton[icon]}${markOnly ? ` ${styles.markOnly}` : ''}`}
+                {...(markOnly && { 'aria-label': label })}
                 {...(opensNewTab && {
                   target: '_blank',
                   rel: 'noopener',
@@ -130,7 +136,7 @@ export function Introduction({
                 })}
               >
                 <Icon name={icon} />
-                {label}
+                {!markOnly && label}
               </a>
             </li>
           ))}

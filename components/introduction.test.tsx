@@ -126,8 +126,26 @@ describe('Introduction', () => {
   // leads.
   it('links to each contact address, with the design’s label as the link text', () => {
     expect(links.slice(0, 3).map(({ href, text }) => ({ href, text }))).toEqual(
-      introduction.contact.map(({ href, label }) => ({ href, text: label })),
+      // Since DDR-073 a pill that shows its mark alone shows no text at all.
+      introduction.contact.map(({ href, label, markOnly }) => ({ href, text: markOnly ? '' : label })),
     );
+  });
+
+  // DDR-073: the email pill shows Gmail's M and no word. Its label is still its accessible name, so
+  // a screen reader announces what it does, and it still writes to the owner in the same tab.
+  it('shows the email pill as Gmail’s mark alone, named by its label, per DDR-073', () => {
+    const email = introduction.contact.find(({ icon }) => icon === 'gmail')!;
+    const tag = html.match(new RegExp(`<a href="${literal(email.href)}"[^>]*>`))![0];
+
+    expect(email.markOnly).toBe(true);
+    expect(email.href).toMatch(/^mailto:/);
+    expect(tag).toContain(`aria-label="${email.label}"`);
+    expect(tag).not.toMatch(/target=/);
+    expect(links.find(({ href }) => href === email.href)!.text).toBe('');
+    // The profiles keep their words.
+    for (const { markOnly } of introduction.contact.filter(({ icon }) => icon !== 'gmail')) {
+      expect(markOnly).toBeFalsy();
+    }
   });
 
   // The whole objection DDR-010 raised against the label, held where it can be seen: with the
@@ -183,20 +201,21 @@ describe('Introduction', () => {
       if (newTab) {
         expect(tag).toContain(`aria-label="${label}, ${introduction.newTab}"`);
       } else {
-        expect(tag).not.toContain('aria-label');
+        // Since DDR-073 the email pill shows its mark alone, so its label is its name instead.
+        expect(tag).toContain(`aria-label="${label}"`);
       }
     }
 
     // Nothing visible says it: no mark on a pill is named, and the visible labels are DDR-029's.
     expect(html).not.toMatch(/role="img"/);
-    expect(links.slice(0, 3).map(({ text }) => text)).toEqual(['Email me', 'LinkedIn', 'GitHub']);
+    expect(links.slice(0, 3).map(({ text }) => text)).toEqual(['', 'LinkedIn', 'GitHub']);
   });
 
   // DDR-044: the three contact marks are solid shapes, where the download beside them is still a
   // line drawing. None is given a class: its colour is its pill's, or for Gmail, its own.
   it('draws the three contact marks as solid shapes in their pill’s ink, per DDR-044', () => {
-    for (const { label } of introduction.contact) {
-      const svg = links.find(({ text }) => text === label)!.markup.match(/<svg[^>]*>/)![0];
+    for (const { href } of introduction.contact) {
+      const svg = links.find((link) => link.href === href)!.markup.match(/<svg[^>]*>/)![0];
 
       expect(svg).toContain('fill="currentColor"');
       expect(svg).not.toMatch(/stroke=|class=/);
@@ -448,8 +467,8 @@ describe('introduction styles', () => {
     const classes = (href: string) =>
       anchors.find((tag) => tag.includes(`href="${href}"`))!.match(/class="([^"]+)"/)![1];
 
-    for (const { href } of introduction.contact) {
-      expect(classes(href).split(' ')).toHaveLength(2);
+    for (const { href, markOnly } of introduction.contact) {
+      expect(classes(href).split(' ')).toHaveLength(markOnly ? 3 : 2);
     }
 
     // The email pill is Gmail's light button: white, with Google's grey edge and near-black label,
@@ -461,10 +480,23 @@ describe('introduction styles', () => {
     );
   });
 
+  // DDR-073: a mark shown alone takes the square a label's line would, so the pill is as tall as
+  // the labelled pills beside it, and it keeps their padding with the GitHub pill's content width,
+  // so it is exactly as wide as the GitHub pill, with the mark centred.
+  it('draws a pill that shows its mark alone as tall as the others and as wide as GitHub’s, per DDR-073', () => {
+    expect(rule('.markOnly')).toMatch(/inline-size:\s*var\(--contact-mark-pill-width\);/);
+    expect(rule('.markOnly')).toMatch(/justify-content:\s*center;/);
+    expect(rule('.markOnly')).not.toMatch(/padding/);
+    expect(rule('.contact,\n.cv')).toMatch(/padding-inline:\s*var\(--space-medium\);/);
+    expect(rule('.markOnly svg')).toMatch(/inline-size:\s*var\(--contact-mark-size\);/);
+    expect(rule('.markOnly svg')).toMatch(/block-size:\s*var\(--contact-mark-size\);/);
+    expect(rule('.contact,\n.cv')).toMatch(/padding-block:\s*var\(--space-small\);/);
+  });
+
   // DDR-044: Gmail's M is drawn in its own four colours, which are the mark, and nothing on the pill
   // sets them; the other two marks have one colour each, which their pill decides.
   it('draws Gmail’s M in its own colours, and the other marks in their pill’s ink, per DDR-044', () => {
-    const gmail = links.find(({ text }) => text === 'Email me')!.markup;
+    const gmail = links.find(({ href }) => href.startsWith('mailto:'))!.markup;
 
     for (const colour of ['#4285f4', '#34a853', '#fbbc04', '#ea4335']) {
       expect(gmail).toContain(`fill="${colour}"`);
@@ -566,8 +598,9 @@ describe('introduction content', () => {
 
   // DDR-029 takes the design's short labels, each shorter than the address it replaces, which is
   // the whole point of it. The two profiles name their service; the email pill asks to be written
-  // to, per DDR-058, because it is the one control that starts a message to the owner.
-  it('labels each contact pill as DDR-029 and DDR-058 decide', () => {
+  // to, per DDR-058, because it is the one control that starts a message to the owner. Since
+  // DDR-073 that label is the email pill's accessible name rather than what it shows.
+  it('labels each contact pill as DDR-029, DDR-058 and DDR-073 decide', () => {
     expect(introduction.contact.map(({ label }) => label)).toEqual([
       'Email me',
       'LinkedIn',
