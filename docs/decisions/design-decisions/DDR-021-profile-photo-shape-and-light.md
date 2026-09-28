@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-17
 
+**Amended by DDR-077 in one number**: the narrow photo is `7.5rem`, 120px, where it was `6rem`, so
+that it balances the name beside it on a phone. The ratio, the capsule, both lights and the wide
+width stand.
+
 **Amended by DDR-075 in one respect**: the contents bar's menu panel is `position: absolute`, the
 one element admitted out of the flow besides a pseudo-element, as DDR-031 admitted the bar's
 `sticky`.

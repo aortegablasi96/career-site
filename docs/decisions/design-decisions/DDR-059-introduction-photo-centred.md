@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Extended by DDR-077** below the wide breakpoint: there the photo and the name are one row,
+centred on each other in the same way, and the rest of the text follows at the full column.
+
 **Supersedes nothing.** It refines DDR-010, which puts the photo beside the name, and DDR-040,
 which sizes the wide photo and spaces the introduction. Neither record says where the photo sits
 vertically in its row. The page set it level with the top of the text, and this record decides the

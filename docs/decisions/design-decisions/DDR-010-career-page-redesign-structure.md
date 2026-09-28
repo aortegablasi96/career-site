@@ -4,6 +4,11 @@ Status: Accepted
 
 Date: 2026-09-16
 
+**Amended by DDR-077** below the wide breakpoint: the photo no longer floats beside the text on
+screen. It and the name are one row, sized to balance and centred on each other, and the rest of
+the text follows at the full column. The photo is still beside the name at every width, and the
+float is paper's alone.
+
 **Superseded in part by DDR-075**: the bullet "It is not collapsed behind a toggle" and the rejected
 alternative "Adopt the mobile 'Sections' toggle". Below the wide breakpoint the contents bar's links
 are behind a menu, at the owner's request on #221.

@@ -62,18 +62,25 @@
   --font-size-xx-large: 2.25rem;
   --font-size-xxx-large: 3.2rem;
 
-  /* The step each level of heading uses, named by role, per DDR-014. The page and section titles
-     are the narrow values here, each one step below the full scale, so long words in headings fit
-     a narrow column with enlarged text; the narrow breakpoint restores the full scale. The item
-     title is body size and does not step down, because there is nothing below body size a title
-     could take.
+  /* The step each level of heading uses, named by role, per DDR-014. The section title is the
+     narrow value here, one step below the full scale, so long words in headings fit a narrow
+     column with enlarged text; the narrow breakpoint restores the full scale. The item title is
+     body size and does not step down, because there is nothing below body size a title could take.
+
+     The page title is the name, and since DDR-077 it has two roles, as a project view's title
+     has: the full one, the design's 51.2px, and a narrow one, which the introduction reads below
+     the wide breakpoint and swaps for the full one from it and on paper. Below the wide breakpoint
+     the name stands beside the photo and is balanced against it, so it takes the narrow step at
+     every phone width rather than only below the narrow breakpoint: at 51.2px it ran three lines,
+     184px tall, beside a photo 128px tall, and at 320px it no longer fitted beside the photo.
 
      `xx-large` is the one step the design does not draw, and it is here for the narrow page title
      alone, per DDR-022: the design is a single 894px frame with no narrow view, and the step below
      `xxx-large` in the design's own sizes is the section title's, which would leave the name and a
      section heading the same size on a phone. It keeps the 36px DDR-011 gave it, which is three
      quarters of the full size as it was before. */
-  --font-size-page-title: var(--font-size-xx-large);
+  --font-size-page-title: var(--font-size-xxx-large);
+  --font-size-page-title-narrow: var(--font-size-xx-large);
   --font-size-section-title: var(--font-size-large);
   --font-size-item-title: var(--font-size-medium);
 
@@ -544,7 +551,7 @@
       var(--color-surface-timeline-card-end) 100%
     );
 
-  /* The profile photo, per DDR-010, #71 and DDR-021: 96px wide below the wide breakpoint and, from
+  /* The profile photo, per DDR-010, #71 and DDR-021: 120px wide below the wide breakpoint and, from
      it, the design's width, at 3:4, drawn as a capsule by `--radius-pill` and lit by the two shadows
      above. The narrow width is in rem, as --content-width is, so the photo keeps its proportion to
      the name beside it when text is enlarged; the ratio is a shape rather than a length and has no
@@ -569,12 +576,17 @@
      beside the name at every width, they clear it. The owner chose this on #48; #52 or a later
      design story records it.
 
+     It is 120px since DDR-077, which balances it against the narrow name beside it: 160px tall
+     beside a name of three lines, 158px with its greeting, at 320px to 360px. The owner chose it on
+     #225 over 128px. At 390 by 844 the controls still end above the fold, and higher than they
+     did, because the name is shorter.
+
      Two tokens rather than one that adapts, because DDR-014 gives the wide breakpoint to the
      components and keeps it out of this file: what changes there is layout, and a media query
      cannot read a custom property. The introduction reads the first and swaps to the second at
      that breakpoint. On paper the wide token is redefined again, to the measure DDR-015 gives the
      printed photo. */
-  --photo-width: 6rem;
+  --photo-width: 7.5rem;
   --photo-width-wide: clamp(11.25rem, 22vw, 18.75rem);
   --photo-ratio: 3 / 4;
 
@@ -805,8 +817,8 @@
 }
 
 /*
- * The narrow breakpoint, per DDR-014. From here up, the page and section titles take the full
- * scale DDR-022 records, the page's gutter opens out, and the language cards stand two to a row.
+ * The narrow breakpoint, per DDR-014. From here up, the section title takes the full scale
+ * DDR-022 records, the page's gutter opens out, and the language cards stand two to a row.
  * The space above and below the page no longer changes here: since DDR-040 it is a section
  * boundary, which the rhythm's factor steps down instead.
  *
@@ -816,7 +828,6 @@
  */
 @media (min-width: 20em) {
   :root {
-    --font-size-page-title: var(--font-size-xxx-large);
     --font-size-section-title: var(--font-size-x-large);
     --font-size-project-title-narrow: var(--font-size-xx-large);
     --page-gutter: var(--space-medium);

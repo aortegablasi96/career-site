@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-17
 
+**Amended by DDR-077** in one row of the table below: `xx-large`, 36px, is the name at every width
+below the wide breakpoint, as `--font-size-page-title-narrow`, where it was the name below the
+narrow breakpoint only. The ten steps stand.
+
 **Amended by DDR-050** in one respect: a project view's title is the design's 41.6px,
 `--font-size-project-title`, a role written in rem that is not a step. The ten steps stand.
 

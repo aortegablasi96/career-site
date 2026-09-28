@@ -1,10 +1,11 @@
 /*
  * The introduction, per DDR-010.
  *
- * The photo sits beside the name at every width. Below the wide breakpoint it is small and the
- * text runs past it, so the name and the positioning line sit alongside it and the summary returns
- * to the full column beneath; from the wide breakpoint the photo takes a column of its own and all
- * the text sits in the other. The markup order is the same at both and nothing is reordered, per
+ * The photo sits beside the name at every width. Below the wide breakpoint, since DDR-077, the
+ * photo and the name are one row, centred on each other, and everything after the name takes the
+ * full column beneath them; from the wide breakpoint the photo takes a column of its own and all
+ * the text sits in the other, centred on it too, per DDR-059. On paper the text runs past the
+ * photo, which floats. The markup order is the same in all three and nothing is reordered, per
  * DDR-014: the photo is first in the markup and first on the page.
  *
  * DDR-010 puts the photo beside the name so that it never pushes the positioning line or the
@@ -17,25 +18,36 @@
    page's own off-white, is set apart from the page from the first view. The band runs from the bar
    down to the first section's divider: the introduction carries the space above the page, which
    `main` carried before, and the half of the first boundary above that divider, which was the
-   first section's margin. Every distance is what it was. */
+   first section's margin. Every distance is what it was.
+
+   Below the wide breakpoint it is a wrapping row, per DDR-077: the photo and the name share the
+   first line, centred on each other so that neither stands above the other, and everything after
+   the name takes a line of its own at the full column, so the summary keeps the whole width of a
+   narrow screen rather than what is left beside a photo. The photo and the name are sized to
+   balance, by the narrow photo width and the narrow page title, and the row is what keeps them
+   level whichever of the two is the taller. It is DDR-059's centring, which the wide layout already
+   has, on the one row where the name and the photo meet. */
 .introduction {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--space-medium);
   padding-block: var(--page-padding-block) var(--space-boundary);
   background-color: var(--color-surface-band);
 }
 
-/* The frame is what floats, and it shrink-wraps the photo inside it, so it is the photo's box in
-   every respect the layout cares about. It exists because the design lights the photo twice and the
-   second light cannot be drawn on the image itself, per DDR-021.
+/* The frame shrink-wraps the photo inside it, so it is the photo's box in every respect the layout
+   cares about. It exists because the design lights the photo twice and the second light cannot be
+   drawn on the image itself, per DDR-021.
 
    It carries the glow, because a shadow spreading outwards belongs on the outermost box, and the
    capsule radius, because a shadow follows the border radius of the box it is drawn on.
 
-   The text runs past the photo rather than sharing a column with it, so that the summary keeps the
-   full width of a narrow screen instead of being squeezed into what is left beside a photo. */
+   The space below it is what stands between the photo and the name when enlarged text sends the
+   name onto the line below, and the name carries the same space below itself, so the two are
+   centred on each other exactly when they share the line. */
 .frame {
   position: relative;
-  float: inline-start;
-  margin-inline-end: var(--space-medium);
   margin-block-end: var(--space-small);
   border-radius: var(--radius-pill);
   box-shadow: var(--shadow-photo-glow);
@@ -78,15 +90,24 @@
 
 /* The text column is a div, which the base styles' flow rule does not reach, so it sets the rhythm
    between its own blocks. Every step is the flow step, and the two that sit tighter and the two
-   that stand further apart say so below. It adds no space above itself, so below the wide
-   breakpoint the greeting starts level with the top of the photo, and from it the column is centred
-   on the photo with nothing added to either half. */
+   that stand further apart say so below. It adds no space above itself, so from the wide breakpoint
+   the column is centred on the photo with nothing added to either half.
+
+   Below the wide breakpoint the column draws no box of its own, per DDR-077, so that its blocks are
+   the introduction's row items and the name can share a line with the photo. A `div` has no role,
+   so nothing is lost from the accessibility tree, and its blocks keep their markup order. Each
+   block but the name takes the whole line. */
 .text {
+  display: contents;
   margin-block-start: 0;
 }
 
 .text > * + * {
   margin-block-start: var(--space-flow);
+}
+
+.text > :not(.heading) {
+  flex-basis: 100%;
 }
 
 /* The greeting before the name, per DDR-056. It reads with the name as one sentence, so it sits a
@@ -102,28 +123,40 @@
   margin-block-start: var(--space-x-small);
 }
 
+/* The name, below the wide breakpoint, is the narrow page title, per DDR-077: the step that
+   balances it against the photo beside it. From the wide breakpoint and on paper it is the full
+   one, below. */
+.heading h1 {
+  font-size: var(--font-size-page-title-narrow);
+}
+
 /* The name, and since DDR-056 the greeting above it, take the width left beside the photo and keep
-   it, rather than letting the line that falls past the foot of the photo run back out to the full
-   column. Without this the name wraps in an L around the photo, which is the one place on the page
-   it would be most obvious. What follows the name clears the photo on its own and returns to the
-   full column, which is where the summary wants to be.
+   it. It is the pair's group that does this, not the name alone. Measured on #171 with the rule on
+   the name: at 320px the name dropped below the photo while the greeting stayed beside it, and at
+   200% the greeting stood one word to a line beside the photo with the name below. As one box the
+   two are beside the photo or below it together.
 
-   It is the pair's group that does this, not the name alone. Measured on #171 with the rule on the
-   name: at 320px the name dropped below the photo while the greeting stayed beside it, and at 200%
-   the greeting stood one word to a line beside the photo with the name below. As one box the two
-   are beside the photo or below it together.
+   Below the wide breakpoint the group takes whatever the photo leaves on its line, from nothing up,
+   and the minimum is what stops that becoming a squeeze when text is enlarged, per #68. The photo
+   is sized in rem, so it grows with the reader's text while the room beside it shrinks: at 390px
+   and 200% the name had 119px and broke mid-word onto seven lines, and at 320px it had 49px and
+   took seventeen, about one letter each, which put the contact controls 3777px down the page — the
+   very thing DDR-010 places the photo beside the name to prevent. A row item that cannot have its
+   minimum beside the photo wraps onto the next line, so asking for at least the longest word is
+   what tells the browser when beside is no longer possible. The name then takes the full column
+   under the photo, and at the default size, where it fits, it stays beside it from 320px up.
 
-   The minimum is what stops that becoming a squeeze when text is enlarged, per #68. The photo is
-   sized in rem, so it grows with the reader's text while the room beside it shrinks: at 390px and
-   200% the name had 119px and broke mid-word onto seven lines, and at 320px it had 49px and took
-   seventeen, about one letter each, which put the contact controls 3777px down the page — the very
-   thing DDR-010 places the photo beside the name to prevent. A block that establishes its own
-   formatting context and cannot fit beside a float moves below it instead, so asking for at least
-   the longest word is what tells the browser when beside is no longer possible. The name then takes
-   the full column under the photo, and at the default size, where it fits, nothing changes. */
+   The same minimum does the same on paper, where the photo floats: a block that establishes its own
+   formatting context and cannot fit beside a float moves below it instead, and the name keeps the
+   width beside the photo rather than wrapping in an L around it.
+
+   The space below the group matches the frame's, so the two are centred on each other exactly; the
+   wide layout and paper take it away, as they take the frame's. */
 .heading {
   display: flow-root;
+  flex: 1 1 0;
   min-inline-size: min-content;
+  margin-block-end: var(--space-small);
 }
 
 /* The most prominent text after the name, without joining the heading outline: a larger step in the
@@ -340,49 +373,34 @@
   block-size: var(--contact-mark-size);
 }
 
-/* From here the photo sits beside the text, per DDR-010. This is the one width a component may
-   write, per DDR-014. */
-@media (min-width: 48em) {
-  .introduction {
-    display: grid;
-    grid-template-columns: var(--photo-width-wide) 1fr;
-    /* The design's 64px between the photo and the text, per DDR-040, which is the largest step of
-       the scale. It is a gap between two columns rather than a space between blocks, so it takes
-       the scale as it is rather than the rhythm's factor, which is 1 from here anyway. */
-    gap: var(--space-x-large);
-    /* The photo is centred on the text beside it, per DDR-059: level with the middle of the column
-       from the greeting to the controls, so the space above it and below it is the same. The row is
-       as tall as the taller of the two, so the band is as tall as it was, and whichever is shorter
-       is the one centred — the text, if the photo is ever the taller. */
-    align-items: center;
-  }
-
-  /* The grid places the frame, so it stops floating and the text no longer runs past it: from here
-     the whole of the text sits in the second column. */
-  .frame {
-    float: none;
-    margin-inline-end: 0;
-    margin-block-end: 0;
-  }
-
-  .photo {
-    inline-size: var(--photo-width-wide);
-  }
-}
-
 @media print {
-  /* The introduction is the one section whose paper layout is the narrow one, per DDR-015. Paper
-     takes the wide layout everywhere else, but the printed photo is 28mm — short — so a column of
-     its own would leave three quarters of it empty, and the UI Review on #43 asks for the photo
-     beside the *name*, which is what the float at the top of this file does. So there is no layout
-     to write here: the float is already it, and print redefines the token that sizes it.
+  /* The introduction is the one section whose paper layout is not the screen's wide one, per
+     DDR-015. The printed photo is 28mm — short — so a column of its own would leave three quarters
+     of it empty, and the UI Review on #43 asks for the photo beside the *name*. On paper that is a
+     float: the photo floats, the name takes the width beside it, and the text after the name runs
+     past it. It was the narrow screen's layout too until DDR-077 made that a row; paper keeps it,
+     so the sheet is as it was. Print redefines the token that sizes the photo.
 
      The space below it goes back to the first section's margin, where it was before DDR-046, so
      the breaks do not move. The band is dropped at the token layer.
 
      A download control is dead on paper, and the paper is the CV, per DDR-010. */
   .introduction {
+    display: block;
     padding-block-end: 0;
+  }
+
+  .text {
+    display: block;
+  }
+
+  .frame {
+    float: inline-start;
+    margin-inline-end: var(--space-medium);
+  }
+
+  .heading {
+    margin-block-end: 0;
   }
 
   .cvItem {
@@ -445,5 +463,56 @@
 
   .github {
     color: var(--color-github);
+  }
+}
+
+/* From here the photo sits beside the text, per DDR-010. This is the one width a component may
+   write, per DDR-014.
+
+   It follows the print block, so that a sheet wide enough to match it, such as A4 laid landscape,
+   takes the grid as it did before DDR-077 rather than paper's float: at the same specificity the
+   later rule wins. */
+@media (min-width: 48em) {
+  .introduction {
+    display: grid;
+    grid-template-columns: var(--photo-width-wide) 1fr;
+    /* The design's 64px between the photo and the text, per DDR-040, which is the largest step of
+       the scale. It is a gap between two columns rather than a space between blocks, so it takes
+       the scale as it is rather than the rhythm's factor, which is 1 from here anyway. */
+    gap: var(--space-x-large);
+    /* The photo is centred on the text beside it, per DDR-059: level with the middle of the column
+       from the greeting to the controls, so the space above it and below it is the same. The row is
+       as tall as the taller of the two, so the band is as tall as it was, and whichever is shorter
+       is the one centred — the text, if the photo is ever the taller. */
+    align-items: center;
+  }
+
+  /* The grid places the frame, and the text column is a box again, so the whole of the text sits in
+     the second column. The frame does not float, which only paper asks of it, and neither the frame
+     nor the name keeps the space below it that the narrow row needs. */
+  .text {
+    display: block;
+  }
+
+  .frame {
+    float: none;
+    margin-inline-end: 0;
+    margin-block-end: 0;
+  }
+
+  .heading {
+    margin-block-end: 0;
+  }
+
+  .photo {
+    inline-size: var(--photo-width-wide);
+  }
+}
+
+/* The name is the full page title from the wide breakpoint, and on paper, which printed it at the
+   full title before DDR-077 and still does, per DDR-015. */
+@media (min-width: 48em), print {
+  .heading h1 {
+    font-size: var(--font-size-page-title);
   }
 }
