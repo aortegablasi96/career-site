@@ -20,6 +20,10 @@ import type { Introduction } from './types';
  * names SaaS products beside AI, and connected products where it said IoT, each of which the
  * owner's roles and projects in the knowledge base carry.
  *
+ * Since #214 a question stands between the summary and the controls, in the owner's own words on
+ * that story. It asks the reader rather than stating anything about the owner, so it is not a claim
+ * and needs no source in the knowledge base. It is on screen only, per DDR-072.
+ *
  * Each contact carries two strings, per DDR-029: the label the pill shows, which names the service
  * rather than the address, and the address itself, which the footer shows and which is what the
  * printed CV carries. The labels are the design's own words, and each names a service a reader
@@ -44,6 +48,7 @@ export const introduction: Introduction = {
     { strong: 'Curious by nature and ambitious by choice' },
     ', I’m drawn to challenging problems, emerging opportunities, and ideas that have yet to prove their potential. I enjoy bringing strategy, technology, and people together to make them happen.',
   ],
+  invitation: 'Interested in working together?',
   contact: [
     {
       label: 'Email me',

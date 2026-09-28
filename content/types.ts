@@ -147,6 +147,12 @@ export interface Introduction {
    */
   summary: readonly (string | Strong)[];
   /**
+   * The question between the summary and the controls, per #214 and DDR-072, which the controls
+   * below it answer. It is on screen only: on paper the pills are not links, so there is nothing
+   * for it to lead into.
+   */
+  invitation: string;
+  /**
    * Each link shows its short label here and its address in the footer, per DDR-029. Neither is
    * printed twice: the pill prints its label with no address after it, and the footer prints the
    * address once.

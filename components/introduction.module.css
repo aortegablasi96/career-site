@@ -158,8 +158,8 @@
 
    The summary is held to the design's 680px rather than to the measure every other paragraph
    takes, per DDR-040, and the space above it and below it are the design's, which set the name, the
-   positioning line and the location apart from what the owner says about their work, and the
-   controls apart from both. */
+   positioning line and the location apart from what the owner says about their work, and, since
+   DDR-072, the question and the controls it leads into apart from both. */
 .summary {
   max-inline-size: var(--measure-summary);
   line-height: var(--line-height-prose);
@@ -169,8 +169,20 @@
   margin-block-start: var(--space-summary);
 }
 
-.summary + .controls {
+/* The question the controls answer, per DDR-072. It takes the design's space above the controls,
+   which sets it apart from the summary, and the controls follow it at the column's flow step, so
+   the question reads with them rather than with the paragraph above it. It is set as the
+   positioning line is, in the accent at the larger step, and a weight heavier, so it is told apart
+   at a glance both from the summary and from the summary's own semibold phrase, which is in the
+   body's ink. */
+.summary + .invitation {
   margin-block-start: var(--space-controls);
+}
+
+.invitation {
+  color: var(--color-accent);
+  font-size: var(--font-size-large);
+  font-weight: var(--font-weight-semibold);
 }
 
 /* The four controls wrap onto as many rows as they need, rather than being cut off or scrolled. */
@@ -356,6 +368,17 @@
 
   .greeting + h1 {
     margin-block-start: 0;
+  }
+
+  /* The question is the screen's too, per DDR-072: on paper the pills are words rather than links,
+     so it has nothing to lead into. The controls take back the space above them that the question
+     took on screen, so the sheet is as it was. */
+  .invitation {
+    display: none;
+  }
+
+  .invitation + .controls {
+    margin-block-start: var(--space-controls);
   }
 
   /* Nothing is tapped on paper, so a control takes the height of its text and drops the padding
