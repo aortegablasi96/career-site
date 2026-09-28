@@ -151,12 +151,20 @@ export function ProjectView({
         <div className={styles.text}>
           <h1 className={styles.name}>{name}</h1>
           <p className={styles.description}>{description}</p>
-          {/* How the project was built, per DDR-078, where the owner's knowledge base says. A
-              project without it shows neither the heading nor an empty paragraph. */}
-          {howBuilt && (
+          {/* How the project was built, per DDR-078, where the owner's knowledge base says: one
+              paragraph or several, each with the owner's bold phrases as `strong`, as the
+              introduction's summary sets them. A project without it shows neither the heading nor
+              an empty paragraph. */}
+          {howBuilt && howBuilt.length > 0 && (
             <>
               <h2 className={styles.label}>{howBuiltTitle}</h2>
-              <p className={styles.howBuilt}>{howBuilt}</p>
+              {howBuilt.map((paragraph, index) => (
+                <p key={index} className={styles.howBuilt}>
+                  {paragraph.map((part, partIndex) =>
+                    typeof part === 'string' ? part : <strong key={partIndex}>{part.strong}</strong>,
+                  )}
+                </p>
+              ))}
             </>
           )}
           <h2 className={styles.label}>{builtWith}</h2>

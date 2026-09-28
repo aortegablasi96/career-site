@@ -50,10 +50,12 @@ const liveSite = 'Live site';
  *
  * Since #229 each description is the project's general description from the owner's knowledge base,
  * in British spelling and without assuming a reader's gender, and `howBuilt` is its "AI-assisted
- * product development" section, which a view shows under "How I built it", per DDR-078. The Digital
- * Twin's entry has no such section, so it has no `howBuilt` and its view shows no heading. The site
- * has no entry: its description keeps its first sentence, and its `howBuilt` was written in the same
- * form as the others, as the owner asked, from what the repository shows.
+ * product development" section, which a view shows under "How I built it", per DDR-078: a list of
+ * paragraphs, each a run of text in which a phrase may be strong, as the introduction's summary is,
+ * so the owner's bold phrases stay theirs. The site has no entry: its description keeps its first
+ * sentence, and its `howBuilt` was written in the same form as the others, as the owner asked, from
+ * what the repository shows. A project without the section would leave `howBuilt` out, and its
+ * view would show no heading.
  */
 export const projects: Projects = {
   // The owner renamed the section on #202, per ADR-012: it is their portfolio.
@@ -69,8 +71,11 @@ export const projects: Projects = {
       technologies: ['Next.js', 'TypeScript', 'PostgreSQL on Neon', 'OpenAI', 'Vercel', 'Cloudflare R2'],
       description:
         'A coin collection management SaaS that helps collectors visualise the fundamental aspects of their coins, organise them and monitor price statistics. The collector can also interact with an AI-assisted chatbot to manage their collection and obtain information from it.',
-      howBuilt:
-        'Used Claude Code as a virtual cross-functional development team, creating specialised skill workflows for architecture, database design, UI design, testing, governance and project management. Integrated MCP tools including Figma, Neon and Playwright to connect product design, data migration and E2E testing.',
+      howBuilt: [
+        [
+          'Used Claude Code as a virtual cross-functional development team, creating specialised skill workflows for architecture, database design, UI design, testing, governance and project management. Integrated MCP tools including Figma, Neon and Playwright to connect product design, data migration and E2E testing.',
+        ],
+      ],
       links: [
         { text: sourceCode, href: 'https://github.com/aortegablasi96/numisbook' },
         { text: liveSite, href: 'https://numisbook.vercel.app' },
@@ -85,6 +90,27 @@ export const projects: Projects = {
       technologies: ['LangGraph', 'OpenAI Agents SDK', 'Chroma', 'Cohere', 'FastAPI', 'Next.js'],
       description:
         'A chatbot that answers questions about the career on this page, in the visitor’s language. Demonstrates an agentic RAG system: several agents filter each question, retrieve the documents, write a professional answer, and send push notifications, while semantic vector search and BM25 lexical search run concurrently and are reranked with Cohere for precision.',
+      howBuilt: [
+        [
+          'Designed an orchestrated ',
+          { strong: 'multi-agent workflow' },
+          ' with LangGraph and OpenAI agents, breaking the conversation into specialised steps. Each agent can access the tools it needs, while ',
+          { strong: 'structured outputs and guardrails' },
+          ' provide consistency and control over the responses.',
+        ],
+        [
+          'To improve retrieval quality, implemented a ',
+          { strong: 'hybrid RAG approach' },
+          ' combining BM25 lexical search and semantic vector search. Relevant documents are retrieved from the Chroma database and then ',
+          { strong: 'reranked with Cohere' },
+          ' before being provided as context to the agents.',
+        ],
+        [
+          'Built the backend with ',
+          { strong: 'FastAPI' },
+          ', exposing the agentic RAG pipeline through APIs that connect the AI layer with the frontend.',
+        ],
+      ],
       links: [
         { text: sourceCode, href: 'https://github.com/aortegablasi96/career_conversation_chatbot' },
         { text: liveSite, href: 'https://career-conversation-chatbot.vercel.app' },
@@ -99,8 +125,11 @@ export const projects: Projects = {
       technologies: ['Electron', 'React', 'TypeScript', 'SQLite', 'OpenAI'],
       description:
         'A local-first portfolio management application that lets investors import broker data into a single private workspace, display the data in multiple personalised views and support the analysis through an AI-assisted chatbot.',
-      howBuilt:
-        'Used Claude Code as a virtual cross-functional development team, creating specialised skill workflows for architecture, UI development, testing, governance and project management. Integrated MCP tools including Figma, shadcn and Playwright to connect product design, implementation and E2E testing.',
+      howBuilt: [
+        [
+          'Used Claude Code as a virtual cross-functional development team, creating specialised skill workflows for architecture, UI development, testing, governance and project management. Integrated MCP tools including Figma, shadcn and Playwright to connect product design, implementation and E2E testing.',
+        ],
+      ],
       links: [{ text: sourceCode, href: 'https://github.com/aortegablasi96/stock-portfolio-viewer' }],
     },
     {
@@ -112,8 +141,11 @@ export const projects: Projects = {
       technologies: ['Next.js', 'TypeScript', 'CSS Modules', 'GitHub Pages'],
       description:
         'A career site that is also its own printed CV.',
-      howBuilt:
-        'Used Claude Code as a virtual cross-functional development team, creating specialised skill workflows for content strategy, UI design, architecture, testing, governance and project management, with every significant design and architecture decision recorded. Integrated MCP tools including Figma and Playwright to connect product design and browser testing.',
+      howBuilt: [
+        [
+          'Used Claude Code as a virtual cross-functional development team, creating specialised skill workflows for content strategy, UI design, architecture, testing, governance and project management, with every significant design and architecture decision recorded. Integrated MCP tools including Figma and Playwright to connect product design and browser testing.',
+        ],
+      ],
       links: [{ text: sourceCode, href: 'https://github.com/aortegablasi96/career-site' }],
     },
   ],

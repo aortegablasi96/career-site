@@ -26,6 +26,10 @@ const html = render(numisBook!);
 /** The markup's text, as a reader meets it. */
 const text = (markup: string) => markup.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 
+/** A paragraph of how a project was built, as a reader meets it: its parts run together. */
+const words = (paragraph: readonly (string | { strong: string })[]) =>
+  paragraph.map((part) => (typeof part === 'string' ? part : part.strong)).join('');
+
 /** The markup without its classes, which the CSS-module stub hashes, so its elements can be read in order. */
 const bare = (markup: string) => markup.replace(/ class="[^"]*"/g, '');
 
@@ -42,7 +46,7 @@ describe('ProjectView', () => {
       numisBook!.name,
       numisBook!.description,
       projects.view.howBuilt,
-      numisBook!.howBuilt!,
+      words(numisBook!.howBuilt![0]!),
       projects.view.builtWith,
       ...numisBook!.technologies,
       ...numisBook!.links.map(({ text }) => text),
@@ -63,21 +67,34 @@ describe('ProjectView', () => {
 
   // DDR-078: how a project was built follows its description, under an h2 set as "Built with" is.
   it('says how the project was built, under its own h2, between the description and the technologies', () => {
-    for (const project of [numisBook!, stockPortfolioViewer!, careerSite!]) {
+    for (const project of projects.projects) {
       const view = render(project);
+      const paragraphs = project.howBuilt!.map(
+        (paragraph) =>
+          `<p>${paragraph.map((part) => (typeof part === 'string' ? part : `<strong>${part.strong}</strong>`)).join('')}</p>`,
+      );
 
-      expect(project.howBuilt).toBeTruthy();
+      expect(paragraphs.length).toBeGreaterThan(0);
       expect(bare(view)).toContain(
-        `<p>${project.description}</p><h2>${projects.view.howBuilt}</h2><p>${project.howBuilt}</p><h2>${projects.view.builtWith}</h2>`,
+        `<p>${project.description}</p><h2>${projects.view.howBuilt}</h2>${paragraphs.join('')}<h2>${projects.view.builtWith}</h2>`,
       );
       expect(view.match(/<h1/g)).toHaveLength(1);
     }
   });
 
-  it('shows neither the heading nor a paragraph for a project that does not say how it was built', () => {
-    const view = render(digitalTwin!);
+  // The owner's bold phrases, from the Digital Twin's knowledge-base entry, stay bold, per #229.
+  it('sets the owner’s bold phrases as strong, in their place in the paragraph', () => {
+    const view = bare(render(digitalTwin!));
 
-    expect(digitalTwin!.howBuilt).toBeUndefined();
+    for (const phrase of ['multi-agent workflow', 'structured outputs and guardrails', 'hybrid RAG approach', 'reranked with Cohere', 'FastAPI']) {
+      expect(view).toContain(`<strong>${phrase}</strong>`);
+    }
+    expect(bare(render(numisBook!))).not.toContain('<strong>');
+  });
+
+  it('shows neither the heading nor a paragraph for a project that does not say how it was built', () => {
+    const view = render({ ...digitalTwin!, howBuilt: undefined });
+
     expect(text(view)).not.toContain(projects.view.howBuilt);
     expect(view).not.toContain('howBuilt');
     expect(bare(view)).toContain(`<p>${digitalTwin!.description}</p><h2>${projects.view.builtWith}</h2>`);

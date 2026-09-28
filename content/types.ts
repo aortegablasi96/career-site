@@ -354,10 +354,11 @@ export interface Project {
   description: string;
   /**
    * How the project was built with AI, which the view shows below the description under the heading
-   * `ProjectView.howBuilt`, per DDR-078. Left out where the owner's knowledge base has no such
-   * section, and a view without it shows no heading.
+   * `ProjectView.howBuilt`, per DDR-078. One or more paragraphs, each a run of text in which a part
+   * may be strong, as the introduction's summary is. Left out where the owner's knowledge base has
+   * no such section, and a view without it shows no heading.
    */
-  howBuilt?: string;
+  howBuilt?: readonly (readonly (string | Strong)[])[];
   /**
    * The repository first, then a live version where one exists. Each link is labelled rather than
    * showing its address, which prints after it on paper, per DDR-006.

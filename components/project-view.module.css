@@ -111,10 +111,15 @@
 }
 
 /* How the project was built, per DDR-078: running text set as the description is, as far below its
-   label as the technologies are below theirs. */
+   label as the technologies are below theirs, and each further paragraph the column's flow step
+   below the one before. */
 .howBuilt {
   margin-block-start: var(--project-view-label-gap);
   line-height: var(--line-height-prose);
+}
+
+.howBuilt + .howBuilt {
+  margin-block-start: var(--space-flow);
 }
 
 /* Every technology, as tags that wrap, 8px apart each way (node 59:32). */

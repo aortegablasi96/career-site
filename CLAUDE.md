@@ -1745,11 +1745,13 @@ an item gets is 268.8px.
 
 **#229 has landed, as DDR-078: a view describes its project in the owner's words, and says how it
 was built.** Each `description` is the project's general description from the owner's knowledge
-base, and the optional `howBuilt` on a `Project` is its "AI-assisted product development" section.
-The view shows it after the description under `projects.view.howBuilt`, "How I built it", an `h2`
-that shares `.label` with "Built with", with the paragraph set as the description is. The Digital
-Twin's entry has no such section, so its view is as it was. The site has no entry: its description
-is its first sentence, and its `howBuilt` was written in the same form, as the owner asked. The link
+base, and the optional `howBuilt` on a `Project` is its "AI-assisted product development" section:
+a list of paragraphs, each a list of parts in which a part may be a `Strong`, as the introduction's
+summary is, so the owner's bold phrases stay bold. The view shows it after the description under
+`projects.view.howBuilt`, "How I built it", an `h2` that shares `.label` with "Built with", with each
+paragraph set as the description is. Every project has one; the Digital Twin's is three paragraphs.
+The site has no entry: its description is its first sentence, and its `howBuilt` was written in the
+same form, as the owner asked. The link
 preview is still the description alone. The page never shows a description, so its markup and the
 printed CV are unchanged. Swept every 10px from 300px to 900px on all four views at both text
 sizes: nothing scrolls sideways.

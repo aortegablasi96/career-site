@@ -19,9 +19,10 @@ with Claude Code.
 On #229, part of Epic #152, the owner asked for each description to be the project's general
 description from their knowledge base. They also asked for the entry's "AI-assisted product
 development" section, where it has one, to follow the description, under a heading: "How I built
-it". NumisBook and the Stock Portfolio Viewer have that section. The Digital Twin's entry does not.
-This site has no entry, so the owner asked for its paragraph to be written in the same form, and
-its description now keeps only its first sentence.
+it". NumisBook and the Stock Portfolio Viewer have that section as one paragraph. The owner then
+added one to the Digital Twin's entry: three paragraphs, with five phrases in bold. This site has no
+entry, so the owner asked for its paragraph to be written in the same form, and its description now
+keeps only its first sentence.
 
 The story asked for the heading to have the same level and style as the view's other headings, such
 as "Built with", with one `h1` and no skipped levels. It left the paragraph's setting and the space
@@ -29,18 +30,20 @@ around the two to the UI Designer.
 
 ## Decision
 
-**The heading is an `h2` set exactly as "Built with" is, and the paragraph is set as the
-description is. The two are spaced as "Built with" and its tags are.** A project without the
-section shows neither.
+**The heading is an `h2` set exactly as "Built with" is, and each paragraph is set as the
+description is. The heading and the first paragraph are spaced as "Built with" and its tags are.**
+The owner's bold phrases stay bold. A project without the section shows neither.
 
 | Property          | Value                                            | Why |
 | ----------------- | ------------------------------------------------ | --- |
-| Element           | `h2`, then `p`, after the description, before "Built with" | The view's outline becomes the project, how it was built and what it is built with. It has one `h1` and skips no level. |
+| Element           | `h2`, then one `p` per paragraph, after the description, before "Built with" | The view's outline becomes the project, how it was built and what it is built with. It has one `h1` and skips no level. |
 | Heading's setting | `.label`: 10px bold capitals, tracked, in the faint ink | "Built with"'s own rule, so the two headings cannot drift apart. The capitals are drawn: the string is "How I built it". |
 | Above the heading | `--space-large`, 32px                            | "Built with"'s own space from what is above it. |
 | Below the heading | `--project-view-label-gap`, 12px                 | The space between "Built with" and its tags, so each label sits the same distance above what it names. |
 | Paragraph         | The body's size, weight and ink, at `--line-height-prose` | It is running text like the description, and is set as the description is. |
-| Without the section | Nothing: no heading and no empty paragraph     | A heading over nothing is worse than no heading, as DDR-053 says of the gallery. The Digital Twin's view is as it was. |
+| Between paragraphs | `--space-flow`, 16px                            | The column's own step between two paragraphs of running text. |
+| Bold phrases      | `strong`, which DDR-023 sets semibold            | The owner's own emphasis, stated as the introduction's summary states its bold phrase, per #212: a part of the paragraph, not markup in a string. |
+| Without the section | Nothing: no heading and no empty paragraph     | A heading over nothing is worse than no heading, as DDR-053 says of the gallery. Every project has the section today, so no view takes this branch. |
 | Link preview      | The description alone                            | The meta and Open Graph description still say what the project is, not how it was built. |
 | On paper          | Nothing changes                                  | A view does not print, and the page does not show a description. |
 
@@ -51,10 +54,11 @@ Measured on #229 in Edge, on all four views, at the browser's default text size 
 10px from 300px to 900px and at 1195px, 1280px and 1536px (512 measurements):
 
 * Nothing scrolls sideways, and no element reaches past the window.
-* The heading, the paragraph and "Built with" stand 32px, 12px and 32px apart at the default size,
-  and 64px, 24px and 64px at 200%. "Built with" is the same distance from its tags as before.
-* Each view has one `h1`. NumisBook, the Stock Portfolio Viewer and This site have the two `h2`s in
-  that order, and the Digital Twin has "Built with" alone. The two headings' computed face, size,
+* The heading is 32px below the description and 12px above its first paragraph, and the last
+  paragraph is 32px above "Built with", at the default size; 64px, 24px and 64px at 200%. The
+  Digital Twin's three paragraphs are 16px apart, 32px at 200%. "Built with" is the same distance
+  from its tags as before.
+* Each view has one `h1` and the two `h2`s in that order. The two headings' computed face, size,
   weight, ink, case and tracking are identical at every width.
 * The page's markup is identical to the tree before, apart from its script and stylesheet links,
   so the printed CV is untouched.
@@ -96,8 +100,8 @@ Benefits:
 * No new token, no new pattern and no new failing pairing, and paper is untouched.
 
 Tradeoffs:
-* NumisBook's, the Stock Portfolio Viewer's and This site's views are longer: a heading and a
-  paragraph of five to nine lines on a phone.
+* Every view is longer: a heading and five to nine lines on a phone for NumisBook, the Stock
+  Portfolio Viewer and This site, and three paragraphs of 15 lines for the Digital Twin at 390px.
 * This site's description is now one sentence, about as long as its card's slogan. The card still
   leads to more, because the view's account continues under "How I built it".
 
