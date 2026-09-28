@@ -578,6 +578,10 @@
   --photo-width-wide: clamp(11.25rem, 22vw, 18.75rem);
   --photo-ratio: 3 / 4;
 
+  /* A contact mark shown alone, per DDR-073: the square a pill's label line takes, so a pill with no
+     word is as tall as the pills beside it, and with the small step on every side it is a circle. */
+  --contact-mark-size: calc(var(--font-size-x-small) * var(--line-height-body));
+
   /* The timeline's three columns, per DDR-010: the dates, the spine, and the content. The date
      column and the spine are the widths the UI Review on #43 measured, 160px and 28px, and the dot
      that marks each role on the spine is 12px across. All three are in rem, as the page column and

@@ -29,6 +29,9 @@ import type { Introduction } from './types';
  * printed CV carries. The labels are the design's own words, and each names a service a reader
  * already knows; they say nothing about the owner, so none of them is a claim.
  *
+ * Since #215 the email pill shows Gmail's M alone, per DDR-073, and "Email me" is its accessible
+ * name, which a screen reader announces and nothing shows.
+ *
  * The LinkedIn and GitHub pills open in a new tab, per DDR-043, and `newTab` is what they say about
  * it. It is a fact about the control rather than about the owner, so it is not a claim either.
  *
@@ -55,6 +58,7 @@ export const introduction: Introduction = {
       text: 'aortegablasi@gmail.com',
       href: 'mailto:aortegablasi@gmail.com',
       icon: 'gmail',
+      markOnly: true,
       newTab: false,
     },
     {

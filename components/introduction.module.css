@@ -311,6 +311,20 @@
   background-color: var(--color-surface-google-hover);
 }
 
+/* A pill that shows its mark alone, per DDR-073, is a circle the height of the pills beside it. The
+   mark takes the square a label's line would have taken, so the pill keeps the labelled pills'
+   height, and the same small step on every side makes it exactly as wide as it is tall, which the
+   pill radius then draws round. The mark keeps its own proportions inside that square, in its own
+   colours. */
+.markOnly {
+  padding-inline: var(--space-small);
+}
+
+.markOnly svg {
+  inline-size: var(--contact-mark-size);
+  block-size: var(--contact-mark-size);
+}
+
 /* From here the photo sits beside the text, per DDR-010. This is the one width a component may
    write, per DDR-014. */
 @media (min-width: 48em) {

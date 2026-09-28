@@ -46,6 +46,9 @@ import styles from './introduction.module.css';
  * shows it: the link's accessible name says so instead, so assistive technology still announces it
  * before the pill is chosen. The email pill opens the mail client and says nothing of a tab.
  *
+ * Since DDR-073 the email pill shows Gmail's M and no word: the mark says email, and "Email me" is
+ * its accessible name.
+ *
  * Each contact pill is its service's own button, per DDR-044: Gmail's white button with its
  * four-colour M, and LinkedIn's and GitHub's filled in the brand's colour with a white mark.
  */
@@ -118,11 +121,14 @@ export function Introduction({
               The pill shows no sign of the tab, per DDR-044, so its name carries it: the visible
               label first, so the name a speech-input user reads off the pill is still the start of
               the name, per WCAG 2.5.3, and then the words that say a tab opens. */}
-          {contact.map(({ label, href, icon, newTab: opensNewTab }) => (
+          {/* A pill that shows its mark alone, per DDR-073, takes its label as its name instead, so a
+              screen reader still announces what it does. */}
+          {contact.map(({ label, href, icon, markOnly, newTab: opensNewTab }) => (
             <li key={href}>
               <a
                 href={href}
-                className={`${styles.contact} ${brandButton[icon]}`}
+                className={`${styles.contact} ${brandButton[icon]}${markOnly ? ` ${styles.markOnly}` : ''}`}
+                {...(markOnly && { 'aria-label': label })}
                 {...(opensNewTab && {
                   target: '_blank',
                   rel: 'noopener',
@@ -130,7 +136,7 @@ export function Introduction({
                 })}
               >
                 <Icon name={icon} />
-                {label}
+                {!markOnly && label}
               </a>
             </li>
           ))}

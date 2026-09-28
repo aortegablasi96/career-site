@@ -878,6 +878,12 @@ describe('spacing tokens', () => {
     expect(token('timeline-card-space')).toBe('1.25rem');
   });
 
+  // DDR-073: a contact mark shown alone is the height of a pill's label line, so the pill keeps
+  // the labelled pills' height.
+  it('sizes a contact mark shown alone to a label’s line, per DDR-073', () => {
+    expect(token('contact-mark-size')).toBe('calc(var(--font-size-x-small) * var(--line-height-body))');
+  });
+
   // DDR-066: a company's logo is 18px tall on its card, in rem, so it grows with the text.
   it('sizes a company’s logo in rem, per DDR-066', () => {
     expect(token('timeline-logo-height')).toBe('1.125rem');
