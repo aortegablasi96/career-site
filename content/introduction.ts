@@ -12,6 +12,10 @@ import type { Introduction } from './types';
  * gives, and an availability sentence — and the relocation note, which the owner removed. The
  * greeting before the name is the owner's own, and is on screen only, per DDR-056.
  *
+ * Since #212 the summary is the owner's new description, on Epic #209, with the phrase they set in
+ * bold. It is the description in the knowledge base but for one word: the owner chose "focused on
+ * AI and IoT" for the site, where the knowledge base says "SaaS, AI and IoT".
+ *
  * Since #210 the positioning line is the owner's own wording, capitals included, on Epic #209: it
  * names SaaS products beside AI, and connected products where it said IoT, each of which the
  * owner's roles and projects in the knowledge base carry.
@@ -35,8 +39,11 @@ export const introduction: Introduction = {
   name: 'Andreu Ortega Blasi',
   positioning: 'Product Manager building AI, SaaS and connected products',
   location: 'Lugano, Switzerland',
-  summary:
-    'I’m a product manager focused on building AI and IoT products that turn complex technology into useful, scalable solutions. A passionate strategist and ambitious hard worker, I would rather work on high-potential but little-known solutions than on settled, easy-going ones.',
+  summary: [
+    'I’m a Product Manager focused on AI and IoT, turning complex technology into useful, scalable products. ',
+    { strong: 'Curious by nature and ambitious by choice' },
+    ', I’m drawn to challenging problems, emerging opportunities, and ideas that have yet to prove their potential. I enjoy bringing strategy, technology, and people together to make them happen.',
+  ],
   contact: [
     {
       label: 'Email me',

@@ -38,6 +38,11 @@ function rule(selector: string, within = styles): string {
   return within.match(new RegExp(`(?:^|[{}])\\s*${escaped}\\s*\\{([^}]*)\\}`))?.[1] ?? '';
 }
 
+/** The summary as the page renders it: its text, with the owner's bold phrase as `strong`. */
+const summaryHtml = introduction.summary
+  .map((part) => (typeof part === 'string' ? part : `<strong>${part.strong}</strong>`))
+  .join('');
+
 /** A content string as a literal inside a regular expression. */
 const literal = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -62,7 +67,7 @@ describe('Introduction', () => {
       `<h1>${introduction.name}`,
       introduction.positioning,
       introduction.location,
-      introduction.summary,
+      summaryHtml,
       introduction.contact[0].label,
       cv.label,
     ].map((part) => html.indexOf(part));
@@ -76,8 +81,19 @@ describe('Introduction', () => {
   });
 
   it('shows the summary exactly as content/ writes it, as the one paragraph below the location', () => {
-    expect(html).toMatch(new RegExp(`<p class="[^"]+">${literal(introduction.summary)}</p>`));
+    expect(html).toMatch(new RegExp(`<p class="[^"]+">${literal(summaryHtml)}</p>`));
     expect(html.match(/<p class="[^"]*summary[^"]*"/g)).toHaveLength(1);
+  });
+
+  // #212: the owner sets one phrase in bold. It is `strong`, which the base styles set semibold per
+  // DDR-023, inside the paragraph, so it is read in its place; nothing else on the introduction is.
+  it('sets the owner’s bold phrase as strong inside the summary, and nothing else', () => {
+    const strong = introduction.summary.filter((part) => typeof part !== 'string');
+    expect(strong).toHaveLength(1);
+    expect(html.match(/<strong>/g)).toHaveLength(1);
+    expect(html).toContain(`<strong>${strong[0].strong}</strong>`);
+    // The weight is the base styles' alone, so the introduction writes no rule of its own for it.
+    expect(styles).not.toMatch(/\bstrong\b/);
   });
 
   // DDR-056: the greeting is a paragraph before the heading rather than part of it, so the page

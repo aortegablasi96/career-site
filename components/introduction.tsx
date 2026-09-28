@@ -97,7 +97,13 @@ export function Introduction({
           ]}
           className={styles.location}
         />
-        <p className={styles.summary}>{summary}</p>
+        {/* The owner's bold phrase is `strong`, which DDR-023 sets semibold, inside the one
+            paragraph, so it is read in its place in the sentence. */}
+        <p className={styles.summary}>
+          {summary.map((part, index) =>
+            typeof part === 'string' ? part : <strong key={index}>{part.strong}</strong>,
+          )}
+        </p>
         <ul className={styles.controls}>
           {/* A profile opens in a new tab, so the page stays open behind it, per DDR-043. `noopener`
               keeps the new tab from reaching back to this one through `window.opener`; browsers

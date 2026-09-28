@@ -48,6 +48,11 @@ owner's own description from their knowledge base, where there were two — a su
 and an availability sentence. `Introduction` in `content/types.ts` lost `relocation` and
 `availability` and gained `greeting`.
 
+**Since #212 the summary is the owner's new description, with one phrase in bold**, "Curious by
+nature and ambitious by choice". `summary` is a list of parts, each a string or a `Strong`, so the
+words stay in `content/` and the component renders a `Strong` as `strong` inside the one paragraph.
+Its weight is DDR-023's semibold from `app/globals.css`; the introduction writes no rule for it.
+
 **The experience and education sections are horizontal timelines of cards, under #173, per
 DDR-057**, from the Figma layer `career-site-main`, nodes 170:65 and 170:439. A role and a credential
 still share one pattern, per DDR-010, and `components/timeline.tsx` is it: `Timeline` renders one
