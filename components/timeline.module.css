@@ -2,19 +2,25 @@
  * The timeline, per DDR-057, which experience and education share, as DDR-010 has them share one
  * pattern.
  *
- * On screen it is the design's horizontal row (`career-site-main`, nodes 170:65 and 170:439) at
- * every width: each entry a column of its dates, its dot on the line and its card, oldest on the
- * left. The columns share the row equally and none is narrower than --timeline-entry-width, so
- * where they do not fit the row scrolls sideways inside itself and the page never does, which is
- * what DDR-057 amends DDR-014's rule to allow. There is no breakpoint in it: the owner chose on
- * #173 that a phone scrolls the same row rather than stacking it.
+ * From the wide breakpoint it is the design's horizontal row (`career-site-main`, nodes 170:65 and
+ * 170:439): each entry a column of its dates, its dot on the line and its card, oldest on the left.
+ * The columns share the row equally and none is narrower than --timeline-entry-width, so where they
+ * do not fit the row scrolls sideways inside itself and the page never does, which is what DDR-057
+ * amends DDR-014's rule to allow.
+ *
+ * Below the wide breakpoint it is a column, per DDR-074, which the owner asked for on #218 in place
+ * of the row a phone scrolled: the entries run down the page, newest first, each its dot on a line
+ * down the left, and its dates above its card. It is a second list, `.stack`, because its order is
+ * not the row's; the rules for it follow the row's and change only how an entry is laid out, so its
+ * card, dot and dates look and answer exactly as the row's do.
  *
  * On paper it is the vertical timeline DDR-010 drew, in the print block below, because a sheet
  * cannot scroll and DDR-057 prints each role's points, which a column of cards has no room for.
  */
 
+/* The row is the wide screen's and paper's, so below the wide breakpoint it is not drawn. */
 .timeline {
-  display: flex;
+  display: none;
   overflow-x: auto;
   /* A role's card draws a shadow under the pointer, per DDR-061, and the row clips what reaches
      past it because it scrolls. So the row leaves the shadow room below the cards, and takes that
@@ -285,6 +291,125 @@
   font-size: var(--font-size-xxxx-small);
 }
 
+/*
+ * The column, below the wide breakpoint, per DDR-074. Each entry is two columns: the spine at the
+ * left, as wide as the printed spine, and beside it the dates above the card. The spine's dot is at
+ * the top of the entry, level with the dates, and its line runs down past the card and the space
+ * below it to the next entry's dot, so the line runs from the first dot to the last, per DDR-036.
+ * Everything else about an entry is the row's: the card's surface, the dot, the dates' label, and
+ * how all three answer the pointer and focus.
+ */
+.stack {
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.stack .entry {
+  display: grid;
+  grid-template-columns: var(--timeline-spine-width) minmax(0, 1fr);
+  column-gap: var(--space-small);
+  min-inline-size: 0;
+  text-align: start;
+}
+
+/* The space between two entries is paper's, per DDR-039, since the column is the printed timeline's
+   shape: inside the entry, below its card, so the spine beside it reaches down to the next dot. */
+.stack.role .body {
+  padding-block-end: var(--space-role);
+}
+
+.stack.credential .body {
+  padding-block-end: var(--space-credential);
+}
+
+.stack .entry:last-child .body {
+  padding-block-end: 0;
+}
+
+/* The dates stand on a line as tall as the ringed dot beside them, centred on it. */
+.stack .dates {
+  align-items: center;
+  justify-content: flex-start;
+  min-block-size: var(--timeline-dot-span);
+  padding-inline: 0;
+}
+
+.stack .spine {
+  flex-direction: column;
+}
+
+/* The dot is at the top of its entry, so no line comes into it from above within the entry: the
+   entry before draws that part, down to this dot. */
+.stack .lead {
+  display: none;
+}
+
+.stack .line {
+  inline-size: var(--timeline-line-width);
+  block-size: auto;
+}
+
+/* A card in the column is as wide as the column leaves it, and its text begins at its edge, below
+   the dates, rather than centred as a card in the row is. */
+.stack .card {
+  justify-content: flex-start;
+  margin: 0;
+}
+
+.stack .logo {
+  align-self: flex-start;
+}
+
+/* A raised logo keeps the name beside it level with the cards beside it in the row. The column has
+   no card beside it, so the logo stands in the card's padding as every other logo does. */
+.stack .logoRaised {
+  margin-block-start: 0;
+}
+
+/* The link's box covers the dates, the card and the spine beside them, per DDR-064, so the three are
+   one target, as a column of the row is. The dates wrap onto a second line where the column is
+   narrow and the text enlarged, so the box is measured from the block that holds the dates and the
+   card, whatever their height, rather than from the card: it reaches left over the gap and the
+   spine, and stops at the foot of the card, so the space before the next entry leads nowhere.
+
+   So in the column the card is not what the box is measured from, and it may not become it: a
+   positioned or moved box is what an absolutely positioned box inside it is measured from. Its lift
+   is therefore a margin rather than a translation, below, and its focus outline is its own. */
+.body {
+  position: relative;
+}
+
+.stack .card:has(.link) {
+  position: static;
+}
+
+.stack .link::before {
+  inset-block: 0;
+  inset-inline: calc(-1 * (var(--timeline-spine-width) + var(--space-small))) 0;
+}
+
+.stack.role .link::before {
+  inset-block-end: var(--space-role);
+}
+
+.stack.credential .link::before {
+  inset-block-end: var(--space-credential);
+}
+
+.stack .entry:last-child .link::before {
+  inset-block-end: 0;
+}
+
+/* Focus outlines the card itself, outside its edge, as the row's stretched box outlines it. */
+.stack .link::after {
+  content: none;
+}
+
+.stack .entry:has(.link:focus-visible) .card {
+  outline: var(--focus-outline-width) solid var(--color-focus);
+  outline-offset: var(--focus-outline-offset);
+}
+
 /* And the card rises, as a project card does, per DDR-055 as DDR-063 extends it to the roles, over
    the same 150ms and with the edge and the shadow as one change. The movement and its transition
    are both inside the query, so a reader who has asked for less motion gets no movement at all.
@@ -322,6 +447,31 @@
   .link::before {
     inset-block-end: calc(-1 * var(--card-lift) - 1px);
   }
+
+  /* In the column the card rises by the same lift over the same 150ms, per DDR-074, but as a margin:
+     it gives up above what it takes below, so nothing around it moves. The link's box is the
+     entry's and stays where it is, so the strip the card leaves is still the link. */
+  .stack .card:has(.link) {
+    transition-property: margin-block-start, margin-block-end, border-color, box-shadow;
+  }
+
+  .stack .entry:has(.link):hover .card,
+  .stack .entry:has(.link:focus-visible) .card {
+    translate: none;
+    margin-block: var(--card-lift-back) var(--card-lift);
+  }
+}
+
+/* From the wide breakpoint the row is drawn, per DDR-057, and the column is not, per DDR-074. Exactly
+   one of the two is displayed at any width, so a reader meets one list. */
+@media (min-width: 48em) {
+  .timeline {
+    display: flex;
+  }
+
+  .stack {
+    display: none;
+  }
 }
 
 /*
@@ -339,6 +489,11 @@
     /* Paper draws no shadow and cannot point at a card, so the row leaves it no room. */
     margin-block-end: 0;
     padding-block-end: 0;
+  }
+
+  /* Paper prints the row's list, oldest first, as DDR-057 has it, and never the column. */
+  .stack {
+    display: none;
   }
 
   .entry {

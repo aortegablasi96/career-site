@@ -4,7 +4,8 @@ import { Hint } from './hint';
 import { Timeline } from './timeline';
 
 /**
- * The owner's degrees and certifications, oldest first as `content/` gives them, per DDR-057. Each
+ * The owner's degrees and certifications, oldest first as `content/` gives them, per DDR-057, and
+ * newest first below the wide breakpoint, where the timeline runs down the page, per DDR-074. Each
  * is an entry of the timeline experience shares: the dates, a dot, and a card with the institution
  * and the credential's name.
  *

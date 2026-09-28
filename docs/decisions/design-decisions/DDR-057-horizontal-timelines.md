@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-074**, per #218: below the wide breakpoint each timeline is a column that runs down the page, newest first, where a phone scrolled the row. From the wide breakpoint and on paper the row, oldest first, is unchanged.
+
 **Amended by DDR-070**, per #204: every card in both timelines is drawn on the design's surface, a pale indigo-to-pink gradient with a faint grain, a violet edge and a white highlight inside its top edge, where it was white with a `--color-border` hairline. Paper is unchanged.
 
 **Amended by DDR-069**, per #200: each education card is a link off the site, and it rests raised and answers the pointer as a role's card does. A hint stands above the education row, which takes no tab stop of its own.
@@ -107,7 +109,10 @@ The columns share the row equally, and none is narrower than `--timeline-entry-w
 is the design's narrowest column at 1195px, so the design's five roles fit its column.
 
 **Where the entries do not fit, the list scrolls sideways inside itself.** There is no breakpoint: a
-phone scrolls the same row. The list is focusable and named by its section's heading, so the
+phone scrolls the same row.
+
+> **Amended by DDR-074.** Below the wide breakpoint the timeline is a column, newest first, and
+> the row is drawn only from the wide breakpoint and on paper. The list is focusable and named by its section's heading, so the
 keyboard's arrow keys scroll it and a screen reader announces it as a list named "Experience" or
 "Education and certifications". The site's focus outline marks it. It holds no link.
 

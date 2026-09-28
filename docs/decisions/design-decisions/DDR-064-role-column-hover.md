@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-27
 
+**Amended by DDR-074**, per #218: in the timeline's column below the wide breakpoint, the one target is measured from the block that holds the dates and the card, so it covers the dates whatever they wrap to, and the spine beside them.
+
 **Amended by DDR-071**, per #206: when the card is lit, its dates take a soft glow in the card's hover ink, `--shadow-dates-hover`. Its dot's ring takes `--color-accent`, where it took `--color-border-accent-hover`, and its core takes `--color-accent-deep`, where it took `--color-accent-hover`. At rest nothing changes.
 
 **Amended by DDR-069**, per #200: an education card's dates, dot and card are one target too.

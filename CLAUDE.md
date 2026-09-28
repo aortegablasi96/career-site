@@ -73,9 +73,10 @@ still share one pattern, per DDR-010, and `components/timeline.tsx` is it: `Time
 `aria-hidden` spine (lead line, ringed dot, line) and a card (on DDR-070's surface) with the company or institution,
 the title as the `h3`, and a role's place. The line runs from the first dot to the last across the
 row: the columns meet with no gap, and the design's 24px between cards is the dates' and the card's
-`--timeline-entry-inset`. **There is no breakpoint**: the columns share the row and none is
+`--timeline-entry-inset`. The columns share the row and none is
 narrower than `--timeline-entry-width`, so where they do not fit the `ol` scrolls sideways inside
-itself, which DDR-057 lets it do and the page still may not. The `ol` is `aria-labelledby` its
+itself, which DDR-057 lets it do and the page still may not. **Since #218 the row is drawn only from
+the wide breakpoint and on paper**, per DDR-074, below. The `ol` is `aria-labelledby` its
 section's heading. **Since #176, per DDR-059, each role's card is a link to the role's view**: the
 title is the link, stretched over the card as a project card's name is, and the hint "Click any role
 to read the full description" stands above the row, screen only. A timeline whose entries have an
@@ -86,6 +87,23 @@ one print-only content; `experience.module.css` holds them. **On paper the timel
 vertical one** — date column, spine, the card's text and the points — written in the print block
 of `timeline.module.css`, with the old 12px dot restored in `app/tokens.css`'s print block. The
 degrees' theses are gone from the content, and DM Sans Italic with them.
+
+**Since #218, per DDR-074, each timeline is a column below the wide breakpoint, newest first**, as
+the owner chose. A stylesheet may not reorder content, so `Timeline` renders two lists from the same
+entries inside one `div`: the row's `ol`, oldest first, and a `.stack` `ol`, newest first, each
+named by the section's heading. Exactly one is displayed: the row from 48em and on paper, the column
+below it, so a reader, the keyboard and the printed CV each meet one list. **Every card is therefore
+in the HTML twice**, so a test that counts entries, headings or links reads the row (the first `ol`)
+or sets the column aside, as `app/page.test.tsx` does. The column's entry is the spine at the left,
+first in its markup and hidden, with the dates above the card beside it; the dot is level with the
+dates, which stand on a line `--timeline-dot-span` tall; entries are `--space-role` or
+`--space-credential` apart, inside the entry so the line reaches the next dot. It holds no role's
+points and its raised logo does not rise. **The link's box is measured from `.body`**, the block
+holding the dates and the card, because a date wraps onto two lines at 200% text below 380px, so the
+card is static there and must not be translated: it lifts by a margin, `--card-lift-back` and
+`--card-lift`, and draws its own focus outline. Card, dates and dot share the row's rules
+otherwise, so a change to how they look changes both; a change to layout does not. Desktop and paper
+were measured pixel-identical to before.
 
 **Each role has a view of its own since #176**, per ADR-011 and DDR-059, at `/experience/<slug>`,
 laid out as the Figma layer `career-site-experience` (177:1196) draws it: the way back, a tinted
@@ -699,8 +717,8 @@ ADR-010's address: since #202 the projects section is "Portfolio", at `#portfoli
 `/portfolio/<slug>` and its pictures are in `public/portfolio/<slug>/`; the old `/projects/…`
 addresses are not kept, as the owner chose. The next ADR is `013`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-057 and DDR-059 to DDR-073. The next DDR is
-`074`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-057 and DDR-059 to DDR-074. The next DDR is
+`075`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Thirty-one accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -743,6 +761,10 @@ at the section concerned:
 * **DDR-057** keeps its row, its order, its scrolling, its print treatment and its education row.
   DDR-059 makes each role's card a link to the role's view and shows the hint above the row, which
   then takes no tab stop of its own. DDR-066 opens each role's card with its company's logo. DDR-067 shrinks its date band to one line of dates. DDR-070 draws every card on the design's tinted, grained surface.
+  DDR-074 takes its "a phone scrolls the same row": below the wide breakpoint each timeline is a
+  column, newest first, a second list beside the row, and the row is the wide screen's and paper's.
+* **DDR-063 and DDR-064** keep everything for the row. DDR-074 has a card in the column lift by a
+  margin and outline itself, and measures its one target from the block holding its dates and card.
 * **DDR-057, DDR-059, DDR-063 and DDR-064** keep everything but what DDR-069 takes: an education
   card leads off the site, rests raised, answers as a role's card does and has a hint above its row.
   **DDR-043** keeps its pills; DDR-069 widens its new tab to the four education cards.

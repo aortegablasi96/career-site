@@ -16,8 +16,15 @@ const html = renderToStaticMarkup(
   />,
 );
 
-/** The markup's text, as a reader meets it. */
-const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+/**
+ * The two lists, per DDR-074: the row, oldest first, which the wide screen and paper show, and the
+ * column, newest first, which a narrower screen shows instead. Only one is ever displayed, so what a
+ * reader meets is either list; the tests below read the row unless they say otherwise.
+ */
+const [row, column] = html.match(/<ol [^>]*>.*?<\/ol>/g) ?? [];
+
+/** The row's text, as a reader meets it. */
+const text = row!.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 
 const { roles } = experience;
 const role = (company: string) => roles.find((candidate) => candidate.company === company)!;
@@ -44,7 +51,8 @@ describe('Experience', () => {
       expect(existsSync(new URL(`../public${logo}`, import.meta.url))).toBe(true);
     }
 
-    expect(html.match(/<img /g)).toHaveLength(roles.length);
+    expect(row!.match(/<img /g)).toHaveLength(roles.length);
+    expect(column!.match(/<img /g)).toHaveLength(roles.length);
   });
 
   // DDR-066: ToBeIT's and EDP's logos read small at the shared height, so the owner chose on #193
@@ -54,16 +62,16 @@ describe('Experience', () => {
       'Electrónica Digital de Protección',
       'ToBeIT',
     ]);
-    expect(html.match(/<img class="[^"]* [^"]*"/g)).toHaveLength(2);
+    expect(row!.match(/<img class="[^"]* [^"]*"/g)).toHaveLength(2);
     // Only ToBeIT's rises, so its name is level with its neighbours'; EDP's card is the tallest.
     expect(roles.filter(({ logoRaised }) => logoRaised).map(({ company }) => company)).toEqual(['ToBeIT']);
   });
 
   it('renders each role as an entry of the timeline, in the order the content gives', () => {
-    const entries = html.match(/<li class=/g) ?? [];
-    const titles = [...html.matchAll(/<h3[^>]*><a [^>]*>([^<]+)<\/a><\/h3>/g)].map(([, title]) => title);
+    const entries = row!.match(/<li class=/g) ?? [];
+    const titles = [...row!.matchAll(/<h3[^>]*><a [^>]*>([^<]+)<\/a><\/h3>/g)].map(([, title]) => title);
 
-    expect(html).toMatch(/<\/p><ol /);
+    expect(html).toMatch(/<\/p><div><ol /);
     expect(entries).toHaveLength(roles.length);
     expect(titles).toEqual(roles.map(({ title }) => title));
   });
@@ -96,13 +104,13 @@ describe('Experience', () => {
   });
 
   it('marks every month up with its machine-readable value', () => {
-    const months = [...html.matchAll(/<time datetime="([^"]+)"/gi)].map(([, month]) => month);
+    const months = [...row!.matchAll(/<time datetime="([^"]+)"/gi)].map(([, month]) => month);
 
     expect(months).toEqual(roles.flatMap(({ start, end }) => (end ? [start, end] : [start])));
   });
 
   it('gives each role its points as a bulleted list, which paper shows', () => {
-    const lists = html.match(/<ul[^>]*>.*?<\/ul>/g) ?? [];
+    const lists = row!.match(/<ul[^>]*>.*?<\/ul>/g) ?? [];
 
     expect(lists).toHaveLength(roles.length);
     expect(lists.map((list) => list.match(/<li>/g)?.length)).toEqual(roles.map(({ points }) => points.length));
@@ -111,7 +119,7 @@ describe('Experience', () => {
   // DDR-059: each card leads to its role's view, and the job title is the link, so the card is one
   // tab stop named by the title.
   it('leads from each role’s card to its view, by the job title', () => {
-    const links = [...html.matchAll(/<a [^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(([, href, title]) => ({
+    const links = [...row!.matchAll(/<a [^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(([, href, title]) => ({
       href,
       title,
     }));
@@ -126,7 +134,7 @@ describe('Experience', () => {
   });
 
   it('says above the timeline that a role’s card leads to its description, beside a hidden mark', () => {
-    expect(html).toMatch(/^<div><p class="[^"]*"><svg [^>]*aria-hidden="true"[^>]*>.*<\/svg>Click any role to read the full description<\/p><ol /);
+    expect(html).toMatch(/^<div><p class="[^"]*"><svg [^>]*aria-hidden="true"[^>]*>.*<\/svg>Click any role to read the full description<\/p><div><ol /);
   });
 
   // The spine draws the path from one role to the next and says nothing the text does not, so a
@@ -134,10 +142,27 @@ describe('Experience', () => {
   it('hides the timeline’s ornament from assistive technology, and gives it no text', () => {
     const spines = [...html.matchAll(/<div [^>]*aria-hidden="true"[^>]*>(.*?)<\/div>/g)];
 
-    expect(spines).toHaveLength(roles.length);
+    // One for each role in each list.
+    expect(spines).toHaveLength(2 * roles.length);
     for (const [, inner] of spines) {
       expect(inner.replace(/<[^>]+>/g, '')).toBe('');
     }
+  });
+
+  // DDR-074: below the wide breakpoint the roles run down the page, newest first, as the owner chose
+  // on #218, each card leading where the row's does. The points are paper's, and paper prints the
+  // row, so the column holds none.
+  it('lists the roles newest first in the column, each leading to its view, with no points', () => {
+    const links = [...column!.matchAll(/<a [^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(([, href, title]) => ({
+      href,
+      title,
+    }));
+
+    expect(links).toEqual(roles.map(({ slug, title }) => ({ href: `/experience/${slug}`, title })).reverse());
+    expect(column!.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ')).toContain(
+      'Oct 2024 – Present ABB Global Product Manager Quartino, Switzerland',
+    );
+    expect(column).not.toContain('<ul');
   });
 });
 
