@@ -298,6 +298,28 @@ describe('ProjectView', () => {
     expect(text(view)).not.toContain('Live site');
   });
 
+  // #233: an on-premise application has no live site, so its view leads to its release instead,
+  // as the second link, in a new tab, and gives way to the business case with the source code.
+  it('leads to the release of a project a reader runs on their own machine', () => {
+    const view = render(stockPortfolioViewer!);
+    const release = 'https://github.com/aortegablasi96/stock-portfolio-viewer/releases/tag/v1.0.0';
+    const overview = view.match(/<ul class="[^"]*links[^"]*overviewOnly[^"]*">.*?<\/ul>/)?.[0] ?? '';
+    const links = [...overview.matchAll(/<a href="([^"]+)" class="([^"]+)"([^>]*)>/g)];
+
+    expect(links.map(([, href]) => href)).toEqual([
+      'https://github.com/aortegablasi96/stock-portfolio-viewer',
+      release,
+    ]);
+    expect(links[1][2]).toContain('secondary');
+    expect(links[1][3]).toContain('target="_blank"');
+    expect(links[1][3]).toContain('rel="noopener"');
+    expect(view).toContain(`aria-label="Visit release site, ${introduction.newTab}"`);
+
+    for (const project of [numisBook!, digitalTwin!, careerSite!]) {
+      expect(render(project)).not.toContain(release);
+    }
+  });
+
   it('shows the lead picture with its alternative text and its caption below it', () => {
     const media = numisBook!.media;
 

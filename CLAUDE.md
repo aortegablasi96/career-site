@@ -1777,6 +1777,11 @@ the page and the printed CV are unchanged. Swept every 10px from 300px to 900px 
 in both accounts, at both text sizes: nothing scrolls sideways, and the options wrap onto two rows
 only at 200% text below 490px.
 
+**Since #233 the Stock Portfolio Viewer's view has a second link, "Visit release site"**, to its
+v1.0.0 release on GitHub, because an on-premise application has no live site. It is content alone,
+a second entry in the project's `links`, so it takes the second link's look and hides with "Source
+code" in the business case. The address names that release, so a new one is a content change.
+
 **#115 has landed, as DDR-035: every link and control answers the pointer.** A contact pill takes
 `--color-surface-hover` and `--color-border-accent-hover`, the CV control darkens to
 `--color-accent-hover`, the contents links and the footer's addresses take the accent, and a project

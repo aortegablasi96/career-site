@@ -158,7 +158,11 @@ export const projects: Projects = {
         ],
         file: '/portfolio/stock-portfolio-viewer/stock-portfolio-viewer-business-case.pdf',
       },
-      links: [{ text: sourceCode, href: 'https://github.com/aortegablasi96/stock-portfolio-viewer' }],
+      // An on-premise application has no live site, so its release is how a reader gets it, per #233.
+      links: [
+        { text: sourceCode, href: 'https://github.com/aortegablasi96/stock-portfolio-viewer' },
+        { text: 'Visit release site', href: 'https://github.com/aortegablasi96/stock-portfolio-viewer/releases/tag/v1.0.0' },
+      ],
     },
     {
       name: 'This site',
