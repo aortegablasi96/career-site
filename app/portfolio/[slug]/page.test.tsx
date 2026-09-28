@@ -39,6 +39,18 @@ describe('a project’s view', () => {
     },
   );
 
+  // #229: the preview carries the description alone, not the heading or paragraph that follow it.
+  it.each(projects.projects.map(({ slug, description }) => [slug, description]))(
+    'describes %s in the link preview by its description alone',
+    async (slug, description) => {
+      const metadata = await generateMetadata(params(slug));
+
+      expect(metadata.description).toBe(description);
+      expect(metadata.openGraph?.description).toBe(description);
+      expect(description).not.toContain(projects.view.howBuilt);
+    },
+  );
+
   it.each(projects.projects.map(({ slug }) => slug))('%s has one h1, the project’s name', async (slug) => {
     const html = await render(slug);
     const { name } = projects.projects.find((project) => project.slug === slug)!;

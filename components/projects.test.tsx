@@ -3,6 +3,12 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { projects } from '@/content/projects';
 import type { Project } from '@/content/types';
+
+/** How a project was built, as one run of words, bold phrases and all, per #229. */
+const howBuiltWords = ({ howBuilt = [] }: Project) =>
+  howBuilt
+    .map((paragraph) => paragraph.map((part) => (typeof part === 'string' ? part : part.strong)).join(''))
+    .join(' ');
 import { Media, Projects, projectRows } from './projects';
 
 // Rendered with the real content, a row at a time as the page renders it, since what the cards say
@@ -447,19 +453,29 @@ describe('projects content', () => {
   });
 
   // A card's sentence is the project's slogan since #227, in the owner's own words, which may say
-  // "my"; a description still may not.
+  // "my"; a description still may not, nor, since #229, how the project was built. Only that
+  // paragraph's heading, which is a view string, says "I".
   it('writes descriptions without pronouns, and neither descriptions nor sentences with self-assessed traits', () => {
-    for (const { description, summary } of projects.projects) {
+    for (const project of projects.projects) {
+      const { description, summary } = project;
+      const howBuilt = howBuiltWords(project);
+
       expect(description).not.toMatch(/\b(?:I|me|my|we|our)\b/i);
-      for (const words of [description, summary]) {
+      expect(howBuilt).not.toMatch(/\b(?:I|me|my|we|our)\b/i);
+      for (const words of [description, howBuilt, summary]) {
         expect(words).not.toMatch(/strong|proven|leadership|servant|passionate|results-driven/i);
       }
     }
   });
 
-  it('gives each card a sentence well under half the length of the project’s description', () => {
-    for (const { description, summary } of projects.projects) {
-      expect(summary.length).toBeLessThan(description.length / 2);
+  // The card leads to more than it says. Since #229 what the view says is the description and, where
+  // there is one, how the project was built: this site's description is one sentence, about as long
+  // as its card's, and the rest of its account is under "How I built it", per DDR-078.
+  it('gives each card a sentence well under half the length of what the project’s view says of it', () => {
+    for (const project of projects.projects) {
+      const { description, summary } = project;
+
+      expect(summary.length).toBeLessThan((description.length + howBuiltWords(project).length) / 2);
     }
   });
 });

@@ -346,8 +346,19 @@ export interface Project {
    * the project's view both show every one, in this order, per DDR-054 and DDR-050.
    */
   technologies: readonly string[];
-  /** What the project is and what it demonstrates, CV-style, without pronouns. */
+  /**
+   * What the project is, CV-style, without pronouns: its general description from the owner's
+   * knowledge base, since #229. The view shows it below the name, and it is the view's browser and
+   * link-preview description.
+   */
   description: string;
+  /**
+   * How the project was built with AI, which the view shows below the description under the heading
+   * `ProjectView.howBuilt`, per DDR-078. One or more paragraphs, each a run of text in which a part
+   * may be strong, as the introduction's summary is. Left out where the owner's knowledge base has
+   * no such section, and a view without it shows no heading.
+   */
+  howBuilt?: readonly (readonly (string | Strong)[])[];
   /**
    * The repository first, then a live version where one exists. Each link is labelled rather than
    * showing its address, which prints after it on paper, per DDR-006.
@@ -381,6 +392,8 @@ export interface Projects {
 export interface ProjectView {
   /** The link at the top of the view, which returns the reader to the projects on the page. */
   back: string;
+  /** The heading above how the project was built, per DDR-078. A project without `howBuilt` shows it nowhere. */
+  howBuilt: string;
   /** The label above the technologies. */
   builtWith: string;
   /**
