@@ -100,7 +100,8 @@ function Neighbour({
  * Every word is the project's own record, stated once in `content/` and shown on the page as well,
  * per ADR-002, and the words around it are the view's strings beside the projects. The name is the
  * view's one `h1`, and the label above the technologies is an `h2`, so the view's outline is the
- * project and what it is built with.
+ * project and what it is built with. Where the project says how it was built, that follows the
+ * description under an `h2` of the same kind, per DDR-078.
  *
  * The first link is the repository and is filled; a live site, where there is one, follows it
  * outlined, as the design draws the two. Both leave the site for another one the reader means to
@@ -114,9 +115,10 @@ function Neighbour({
  * picture on each view, whether or not the reader goes back.
  */
 export function ProjectView({
-  project: { name, media, caption, gallery, technologies, description, links },
+  project: { name, media, caption, gallery, technologies, description, howBuilt, links },
   strings: {
     back,
+    howBuilt: howBuiltTitle,
     builtWith,
     gallery: galleryTitle,
     newTab,
@@ -149,6 +151,14 @@ export function ProjectView({
         <div className={styles.text}>
           <h1 className={styles.name}>{name}</h1>
           <p className={styles.description}>{description}</p>
+          {/* How the project was built, per DDR-078, where the owner's knowledge base says. A
+              project without it shows neither the heading nor an empty paragraph. */}
+          {howBuilt && (
+            <>
+              <h2 className={styles.label}>{howBuiltTitle}</h2>
+              <p className={styles.howBuilt}>{howBuilt}</p>
+            </>
+          )}
           <h2 className={styles.label}>{builtWith}</h2>
           <ul className={styles.technologies}>
             {technologies.map((technology) => (

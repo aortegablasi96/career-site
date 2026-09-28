@@ -84,9 +84,13 @@ import type { Cv } from './types';
  * It moved again with #227, because each project card's sentence is now the project's slogan. A
  * card's sentence is not a fact ADR-005 lists as shared, and no project's name changed, so it did
  * not move the CV.
+ * It moved again with #229, because each project's description is now its general description from
+ * the owner's knowledge base, and three projects gained how they were built, which their views show
+ * under a heading of its own, per DDR-078. No project's name changed and no metric was added, so it
+ * did not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'dce5aec1e3c52ea16c63600e859b1d9530f907785c0877878b8b053027748b27',
+  contentDigest: '5dcd7cf046b3c19338d30110cc7eb06776602f26423d30fee9cb0f2405536e0e',
 };

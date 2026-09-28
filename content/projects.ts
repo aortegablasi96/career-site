@@ -47,6 +47,13 @@ const liveSite = 'Live site';
  * Since #163 a card shows every technology stated here, per DDR-054, where it showed the first four
  * and counted the rest. So the order below is the order a card and a view both read in, and no
  * technology is hidden behind a click; the wording of that count is gone with it.
+ *
+ * Since #229 each description is the project's general description from the owner's knowledge base,
+ * in British spelling and without assuming a reader's gender, and `howBuilt` is its "AI-assisted
+ * product development" section, which a view shows under "How I built it", per DDR-078. The Digital
+ * Twin's entry has no such section, so it has no `howBuilt` and its view shows no heading. The site
+ * has no entry: its description keeps its first sentence, and its `howBuilt` was written in the same
+ * form as the others, as the owner asked, from what the repository shows.
  */
 export const projects: Projects = {
   // The owner renamed the section on #202, per ADR-012: it is their portfolio.
@@ -61,7 +68,9 @@ export const projects: Projects = {
       summary: 'An intelligent coin collection management SaaS.',
       technologies: ['Next.js', 'TypeScript', 'PostgreSQL on Neon', 'OpenAI', 'Vercel', 'Cloudflare R2'],
       description:
-        'A SaaS application for managing a coin collection, with an AI assistant that helps manage it and automates tasks such as adding a new coin. Built end to end with Claude Code, whose workflow, execution, governance, and project-management skills work as a simulated product team across the whole development pipeline, through to production.',
+        'A coin collection management SaaS that helps collectors visualise the fundamental aspects of their coins, organise them and monitor price statistics. The collector can also interact with an AI-assisted chatbot to manage their collection and obtain information from it.',
+      howBuilt:
+        'Used Claude Code as a virtual cross-functional development team, creating specialised skill workflows for architecture, database design, UI design, testing, governance and project management. Integrated MCP tools including Figma, Neon and Playwright to connect product design, data migration and E2E testing.',
       links: [
         { text: sourceCode, href: 'https://github.com/aortegablasi96/numisbook' },
         { text: liveSite, href: 'https://numisbook.vercel.app' },
@@ -89,7 +98,9 @@ export const projects: Projects = {
       summary: 'An on-premise AI-enabled portfolio management assistant.',
       technologies: ['Electron', 'React', 'TypeScript', 'SQLite', 'OpenAI'],
       description:
-        'A local desktop application for analysing a personal stock portfolio from an Interactive Brokers account, with an AI assistant that gives feedback on it, in which every figure is computed by the application and only phrased by the model. Built with Claude Code skills and MCP servers, including shadcn’s, working from a Figma design.',
+        'A local-first portfolio management application that lets investors import broker data into a single private workspace, display the data in multiple personalised views and support the analysis through an AI-assisted chatbot.',
+      howBuilt:
+        'Used Claude Code as a virtual cross-functional development team, creating specialised skill workflows for architecture, UI development, testing, governance and project management. Integrated MCP tools including Figma, shadcn and Playwright to connect product design, implementation and E2E testing.',
       links: [{ text: sourceCode, href: 'https://github.com/aortegablasi96/stock-portfolio-viewer' }],
     },
     {
@@ -100,7 +111,9 @@ export const projects: Projects = {
       summary: 'A career site that doubles as its own printed CV.',
       technologies: ['Next.js', 'TypeScript', 'CSS Modules', 'GitHub Pages'],
       description:
-        'A career site that is also its own printed CV. Built with Claude Code through a skill-driven workflow, in which a content strategist, a UI designer, an architect, builders, and a tester are each a skill, and every significant design and architecture decision is recorded.',
+        'A career site that is also its own printed CV.',
+      howBuilt:
+        'Used Claude Code as a virtual cross-functional development team, creating specialised skill workflows for content strategy, UI design, architecture, testing, governance and project management, with every significant design and architecture decision recorded. Integrated MCP tools including Figma and Playwright to connect product design and browser testing.',
       links: [{ text: sourceCode, href: 'https://github.com/aortegablasi96/career-site' }],
     },
   ],
@@ -108,6 +121,8 @@ export const projects: Projects = {
   hint: 'Click any project to read the full description',
   view: {
     back: 'Back to portfolio',
+    // The heading above how a project was built, per #229 and DDR-078, in the owner's words.
+    howBuilt: 'How I built it',
     builtWith: 'Built with',
     // The label above the further pictures and videos of a project, per DDR-053. No project carries
     // gallery media yet, so no view shows it; the media is the owner's to supply, as on #63.

@@ -768,8 +768,8 @@ ADR-010's address: since #202 the projects section is "Portfolio", at `#portfoli
 `/portfolio/<slug>` and its pictures are in `public/portfolio/<slug>/`; the old `/projects/…`
 addresses are not kept, as the owner chose. The next ADR is `014`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-057 and DDR-059 to DDR-077. The next DDR is
-`078`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-057 and DDR-059 to DDR-078. The next DDR is
+`079`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Thirty-four accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -837,7 +837,8 @@ at the section concerned:
 * **DDR-050** keeps everything it decides about a view's address, its way back, its introduction
   and its two columns. DDR-052 adds its foot: a divider, and the projects on either side of this
   one. DDR-053 adds its middle: a gallery of further pictures and videos, between the introduction
-  and that foot, which a view whose project has no gallery media does not draw at all.
+  and that foot, which a view whose project has no gallery media does not draw at all. DDR-078
+  adds how the project was built, under "How I built it", between the description and "Built with".
 * **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
   rule and its rule that nothing scrolls horizontally from 320px. DDR-039 lets the wide breakpoint
   redefine one token, `--rhythm-scale`, and DDR-049 a second, `--contents-bar-title-row`. DDR-040 takes `--page-padding-block` off the narrow
@@ -1741,6 +1742,17 @@ caption 11px in the faint ink 8px below. Swept every 10px from 300px to 900px at
 default text size and at 200%: nothing scrolls sideways, every item keeps its shape, no pair of
 targets fails WCAG 2.5.8 — the closest is still the footer's addresses at 27.2px — and the narrowest
 an item gets is 268.8px.
+
+**#229 has landed, as DDR-078: a view describes its project in the owner's words, and says how it
+was built.** Each `description` is the project's general description from the owner's knowledge
+base, and the optional `howBuilt` on a `Project` is its "AI-assisted product development" section.
+The view shows it after the description under `projects.view.howBuilt`, "How I built it", an `h2`
+that shares `.label` with "Built with", with the paragraph set as the description is. The Digital
+Twin's entry has no such section, so its view is as it was. The site has no entry: its description
+is its first sentence, and its `howBuilt` was written in the same form, as the owner asked. The link
+preview is still the description alone. The page never shows a description, so its markup and the
+printed CV are unchanged. Swept every 10px from 300px to 900px on all four views at both text
+sizes: nothing scrolls sideways.
 
 **#115 has landed, as DDR-035: every link and control answers the pointer.** A contact pill takes
 `--color-surface-hover` and `--color-border-accent-hover`, the CV control darkens to

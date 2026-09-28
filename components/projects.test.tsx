@@ -447,19 +447,24 @@ describe('projects content', () => {
   });
 
   // A card's sentence is the project's slogan since #227, in the owner's own words, which may say
-  // "my"; a description still may not.
+  // "my"; a description still may not, nor, since #229, how the project was built. Only that
+  // paragraph's heading, which is a view string, says "I".
   it('writes descriptions without pronouns, and neither descriptions nor sentences with self-assessed traits', () => {
-    for (const { description, summary } of projects.projects) {
+    for (const { description, howBuilt = '', summary } of projects.projects) {
       expect(description).not.toMatch(/\b(?:I|me|my|we|our)\b/i);
-      for (const words of [description, summary]) {
+      expect(howBuilt).not.toMatch(/\b(?:I|me|my|we|our)\b/i);
+      for (const words of [description, howBuilt, summary]) {
         expect(words).not.toMatch(/strong|proven|leadership|servant|passionate|results-driven/i);
       }
     }
   });
 
-  it('gives each card a sentence well under half the length of the project’s description', () => {
-    for (const { description, summary } of projects.projects) {
-      expect(summary.length).toBeLessThan(description.length / 2);
+  // The card leads to more than it says. Since #229 what the view says is the description and, where
+  // there is one, how the project was built: this site's description is one sentence, about as long
+  // as its card's, and the rest of its account is under "How I built it", per DDR-078.
+  it('gives each card a sentence well under half the length of what the project’s view says of it', () => {
+    for (const { description, howBuilt = '', summary } of projects.projects) {
+      expect(summary.length).toBeLessThan((description.length + howBuilt.length) / 2);
     }
   });
 });

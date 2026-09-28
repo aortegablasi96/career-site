@@ -90,10 +90,11 @@
   line-height: var(--line-height-prose);
 }
 
-/* "Built with" and "Gallery", set as the design's labels are: 10px bold capitals, tracked and in
-   the faint ink (nodes 59:30 and 59:86). Both are h2, so neither takes a section title's serif,
-   size or tracking. They stand at different distances from what is above them — one inside the
-   view's text column, the other opening a block below it — so each sets its own space above. */
+/* "How I built it", "Built with" and "Gallery", set as the design's labels are: 10px bold
+   capitals, tracked and in the faint ink (nodes 59:30 and 59:86); the first is DDR-078's, set as
+   the second is. All are h2, so none takes a section title's serif, size or tracking. They stand
+   at different distances from what is above them — the first two inside the view's text column,
+   the last opening a block below it — so each sets its own space above. */
 .label,
 .galleryTitle {
   color: var(--color-text-faint);
@@ -107,6 +108,13 @@
 
 .label {
   margin-block-start: var(--space-large);
+}
+
+/* How the project was built, per DDR-078: running text set as the description is, as far below its
+   label as the technologies are below theirs. */
+.howBuilt {
+  margin-block-start: var(--project-view-label-gap);
+  line-height: var(--line-height-prose);
 }
 
 /* Every technology, as tags that wrap, 8px apart each way (node 59:32). */
