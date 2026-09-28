@@ -61,6 +61,14 @@ below. It is on screen only; on paper the controls take back its space, and the 
 pixel-identical. At 390 by 844 the controls end 802.9px down, 41px above the fold, so a longer
 summary or question is to be measured there again.
 
+**Since #223, per DDR-076, "Get in touch or download my CV below:" stands under the question**:
+`callToAction` on `Introduction`, a `p` in `--color-text-secondary` at the body's size and weight,
+`--space-x-small` below the question, with the controls following it at the flow step. It is on
+screen only, as the question is; on paper the controls keep `--space-controls` above them and the
+sheets are pixel-identical. At 390 by 844 the controls now end 791.2px down, 52.8px above the fold
+(the contents bar is a row shorter on a phone since #221), so a longer summary, question or line is
+to be measured there again.
+
 **Since #212 the summary is the owner's new description, with one phrase in bold**, "Curious by
 nature and ambitious by choice". `summary` is a list of parts, each a string or a `Strong`, so the
 words stay in `content/` and the component renders a `Strong` as `strong` inside the one paragraph.
@@ -739,10 +747,10 @@ ADR-010's address: since #202 the projects section is "Portfolio", at `#portfoli
 `/portfolio/<slug>` and its pictures are in `public/portfolio/<slug>/`; the old `/projects/…`
 addresses are not kept, as the owner chose. The next ADR is `014`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-057 and DDR-059 to DDR-075. The next DDR is
-`076`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-057 and DDR-059 to DDR-076. The next DDR is
+`077`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
-Thirty-two accepted records are superseded or amended **in part**, and each says so at the top and again
+Thirty-three accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
 
 * **DDR-010** keeps its whole structure and every pattern in it, including the decorative rule it
@@ -827,6 +835,8 @@ at the section concerned:
   the page's top and foot into the introduction and the last section.
 * **DDR-040** keeps its proportions. DDR-072 puts the question that introduces the controls in
   the space above them, `--space-controls`, and the controls follow it at the flow step.
+* **DDR-072** keeps its question and everything it decides about it. DDR-076 puts a line below it
+  that says what the controls are for, and the controls follow that line at the flow step.
 * **DDR-021** keeps its capsule, its two lights, its ratio and its narrow width. DDR-040 takes its
   wide width: `13rem` becomes the Make file's `clamp(180px, 22vw, 300px)`, in rem bounds. DDR-075
   admits one more element out of the flow, the contents bar's menu panel.

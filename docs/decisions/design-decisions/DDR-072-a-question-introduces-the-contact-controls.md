@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-28
 
+**Amended by DDR-076 in one respect**: since #223 a line below the question says what the
+controls are for, and the controls follow that line at the flow step rather than the question.
+Everything else here stands.
+
 **Amends DDR-040 in one respect**: the design's space above the controls, `--space-controls`, now
 stands above the question that introduces them, and the controls follow the question at the text
 column's flow step. Nothing else about DDR-040 changes. It **adds no token**: the question reads the
@@ -39,7 +43,7 @@ summary rather than as something new.
 | Weight    | `--font-weight-semibold`, 600           | A step heavier than the positioning line's medium, so the two accent lines are not the same line twice. |
 | Ink       | `--color-accent`, `#4f46e5`             | Sets it apart from the summary's semibold phrase, which is in the body's ink. |
 | Above it  | `--space-controls`, 27px narrow, 36px wide | The design's space above the controls, per DDR-040, now above the question. |
-| Below it  | `--space-flow`, 16px                    | The column's own step, so the question reads with the controls it introduces. |
+| Below it  | `--space-flow`, 16px                    | The column's own step, so the question reads with the controls it introduces. Since DDR-076 the question's follow-up line stands here, 4px below it, and the controls follow that line at this step. |
 | On paper  | Not printed                             | The pills print as words, not links, so the question has nothing to lead into. The controls take back `--space-controls` above them, so the sheet is as it was. |
 
 **The accent on the introduction's band passes WCAG 1.4.3.** It is 5.87:1 on the page's surface,
