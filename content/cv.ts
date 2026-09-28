@@ -88,9 +88,13 @@ import type { Cv } from './types';
  * the owner's knowledge base, and every project gained how it was built, which its view shows
  * under a heading of its own, per DDR-078. No project's name changed and no metric was added, so it
  * did not move the CV.
+ *
+ * It moved again with #231, because the Stock Portfolio Viewer gained its business case, which its
+ * view lets a reader switch to, per DDR-079. It states no fact ADR-005 lists, so it did not move
+ * the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'd6ec07eb9e78913959492e5295dbf3306b8db0eb4094d6803ef389328b11a970',
+  contentDigest: '560f094b6577442aa985456fea42fabb02e2c06266be4a57f8830ae71367504e',
 };

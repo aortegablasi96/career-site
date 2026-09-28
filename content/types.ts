@@ -311,6 +311,12 @@ export interface RoleView {
   neighbour: (direction: string, company: string, role: string) => string;
 }
 
+/** One item of a project's business case, per DDR-079: its label, such as "01 — Problem", and its text. */
+export interface BusinessCaseItem {
+  label: string;
+  text: string;
+}
+
 /** A project in the projects section, per the Content Brief on #25. */
 export interface Project {
   /** The project's name, which is the entry's heading, per DDR-006, and its view's `h1`. */
@@ -360,6 +366,14 @@ export interface Project {
    */
   howBuilt?: readonly (readonly (string | Strong)[])[];
   /**
+   * Why the project exists, what the owner decided and what came of it: the "Summary of Business
+   * Case" from the owner's knowledge base, as labelled items in their order, per #231 and DDR-079.
+   * A view whose project has one lets the reader switch between it and the overview, which is the
+   * description and `howBuilt`. Left out where the owner has supplied none, and a view without it
+   * shows no switch.
+   */
+  businessCase?: readonly BusinessCaseItem[];
+  /**
    * The repository first, then a live version where one exists. Each link is labelled rather than
    * showing its address, which prints after it on paper, per DDR-006.
    */
@@ -394,6 +408,15 @@ export interface ProjectView {
   back: string;
   /** The heading above how the project was built, per DDR-078. A project without `howBuilt` shows it nowhere. */
   howBuilt: string;
+  /**
+   * The name of the switch between a project's two accounts, per DDR-079. Only assistive
+   * technology is told it: the two options beside each other say what the switch does.
+   */
+  accounts: string;
+  /** The switch's first option: the description and how the project was built. */
+  overview: string;
+  /** The switch's second option: the project's business case. */
+  businessCase: string;
   /** The label above the technologies. */
   builtWith: string;
   /**

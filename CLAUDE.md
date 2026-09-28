@@ -748,7 +748,7 @@ ADR-001-short-title.md
 DDR-001-short-title.md
 ```
 
-ADR-001 to ADR-013 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
+ADR-001 to ADR-014 are accepted, with ADR-004 superseding the part of ADR-002 that rules out a
 separate CV file, and ADR-005 superseding the part of ADR-004 that makes the CV a PDF saved from the
 page's print output; the rest of both records stands. ADR-006 supersedes nothing: it refines
 ADR-001's styling boundary by saying which literal values a component stylesheet may write: `0`,
@@ -766,10 +766,12 @@ is a route rather than a file, so it does not go through `asset()`, which amends
 extends ADR-010 to the roles, at `/experience/<slug>`, and supersedes nothing. ADR-012 amends
 ADR-010's address: since #202 the projects section is "Portfolio", at `#portfolio`, each view is at
 `/portfolio/<slug>` and its pictures are in `public/portfolio/<slug>/`; the old `/projects/…`
-addresses are not kept, as the owner chose. The next ADR is `014`.
+addresses are not kept, as the owner chose. ADR-014 supersedes nothing: a project view's switch,
+per DDR-079, holds its state in native radio buttons that the stylesheet reads, so the view gains no
+Client Component and `ContentsBar` is still the one. The next ADR is `015`.
 
-The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-057 and DDR-059 to DDR-078. The next DDR is
-`079`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
+The accepted DDRs are DDR-010, DDR-011, DDR-013 to DDR-015 and DDR-017 to DDR-057 and DDR-059 to DDR-079. The next DDR is
+`080`. Status values are `Proposed`, `Accepted`, `Superseded`, or `Deprecated`.
 
 Thirty-four accepted records are superseded or amended **in part**, and each says so at the top and again
 at the section concerned:
@@ -839,6 +841,8 @@ at the section concerned:
   one. DDR-053 adds its middle: a gallery of further pictures and videos, between the introduction
   and that foot, which a view whose project has no gallery media does not draw at all. DDR-078
   adds how the project was built, under "How I built it", between the description and "Built with".
+  DDR-079 adds a switch under the name, where the project has a business case, between that
+  overview and the business case.
 * **DDR-014** keeps its two breakpoints, its mobile-first ordering, its markup-order rule, its hover
   rule and its rule that nothing scrolls horizontally from 320px. DDR-039 lets the wide breakpoint
   redefine one token, `--rhythm-scale`, and DDR-049 a second, `--contents-bar-title-row`. DDR-040 takes `--page-padding-block` off the narrow
@@ -1755,6 +1759,20 @@ same form, as the owner asked. The link
 preview is still the description alone. The page never shows a description, so its markup and the
 printed CV are unchanged. Swept every 10px from 300px to 900px on all four views at both text
 sizes: nothing scrolls sideways.
+
+**#231 has landed, as DDR-079 and ADR-014: a view can switch between a project's overview and its
+business case.** `businessCase` on a `Project` is the owner's "Summary of Business Case", a list of
+`BusinessCaseItem`s, each a `label` and a `text`. Only the Stock Portfolio Viewer has one. Its view
+shows a switch under the name, "Overview" and "Business case" (`accounts`, `overview` and
+`businessCase` in `projects.view`), which shows the business case as a `dl` in place of the
+description and "How I built it"; everything else on the view stays where it is. A view without a
+business case shows no switch, and its markup is as it was. The switch is a native radio group, per
+ADR-014: the radios take no room, each `label` is drawn as a segment of one pill, and
+`.text:has(.caseChoice:checked)` in `project-view.module.css` decides which account shows, so it
+works without script and adds no Client Component. The link preview is still the description, and
+the page and the printed CV are unchanged. Swept every 10px from 300px to 900px on all four views,
+in both accounts, at both text sizes: nothing scrolls sideways, and the options wrap onto two rows
+only at 200% text below 490px.
 
 **#115 has landed, as DDR-035: every link and control answers the pointer.** A contact pill takes
 `--color-surface-hover` and `--color-border-accent-hover`, the CV control darkens to

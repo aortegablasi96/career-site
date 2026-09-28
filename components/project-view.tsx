@@ -1,5 +1,10 @@
 import Link from 'next/link';
-import type { GalleryItem, Project, ProjectView as ProjectViewStrings } from '@/content/types';
+import type {
+  BusinessCaseItem,
+  GalleryItem,
+  Project,
+  ProjectView as ProjectViewStrings,
+} from '@/content/types';
 import { Icon } from './icon';
 import { Media, projectHref } from './projects';
 import styles from './project-view.module.css';
@@ -34,6 +39,63 @@ function Gallery({ title, items }: { title: string; items: readonly GalleryItem[
         ))}
       </ul>
     </>
+  );
+}
+
+/**
+ * The switch between a project's two accounts, per DDR-079 and ADR-014: the overview, which is its
+ * description and how it was built, and its business case.
+ *
+ * It is a native radio group, because choosing one of two accounts is what a radio group is: the
+ * browser holds which is chosen, assistive technology announces the group's name, each option and
+ * which is checked, and the keyboard reaches the group with Tab and moves between the two with the
+ * arrow keys. So it needs no script, works before hydration and without script at all, and adds no
+ * Client Component, per ADR-014. The stylesheet draws each option's label as a segment of one pill
+ * and shows the account whose option is checked; the radio itself takes no room.
+ *
+ * The overview is checked in the markup, so a view opens on it, as it read before #231. One view
+ * is one page, so the group's `name` need only be unique within it.
+ */
+function Accounts({
+  name,
+  overview,
+  businessCase,
+}: {
+  /** The group's accessible name. */
+  name: string;
+  overview: string;
+  businessCase: string;
+}) {
+  return (
+    <div role="radiogroup" aria-label={name} className={styles.switch}>
+      <label className={styles.option}>
+        <input type="radio" name="account" className={styles.choice} defaultChecked />
+        {overview}
+      </label>
+      <label className={styles.option}>
+        <input type="radio" name="account" className={`${styles.choice} ${styles.caseChoice}`} />
+        {businessCase}
+      </label>
+    </div>
+  );
+}
+
+/**
+ * A project's business case, per DDR-079: each of the owner's labelled items, in their order, as a
+ * term and its description. The labels are not headings, so the view's outline is the same in both
+ * accounts but for "How I built it", which the overview carries. The stylesheet hides it until its
+ * option is checked.
+ */
+function BusinessCase({ items }: { items: readonly BusinessCaseItem[] }) {
+  return (
+    <dl className={styles.businessCase}>
+      {items.map(({ label, text }) => (
+        <div key={label} className={styles.caseItem}>
+          <dt className={styles.caseLabel}>{label}</dt>
+          <dd className={styles.caseText}>{text}</dd>
+        </div>
+      ))}
+    </dl>
   );
 }
 
@@ -101,7 +163,9 @@ function Neighbour({
  * per ADR-002, and the words around it are the view's strings beside the projects. The name is the
  * view's one `h1`, and the label above the technologies is an `h2`, so the view's outline is the
  * project and what it is built with. Where the project says how it was built, that follows the
- * description under an `h2` of the same kind, per DDR-078.
+ * description under an `h2` of the same kind, per DDR-078. Where the project has a business case,
+ * a switch under the name lets the reader read that in place of the description and how it was
+ * built, per DDR-079; everything else on the view stays where it is.
  *
  * The first link is the repository and is filled; a live site, where there is one, follows it
  * outlined, as the design draws the two. Both leave the site for another one the reader means to
@@ -115,10 +179,13 @@ function Neighbour({
  * picture on each view, whether or not the reader goes back.
  */
 export function ProjectView({
-  project: { name, media, caption, gallery, technologies, description, howBuilt, links },
+  project: { name, media, caption, gallery, technologies, description, howBuilt, businessCase, links },
   strings: {
     back,
     howBuilt: howBuiltTitle,
+    accounts: accountsName,
+    overview: overviewWord,
+    businessCase: businessCaseWord,
     builtWith,
     gallery: galleryTitle,
     newTab,
@@ -139,6 +206,28 @@ export function ProjectView({
   /** The project the page shows after this one, if this is not the last. */
   next?: Project;
 }) {
+  const overview = (
+    <>
+      <p className={styles.description}>{description}</p>
+      {/* How the project was built, per DDR-078, where the owner's knowledge base says: one
+          paragraph or several, each with the owner's bold phrases as `strong`, as the
+          introduction's summary sets them. A project without it shows neither the heading nor
+          an empty paragraph. */}
+      {howBuilt && howBuilt.length > 0 && (
+        <>
+          <h2 className={styles.label}>{howBuiltTitle}</h2>
+          {howBuilt.map((paragraph, index) => (
+            <p key={index} className={styles.howBuilt}>
+              {paragraph.map((part, partIndex) =>
+                typeof part === 'string' ? part : <strong key={partIndex}>{part.strong}</strong>,
+              )}
+            </p>
+          ))}
+        </>
+      )}
+    </>
+  );
+
   return (
     <article className={styles.view}>
       <Link href={backHref} className={styles.back} prefetch={false}>
@@ -150,22 +239,18 @@ export function ProjectView({
       <div className={styles.columns}>
         <div className={styles.text}>
           <h1 className={styles.name}>{name}</h1>
-          <p className={styles.description}>{description}</p>
-          {/* How the project was built, per DDR-078, where the owner's knowledge base says: one
-              paragraph or several, each with the owner's bold phrases as `strong`, as the
-              introduction's summary sets them. A project without it shows neither the heading nor
-              an empty paragraph. */}
-          {howBuilt && howBuilt.length > 0 && (
+          {businessCase && businessCase.length > 0 ? (
             <>
-              <h2 className={styles.label}>{howBuiltTitle}</h2>
-              {howBuilt.map((paragraph, index) => (
-                <p key={index} className={styles.howBuilt}>
-                  {paragraph.map((part, partIndex) =>
-                    typeof part === 'string' ? part : <strong key={partIndex}>{part.strong}</strong>,
-                  )}
-                </p>
-              ))}
+              <Accounts
+                name={accountsName}
+                overview={overviewWord}
+                businessCase={businessCaseWord}
+              />
+              <div className={styles.overview}>{overview}</div>
+              <BusinessCase items={businessCase} />
             </>
+          ) : (
+            overview
           )}
           <h2 className={styles.label}>{builtWith}</h2>
           <ul className={styles.technologies}>
