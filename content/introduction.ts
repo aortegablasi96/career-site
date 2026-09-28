@@ -12,6 +12,10 @@ import type { Introduction } from './types';
  * gives, and an availability sentence — and the relocation note, which the owner removed. The
  * greeting before the name is the owner's own, and is on screen only, per DDR-056.
  *
+ * Since #210 the positioning line is the owner's own wording, capitals included, on Epic #209: it
+ * names SaaS products beside AI, and connected products where it said IoT, each of which the
+ * owner's roles and projects in the knowledge base carry.
+ *
  * Each contact carries two strings, per DDR-029: the label the pill shows, which names the service
  * rather than the address, and the address itself, which the footer shows and which is what the
  * printed CV carries. The labels are the design's own words, and each names a service a reader
@@ -29,7 +33,7 @@ export const introduction: Introduction = {
   photo: { file: '/home/andreu-ortega-blasi-photo.webp', alt: 'Andreu Ortega Blasi' },
   greeting: 'Hi there, I’m',
   name: 'Andreu Ortega Blasi',
-  positioning: 'Product manager for AI and IoT products',
+  positioning: 'Product Manager building AI, SaaS and connected products',
   location: 'Lugano, Switzerland',
   summary:
     'I’m a product manager focused on building AI and IoT products that turn complex technology into useful, scalable solutions. A passionate strategist and ambitious hard worker, I would rather work on high-potential but little-known solutions than on settled, easy-going ones.',

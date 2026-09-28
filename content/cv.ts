@@ -66,9 +66,12 @@ import type { Cv } from './types';
  * It moved again with #202, because the projects section is now called Portfolio, per ADR-012, and
  * each project's picture moved from `projects/<slug>/` to `portfolio/<slug>/`. A section's name is
  * not a fact ADR-005 lists as shared, so it did not move the CV.
+ * It moved again with #210, because the positioning line now reads "Product Manager building AI,
+ * SaaS and connected products". ADR-005 leaves a CV's summary and positioning free, so it did not
+ * move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '9946dee8465f865daec1358f333619834ddd4ba8e5d4cb841b779f389e1cbfae',
+  contentDigest: '8b5217a94cdda4a4339de32616fb31f443da61f4101a295ed5de63725a71a001',
 };
