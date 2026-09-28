@@ -309,14 +309,15 @@
   background-color: var(--color-surface-hover);
 }
 
-/* The links follow the account too: while the business case is shown, the view's links give way to
-   the full business case's download, in the same place and as the same filled pill. It follows `.links`, whose `display` it
+/* "Built with", the technologies and the links are the overview's, as the owner asked on #231:
+   while the business case is shown they are hidden, and the full business case's download stands
+   where the links did, as the same filled pill. `.caseLinks` follows `.links`, whose `display` it
    overrides at the same specificity. */
 .caseLinks {
   display: none;
 }
 
-.text:has(.caseChoice:checked) .overviewLinks {
+.text:has(.caseChoice:checked) .overviewOnly {
   display: none;
 }
 

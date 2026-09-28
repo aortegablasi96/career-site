@@ -53,7 +53,8 @@ function Gallery({ title, items }: { title: string; items: readonly GalleryItem[
  * arrow keys. So it needs no script, works before hydration and without script at all, and adds no
  * Client Component, per ADR-014. The stylesheet draws each option's label as a segment of one pill
  * and shows the account whose option is checked; the radio itself takes no room. While the business
- * case is shown, the view's links give way to the full business case's download, by the same rule.
+ * case is shown, "Built with", the technologies and the links are hidden with the overview, and the
+ * full business case's download takes the links' place, by the same rule.
  *
  * The overview is checked in the markup, so a view opens on it, as it read before #231. One view
  * is one page, so the group's `name` need only be unique within it.
@@ -209,6 +210,10 @@ export function ProjectView({
   /** The project the page shows after this one, if this is not the last. */
   next?: Project;
 }) {
+  /** A class for a part of the overview, which the business case hides where the project has one. */
+  const overviewOnly = (className: string) =>
+    businessCase ? `${className} ${styles.overviewOnly}` : className;
+
   const overview = (
     <>
       <p className={styles.description}>{description}</p>
@@ -255,15 +260,17 @@ export function ProjectView({
           ) : (
             overview
           )}
-          <h2 className={styles.label}>{builtWith}</h2>
-          <ul className={styles.technologies}>
+          {/* "Built with", its tags and the links belong to the overview where there is a business
+              case, per DDR-079, so the stylesheet hides them while it is shown. */}
+          <h2 className={overviewOnly(styles.label)}>{builtWith}</h2>
+          <ul className={overviewOnly(styles.technologies)}>
             {technologies.map((technology) => (
               <li key={technology} className={styles.tag}>
                 {technology}
               </li>
             ))}
           </ul>
-          <ul className={businessCase ? `${styles.links} ${styles.overviewLinks}` : styles.links}>
+          <ul className={overviewOnly(styles.links)}>
             {links.map(({ text, href }, index) => (
               <li key={href}>
                 <a

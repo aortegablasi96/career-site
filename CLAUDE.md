@@ -1766,9 +1766,9 @@ business case.** `businessCase` on a `Project` holds the owner's "Summary of Bus
 `public/portfolio/<slug>/`. Only the Stock Portfolio Viewer has one. Its view
 shows a switch under the name, "Overview" and "Business case" (`accounts`, `overview` and
 `businessCase` in `projects.view`), which shows the business case as a `dl` in place of the
-description and "How I built it", and replaces the links with one pill, "Download Full Business
-Case", which downloads the file as the CV control does; everything else on the view stays where it
-is. A view without a
+description and "How I built it", hides "Built with" and the technologies, and replaces the links
+with one pill, "Download Full Business Case", which downloads the file as the CV control does; the
+picture, its caption and the neighbouring projects stay where they are. A view without a
 business case shows no switch, and its markup is as it was. The switch is a native radio group, per
 ADR-014: the radios take no room, each `label` is drawn as a segment of one pill, and
 `.text:has(.caseChoice:checked)` in `project-view.module.css` decides which account shows, so it

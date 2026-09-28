@@ -6,8 +6,9 @@ Date: 2026-09-28
 
 **Adds to DDR-050's introduction and DDR-078**: where a project has a business case, its view
 shows a switch under the name. The switch lets the reader read the business case in place of the
-description and "How I built it", and read them again. While it does, the view's links give way to
-a pill that downloads the full business case. Everything DDR-050, DDR-052, DDR-053 and
+description and "How I built it", and read them again. While it does, "Built with", the
+technologies and the links are hidden too, and a pill that downloads the full business case stands
+where the links did. Everything DDR-050, DDR-052, DDR-053 and
 DDR-078 decide stands, and a view whose project has no business case is unchanged. It **adds no
 token**, and it supersedes nothing. ADR-014 records how the switch holds its state.
 
@@ -26,6 +27,8 @@ The owner chose two things on #231:
 * **The download:** while the business case is shown, the pill below "Built with" becomes "Download
   Full Business Case", in the owner's words, and downloads the full business case, a one-page PDF
   the owner put beside the project's pictures.
+* **What else is the overview's:** "Built with" and the technologies, so the business case shows
+  only its items and its download. The owner asked for both of these while reviewing #232.
 
 The story left the switch's look, its placement and how it announces its state to the UI Designer.
 It is the site's first control that changes what a page shows without leaving it.
@@ -47,10 +50,11 @@ Nothing else on the view moves or changes.
 | Keyboard focus    | The focused option's label draws the site's focus outline, `--focus-outline-width` in `--color-focus` at `--focus-outline-offset` | The radio itself takes no room, so its label draws the ring every control draws. |
 | The radio         | `appearance: none`, 0 by 0, no margin              | The label is what is seen and pointed at. The radio stays the control, so nothing about how it is reached or announced changes. |
 | First shown       | The overview                                     | A view opens as it read before #231. |
-| The business case | A `dl`: each item a `dt` (its label) and a `dd` (its text), in the owner's order | Label and text are a term and its description. The labels are not headings, so the outline is one `h1` and `h2`s in both accounts, with no skipped level. |
+| The business case | A `dl`: each item a `dt` (its label) and a `dd` (its text), in the owner's order | Label and text are a term and its description. The labels are not headings, so neither account skips a heading level: the business case's outline is its `h1` alone. |
 | An item's label   | Bold capitals at `--font-size-x-small`, `--letter-spacing-loose`, in the accent | Set as the page's other labels in the accent are, such as a timeline's dates. The capitals are drawn, so the string is the owner's "01 — Problem". |
 | An item's text    | The body's size and ink at `--line-height-prose`, 4px below its label | Set as the description it stands in for. |
 | Between items     | `--space-flow`, 16px                             | The column's step between two blocks of running text. |
+| "Built with" and the technologies, while the business case is shown | Hidden | They are the overview's, as the owner asked. The business case says what the product is for and what the owner did; what it was built with is the overview's. |
 | The links, while the business case is shown | Replaced by one pill, "Download Full Business Case", with the download mark | The owner asked for the pill to change. It is the view's filled control (`.primary`), in the links' place, so only its words and mark change. |
 | The download      | A plain anchor with `download`, through `asset()`, in the same tab | As the CV control downloads, per ADR-004: a file this site carries, which needs no script and lands in the downloads folder. |
 | The file          | `public/portfolio/<slug>/<slug>-business-case.pdf`, 4 KB | Beside the project's pictures, per ADR-012. Named for what lands in the reader's downloads folder, in the site's lowercase, as the CV is. |
@@ -76,7 +80,7 @@ Measured on #231 in Edge (640 measurements):
 * **Wrapping:** the two options share one line everywhere but at 200% text below 490px. At 300px
   "Business case" also wraps to two lines, inside its label.
 * **Headings:** in the overview, one `h1`, then "How I built it" and "Built with". In the business
-  case, one `h1` and "Built with".
+  case, the `h1` alone, and no technology is shown.
 * **The pills:** in the overview only "Source code" is shown, and in the business case only
   "Download Full Business Case". Neither's words run out of it at any width.
 * **Other views:** no other view has a radio or a download.
@@ -136,7 +140,8 @@ Benefits:
 
 Tradeoffs:
 * A business case replaces "How I built it" while shown, so a reader reads the two accounts one at
-  a time, as the owner chose. The source code is not offered beside the business case.
+  a time, as the owner chose. The source code and the technologies are not shown beside the
+  business case.
 * The full business case is the owner's document and is not checked against the page, as the CV
   is by its digest. It may say more than the summary, or say it differently.
 * The site now has a control that changes the page without navigating. The reader's choice is not

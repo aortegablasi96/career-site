@@ -199,6 +199,13 @@ describe('ProjectView', () => {
       expect(view).toMatch(/<input [^>]*class="[^"]*caseChoice[^"]*"/);
     });
 
+    // The owner asked on #231 for "Built with" and its tags to be the overview's alone.
+    it('hides "Built with" and the technologies with the overview', () => {
+      expect(view).toMatch(new RegExp(`<h2 class="[^"]*overviewOnly[^"]*">${projects.view.builtWith}</h2>`));
+      expect(view).toMatch(/<ul class="[^"]*technologies[^"]*overviewOnly[^"]*">/);
+      expect(render(numisBook!)).not.toContain('overviewOnly');
+    });
+
     // The radio takes no room and draws nothing, and its label draws the focus it cannot.
     it('draws each option as its label, focus included', () => {
       const choice = css.match(/\.choice\s*\{([^}]*)\}/)?.[1] ?? '';
@@ -237,13 +244,13 @@ describe('ProjectView', () => {
       const shown = text(view);
 
       expect(shown.indexOf(projects.view.downloadBusinessCase)).toBeGreaterThan(shown.indexOf('Source code'));
-      expect(view).toMatch(/<ul class="[^"]*links[^"]*overviewLinks[^"]*">/);
+      expect(view).toMatch(/<ul class="[^"]*links[^"]*overviewOnly[^"]*">/);
       expect(view).toMatch(/<ul class="[^"]*links[^"]*caseLinks[^"]*">/);
       expect(css.match(/\.caseLinks\s*\{([^}]*)\}/)?.[1]).toContain('display: none');
       // Hidden by default only if it comes after `.links`, whose `display: flex` it overrides at the
       // same specificity.
       expect(css.search(/^\.caseLinks\s*\{/m)).toBeGreaterThan(css.search(/^\.links\s*\{/m));
-      expect(css).toMatch(/\.text:has\(\.caseChoice:checked\) \.overviewLinks \{\s*display: none;/);
+      expect(css).toMatch(/\.text:has\(\.caseChoice:checked\) \.overviewOnly \{\s*display: none;/);
       expect(css).toMatch(/\.text:has\(\.caseChoice:checked\) \.caseLinks \{\s*display: flex;/);
     });
 
@@ -252,7 +259,7 @@ describe('ProjectView', () => {
         const markup = render(project);
 
         expect(text(markup)).not.toContain(projects.view.downloadBusinessCase);
-        expect(markup).not.toContain('overviewLinks');
+        expect(markup).not.toContain('overviewOnly');
         expect(markup).not.toContain('download=""');
       }
     });
