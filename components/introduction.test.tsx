@@ -481,9 +481,13 @@ describe('introduction styles', () => {
   });
 
   // DDR-073: a mark shown alone takes the square a label's line would, so the pill is as tall as
-  // the labelled pills beside it, and the small step on every side makes it a circle.
-  it('draws a pill that shows its mark alone as a circle the height of the others, per DDR-073', () => {
-    expect(rule('.markOnly')).toMatch(/padding-inline:\s*var\(--space-small\);/);
+  // the labelled pills beside it, and it keeps their padding with the GitHub pill's content width,
+  // so it is exactly as wide as the GitHub pill, with the mark centred.
+  it('draws a pill that shows its mark alone as tall as the others and as wide as GitHub’s, per DDR-073', () => {
+    expect(rule('.markOnly')).toMatch(/inline-size:\s*var\(--contact-mark-pill-width\);/);
+    expect(rule('.markOnly')).toMatch(/justify-content:\s*center;/);
+    expect(rule('.markOnly')).not.toMatch(/padding/);
+    expect(rule('.contact,\n.cv')).toMatch(/padding-inline:\s*var\(--space-medium\);/);
     expect(rule('.markOnly svg')).toMatch(/inline-size:\s*var\(--contact-mark-size\);/);
     expect(rule('.markOnly svg')).toMatch(/block-size:\s*var\(--contact-mark-size\);/);
     expect(rule('.contact,\n.cv')).toMatch(/padding-block:\s*var\(--space-small\);/);

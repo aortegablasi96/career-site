@@ -40,9 +40,11 @@ and four pill controls — the three contact addresses and the "Get my CV" downl
 contact pill reads "LinkedIn" or "GitHub", per DDR-029, and the address it links to is written out
 in the footer instead. A `ContactLink` therefore carries both strings: `label`, which the pill
 shows, and `text`, which is the address and which only the footer shows. **Since #215, per DDR-073,
-the email pill shows Gmail's M alone**, in a 37.5px circle as tall as the other pills: `markOnly`
-on its `ContactLink` renders the mark in `--contact-mark-size`, the square of a label's line, with
-`--space-small` on every side, and makes its `label`, "Email me", the link's `aria-label` rather
+the email pill shows Gmail's M alone**, centred in a pill exactly as wide as the GitHub pill:
+`markOnly` on its `ContactLink` renders the mark in `--contact-mark-size`, the square of a label's
+line, sets the pill's content to `--contact-mark-pill-width` (the GitHub pill's content, whose label
+is a measured 3.333 of the step, to measure again if that label, step, weight or face changes), and
+makes its `label`, "Email me", the link's `aria-label` rather
 than its text. On paper it prints the M alone.
 
 **Since #171, per DDR-056, "Hi there, I’m" stands before the name**, on screen only, and the two
@@ -858,7 +860,7 @@ at the section concerned:
 * **DDR-022** keeps its ten steps and its floor. DDR-050 adds one size that is not a step, a project
   view's 41.6px title, as the role `--font-size-project-title`.
 * **DDR-044** keeps every pill, fill, mark and label it decides, but for DDR-073's email pill,
-  which is a circle with Gmail's M alone, drawn in the square of a label's line. DDR-047 takes the GitHub pill's
+  which shows Gmail's M alone, drawn in the square of a label's line. DDR-047 takes the GitHub pill's
   hover fill: GitHub's Gray 5 barely changed the pill, so it is now a lighter grey in GitHub's hue.
 
 `Superseded` are DDR-001 to DDR-009, DDR-012, DDR-016 and DDR-058:

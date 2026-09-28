@@ -12,9 +12,9 @@ email pill's label is now its accessible name instead. The LinkedIn and GitHub p
 visible labels. The footer is still the one place an address is written out, and it still prints.
 
 **Amends DDR-044 in one respect**: the email pill is still Gmail's light button, with the M in its own
-four colours, but it is a circle rather than a pill with a label. Its mark is drawn in a square
-the height of a label's line, `--contact-mark-size`, rather than at 1em. DDR-044's rule that no mark
-is recoloured or redrawn stands.
+four colours, and it keeps the pill's shape and padding, but it carries no label. Its mark is drawn
+in a square the height of a label's line, `--contact-mark-size`, rather than at 1em. DDR-044's rule
+that no mark is recoloured or redrawn stands.
 
 ## Context
 
@@ -29,23 +29,28 @@ beside it.
 
 ## Decision
 
-**The email pill shows Gmail's M alone, in a circle as tall as the other pills, and "Email me" is
-its accessible name.**
+**The email pill shows Gmail's M alone, centred in a pill exactly as wide as the GitHub pill and as
+tall as every pill, and "Email me" is its accessible name.**
 
 * **The mark takes the label line's square.** `--contact-mark-size` is `--font-size-x-small` times
   `--line-height-body`, 19.5px at the default text size. The mark keeps its own proportions inside it,
   19.5px wide and about 14.6px tall, in its own colours.
-* **The circle is DDR-027's padding, the same on every side.** `--space-small`, 8px, above, below and
-  either side, with the 1px border, makes the pill 37.5 by 37.5px. The pill radius draws a circle.
-  It is exactly as tall as the LinkedIn and GitHub pills at every text size: 37.5px at the default
-  size and 73px at 200%.
+* **The pill is exactly as wide as the GitHub pill.** It keeps DDR-027's padding, as every pill does,
+  and its content is `--contact-mark-pill-width`: the GitHub pill's own content, which is its 1em
+  mark, the `--space-small` gap and its label. The label, "GitHub" in DM Sans Medium, is 3.333 times
+  the pill's step, measured on the live site at 13px, 26px and 130px. Every part is in rem, so the
+  two pills stay equal as text grows. Applied to the live page, the two measured within 0.013px of
+  each other at the default size and at twice it, and the same height.
+* **How it got there.** The first build drew a circle, 37.5px, with `--space-small` on every side. The
+  owner asked for it to be a bit wider, as the other pills are, and then for it to be exactly as wide
+  as the GitHub pill.
 * **The accessible name is "Email me"**, the wording the owner approved on #175, as `aria-label` on
   the link. The owner's answer on #215 asked only for the logo to show. This keeps their approved
   wording where only assistive technology meets it. A screen reader announces "Email me, link", and
   the link still opens the mail client, in the same tab. `markOnly` on a `ContactLink` says which
   pill shows its mark alone. It is set only on the email contact.
 * **Hover and focus are unchanged**: Google's grey state layer, per DDR-035 and DDR-044, and the focus
-  outline around the whole circle.
+  outline around the whole pill.
 * **On paper the pill prints its mark alone**, which is what it shows on screen: the M on a line of
   its own above "LinkedIn" and "GitHub". The footer prints the address, once.
 
@@ -64,13 +69,30 @@ Measured on #215 against the tree before, in Edge at every 10px from 300px to 90
 
 ## Alternatives Considered
 
-### Keep the pill's shape and padding, with the mark alone inside
+### The mark alone inside, at 1em
 
 Pros:
 * No new token.
 
 Cons:
-* The pill shrinks to 31px tall beside 37.5px pills and is 47px wide: neither a pill nor a circle.
+* The pill shrinks to 31px tall beside 37.5px pills, and the mark is 13px wide.
+
+### A circle, with the small step on every side
+
+Pros:
+* The smallest control that keeps the other pills' height: 37.5 by 37.5px.
+
+Cons:
+* It is a different shape from the other three controls. The owner saw it on #215 and asked for the
+  pill to be a bit wider, as the others are.
+
+### The labelled pills' padding alone, about 53.5px wide
+
+Pros:
+* Needs no measured width: the mark and the padding give the size.
+
+Cons:
+* It is narrower than every other pill. The owner asked for it to be exactly the GitHub pill's width.
 
 ### A visually hidden "Email me" inside the pill
 
@@ -100,11 +122,12 @@ Tradeoffs:
 * A sighted reader who does not recognise Gmail's M loses the word that named the control. Speech
   input users must know to say "Email me", which nothing on the pill shows (WCAG 2.5.3 asks the name
   to contain the visible label, and there is none, so it is met trivially but gives no hint).
-* The email pill is a different shape from the other three controls.
-
 Risks:
 * `--contact-mark-size` assumes the pill's label is at `--font-size-x-small` and the body's leading.
-  If either changes, the circle stays the height of the others only if the token moves with them.
+  If either changes, the pill stays the height of the others only if the token moves with them.
+* `--contact-mark-pill-width` holds a measured width of the GitHub label. If that label, the pills'
+  step, their weight or their face changes, the width must be measured again, or the two pills drift
+  apart. `app/tokens.test.ts` holds the label to "GitHub", so a change to it fails the suite.
 
 ## Related Documents
 

@@ -311,13 +311,15 @@
   background-color: var(--color-surface-google-hover);
 }
 
-/* A pill that shows its mark alone, per DDR-073, is a circle the height of the pills beside it. The
-   mark takes the square a label's line would have taken, so the pill keeps the labelled pills'
-   height, and the same small step on every side makes it exactly as wide as it is tall, which the
-   pill radius then draws round. The mark keeps its own proportions inside that square, in its own
-   colours. */
+/* A pill that shows its mark alone, per DDR-073, is exactly as wide as the GitHub pill and as tall as
+   every pill, padded as they are, with the mark centred in it: the owner asked on #215 for it to be
+   the GitHub pill's width. The width is the GitHub pill's content, from `--contact-mark-pill-width`,
+   so the two stay equal as text grows. The mark takes the square a label's line would have taken,
+   so the pill keeps the labelled pills' height, and keeps its own proportions inside that square,
+   in its own colours. */
 .markOnly {
-  padding-inline: var(--space-small);
+  justify-content: center;
+  inline-size: var(--contact-mark-pill-width);
 }
 
 .markOnly svg {
