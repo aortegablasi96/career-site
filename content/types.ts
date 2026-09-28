@@ -161,6 +161,12 @@ export interface Introduction {
    */
   invitation: string;
   /**
+   * The line below the question, per #223 and DDR-076, which says what the controls below it are
+   * for. It is on screen only, as the question is: on paper the pills are not links and the CV
+   * control is not printed.
+   */
+  callToAction: string;
+  /**
    * Each link shows its short label here and its address in the footer, per DDR-029. Neither is
    * printed twice: the pill prints its label with no address after it, and the footer prints the
    * address once.
