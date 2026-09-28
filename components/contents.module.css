@@ -26,6 +26,12 @@
  *
  * Paper draws no bar and this file writes no rule for that: app/globals.css hides every `nav` in
  * print, per DDR-015, which is the one of DDR-010's grounds that never needed answering.
+ *
+ * Below the wide breakpoint the links are behind a menu, per DDR-075, which supersedes DDR-010's
+ * refusal of the design's "Sections" toggle. The rules are written mobile-first, as every rule on
+ * the site is: the button and the panel it opens are the narrow bar, and the one query below that
+ * matches the wide breakpoint, or a reader without script, puts the links back in the bar's row and
+ * hides the button. So a reader who cannot open the menu is never shown one.
  */
 .contents {
   position: sticky;
@@ -75,8 +81,95 @@
   font-size: var(--font-size-x-small);
 }
 
-/* The links, at the right of the column, in a row of their own that wraps inside it. Where they
-   take more than one row, each row is set to the right, so they read as one group.
+/* The menu's button, per DDR-075: after the title, at the right of the column, which its auto
+   margin takes it to, and nothing but its mark — three lines while the menu is closed and a cross
+   while it is open. What it is called and whether the menu is open are `aria-label` and
+   `aria-expanded`, since the mark says neither in words.
+
+   The mark is `--contents-menu-icon-size`, 24px, and the padding the small step above and below
+   it, so the button is 24px wide and 40px tall: WCAG 2.5.8's 24 by 24 outright, inside the bar's
+   48px. It has no padding at its sides, so the mark ends at the column's edge as the title starts
+   at the other, and so the title has room to keep the button beside it at 200% text on a 320px
+   screen. It is in the
+   heading ink the title beside it takes, because it is the bar's one control on a phone, and it
+   takes the accent under the pointer and on focus, as a contents link does, per DDR-035, over the
+   same 150ms for a reader who has not asked for less motion. The base styles' focus outline
+   stays. */
+.menu {
+  display: inline-flex;
+  align-items: center;
+  margin-inline-start: auto;
+  padding-block: var(--space-small);
+  padding-inline: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-heading);
+  font-size: var(--contents-menu-icon-size);
+  cursor: pointer;
+}
+
+.menu:hover,
+.menu:focus-visible {
+  color: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .menu {
+    transition-property: color;
+    transition-duration: var(--hover-transition);
+  }
+}
+
+/* The links, in the menu's panel below the wide breakpoint, per DDR-075. The panel is not
+   displayed until the button says the menu is open, so the links are neither seen nor reached by
+   the keyboard or assistive technology while it is closed.
+
+   Open, it hangs from the bar's lower edge across the window, over the page rather than in the
+   flow: `position: absolute` against the bar, which is positioned already, so nothing below it
+   moves, the section the reader is in stays under the bar, and the mark on its link stays true.
+   components/stylesheets.test.ts admits it here and nowhere else, per DDR-075, as it admits the
+   bar's `sticky`. The markup order is the order on screen: the title, the button, then the links
+   below them.
+
+   It is on the page's opaque surface rather than the bar's 96%, because a blur cannot be drawn
+   inside the bar's own, and it closes with the bar's edge — the same hairline and shadow — so the
+   panel reads as the bar opened out. Its links stand one to a line from the column's left edge, at
+   body size, each padded by the small step above and below, so a link is a 38.5px row a finger can
+   find and the rows touch without overlapping. It is never taller than the window below the
+   clearance, and scrolls inside itself if it would be, which only enlarged text on a short screen
+   asks of it. */
+.list {
+  display: none;
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  max-block-size: var(--contents-menu-max-size);
+  overflow-y: auto;
+  margin: 0;
+  padding-block: var(--space-small);
+  padding-inline: var(--page-gutter);
+  list-style: none;
+  background-color: var(--color-surface);
+  border-block-end: 1px solid var(--color-rule);
+  box-shadow: var(--shadow-bar);
+  font-size: var(--font-size-medium);
+}
+
+.menu[aria-expanded='true'] + .list {
+  display: flex;
+}
+
+.list .link {
+  padding-block: var(--space-small);
+}
+
+/* From the wide breakpoint, and for a reader without script at any width, the bar is the bar
+   DDR-049 draws: no button, and the links at the right of the column, in a row of their own that
+   wraps inside it. Where they take more than one row, each row is set to the right, so they read as
+   one group. Without script the narrow bar lays them out below the title, which the clearance
+   counts for, per the `scripting` block in app/tokens.css.
 
    The column gap is the small step below the wide breakpoint and the design's 28px taken to the
    nearest step of DDR-013's scale, 32px, from it. The narrow gap is not a preference: at 320px with
@@ -87,23 +180,55 @@
    300px to 900px at either text size. The row gap is what keeps two wrapped links
    outside the circles WCAG 2.2's 2.5.8 measures its spacing exception with, as the row this bar
    replaces did, per DDR-027. The base styles indent every list; this one is set by its margin. */
-.list {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  margin-inline-start: auto;
-  column-gap: var(--space-small);
-  row-gap: var(--space-small);
-  padding-inline-start: 0;
-  list-style: none;
+@media (min-width: 48em), (scripting: none) {
+  .menu {
+    display: none;
+  }
+
+  .list {
+    display: flex;
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    max-block-size: none;
+    overflow-y: visible;
+    margin-inline-start: auto;
+    column-gap: var(--space-small);
+    row-gap: var(--space-small);
+    padding: 0;
+    background-color: transparent;
+    border-block-end: 0;
+    box-shadow: none;
+    font-size: var(--font-size-x-small);
+  }
+
+  .list .link {
+    padding-block: 0;
+  }
+
+  .bar .title {
+    flex-grow: 0;
+    flex-basis: auto;
+  }
 }
 
 /* The site's title, per DDR-049, in bold and in the heading ink, at the step a section's title
    takes from the wide breakpoint, so it reads as the bar's name rather than as one more label. Its
    line is 31.2px, which the bar's 48px holds. It is a paragraph, not a heading, because the page's
-   one `h1` is the owner's name, and not a link, because Home already returns to the top. */
+   one `h1` is the owner's name, and not a link, because Home already returns to the top.
+
+   Below the wide breakpoint it takes the room the menu's button leaves it, per DDR-075, and is
+   measured from nothing rather than from its whole line, so where the two do not fit on one row the
+   title's words wrap beside the button rather than the button wrapping below the title. At 200%
+   text from 320px to about 560px the title takes two lines, and the bar stays inside the scroll
+   clearance, which it would pass by 31px with the button on a row of its own. From the wide
+   breakpoint, and without script, the title is measured from its line again, as DDR-049 lays it
+   out beside the links. */
 .title {
+  flex-grow: 1;
+  flex-basis: 0;
   color: var(--color-text-heading);
   font-size: var(--font-size-x-large);
   font-weight: var(--font-weight-bold);

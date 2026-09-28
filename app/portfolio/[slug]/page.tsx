@@ -64,6 +64,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         label={contents.label}
         home={contents.home}
         title={contents.title}
+        menu={contents.menu}
         sections={sections}
         page={page}
       />

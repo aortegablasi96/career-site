@@ -1,7 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { useSyncExternalStore, type MouseEvent } from 'react';
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type FocusEvent,
+  type KeyboardEvent,
+  type MouseEvent,
+} from 'react';
+import { Icon } from './icon';
 import styles from './contents.module.css';
 
 /** Everything subscribed, so a change that is not a scroll or a resize can still be announced. */
@@ -184,6 +194,15 @@ function choose(event: MouseEvent): void {
 }
 
 /**
+ * Whether a click in the bar was on one of its links, which closes the menu, per DDR-075: the
+ * reader has chosen where to go, and the menu would otherwise stay open over the section they
+ * went to. A click on the button or the title is not one.
+ */
+export function choseLink(event: Pick<MouseEvent, 'target'>): boolean {
+  return event.target instanceof Element && event.target.closest('a') !== null;
+}
+
+/**
  * The server marks no link, not even Home, which is also what a reader without script keeps, per
  * DDR-042 and DDR-045.
  */
@@ -193,6 +212,19 @@ function currentSectionOnServer(): string | null {
 
 /**
  * The contents bar, per DDR-031, and the one Client Component on the site, per ADR-007.
+ *
+ * Below the wide breakpoint its links are behind a menu, per DDR-075, and ADR-013 lets it hold
+ * whether the menu is open. A button after the title opens and closes it and says which through
+ * `aria-expanded`, and the stylesheet draws exactly that: the links hang in a panel over the page
+ * while it is `true` and are not displayed while it is `false`. From the wide breakpoint, and for
+ * a reader without script, the stylesheet hides the button and lays the links out in the bar as
+ * before, whatever the state says. The menu closes when a link in it is chosen, on Escape, which
+ * hands focus back to the button, when the pointer goes down outside the bar, and when focus
+ * leaves the bar, so an open menu never covers what the reader has moved on to.
+ *
+ * The mark on the current section's link is unchanged: it is on the link whether the menu is open
+ * or not, so opening the menu shows it where the reader is, and it follows the page if the page
+ * scrolls while the menu is open.
  *
  * It exists for two things, both about scrolling: to make the scroll a contents link starts glide
  * rather than jump, per DDR-041, which ADR-008 lets it do; and to mark the link of the section the
@@ -230,12 +262,15 @@ export function ContentsBar({
   label,
   home,
   title,
+  menu,
   sections,
   page,
 }: {
   label: string;
   home: string;
   title: string;
+  /** The accessible name of the button that opens the links below the wide breakpoint. */
+  menu: string;
   sections: readonly { id: string; link: string }[];
   /** The route of the page the sections are on, when the bar is shown anywhere else. */
   page?: string;
@@ -246,16 +281,75 @@ export function ContentsBar({
     currentSectionOnServer,
   );
   const marked = page === undefined ? current : null;
+  const [open, setOpen] = useState(false);
+  const listId = useId();
+  const nav = useRef<HTMLElement>(null);
+  const button = useRef<HTMLButtonElement>(null);
+
+  // A pointer going down anywhere outside the bar closes an open menu, as it would close any
+  // panel that hangs over the page. Listened for only while the menu is open.
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const dismiss = (event: PointerEvent) => {
+      if (!(event.target instanceof Node) || !nav.current?.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener('pointerdown', dismiss);
+
+    return () => document.removeEventListener('pointerdown', dismiss);
+  }, [open]);
+
+  function click(event: MouseEvent) {
+    choose(event);
+
+    if (choseLink(event)) {
+      setOpen(false);
+    }
+  }
+
+  function keyDown(event: KeyboardEvent) {
+    if (open && event.key === 'Escape') {
+      setOpen(false);
+      button.current?.focus();
+    }
+  }
+
+  // Focus moving to something outside the bar, as Tab past the last link does. Focus that goes
+  // nowhere, as when the window loses it, is not a move, and a click outside is `dismiss`'s.
+  function blur(event: FocusEvent) {
+    if (event.relatedTarget instanceof Node && !nav.current?.contains(event.relatedTarget)) {
+      setOpen(false);
+    }
+  }
 
   return (
     <nav
+      ref={nav}
       aria-label={label}
       className={styles.contents}
-      onClick={choose}
+      onClick={click}
+      onKeyDown={keyDown}
+      onBlur={blur}
     >
       <div className={styles.bar}>
         <p className={styles.title}>{title}</p>
-        <ul className={styles.list}>
+        <button
+          ref={button}
+          type="button"
+          className={styles.menu}
+          aria-label={menu}
+          aria-expanded={open}
+          aria-controls={listId}
+          onClick={() => setOpen(!open)}
+        >
+          <Icon name={open ? 'close' : 'menu'} />
+        </button>
+        <ul id={listId} className={styles.list}>
           {[{ id: homeId, link: home }, ...sections].map(({ id, link }) => (
             <li key={id}>
               {page === undefined ? (

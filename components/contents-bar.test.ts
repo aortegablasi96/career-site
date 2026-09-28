@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
+  choseLink,
   currentSection,
   glide,
   glideStartTimeout,
@@ -428,5 +429,25 @@ describe('holdDestination', () => {
     expect(markedSection(ids)).toBe('experience');
     expect(window.addEventListener).not.toHaveBeenCalled();
     expect(window.setTimeout).not.toHaveBeenCalled();
+  });
+});
+
+// DDR-075: choosing a link in the open menu closes it, so it does not stay open over the section
+// the reader went to; a click on the button or the title does not.
+describe('choseLink', () => {
+  class StubElement {
+    constructor(private readonly inLink: boolean) {}
+
+    closest(selector: string) {
+      return this.inLink && selector === 'a' ? this : null;
+    }
+  }
+
+  it('is true for a click on a link, and false for a click anywhere else in the bar', () => {
+    vi.stubGlobal('Element', StubElement);
+
+    expect(choseLink({ target: new StubElement(true) as unknown as EventTarget })).toBe(true);
+    expect(choseLink({ target: new StubElement(false) as unknown as EventTarget })).toBe(false);
+    expect(choseLink({ target: {} as EventTarget })).toBe(false);
   });
 });

@@ -8,7 +8,8 @@ Date: 2026-09-18
 "It is not sticky", and the alternative "Adopt the sticky navigation bar" that it rests on. The
 contents are now the design's bar, pinned to the top of the window. Everything else DDR-010 says
 about the contents stands: one link per section, a `nav` with an accessible name, no current-section
-state, no animation, not printed, and no mobile "Sections" toggle.
+state, no animation, not printed, and no mobile "Sections" toggle. *DDR-075 supersedes the last of
+these*: below the wide breakpoint the links are behind a menu.
 
 **Amends four other records, each in one respect:**
 

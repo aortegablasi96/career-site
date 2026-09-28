@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-18
 
+**Amended by ADR-013**: the Client Component this record admits also holds whether its menu is
+open below the wide breakpoint, per DDR-075. That is its second reason, recorded as this one was.
+
 Applies ADR-001's rule that "`'use client'` requires a reason" for the first time, and records the
 reason. It supersedes nothing: Server Components stay the default, no client-side library is
 added, and the site stays a static export.

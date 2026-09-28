@@ -128,12 +128,21 @@ describe('component stylesheets', () => {
     // paper, because a sheet is a wide surface and the columns are what a wide surface is for. The
     // width alone never matches on A4, so without this each component would repeat its grid in a
     // print block and the two could drift.
+    //
+    // DDR-075 adds one more, for the contents bar alone: the wide breakpoint or a reader without
+    // script. The bar lays its links out in its row at both, because a reader who cannot open the
+    // menu must not be shown one. It adds no width.
     it('writes no width media query but the wide breakpoint, or that query and paper', () => {
       const queries = [...css.matchAll(/@media([^{]*)\{/g)].map(([, query]) => query.trim());
+      const allowed = ['(min-width: 48em)', '(min-width: 48em), print'];
+
+      if (name === 'contents.module.css') {
+        allowed.push('(min-width: 48em), (scripting: none)');
+      }
 
       expect(css).not.toMatch(/@container/);
       for (const query of queries.filter((query) => /width/.test(query))) {
-        expect(['(min-width: 48em)', '(min-width: 48em), print']).toContain(query);
+        expect(allowed).toContain(query);
       }
     });
 
@@ -149,9 +158,18 @@ describe('component stylesheets', () => {
     // photo's inner shadow needs it — an inset box-shadow on an `<img>` paints nothing, because a
     // replaced element's content covers it, so the shadow is drawn on a pseudo-element over the
     // image. Anything that is content, matched by a class or an element, stays in the flow.
-    it('takes nothing but a pseudo-element out of the flow, per DDR-021', () => {
+    //
+    // DDR-075 admits one element, the contents bar's menu panel, which hangs from the bar over the
+    // page below the wide breakpoint. It is still last in the bar's markup, below the title and the
+    // button as it is on screen, so nothing is reordered; it is taken out of the flow so that
+    // opening it moves nothing under it. It is admitted once, and a second is a decision.
+    it('takes nothing but a pseudo-element out of the flow, per DDR-021 and DDR-075', () => {
       for (const { selector, body } of rules(css)) {
         if (/position:\s*(?:absolute|fixed)/.test(body)) {
+          if (name === 'contents.module.css' && selector === '.list') {
+            continue;
+          }
+
           expect(selector, selector).toMatch(/::[\w-]+$/);
         }
       }

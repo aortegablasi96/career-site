@@ -187,6 +187,8 @@ export interface Contents {
   home: string;
   /** The site's title, which the bar shows at the left of the page's column, per DDR-049. */
   title: string;
+  /** The accessible name of the button that opens the links below the wide breakpoint, per DDR-075. */
+  menu: string;
 }
 
 /** A month, as its machine-readable value: the year and the month's two digits, such as "2024-10". */

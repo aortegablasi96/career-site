@@ -14,7 +14,11 @@ const tokens = readFileSync(new URL('./tokens.css', import.meta.url), 'utf8');
 // block.
 const mediaRule = /@media\s*([^{]+?)\s*\{\s*:root\s*\{([^}]*)\}\s*\}/g;
 const mediaRules = [...tokens.matchAll(mediaRule)].map(([, query, body]) => ({ query, body }));
-const breakpoints = mediaRules.filter(({ query }) => query !== 'print');
+const breakpoints = mediaRules.filter(({ query }) => /width/.test(query));
+// DDR-075: a reader without script cannot open the contents bar's menu, so the bar lays its links
+// out below the title for them and the clearance counts the title's row again. It is a condition
+// of the reader rather than of the width, so it is not a breakpoint.
+const withoutScript = mediaRules.find(({ query }) => query === '(scripting: none)');
 const print = mediaRules.find(({ query }) => query === 'print');
 const root = tokens.replace(mediaRule, '');
 
@@ -1019,6 +1023,33 @@ describe('responsive tokens', () => {
   it('redefines nothing at the wide breakpoint but the rhythm factor and the bar’s title row', () => {
     expect([...atWide.keys()]).toEqual(['rhythm-scale', 'contents-bar-title-row']);
     expect(atWide.get('contents-bar-title-row')).toBe('0rem');
+  });
+
+  // DDR-075: with script the title shares its row with the menu's button at every width, so the
+  // clearance counts no title row; without script it counts the row the title takes above the
+  // links, as DDR-049 did, until the wide breakpoint, which is written after it, takes it away.
+  it('counts the bar’s title row in the clearance only without script, below the wide breakpoint, per DDR-075', () => {
+    expect(token('contents-bar-title-row')).toBe('0rem');
+    expect([...mediaRules.map(({ query }) => query)]).toEqual([
+      '(min-width: 20em)',
+      '(scripting: none)',
+      '(min-width: 48em)',
+      'print',
+    ]);
+    expect([...redefined(withoutScript?.body).entries()]).toEqual([
+      [
+        'contents-bar-title-row',
+        'calc(var(--font-size-x-large) * var(--line-height-body) + var(--space-small))',
+      ],
+    ]);
+  });
+
+  // DDR-075: the menu's mark is WCAG 2.5.8's 24 by 24 on its own, so the button clears it before
+  // its padding, and the open panel is held inside the window below the clearance.
+  it('draws the menu’s mark at 24px and holds its panel inside the window, per DDR-075', () => {
+    expect(token('contents-menu-icon-size')).toBe('1.5rem');
+    expect(rem(token('contents-menu-icon-size')!) * 16).toBe(24);
+    expect(token('contents-menu-max-size')).toBe('calc(100dvh - var(--contents-bar-clearance))');
   });
 
   it('adapts only the page, section and project view titles, the gutter and the language columns, never a step of either scale', () => {

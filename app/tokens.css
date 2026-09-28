@@ -778,10 +778,27 @@
      a row of its own above the links. So the clearance adds that row there — the title's line and
      the gap below it — and the wide breakpoint takes it away again, where the title shares the
      links' row. Without it, at 320px to 390px with text at 200%, a heading landed 15px behind the
-     bar. */
+     bar.
+
+     Since DDR-075 the links are behind a menu below the wide breakpoint, and the title shares its
+     row with the menu's button there too, so the title row is nothing at every width. It comes
+     back only for a reader without script, whose bar lays its links out below the title as it did
+     before, per the `scripting` block below. The open menu hangs below the bar over the page
+     rather than in the flow, so it adds nothing to the clearance: nothing scrolls while it is
+     open.
+
+     The menu's button is a 24px mark, `--contents-menu-icon-size`: WCAG 2.5.8's 24 by 24 in full,
+     so the button clears it outright before its padding, and in rem, so it grows with the text as
+     the title beside it does. The open menu is never taller than the window below the clearance,
+     `--contents-menu-max-size`, so at 200% text on a short screen its last link can still be
+     scrolled to inside it. It is the second length on the page measured from the viewport, after
+     the wide photo, because what it limits is the room the window has, in `dvh` so that a phone's
+     collapsing toolbar is counted. */
   --contents-bar-height: 3rem;
   --contents-bar-blur: 12px;
-  --contents-bar-title-row: calc(var(--font-size-x-large) * var(--line-height-body) + var(--space-small));
+  --contents-bar-title-row: 0rem;
+  --contents-menu-icon-size: 1.5rem;
+  --contents-menu-max-size: calc(100dvh - var(--contents-bar-clearance));
   --contents-bar-clearance: calc(
     var(--contents-bar-height) + var(--contents-bar-title-row) + var(--space-flow)
   );
@@ -808,6 +825,19 @@
 }
 
 /*
+ * A reader without script, per DDR-075. The contents bar cannot open its menu for them, so below the
+ * wide breakpoint it lays its links out below the title, as it did before the menu, and the scroll
+ * clearance adds the title's row back: its line and the gap below it, per DDR-049. The wide
+ * breakpoint, below, takes it away again, where the title shares the links' row with or without
+ * script. It is written before that block so that the wide breakpoint wins where both apply.
+ */
+@media (scripting: none) {
+  :root {
+    --contents-bar-title-row: calc(var(--font-size-x-large) * var(--line-height-body) + var(--space-small));
+  }
+}
+
+/*
  * The wide breakpoint, per DDR-014, where the components lay out in columns. Since DDR-039 it
  * redefines one token as well: the factor the vertical rhythm is measured by, so the spaces between
  * sections, headings and entries take the design's full values from here and three quarters of them
@@ -815,7 +845,8 @@
  * one factor keeps every space in step with the others.
  *
  * Since DDR-049 it also takes the contents bar's title row out of the scroll clearance, because
- * from here the title shares the links' row and the bar is its own 48px again.
+ * from here the title shares the links' row and the bar is its own 48px again. Since DDR-075 the
+ * title row is only ever something without script, but the reason it is nothing here is the same.
  */
 @media (min-width: 48em) {
   :root {
