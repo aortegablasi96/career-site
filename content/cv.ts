@@ -92,9 +92,12 @@ import type { Cv } from './types';
  * It moved again with #231, because the Stock Portfolio Viewer gained its business case, which its
  * view lets a reader switch to and download in full, per DDR-079. It states no fact ADR-005 lists,
  * so it did not move the CV.
+ *
+ * It moved again with #233, because the Stock Portfolio Viewer's view gained a link to its release.
+ * A project's link is not a fact ADR-005 lists as shared, so it did not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '39d5142e05648e47ec0c30ddad1a0c533ef5f37f5fd9f6715b29b4bdd1e0cccb',
+  contentDigest: '35bd27c428b731de3f86f36a96a946fa4bd0ebc622d7990f85543b11871366d3',
 };
