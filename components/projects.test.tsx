@@ -446,10 +446,12 @@ describe('projects content', () => {
     }
   });
 
-  it('writes descriptions and sentences without pronouns, and without self-assessed traits', () => {
+  // A card's sentence is the project's slogan since #227, in the owner's own words, which may say
+  // "my"; a description still may not.
+  it('writes descriptions without pronouns, and neither descriptions nor sentences with self-assessed traits', () => {
     for (const { description, summary } of projects.projects) {
+      expect(description).not.toMatch(/\b(?:I|me|my|we|our)\b/i);
       for (const words of [description, summary]) {
-        expect(words).not.toMatch(/\b(?:I|me|my|we|our)\b/i);
         expect(words).not.toMatch(/strong|proven|leadership|servant|passionate|results-driven/i);
       }
     }
