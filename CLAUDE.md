@@ -1763,7 +1763,8 @@ sizes: nothing scrolls sideways.
 **#231 has landed, as DDR-079 and ADR-014: a view can switch between a project's overview and its
 business case.** `businessCase` on a `Project` holds the owner's "Summary of Business Case" as
 `items`, each a `label` and a `text`, and `file`, the full business case as a PDF in
-`public/portfolio/<slug>/`. Only the Stock Portfolio Viewer has one. Its view
+`public/portfolio/<slug>/`. NumisBook and the Stock Portfolio Viewer have one, each five numbered
+items in the owner's order: Problem, Product, Key decisions, Outcome, My contribution. Such a view
 shows a switch under the name, "Overview" and "Business case" (`accounts`, `overview` and
 `businessCase` in `projects.view`), which shows the business case as a `dl` in place of the
 description and "How I built it", hides "Built with" and the technologies, and replaces the links

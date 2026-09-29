@@ -112,12 +112,14 @@ describe('ProjectView', () => {
     const view = render(stockPortfolioViewer!);
     const radios = [...view.matchAll(/<input [^>]*>/g)].map(([input]) => input);
 
-    it('is on the Stock Portfolio Viewer alone, which is the one project with a business case', () => {
+    it('is on NumisBook and the Stock Portfolio Viewer alone, the projects with a business case', () => {
       expect(projects.projects.filter(({ businessCase }) => businessCase).map(({ name }) => name)).toEqual([
+        numisBook!.name,
         stockPortfolioViewer!.name,
       ]);
+      expect(render(numisBook!)).toContain('radiogroup');
 
-      for (const project of [numisBook!, digitalTwin!, careerSite!]) {
+      for (const project of [digitalTwin!, careerSite!]) {
         expect(render(project)).not.toContain('radiogroup');
         expect(render(project)).not.toContain('<input');
       }
@@ -169,19 +171,23 @@ describe('ProjectView', () => {
       expect(positions).toEqual([...positions].sort((a, b) => a - b));
     });
 
+    // The owner reordered the summary on #231, so key decisions come third and every item is numbered.
     it('shows each item of the business case as a term and its description, in the owner’s order', () => {
-      const items = stockPortfolioViewer!.businessCase!.items;
+      for (const project of [numisBook!, stockPortfolioViewer!]) {
+        const items = project.businessCase!.items;
 
-      expect(items.map(({ label }) => label)).toEqual([
-        '01 — Problem',
-        '02 — Product',
-        '03 — Outcome',
-        '04 — My contribution',
-        'Key decisions',
-      ]);
-      expect(bare(view)).toContain(
-        `<dl>${items.map(({ label, text }) => `<div><dt>${label}</dt><dd>${text}</dd></div>`).join('')}</dl>`,
-      );
+        expect(items.map(({ label }) => label)).toEqual([
+          '01 — Problem',
+          '02 — Product',
+          '03 — Key decisions',
+          '04 — Outcome',
+          '05 — My contribution',
+        ]);
+        // NumisBook's items name "documentation & media", which the markup escapes.
+        expect(bare(render(project))).toContain(
+          `<dl>${items.map(({ label, text }) => `<div><dt>${label}</dt><dd>${text.replaceAll('&', '&amp;')}</dd></div>`).join('')}</dl>`,
+        );
+      }
     });
 
     // The labels are terms, not headings, so either account leaves the outline one h1 and h2s.
@@ -203,7 +209,7 @@ describe('ProjectView', () => {
     it('hides "Built with" and the technologies with the overview', () => {
       expect(view).toMatch(new RegExp(`<h2 class="[^"]*overviewOnly[^"]*">${projects.view.builtWith}</h2>`));
       expect(view).toMatch(/<ul class="[^"]*technologies[^"]*overviewOnly[^"]*">/);
-      expect(render(numisBook!)).not.toContain('overviewOnly');
+      expect(render(digitalTwin!)).not.toContain('overviewOnly');
     });
 
     // The radio takes no room and draws nothing, and its label draws the focus it cannot.
@@ -227,6 +233,14 @@ describe('ProjectView', () => {
       expect(file).toBe('/portfolio/stock-portfolio-viewer/stock-portfolio-viewer-business-case.pdf');
       expect(existsSync(new URL(`../public${file}`, import.meta.url))).toBe(true);
       expect(view).toContain(`href="${file}"`);
+    });
+
+    it('is NumisBook’s own PDF on its view', () => {
+      const numisBookFile = numisBook!.businessCase!.file;
+
+      expect(numisBookFile).toBe('/portfolio/numisbook/numisbook-business-case.pdf');
+      expect(existsSync(new URL(`../public${numisBookFile}`, import.meta.url))).toBe(true);
+      expect(render(numisBook!)).toContain(`href="${numisBookFile}"`);
     });
 
     it('downloads in place, as the filled pill, with its own words', () => {
@@ -255,7 +269,7 @@ describe('ProjectView', () => {
     });
 
     it('is on no view without a business case, whose links are as they were', () => {
-      for (const project of [numisBook!, digitalTwin!, careerSite!]) {
+      for (const project of [digitalTwin!, careerSite!]) {
         const markup = render(project);
 
         expect(text(markup)).not.toContain(projects.view.downloadBusinessCase);
@@ -440,7 +454,7 @@ describe('ProjectView', () => {
   // DDR-052: the projects on either side of this one, at the foot of the view.
   describe('the projects on either side', () => {
     const links = (markup: string) =>
-      [...markup.matchAll(/<a ([^>]*href="\/portfolio\/[^>]*)>/g)].map(([, attributes]) => ({
+      [...markup.matchAll(/<a ([^>]*href="\/portfolio\/[^"/]+"[^>]*)>/g)].map(([, attributes]) => ({
         href: attributes.match(/href="([^"]+)"/)?.[1],
         label: attributes.match(/aria-label="([^"]+)"/)?.[1],
       }));

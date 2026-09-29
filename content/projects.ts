@@ -76,6 +76,33 @@ export const projects: Projects = {
           'Used Claude Code as a virtual cross-functional development team, creating specialised skill workflows for architecture, database design, UI design, testing, governance and project management. Integrated MCP tools including Figma, Neon and Playwright to connect product design, data migration and E2E testing.',
         ],
       ],
+      // The "Summary of Business Case" from the owner's knowledge base, as the Stock Portfolio
+      // Viewer's is, per #231 and DDR-079, and the full business case the owner supplied.
+      businessCase: {
+        items: [
+          {
+            label: '01 — Problem',
+            text: 'Coin collectors often manage inventory, purchase documentation and collection information across spreadsheets, cloud storage and physical documents, making the collection difficult to manage and analyse.',
+          },
+          {
+            label: '02 — Product',
+            text: 'A cloud-based SaaS platform that centralises coin inventory, images and documentation while providing collection analytics and an AI assistant for natural-language exploration.',
+          },
+          {
+            label: '03 — Key decisions',
+            text: 'Cloud-first architecture · Structured collection data model · Integrated documentation & media · AI grounded in collection data',
+          },
+          {
+            label: '04 — Outcome',
+            text: 'Production SaaS MVP · Collection management · Analytics · AI assistant · Extensible data architecture',
+          },
+          {
+            label: '05 — My contribution',
+            text: 'Product strategy · Data architecture · UX/UI · Database & media infrastructure · AI · End-to-end development',
+          },
+        ],
+        file: '/portfolio/numisbook/numisbook-business-case.pdf',
+      },
       links: [
         { text: sourceCode, href: 'https://github.com/aortegablasi96/numisbook' },
         { text: liveSite, href: 'https://numisbook.vercel.app' },
@@ -144,16 +171,16 @@ export const projects: Projects = {
             text: 'A local-first portfolio management application that consolidates broker data into a personalised analytics workspace, complemented by an AI portfolio assistant.',
           },
           {
-            label: '03 — Outcome',
+            label: '03 — Key decisions',
+            text: 'Local-first architecture · IBKR-first MVP · Broker abstraction · AI grounded in portfolio data',
+          },
+          {
+            label: '04 — Outcome',
             text: 'IBKR MVP · Portfolio analytics · Dividend tracking · AI assistant · Broker-extensible architecture',
           },
           {
-            label: '04 — My contribution',
+            label: '05 — My contribution',
             text: 'Product strategy · Data pipeline · UX/UI · Architecture · Development · AI-assisted delivery',
-          },
-          {
-            label: 'Key decisions',
-            text: 'Local-first architecture · IBKR-first MVP · Broker abstraction · AI grounded in portfolio data',
           },
         ],
         file: '/portfolio/stock-portfolio-viewer/stock-portfolio-viewer-business-case.pdf',
