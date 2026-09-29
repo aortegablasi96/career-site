@@ -12,7 +12,11 @@ declare module 'react' {
   interface ButtonHTMLAttributes<T> {
     /** The id of the element the button's command acts on. */
     commandfor?: string;
-    /** What the button does to it: a dialog's are `show-modal`, `close` and `request-close`. */
-    command?: 'show-modal' | 'close' | 'request-close';
+    /**
+     * What the button does to it: a dialog's are `show-modal`, `close` and `request-close`. A
+     * command that starts with two dashes is the page's own: the browser does nothing with it but
+     * tell the element, as a gallery's larger picture is told to show itself in place, per ADR-019.
+     */
+    command?: 'show-modal' | 'close' | 'request-close' | `--${string}`;
   }
 }

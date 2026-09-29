@@ -204,13 +204,22 @@ The page itself is the CV, so what it prints is designed.
   for React; drop it once `@types/react` has them. The opening button follows the picture in the
   flow and is pulled over its corner by a negative margin, because only a pseudo-element may be
   `position: absolute`; its `::after` and the close button's `::before` stretch the targets.
-* **`LargerPicture` is a Client Component only for the movement**: it takes the dialog's `command`
+* **`LargerPicture` is a Client Component for the movement and, in a gallery, the hand-over**
+  (below). For the movement it takes the dialog's `command`
   and `cancel` events and opens or closes it inside a view transition, handing the one
   `view-transition-name` (`larger-picture`) from the frame's picture to the larger one and back.
   Its pseudo-elements are styled in `app/globals.css`, where only the whole picture's capture is
   drawn: the root's `data-moving` (`opening` or `closing`) says which capture is the frame's, and
   it is hidden, or the two crossfade into a ghost (#248). Don't give either picture the name in a
   stylesheet: two elements with it at once skip the transition.
+* **A gallery's larger picture steps to its neighbours** (ADR-019, DDR-083). Each step button points
+  at the neighbour's dialog with `commandfor` and `command="--show-in-place"`, and the neighbour's
+  `LargerPicture` does the work in `swap`. Keep its order: close the old dialog, check the radio,
+  focus the neighbour's "View larger", then `showModal()`. The dialog returns focus to whatever was
+  focused when it opened, so the wrong order returns focus to a hidden control. The arrow keys
+  `click()` the step button, so both take one path. The hand-over is a root crossfade with no
+  `view-transition-name`, so it never touches `data-moving`. `@media (scripting: none)` hides the
+  step buttons.
 * **To watch the movement, slow it down**: set `--project-view-enlarge-duration` on the root to a
   few seconds before a screenshot. A screenshot or `getAnimations()` straight after the click often
   catches the view before the transition starts.

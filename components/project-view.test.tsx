@@ -599,22 +599,25 @@ describe('ProjectView', () => {
         ),
       ].map(([, target, name]) => ({ target, name }));
 
-    /** Each larger picture, as its id, the dialog's name, its close control, its picture and caption. */
+    /**
+     * Each larger picture, as its id, the dialog's name, its close control, its picture, its caption,
+     * where it stands among the gallery's, and the controls that step to its neighbours, per DDR-083.
+     */
     const dialogs = (markup: string) =>
-      [
-        ...markup.matchAll(
-          /<dialog id="([^"]+)"[^>]*aria-labelledby="([^"]+)"><button type="button"[^>]*commandfor="([^"]+)" command="close" aria-label="([^"]*)">[\s\S]*?<\/button><img [^>]*src="([^"]*)" alt="([^"]*)"\/><p id="([^"]+)"[^>]*>([^<]*)<\/p><\/dialog>/g,
-        ),
-      ].map(([, id, labelledBy, closes, close, source, alt, captionId, caption]) => ({
-        id,
-        labelledBy,
-        closes,
-        close,
-        source,
-        alt,
-        captionId,
-        caption,
-      }));
+      [...markup.matchAll(/<dialog id="([^"]+)"[^>]*aria-labelledby="([^"]+)">([\s\S]*?)<\/dialog>/g)].map(
+        ([, id, labelledBy, body]) => {
+          const [, closes, close] =
+            body!.match(/^<button type="button"[^>]*commandfor="([^"]+)" command="close" aria-label="([^"]*)">/) ?? [];
+          const [, source, alt] = body!.match(/<\/button><img [^>]*src="([^"]*)" alt="([^"]*)"\/>/) ?? [];
+          const [, captionId, caption] = body!.match(/<p id="([^"]+-caption)"[^>]*>([^<]*)<\/p>/) ?? [];
+          const [, positionId, position] = body!.match(/<p id="([^"]+-position)"[^>]*>([^<]*)<\/p>/) ?? [];
+          const steps = [
+            ...body!.matchAll(/<button type="button"[^>]*commandfor="([^"]+)" command="--show-in-place" aria-label="([^"]*)">/g),
+          ].map(([, target, name]) => ({ target, name }));
+
+          return { id, labelledBy, closes, close, source, alt, captionId, caption, positionId, position, steps };
+        },
+      );
 
     it('opens every view’s lead picture, with its alternative text, its caption and a way to close it', () => {
       for (const project of projects.projects) {
@@ -627,7 +630,7 @@ describe('ProjectView', () => {
         expect(larger).toMatchObject({
           closes: larger!.id,
           close: projects.view.close,
-          labelledBy: larger!.captionId,
+          labelledBy: project.gallery ? `${larger!.captionId} ${larger!.positionId}` : larger!.captionId,
           source: 'alt' in media ? media.file : '',
           alt: 'alt' in media ? media.alt : '',
           caption: project.caption,
@@ -652,6 +655,49 @@ describe('ProjectView', () => {
       expect(markup).not.toContain(`src="${video.media.file}" alt=`);
     });
 
+    // DDR-083 and ADR-019, on #250: a gallery's larger picture steps to the pictures before and after
+    // it, in the thumbnails' order and in a loop, and says where it stands among them.
+    it('steps from each picture of a gallery to the one before and after it, in a loop, saying where it stands', () => {
+      const larger = dialogs(html);
+      const count = larger.length;
+
+      expect(count).toBe(1 + numisBook!.gallery!.length);
+      larger.forEach(({ id, labelledBy, captionId, positionId, position, steps }, place) => {
+        expect(labelledBy).toBe(`${captionId} ${positionId}`);
+        expect(position).toBe(projects.view.position(place + 1, count));
+        expect(steps).toEqual([
+          { target: larger[(place + count - 1) % count]!.id, name: projects.view.previousPicture },
+          { target: larger[(place + 1) % count]!.id, name: projects.view.nextPicture },
+        ]);
+        expect(id).toBe(`picture-${place}-larger`);
+      });
+      // In the markup's order, which is the visual order: the caption stands between the two controls.
+      expect(bare(html)).toMatch(
+        /<\/button><img [^>]*\/><div><button [^>]*aria-label="Previous picture">[\s\S]*?<\/button><div><p id="picture-0-larger-caption">[^<]*<\/p><p id="picture-0-larger-position">[^<]*<\/p><\/div><button [^>]*aria-label="Next picture">/,
+      );
+    });
+
+    it('passes over a gallery’s video, which opens nothing larger, and counts only the pictures', () => {
+      const markup = render({ ...numisBook!, gallery: [numisBook!.gallery![0]!, video, numisBook!.gallery![1]!] });
+      const larger = dialogs(markup);
+
+      expect(larger.map(({ id }) => id)).toEqual(['picture-0-larger', 'picture-1-larger', 'picture-3-larger']);
+      expect(larger[1]!.steps.map(({ target }) => target)).toEqual(['picture-0-larger', 'picture-3-larger']);
+      expect(larger.map(({ position }) => position)).toEqual(['1 of 3', '2 of 3', '3 of 3']);
+      expect(larger[2]!.position).toBe(projects.view.position(3, 3));
+    });
+
+    it('gives a lone picture no controls to step and no place, and a gallery of one picture and a video none either', () => {
+      const lone = dialogs(render(digitalTwin!));
+      const withVideo = dialogs(render({ ...numisBook!, gallery: [video] }));
+
+      for (const [larger] of [lone, withVideo]) {
+        expect(larger!.steps).toEqual([]);
+        expect(larger!.position).toBeUndefined();
+        expect(larger!.labelledBy).toBe(larger!.captionId);
+      }
+    });
+
     // ADR-018: the view stays a Server Component, and the movement is the one thing in it that
     // needs script, which the larger picture's own Client Component holds.
     it('stays a Server Component, and leaves the movement to the larger picture’s own component', () => {
@@ -659,7 +705,7 @@ describe('ProjectView', () => {
 
       expect(source).not.toMatch(/['"]use client['"]/);
       expect(source).not.toMatch(/\bon[A-Z]\w*=/);
-      expect(source).toContain("import { LargerPicture } from './larger-picture';");
+      expect(source).toMatch(/import \{ LargerPicture, [^}]*\} from '\.\/larger-picture';/);
     });
   });
 

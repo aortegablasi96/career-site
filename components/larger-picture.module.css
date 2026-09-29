@@ -92,12 +92,13 @@
   outline-color: var(--color-on-enlarged);
 }
 
-/* The control that closes it, drawn as the one that opened it is, at the top right. */
-.close {
+/* The control that closes it, drawn as the one that opened it is, at the top right. In a gallery,
+   the two that step between the pictures are drawn the same, per DDR-083. */
+.close,
+.step {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  justify-self: end;
   inline-size: var(--project-view-enlarge-size);
   block-size: var(--project-view-enlarge-size);
   padding: 0;
@@ -107,6 +108,10 @@
   color: var(--color-text-heading);
   font-size: var(--font-size-large);
   cursor: pointer;
+}
+
+.close {
+  justify-self: end;
 }
 
 /* The whole ground around the picture is its target, so the pointer closes the picture from
@@ -119,7 +124,9 @@
 }
 
 .close:hover,
-.close:focus-visible {
+.close:focus-visible,
+.step:hover,
+.step:focus-visible {
   background-color: var(--color-surface-hover);
   color: var(--color-accent);
 }
@@ -144,6 +151,31 @@
   overflow-wrap: anywhere;
 }
 
+/* In a gallery, the caption's row, per DDR-083: the control that shows the picture before at the
+   left edge, the one that shows the picture after at the right, and between them the caption, with
+   where the picture stands among the gallery's under it. The row spans the window, so a thumb
+   reaches both controls on a phone, and it leaves the picture its whole row. What the controls and
+   the words leave is still the ground, which closes the picture. */
+.foot {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  column-gap: var(--space-small);
+  align-items: center;
+  justify-self: stretch;
+}
+
+.words {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* The two controls are drawn over the close control's target, as the picture is, so choosing them
+   steps rather than closes. */
+.step {
+  position: relative;
+}
+
 /* The view behind the larger picture does not scroll while it is open, so closing it returns the
    reader to where they were. Its scrollbar's room is kept, so the blurred view behind does not
    shift sideways as it opens and closes. */
@@ -158,5 +190,14 @@
 @media (min-width: 48em) {
   .larger {
     padding: var(--space-medium);
+  }
+}
+
+/* Stepping from one picture to another closes one dialog and opens another, which only script can
+   do, so a reader without it is not shown the two controls, per ADR-019. Each picture still opens
+   and closes, and still says where it stands among the gallery's. */
+@media (scripting: none) {
+  .step {
+    display: none;
   }
 }

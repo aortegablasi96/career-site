@@ -474,6 +474,17 @@ export interface ProjectView {
   enlarge: string;
   close: string;
   /**
+   * The controls on a gallery's larger picture that show the picture before it and the one after
+   * it, per DDR-083. Each is the control's accessible name: the control shows a chevron alone.
+   */
+  previousPicture: string;
+  nextPicture: string;
+  /**
+   * Where the larger picture stands among the gallery's pictures, from its place and their number:
+   * "3 of 7". It is shown under the caption, and is part of the larger picture's name, per DDR-083.
+   */
+  position: (place: number, count: number) => string;
+  /**
    * What a project's links say about opening a new tab, per DDR-043 as DDR-050 extends it. It is
    * said only to assistive technology, after the link's text in its accessible name, as a profile
    * pill says it.

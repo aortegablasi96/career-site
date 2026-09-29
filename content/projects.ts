@@ -359,6 +359,11 @@ export const projects: Projects = {
     // and DDR-082. Each shows a mark alone, so these are said only to assistive technology.
     enlarge: 'View larger',
     close: 'Close',
+    // The controls that move between a gallery's pictures while one is open larger, per #250 and
+    // DDR-083. Each shows a chevron alone, so these are said only to assistive technology.
+    previousPicture: 'Previous picture',
+    nextPicture: 'Next picture',
+    position: (place, count) => `${place} of ${count}`,
     // The same words a profile pill says, from the one place they are stated.
     newTab: introduction.newTab,
     // The name first, so a row of tabs shows which project each is, then the owner's, as the page's

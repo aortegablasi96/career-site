@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `019`. The next DDR is `083`.** Update both lines when a record lands.
+**The next ADR is `020`. The next DDR is `084`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -18,7 +18,7 @@ reasoning behind it.
 
 ## ADRs
 
-ADR-001 to ADR-018 are accepted.
+ADR-001 to ADR-019 are accepted.
 
 | Record  | Relationship |
 | ------- | ------------ |
@@ -37,10 +37,11 @@ ADR-001 to ADR-018 are accepted.
 | ADR-016 | Amends ADR-004: lead pictures and the photo at their originals' full resolution; the photo's budget is 200 KB |
 | ADR-017 | Extends ADR-014: a project's gallery holds its picture in native radios (DDR-081); no new Client Component |
 | ADR-018 | Amends ADR-017's overlay rejection and ADR-007: a view's picture opens larger in a modal `dialog` via Invoker Commands, without script (DDR-082); a third Client Component, `LargerPicture`, only moves it |
+| ADR-019 | Amends ADR-018: a gallery's larger picture hands over to its neighbour's by a command of the page's own, `--show-in-place` (DDR-083); still `LargerPicture`, and no stepping without script |
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-082. There are
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-083. There are
 two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
@@ -141,4 +142,6 @@ Each record keeps everything not listed against it.
   larger.
 * **DDR-081** (thumbnails): DDR-082 opens the picture in the frame larger, which its Option A
   rejected; a thumbnail still only chooses the picture.
+* **DDR-082** (picture larger): DDR-083 steps between a gallery's pictures while one is open, which
+  its Option D rejected; the frame follows the last picture seen.
 * **DDR-079** (business-case switch): DDR-080 shows the business case one item at a time, in a card.
