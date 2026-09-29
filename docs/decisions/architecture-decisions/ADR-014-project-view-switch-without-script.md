@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-28
 
+**Extended by ADR-017 (2026-09-29)**: the gallery holds which picture is shown the same way, with
+native radios read by the stylesheet.
+
 **Supersedes nothing and amends nothing.** A project's view gains a control with state, per
 DDR-079, and it gains **no Client Component**: the state is held by native radio buttons and read
 by the stylesheet. `ContentsBar` is still the site's one Client Component, per ADR-007 as ADR-013

@@ -542,6 +542,10 @@
      other shadow is. */
   --shadow-dates-hover: 0 4px 6px rgba(26, 26, 46, 0.5);
 
+  /* A gallery thumbnail's, per DDR-081: the soft two-layer shadow `career-site-business-case` draws
+     under each one (node 405:99), in black at 10%, so the overlapping thumbnails read as a stack. */
+  --shadow-thumbnail: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+
   /* A timeline card's surface, per DDR-070: the design's grain over its gradient. The grain is the
      design's own 200px texture, whose pixels are grey or white at 1% to 7%; it repeats at its own
      size rather than stretching, so it looks the same on a card of any size. The design sets the
@@ -726,12 +730,19 @@
   --project-view-rule-gap: 1.5rem;
   --project-view-label-gap: 0.75rem;
 
-  /* The gallery below a view's introduction, per DDR-053, measured off node 59:84: the design
-     spaces it by one 20px throughout, as it spaces a card on the page — between two items each
-     way, and from the "Gallery" label to the first row. 20px is not a step of DDR-013's scale, so
-     it is a measure of the view's own, as the three above are. An item is the lead picture's 16:10
-     at the same radius (node 59:90 is 492 by 307.5), so it writes no ratio of its own. */
-  --project-view-gallery-gap: 1.25rem;
+  /* A view's gallery, per DDR-081, measured off `career-site-business-case` (node 405:93): a
+     thumbnail is 72 by 52 with 8px corners and a 1.6px edge, each one starts 36px after the one
+     before it, so it overlaps half of it, and the count stands 12px after the last. None is a step
+     of DDR-013's scale, and the corner is not one of its three radii, so all are measures of the
+     view's own, as the ones above are. In rem, so a thumbnail keeps its proportion to the count
+     beside it when text is enlarged. */
+  --project-view-thumbnail-width: 4.5rem;
+  --project-view-thumbnail-height: 3.25rem;
+  --project-view-thumbnail-overlap: 2.25rem;
+  --project-view-thumbnail-edge: 0.1rem;
+  --project-view-thumbnail-radius: 0.5rem;
+  --project-view-thumbnail-count-gap: 0.75rem;
+  --project-view-thumbnail-overlap-back: calc(-1 * var(--project-view-thumbnail-overlap));
 
   /* The foot of a project's view, per DDR-052, measured off node 59:118: the two halves stand 24px
      apart, and inside a card the chevron is 12px from the words. Neither is a step of DDR-013's
@@ -1011,6 +1022,9 @@
     --shadow-card-highlight: none;
     /* Nor is a lit entry's glow on its dates, per DDR-071, which a sheet cannot be in the state to draw. */
     --shadow-dates-hover: none;
+    /* Nor is a gallery thumbnail's, per DDR-081. A view does not print; this keeps every light in
+       this one place. */
+    --shadow-thumbnail: none;
 
     --content-width: none;
     --page-gutter: 0;

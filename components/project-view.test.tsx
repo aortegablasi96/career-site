@@ -366,9 +366,10 @@ describe('ProjectView', () => {
     expect(figure).toContain('flex-direction: column');
   });
 
-  // DDR-053: further pictures and videos below the introduction. No project states a gallery yet —
-  // the media is the owner's to supply, as on #63 — so the branch that shows one is exercised here
-  // rather than by a page, as the video branch of `Media` has been since #50.
+  // DDR-053's gallery, laid out as DDR-081 draws it: thumbnails under the lead picture, and the
+  // chosen one shown in the lead's place, held by native radios per ADR-017. No project states a
+  // gallery yet — the media is the owner's to supply, as on #63 — so the branch that shows one is
+  // exercised here rather than by a page, as the video branch of `Media` has been since #50.
   describe('the gallery', () => {
     const picture: GalleryItem = {
       media: { file: '/gallery-picture.webp', alt: 'The assistant adding a coin from a photograph' },
@@ -382,43 +383,118 @@ describe('ProjectView', () => {
       },
       caption: 'Walkthrough demo',
     };
+    const third: GalleryItem = {
+      media: { file: '/gallery-collections.webp', alt: 'The collections, each with its coins' },
+      caption: 'Collections',
+    };
     const withGallery = (gallery: readonly GalleryItem[]) => render({ ...numisBook!, gallery });
 
-    it('shows nothing at all for a project the owner has supplied no media for', () => {
+    /** The pictures' radios, in the markup's order. */
+    const radios = (markup: string) =>
+      [...markup.matchAll(/<input [^>]*name="picture"[^>]*>/g)].map(([tag]) => tag);
+
+    /** The thumbnails, in the markup's order, as the radio each chooses and the file it shows. */
+    const thumbnails = (markup: string) =>
+      [...markup.matchAll(/<label for="(picture-\d+)"[^>]*><img [^>]*src="([^"]*)" alt=""\/><\/label>/g)].map(
+        ([, target, source]) => ({ target, source }),
+      );
+
+    /** A rule's body, by its whole selector. */
+    const rule = (selector: string) =>
+      css.match(new RegExp(`(?:^|\\})\\s*${selector.replace(/[.:+()]/g, '\\$&')}\\s*\\{([^}]*)\\}`))?.[1] ?? '';
+
+    it('leaves a view whose project has no gallery media as it was: the lead picture alone', () => {
       for (const project of projects.projects) {
         expect(project.gallery).toBeUndefined();
-        expect(text(render(project))).not.toContain(projects.view.gallery);
+        expect(radios(render(project))).toHaveLength(0);
+        expect(render(project)).not.toContain('<details');
       }
 
-      expect(text(withGallery([]))).not.toContain(projects.view.gallery);
+      expect(withGallery([])).toBe(html);
     });
 
-    it('heads the block with an h2 and lists every item in the order the content gives', () => {
-      const shown = text(withGallery([picture, video]));
+    it('draws no "Gallery" heading, and keeps one h1', () => {
+      const markup = withGallery([picture, video, third]);
 
-      expect(withGallery([picture, video])).toMatch(
-        new RegExp(`<h2[^>]*>${projects.view.gallery}</h2>`),
-      );
-      expect(shown.indexOf(picture.caption)).toBeGreaterThan(shown.indexOf(projects.view.gallery));
-      expect(shown.indexOf(video.caption)).toBeGreaterThan(shown.indexOf(picture.caption));
+      expect(markup).not.toMatch(new RegExp(`<h2[^>]*>${projects.view.gallery}</h2>`));
+      expect(markup.match(/<h1/g)).toHaveLength(1);
     });
 
-    // Each item is a figure with its caption, as the lead picture is, so the words below a picture
-    // are tied to it rather than standing loose under it.
-    it('ties each caption to its own picture, and describes the picture for a reader who cannot see it', () => {
-      const markup = withGallery([picture]);
+    // DDR-081: the pictures are one choice among several, the lead first and checked, each named
+    // by its caption, so assistive technology hears the picture's words and its place in the set.
+    it('is a radio group named for the gallery, the lead first and checked, each named by its caption', () => {
+      const markup = withGallery([picture, video]);
+      const found = radios(markup);
+
+      expect(markup).toContain(`role="radiogroup" aria-label="${projects.view.gallery}"`);
+      expect(found).toHaveLength(3);
+      expect(found[0]).toContain('checked=""');
+      for (const [index, tag] of found.entries()) {
+        expect(tag).toContain('type="radio"');
+        expect(tag).toContain(`id="picture-${index}"`);
+        expect(tag).toContain(`aria-labelledby="picture-${index}-caption"`);
+        if (index > 0) expect(tag).not.toContain('checked');
+      }
+
+      for (const [index, caption] of [numisBook!.caption, picture.caption, video.caption].entries()) {
+        expect(bare(markup)).toContain(`<figcaption id="picture-${index}-caption">${caption}</figcaption>`);
+      }
+    });
+
+    // ADR-017: a figure's radio is its previous sibling, which is what lets one stylesheet rule show
+    // the checked picture and hide the rest, for any number of pictures.
+    it('puts each picture’s radio immediately before its figure, in the order the content gives', () => {
+      const markup = bare(withGallery([picture, video]));
       const alt = 'alt' in picture.media ? picture.media.alt : '';
 
       expect(markup).toMatch(
-        new RegExp(`<figure[^>]*><img [^>]*alt="${alt}"[^>]*><figcaption[^>]*>${picture.caption}</figcaption></figure>`),
+        new RegExp(
+          `<input [^>]*id="picture-1"[^>]*/><figure><img [^>]*alt="${alt}"/><figcaption id="picture-1-caption">${picture.caption}</figcaption></figure><input [^>]*id="picture-2"`,
+        ),
       );
+      expect(rule('.pick:not(:checked) + .figure')).toContain('display: none');
+      expect(rule('.pick:focus-visible + .figure .media')).toContain('outline:');
+    });
+
+    it('shows two thumbnails and no count where there are two pictures', () => {
+      const markup = withGallery([picture]);
+
+      expect(thumbnails(markup).map(({ target }) => target)).toEqual(['picture-0', 'picture-1']);
+      expect(markup).not.toContain('<details');
+    });
+
+    // DDR-081: the row shows two thumbnails, then a count of the rest, which discloses them. The
+    // radios stay outside it, so the keyboard reaches every picture whether it is open or not.
+    it('follows the first two thumbnails with a count that discloses the rest', () => {
+      const markup = withGallery([picture, video, third]);
+      const details = markup.match(/<details[^>]*>([\s\S]*?)<\/details>/)?.[1] ?? '';
+
+      expect(thumbnails(markup).map(({ target }) => target)).toEqual([
+        'picture-0',
+        'picture-1',
+        'picture-2',
+        'picture-3',
+      ]);
+      expect(projects.view.more(2)).toBe('+2 more');
+      expect(bare(details)).toMatch(/^<summary>\+2 more<\/summary>/);
+      expect(thumbnails(details).map(({ target }) => target)).toEqual(['picture-2', 'picture-3']);
+      expect(radios(details)).toHaveLength(0);
+    });
+
+    // A thumbnail shows its own picture, or a video's poster, and says nothing: the radio is named
+    // by the caption and the picture in the frame carries the alternative text.
+    it('shows each picture, or a video’s poster, as its thumbnail, saying nothing twice', () => {
+      expect(thumbnails(withGallery([picture, video])).map(({ source }) => source)).toEqual([
+        numisBook!.media.file,
+        '/gallery-picture.webp',
+        '/gallery-walkthrough.webp',
+      ]);
     });
 
     // DDR-010 and ADR-004: nothing is fetched until someone presses play, and the poster is what is
-    // seen until then. The still beside it is for paper, and exactly one of the two is displayed.
+    // seen until then.
     it('leaves a video unplayed and unfetched until the reader starts it', () => {
-      const markup = withGallery([video]);
-      const element = markup.match(/<video[^>]*>/)?.[0] ?? '';
+      const element = withGallery([video]).match(/<video[^>]*>/)?.[0] ?? '';
       const description = 'poster' in video.media ? video.media.description : '';
 
       expect(element).toContain('preload="none"');
@@ -426,31 +502,26 @@ describe('ProjectView', () => {
       expect(element).toContain('poster="/gallery-walkthrough.webp"');
       expect(element).toContain(`aria-label="${description}"`);
       expect(element).not.toContain('autoplay');
-      expect(markup).toContain(`<img class="`);
     });
 
     // Every path a picture or video is reached by goes through `asset()`, per ADR-004, so it
     // resolves under the Pages base path as well as locally. `components/assets.test.ts` holds
-    // every attribute in `components/` to it; this holds the gallery's own two.
+    // every attribute in `components/` to it; this holds the gallery's own.
     it('reaches each file by the one route a binary asset takes', () => {
       expect(withGallery([picture])).toContain('src="/gallery-picture.webp"');
       expect(withGallery([video])).toContain('src="/gallery-walkthrough.mp4"');
     });
 
-    // DDR-053: one item to a row below the wide breakpoint, where two 16:10 pictures side by side
-    // on a phone would be about 130px wide each, and two from it, as the design draws them.
-    it('stands one item to a row below the wide breakpoint and two from it', () => {
-      expect(css.match(/\.gallery\s*\{([^}]*)\}/)?.[1]).toContain('grid-template-columns: minmax(0, 1fr);');
-      expect(css).toMatch(
-        /@media \(min-width: 48em\) \{[\s\S]*\.gallery \{\s*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);/,
-      );
-    });
-
-    // An item is drawn in the lead picture's shape, at the same ratio and radius, so it is cropped
-    // rather than stretched by the rule #153 already measured.
-    it('keeps each item in the design’s shape, as the lead picture is kept', () => {
-      expect(withGallery([picture, video])).toMatch(/<img class="[^"]*media[^"]*"/);
-      expect(css.match(/\.media\s*\{([^}]*)\}/)?.[1]).toContain('object-fit: cover');
+    // DDR-081: the thumbnails overlap by half, the first drawn over the second, inside a row that
+    // isolates them from the contents bar; the count stands clear of the last.
+    it('draws the row as the design does, the count clear of every thumbnail', () => {
+      expect(rule('.thumbnails')).toContain('isolation: isolate');
+      expect(rule('.thumbnails')).toContain('padding-inline-start: var(--project-view-thumbnail-overlap)');
+      expect(rule('.thumbnail')).toContain('margin-inline-start: var(--project-view-thumbnail-overlap-back)');
+      expect(rule('.thumbnail:first-child')).toContain('z-index: 1');
+      expect(rule('.thumbnailImage')).toContain('object-fit: cover');
+      expect(rule('.count')).toContain('margin-inline-start: var(--project-view-thumbnail-count-gap)');
+      expect(rule('.count + .thumbnail')).toContain('margin-inline-start: var(--project-view-thumbnail-count-gap)');
     });
   });
 

@@ -55,8 +55,9 @@ save the next person from breaking something; don't add story history.
   `48em`, redefines `--rhythm-scale` (0.75 → 1) and `--contents-bar-title-row` there; components
   write their own layout under it. To test either, change the browser's default font size, not
   the root's CSS font size.
-* **`z-index: 1` on the contents bar is the site's only z-index**; without it the photo's positioned
-  inner shadow paints over the bar.
+* **`z-index: 1` on the contents bar** keeps the photo's positioned inner shadow from painting over
+  the bar. The only other z-index is the gallery's thumbnails (DDR-081), inside a row with
+  `isolation: isolate` so they can never rise over the bar. Isolate any new one the same way.
 * **Hover is written `:hover, :focus-visible`**, and the colour transition is written once, on `a`
   in `globals.css`, inside `prefers-reduced-motion: no-preference`. Movement (the card lift) goes
   inside that query too, not only its transition.
@@ -181,7 +182,7 @@ The page itself is the CV, so what it prints is designed.
   to a colour the brand publishes; Gmail's M carries its own fills. On paper the pill's ink is the
   brand's colour, because the fill drops.
 
-### Project cards and views (DDR-050 to DDR-055, DDR-079)
+### Project cards and views (DDR-050 to DDR-055, DDR-079, DDR-081)
 
 * **A card's link is its name, stretched over the card**: `.link::after` draws the focus outline,
   `.link::before` extends `--card-lift` below the card so a lifted card doesn't flicker.
@@ -192,6 +193,13 @@ The page itself is the CV, so what it prints is designed.
 * **Names and addresses wrap with `overflow-wrap: anywhere`** wherever a long word would overflow
   at 200% text. A new or renamed project or technology means sweeping again.
 * The view's business-case switch is native radios read by `:has()`, with no script (ADR-014).
+* **The gallery is native radios too** (ADR-017, DDR-081): each picture's radio is its figure's
+  previous sibling, and `.pick:not(:checked) + .figure` hides the rest. Keep that adjacency. The
+  count is `details`; open, its `::details-content` is `display: contents` so the revealed
+  thumbnails stay on the count's line. Only while open: closed, that box is what hides them.
+  A thumbnail's image is `box-sizing: border-box`, or its edge makes it 75×55.
+* **No project has gallery media**, so a browser check needs a temporary `gallery` in
+  `content/projects.ts`. Revert it before committing.
 * **The business case inside it is a Client Component**, `BusinessCaseSlider` (ADR-015, DDR-080).
   Every item is in the HTML and sits in one grid cell; only `.shown` is `visibility: visible`, which
   holds the card at its tallest item's height. `components/stylesheets.test.ts` admits `grid-area`

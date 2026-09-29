@@ -610,7 +610,7 @@ describe('elevation tokens', () => {
   // for the one element that may read them rather than putting them on a scale above `raised`: the
   // photo is not raised off the page the way a control or a card is, it is lit.
   it('names every shadow for what it does, so a third is a decision rather than a number', () => {
-    expect(shadows).toEqual(['raised', 'photo-glow', 'photo-inner', 'bar', 'card-hover', 'card-highlight', 'dates-hover']);
+    expect(shadows).toEqual(['raised', 'photo-glow', 'photo-inner', 'bar', 'card-hover', 'card-highlight', 'dates-hover', 'thumbnail']);
   });
 
   // The photo's two lights are the design's own, ink and geometry both, per DDR-021. They are two
@@ -751,8 +751,9 @@ describe('elevation tokens', () => {
     expect(token('shadow-card-hover')!.match(/rgba\(/g)).toHaveLength(1);
     expect(token('shadow-card-highlight')!.match(/rgba\(/g)).toHaveLength(1);
     expect(token('shadow-dates-hover')!.match(/rgba\(/g)).toHaveLength(1);
-    // Every translucency at the root belongs to a shadow, eight of them, or is the bar's surface.
-    expect(root.match(/rgba\(/g)).toHaveLength(9);
+    expect(token('shadow-thumbnail')!.match(/rgba\(/g)).toHaveLength(2);
+    // Every translucency at the root belongs to a shadow, ten of them, or is the bar's surface.
+    expect(root.match(/rgba\(/g)).toHaveLength(11);
   });
 });
 
@@ -998,10 +999,19 @@ describe('spacing tokens', () => {
     expect(rem(token('project-view-label-gap')!) * 16).toBe(12);
   });
 
-  // DDR-053's gallery, off node 59:84: one 20px between two items each way and above the first row.
-  // An item is the lead picture's shape, so the ratio above is the only one a view writes.
-  it('spaces a project view’s gallery as `career-site-project` does, per DDR-053', () => {
-    expect(rem(token('project-view-gallery-gap')!) * 16).toBe(20);
+  // DDR-081's thumbnails, off node 405:93: 72 by 52, 8px corners and a 1.6px edge, each 36px after
+  // the one before, the count 12px after the last, and the layer's two-layer shadow.
+  it('draws a project view’s gallery thumbnails as `career-site-business-case` does, per DDR-081', () => {
+    const px = (name: string) => rem(token(name)!) * 16;
+
+    expect(px('project-view-thumbnail-width')).toBe(72);
+    expect(px('project-view-thumbnail-height')).toBe(52);
+    expect(px('project-view-thumbnail-overlap')).toBe(36);
+    expect(px('project-view-thumbnail-edge')).toBeCloseTo(1.6);
+    expect(px('project-view-thumbnail-radius')).toBe(8);
+    expect(px('project-view-thumbnail-count-gap')).toBe(12);
+    expect(token('project-view-thumbnail-overlap-back')).toBe('calc(-1 * var(--project-view-thumbnail-overlap))');
+    expect(token('shadow-thumbnail')).toBe('0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)');
   });
 
   // DDR-080's business case, off node 365:26: the card's padding, the 12px between its parts, the
@@ -1191,6 +1201,7 @@ const forPaper = [
   { name: 'shadow-card-hover', value: 'none' },
   { name: 'shadow-card-highlight', value: 'none' },
   { name: 'shadow-dates-hover', value: 'none' },
+  { name: 'shadow-thumbnail', value: 'none' },
   { name: 'content-width', value: 'none' },
   { name: 'page-gutter', value: '0' },
   { name: 'page-inset', value: '0' },

@@ -69,7 +69,8 @@ export interface Video {
 export type ProjectMedia = Image | Video;
 
 /**
- * One picture or video in a project view's gallery, per DDR-053 (node 59:84).
+ * One picture or video in a project view's gallery, per DDR-053, shown as a thumbnail under the
+ * lead picture and in its place when chosen, per DDR-081 (node 405:93).
  *
  * It is the lead picture's pair — the media and the few words shown under it — so a gallery item
  * and the lead differ in where they stand rather than in what they are. The caption is what a
@@ -368,9 +369,10 @@ export interface Project {
    */
   caption: string;
   /**
-   * Further pictures and videos of the project, each with its caption, shown below the view's
-   * introduction, per DDR-053. Left out where there is nothing more to show, and a view with none
-   * shows no gallery and no heading: an empty gallery is a heading over nothing.
+   * Further pictures and videos of the project, each with its caption, per DDR-053. Since DDR-081
+   * the view shows them as thumbnails under the lead picture, the lead's first, and choosing one
+   * shows it in the lead's place. Left out where there is nothing more to show, and a view with
+   * none shows the lead picture alone, as before.
    */
   gallery?: readonly GalleryItem[];
   /**
@@ -459,10 +461,16 @@ export interface ProjectView {
   /** The label above the technologies. */
   builtWith: string;
   /**
-   * The label above the gallery, per DDR-053. A view whose project has no gallery media shows it
-   * nowhere, so it names the block rather than standing on its own.
+   * The name of the gallery's thumbnails, per DDR-081: the radio group that chooses which picture
+   * the lead's frame shows. It is said only to assistive technology, and a view whose project has
+   * no gallery media has no group to name.
    */
   gallery: string;
+  /**
+   * The count after the gallery's first two thumbnails, from the number of the rest: "+2 more", per
+   * DDR-081. Choosing it shows the rest of the thumbnails.
+   */
+  more: (count: number) => string;
   /**
    * What a project's links say about opening a new tab, per DDR-043 as DDR-050 extends it. It is
    * said only to assistive technology, after the link's text in its accessible name, as a profile
