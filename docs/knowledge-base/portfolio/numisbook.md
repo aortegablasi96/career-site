@@ -41,8 +41,8 @@ Used Claude Code as a virtual cross-functional development team, creating specia
 
 Coin collectors often manage inventory, purchase documentation and collection information across spreadsheets, cloud storage and physical documents, making the collection difficult to manage and analyze.
 
-- Icon: 
-- Headline: 
+- Icon: ⚠️
+- Headline: Collectors lack a single source of truth
 - Key figure: 
 - Key figure caption: 
 
@@ -50,8 +50,8 @@ Coin collectors often manage inventory, purchase documentation and collection in
 
 A cloud-based SaaS platform that centralizes coin inventory, images and documentation while providing collection analytics and an AI assistant for natural-language exploration.
 
-- Icon: 
-- Headline: 
+- Icon: 💡
+- Headline: One place for the whole collection
 - Key figure: 
 - Key figure caption: 
 
@@ -59,8 +59,8 @@ A cloud-based SaaS platform that centralizes coin inventory, images and document
 
 Cloud-first architecture · Structured collection data model · Integrated documentation & media · AI grounded in collection data
 
-- Icon: 
-- Headline: 
+- Icon: 🔀
+- Headline: Cloud-first, with AI grounded in the data
 - Key figure: 
 - Key figure caption: 
 
@@ -68,8 +68,8 @@ Cloud-first architecture · Structured collection data model · Integrated docum
 
 Production SaaS MVP · Collection management* · Analytics · AI assistant · Extensible data architecture
 
-- Icon: 
-- Headline: 
+- Icon: 🏁
+- Headline: A production SaaS MVP
 - Key figure: 
 - Key figure caption: 
 
@@ -77,8 +77,8 @@ Production SaaS MVP · Collection management* · Analytics · AI assistant · Ex
 
 Product strategy · Data architecture · UX/UI · Database & media infrastructure · AI · End-to-end development
 
-- Icon: 
-- Headline: 
+- Icon: 🛠
+- Headline: From strategy to end-to-end development
 - Key figure: 
 - Key figure caption: 
 

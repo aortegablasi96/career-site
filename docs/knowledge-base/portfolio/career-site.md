@@ -10,8 +10,8 @@ This site. It had no entry until the business case slider (Epic #152): its five 
 
 Recruiters skim a candidate’s profile quickly and often print it, while the evidence behind a CV’s claims sits elsewhere, and a CV kept apart from a website drifts out of step with it.
 
-- Icon: 
-- Headline: 
+- Icon: ⚠️
+- Headline: CVs drift from the evidence behind them
 - Key figure: 
 - Key figure caption: 
 
@@ -19,8 +19,8 @@ Recruiters skim a candidate’s profile quickly and often print it, while the ev
 
 A career site that is also its own printed CV, with a view of its own for every role and project, and a downloadable CV kept in step with the page.
 
-- Icon: 
-- Headline: 
+- Icon: 💡
+- Headline: A career site that is its own CV
 - Key figure: 
 - Key figure caption: 
 
@@ -28,8 +28,8 @@ A career site that is also its own printed CV, with a view of its own for every 
 
 The page is the CV · Content separate from code · Static by design · Accessible from the start · Every decision recorded
 
-- Icon: 
-- Headline: 
+- Icon: 🔀
+- Headline: The page is the CV
 - Key figure: 
 - Key figure caption: 
 
@@ -37,8 +37,8 @@ The page is the CV · Content separate from code · Static by design · Accessib
 
 Live career site · Printable CV · A view for every role and project · Automated quality gate · Decision trail
 
-- Icon: 
-- Headline: 
+- Icon: 🏁
+- Headline: Live, printable and every decision traced
 - Key figure: 
 - Key figure caption: 
 
@@ -46,7 +46,7 @@ Live career site · Printable CV · A view for every role and project · Automat
 
 Product strategy · Content · UX/UI · Architecture · AI-assisted development · Delivery
 
-- Icon: 
-- Headline: 
+- Icon: 🛠
+- Headline: From product strategy to delivery
 - Key figure: 
 - Key figure caption: 

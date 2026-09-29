@@ -33,8 +33,8 @@ Built the backend with **FastAPI**, exposing the agentic RAG pipeline through AP
 
 Traditional career websites require visitors to navigate static pages to understand a candidate's experience, creating an opportunity for a more interactive way to explore professional information.
 
-- Icon: 
-- Headline: 
+- Icon: ⚠️
+- Headline: Static pages make visitors dig for answers
 - Key figure: 
 - Key figure caption: 
 
@@ -42,8 +42,8 @@ Traditional career websites require visitors to navigate static pages to underst
 
 An AI-powered Digital Twin that allows recruiters and visitors to ask natural-language questions about my experience, projects, skills and professional background.
 
-- Icon: 
-- Headline: 
+- Icon: 💡
+- Headline: Ask about my career in plain language
 - Key figure: 
 - Key figure caption: 
 
@@ -51,16 +51,16 @@ An AI-powered Digital Twin that allows recruiters and visitors to ask natural-la
 
 AI as an interface · Grounded professional knowledge · Structured career context · Controlled conversational scope
 
-- Icon: 
-- Headline: 
+- Icon: 🔀
+- Headline: AI as the interface, grounded in facts
 - Key figure: 
 - Key figure caption: 
 
 04 — Outcome
 Interactive AI profile · Conversational career exploration · Structured professional knowledge base · AI agent foundation
 
-- Icon: 
-- Headline: 
+- Icon: 🏁
+- Headline: An interactive AI profile
 - Key figure: 
 - Key figure caption: 
 
@@ -68,8 +68,8 @@ Interactive AI profile · Conversational career exploration · Structured profes
 
 Product strategy · AI & data design · Conversational UX · Knowledge architecture · End-to-end development
 
-- Icon: 
-- Headline: 
+- Icon: 🛠
+- Headline: From AI design to end-to-end development
 - Key figure: 
 - Key figure caption: 
 
