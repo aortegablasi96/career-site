@@ -14,6 +14,14 @@ interface Named {
   style: { viewTransitionName: string };
 }
 
+/** Which way the picture moves: out of its frame, or back into it. */
+export type Direction = 'opening' | 'closing';
+
+/** The part of the root this component writes while the picture moves. */
+interface Root {
+  dataset: { moving?: string };
+}
+
 /**
  * Whether the picture moves between the frame and the window, per DDR-082: only where the browser
  * can draw a view transition and the reader has not asked for less motion. Elsewhere the dialog
@@ -35,13 +43,20 @@ export function moves(
  * and the element it arrives at carries it as the browser captures the view after, so the browser
  * draws one picture growing out of the frame, or shrinking back into it. Neither carries the name
  * once the move is over, so the next one starts clean.
+ *
+ * The root says which way the picture is moving, so the stylesheet can draw only the whole
+ * picture's capture and never the frame's, which is already cropped: the two crossfading, the
+ * frame's zoomed to cover the box, drew a second, larger picture behind the first (#248).
  */
 export function glide(
   start: (update: () => void) => { finished: Promise<unknown> },
   from: Named,
   to: Named,
   change: () => void,
+  root: Root,
+  direction: Direction,
 ): void {
+  root.dataset.moving = direction;
   from.style.viewTransitionName = movingName;
 
   const transition = start(() => {
@@ -52,6 +67,7 @@ export function glide(
 
   void transition.finished.finally(() => {
     to.style.viewTransitionName = '';
+    delete root.dataset.moving;
   });
 }
 
@@ -110,6 +126,7 @@ export function LargerPicture({
     }
 
     const start = (update: () => void) => document.startViewTransition(update);
+    const root = document.documentElement;
 
     // A button's command reaches the dialog first as a cancelable event, so the dialog can be
     // opened or closed inside a transition rather than at once.
@@ -122,9 +139,9 @@ export function LargerPicture({
 
       event.preventDefault();
       if (command === 'show-modal') {
-        glide(start, small!, large!, () => box!.showModal());
+        glide(start, small!, large!, () => box!.showModal(), root, 'opening');
       } else {
-        glide(start, large!, small!, () => box!.close());
+        glide(start, large!, small!, () => box!.close(), root, 'closing');
       }
     }
 
@@ -136,7 +153,7 @@ export function LargerPicture({
       }
 
       event.preventDefault();
-      glide(start, large!, small!, () => box!.close());
+      glide(start, large!, small!, () => box!.close(), root, 'closing');
     }
 
     box.addEventListener('command', onCommand);

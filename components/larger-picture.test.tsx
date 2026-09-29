@@ -90,6 +90,24 @@ describe('LargerPicture', () => {
     expect(pair).toContain('block-size: 100%');
   });
 
+  // Crossfaded, the frame's capture, already cropped and zoomed again to cover the box, drew a
+  // second, larger picture behind the first. Only the whole picture's capture is drawn, opaque,
+  // inside the frame's rounded corners.
+  it('draws only the whole picture while it moves, never the frame’s cropped capture beside it', () => {
+    const pair = rule(globals, `::view-transition-old(${movingName}),\n::view-transition-new(${movingName})`);
+    const group = rule(globals, `::view-transition-group(${movingName})`);
+    const hidden = rule(
+      globals,
+      `:root[data-moving='opening']::view-transition-old(${movingName}),\n:root[data-moving='closing']::view-transition-new(${movingName})`,
+    );
+
+    expect(pair).toContain('animation: none');
+    expect(pair).toContain('mix-blend-mode: normal');
+    expect(group).toContain('overflow: clip');
+    expect(group).toContain('border-radius: var(--radius-large)');
+    expect(hidden).toContain('opacity: 0');
+  });
+
   describe('the movement', () => {
     const welcome = () => ({ matches: false });
     const unwelcome = (query: string) => ({ matches: query === '(prefers-reduced-motion: reduce)' });
@@ -105,6 +123,7 @@ describe('LargerPicture', () => {
     it('hands the moving name from the picture it leaves to the one it arrives at, around the change', () => {
       const from = { style: { viewTransitionName: '' } };
       const to = { style: { viewTransitionName: '' } };
+      const root: { dataset: { moving?: string } } = { dataset: {} };
       const seen: string[] = [];
       let finish = () => {};
       let update = () => {};
@@ -118,7 +137,11 @@ describe('LargerPicture', () => {
         from,
         to,
         () => seen.push(`change: ${from.style.viewTransitionName}|${to.style.viewTransitionName}`),
+        root,
+        'closing',
       );
+      // The root says which way it moves, so the stylesheet hides the frame's capture.
+      expect(root.dataset.moving).toBe('closing');
       update();
       seen.push(`after: ${from.style.viewTransitionName}|${to.style.viewTransitionName}`);
 
@@ -130,6 +153,7 @@ describe('LargerPicture', () => {
         .then(() => {
           expect(to.style.viewTransitionName).toBe('');
           expect(from.style.viewTransitionName).toBe('');
+          expect(root.dataset).not.toHaveProperty('moving');
         });
     });
   });

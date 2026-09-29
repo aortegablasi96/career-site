@@ -207,7 +207,9 @@ The page itself is the CV, so what it prints is designed.
 * **`LargerPicture` is a Client Component only for the movement**: it takes the dialog's `command`
   and `cancel` events and opens or closes it inside a view transition, handing the one
   `view-transition-name` (`larger-picture`) from the frame's picture to the larger one and back.
-  Its pseudo-elements are styled in `app/globals.css`. Don't give either picture the name in a
+  Its pseudo-elements are styled in `app/globals.css`, where only the whole picture's capture is
+  drawn: the root's `data-moving` (`opening` or `closing`) says which capture is the frame's, and
+  it is hidden, or the two crossfade into a ghost (#248). Don't give either picture the name in a
   stylesheet: two elements with it at once skip the transition.
 * **To watch the movement, slow it down**: set `--project-view-enlarge-duration` on the root to a
   few seconds before a screenshot. A screenshot or `getAnimations()` straight after the click often
