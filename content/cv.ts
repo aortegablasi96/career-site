@@ -116,5 +116,5 @@ import type { Cv } from './types';
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '1e36302d22f44922f9bd502e78461a0c892f24d235b9bec652c8941a615be87a',
+  contentDigest: 'b155fe4af98e7fe7305fc4d2b7429381e162f9348359b7811e31ef16cd51ebb7',
 };
