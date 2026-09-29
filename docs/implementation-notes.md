@@ -1,0 +1,210 @@
+# Implementation notes
+
+The traps in this codebase that are hard to rediscover. **Why** each is so lives in the decision
+record named beside it and in the pull request that landed it. Add a note here only when it would
+save the next person from breaking something; don't add story history.
+
+## Tooling
+
+* **ESLint is held at 9.x**: `eslint-config-next` depends on `eslint-plugin-react`, which does not
+  support ESLint 10. Next.js 16 removed `next lint`, so linting goes through the ESLint CLI.
+* **`typecheck` runs `next typegen` first**, because `next-env.d.ts` and the route types are
+  generated and gitignored.
+* **Tests run in Node** and render with `react-dom/server`. There is no DOM environment or Testing
+  Library; add them only for interactive behaviour. `ContentsBar`'s functions are tested against a
+  stubbed `window`.
+* **A test that imports the root layout mocks `next/font/local`**, whose loaders throw outside the
+  Next.js compiler (see `app/layout.test.tsx`).
+* **Vitest's CSS-module stub returns a class for any key**, so `styles[someKey]` is always truthy in
+  a test. Map keys to classes explicitly, as `brandButton` in `introduction.tsx` does.
+* **`@next/next/no-img-element` is off**, because ADR-004 rules out `next/image`.
+
+## Fonts (DDR-011, DDR-023)
+
+* Lora is `h1` and `h2` alone (plus a project card's name, DDR-051); everything else, `h3` to `h6`
+  included, is DM Sans. Medium is DDR-030's list.
+* **Six static files, all loaded**: DM Sans 400, 500, 600, 700 and Lora 400, 600, in `app/fonts/`.
+  `app/layout.test.tsx` holds committed and loaded files equal, so an unused file fails the suite.
+* **No variable fonts**: Firefox writes them into a PDF as outlines, so the CV's text can't be
+  selected (#22). To add a file, take Fontsource's variable Latin file, pin the weight with
+  fontTools' instancer, name it, save as WOFF2; an italic comes from the italic variable file. A
+  weight with no file is synthesised, so a new weight means a new file and a DDR-023 revision.
+* **Ligatures and contextual alternates are off** in `app/globals.css`, so a Firefox PDF spells every
+  word as the page does (#40).
+
+## Styling system (ADR-001, ADR-006, DDR-014)
+
+* `app/tokens.css` defines every token once at `:root`; `app/globals.css` styles plain elements,
+  wrapped in `:where()` so a module class always wins. Components are CSS Modules that read tokens.
+  **A value the tokens don't provide is a design decision, not a number to invent.**
+* **`app/tokens.test.ts` holds tokens to their records**: the scale, rhythm, leadings, tracking,
+  radii, shadows and every colour pairing's measured contrast. Failing pairings are held **by
+  name**, so a new failure can't join quietly. Changing a token means revising its DDR.
+* **`components/stylesheets.test.ts` holds every module stylesheet** to:
+  * tokens only for sizes, spaces, `letter-spacing`, `line-height` and each `box-shadow` layer;
+  * literals per ADR-006: `0`, `auto` and `none` anywhere, `100%` on `max-inline-size` and
+    `max-block-size`, `min-content` on `min-inline-size` and `min-block-size`. The rule behind the
+    list: *a limit may name the space there is or the space the content needs; a size may not*;
+  * no reordering (visual order is markup order, so no `order` and no `grid-column` placement);
+  * `position: absolute` only on a pseudo-element and on the contents bar's menu panel, `.list`;
+    `position: sticky` on the contents bar alone;
+  * only one width media query, `(min-width: 48em)`, which may be written `(min-width: 48em), print`
+    and, in the contents bar alone, `(min-width: 48em), (scripting: none)`.
+* **Breakpoints are in em.** The narrow one, `20em`, lives only in `tokens.css` and adapts three
+  role tokens: the section title, the project title's narrow size and the gutter. The wide one,
+  `48em`, redefines `--rhythm-scale` (0.75 → 1) and `--contents-bar-title-row` there; components
+  write their own layout under it. To test either, change the browser's default font size, not
+  the root's CSS font size.
+* **`z-index: 1` on the contents bar is the site's only z-index**; without it the photo's positioned
+  inner shadow paints over the bar.
+* **Hover is written `:hover, :focus-visible`**, and the colour transition is written once, on `a`
+  in `globals.css`, inside `prefers-reduced-motion: no-preference`. Movement (the card lift) goes
+  inside that query too, not only its transition.
+* **`main > *` is padded by `--page-inset`**, so the bands can span the window. A new direct child
+  of `main` gets the inset too. Bands alternate with `.section:nth-of-type(even)`.
+* **Two modules setting one property on one element** are resolved by the bundler's emit order.
+  When a module must beat another module's rule, raise its specificity on purpose.
+* **`app/grain.webp` stays in `app/`**: `tokens.css` imports it with a relative `url()`, so the
+  bundler puts it under the base path. From `public/` it would need a root path that 404s live.
+* **An inset `box-shadow` on an `<img>` paints nothing**: the image covers it. The photo is wrapped
+  in a `.frame` span whose `::after` carries the inner shadow.
+
+## Print (ADR-002, DDR-015 and its amendments)
+
+The page itself is the CV, so what it prints is designed.
+
+* **Paper is the wide surface**: a component that lays out in columns writes
+  `@media (min-width: 48em), print`, never the grid twice. Two exceptions: the introduction floats
+  its photo on paper, and its print block comes **before** its wide block so that a sheet wide
+  enough to match the breakpoint, such as A4 landscape, takes the grid; and a timeline prints as the
+  vertical one of DDR-010.
+* **The token layer does paper's work**: `tokens.css`'s print block sets the root to 12pt, makes
+  every surface, hairline and shadow transparent or `none`, puts leading and rhythm back to their
+  paper values and sets the photo to 28mm. `--color-marker` is deliberately not dropped. No
+  component writes a print rule to drop its own background.
+* **`globals.css`'s print block hides `nav` and only `nav`.** The footer prints: it is the only
+  place the page, and so the CV, writes out an address. Link addresses print after links with
+  `overflow-wrap: anywhere`, because one unbreakable URL made Edge shrink the whole sheet to 0.9.
+  A contact link writes `::after { content: none }`.
+* **Firefox ignores `break-after: avoid`**, so `section.tsx` wraps a heading and its first item in
+  one block kept whole. Timeline sections are `breakable`, because kept whole they cost a sheet.
+* **No print-only content**, except a role's points (DDR-057). A video's poster is rendered again
+  as an image, and exactly one of the two displays per medium.
+* **A linked timeline card is `position: static` on paper**; positioned, both browsers wrote its
+  text at the foot of the sheet's PDF.
+* **Check print by saving PDFs in Edge and Firefox**, with background graphics on and off, and
+  compare against the tree before: sheet count, where each heading falls, no item split, and the
+  text read back through pypdf and pdfium with no U+FFFD, the apostrophe still U+2019 and no
+  letter-spaced word split apart. Reprint after changing anything above experience or education,
+  or the amount of content. After adding a long address or a grid column, measure `scrollWidth` at
+  643px under print media in Edge.
+
+## Content and assets (ADR-002, ADR-004, ADR-005)
+
+* **`app/sections.tsx` is the ordered list of the page's sections**, rendered and listed in the
+  contents bar; a new section goes there. Each section's contents word is `link` in its content
+  module. A section gets its items one element each, so it can keep its heading with its first
+  item on paper.
+* **`ContactLink`**: `label` is what the pill shows, `text` is the address, which only the footer
+  shows; `newTab`, `markOnly` and the `icon` key (`gmail`, `linkedin`, `github`) are content.
+  `app/page.test.tsx` holds each address to exactly one appearance on the page.
+* **Rich text** (the summary, `howBuilt`) is a list of parts, each a string or a `Strong`.
+* **A `slug` is an address someone may have been sent**; don't rename one lightly.
+* **A role**: `title`, and `fullTitle` only when the heading has a qualifier (DDR-060); `logo` is
+  required, at `public/experiences/<slug>/logo.webp`, trimmed, 36px tall (56px for `logoTall`),
+  lossless, transparent ground; `skills` are the owner's to supply.
+* **A credential** has `href` and an optional `logo`. No PMI or PMP logo and no Credly badge until
+  the owner confirms PMI's written authorization.
+* **A project**: `summary` is its slogan, `description` and `howBuilt` are from the owner's
+  knowledge base, `businessCase` holds the items and a PDF, `gallery` is `GalleryItem`s. A video
+  with speech needs a captions track, which the `Video` type does not carry yet (DDR-053).
+* **`content/cv.ts` carries a digest** that `content/cv.test.ts` checks against the content modules.
+  A change to a fact ADR-005 lists fails the suite until the CV file is brought into step; the
+  file is the owner's.
+* **`public/` is arranged by view**: `home/` (photo, CV), `portfolio/<slug>/` (`lead.webp` and
+  gallery files), `experiences/<slug>/`, `education/<institution>/`. Moving a file changes its
+  address. `public/**/*.png` is gitignored for the owner's originals.
+* **Every binary `src`, `poster` and `href` goes through `app/asset.ts`**, so it resolves under
+  `PAGES_BASE_PATH`; `components/assets.test.ts` enforces it. A `next/link` href is a route and is
+  exempt. Internal links use `prefetch={false}`, or each view would prefetch every picture on the
+  page.
+* **Views are static routes** (`app/portfolio/[slug]`, `app/experience/[slug]`) with
+  `generateStaticParams` and `dynamicParams = false`.
+
+## Components
+
+### Contents bar (ADR-007, ADR-008, ADR-009, ADR-013)
+
+* **`components/contents-bar.tsx` is the only Client Component.** It marks the current section with
+  `aria-current="location"`, glides on its own links' clicks, and holds the menu's open state below
+  the wide breakpoint. `Contents` stays a Server Component and hands it `{ id, link }` per section,
+  never the sections' rendered items.
+* **The glide is `data-gliding` on the root**, removed by the first `scroll` event, with a 250ms
+  fallback. Don't swap the listener for a timer: Firefox starts the scroll a frame or two late.
+  Don't set `scroll-behavior: smooth` on the root either: it animates the back button, fragment
+  loads and focus scrolls.
+* **Home is `#top`; no element may have the id `top`** (`app/page.test.tsx`).
+* **Without script the bar is the full row at every width**, through `(scripting: none)`, and
+  `--contents-bar-title-row` returns to the clearance there.
+* **The clearance is the root's `scroll-padding-block-start`**; sections write no `scroll-margin`.
+* A new link label or section changes how the bar wraps: sweep again.
+
+### Timelines (DDR-057, DDR-074)
+
+* **`Timeline` renders two lists from the same entries**: the row, oldest first, shown from the wide
+  breakpoint and on paper, and the stack, newest first, shown below it. **Every card is in the HTML
+  twice**, so a test counting entries, headings or links reads the first `ol`.
+* A timeline whose entries have an `href` takes no tab stop of its own.
+* **The row clips**, so it pads its foot by `--timeline-shadow-room` and takes it back with a
+  negative margin; a larger shadow or lift needs more room (`tokens.test.ts`). The dates' glow may
+  reach at most 2px above the letters.
+* **The dots stay level only while every date range sets on one line.**
+* **In the stack, a card lifts by a margin, not a translate**, and its link box is measured from
+  `.body`, because a date wraps at 200% text below 380px.
+* A role's points are hidden on screen and print (DDR-057).
+
+### Introduction (DDR-056, DDR-072, DDR-076, DDR-077)
+
+* Below the wide breakpoint the photo and the `hgroup` are one wrapping flex row, centred on each
+  other; the text column is `display: contents`. On paper the photo floats.
+* **`min-inline-size: min-content` on the `hgroup`** is what moves the name below the photo, rather
+  than breaking it mid-word, when its longest word no longer fits beside it.
+* **After changing the photo, the name, the greeting or the intro copy**, check at 300px to 767px
+  at the default text size and at 200%, and check that the controls still end above the fold at
+  390 by 844.
+* The photo's capsule is drawn by the stylesheet, so a replacement's corners are cropped away. No
+  monogram or gradient in its place.
+* The email pill's width is set to match the GitHub pill's content, a measured 3.333 of the step
+  (`--contact-mark-pill-width`); measure again if that label, step, weight or face changes.
+* **Brand marks are never recoloured.** LinkedIn's and GitHub's marks are `currentColor`, set only
+  to a colour the brand publishes; Gmail's M carries its own fills. On paper the pill's ink is the
+  brand's colour, because the fill drops.
+
+### Project cards and views (DDR-050 to DDR-055, DDR-079)
+
+* **A card's link is its name, stretched over the card**: `.link::after` draws the focus outline,
+  `.link::before` extends `--card-lift` below the card so a lifted card doesn't flicker.
+* **A card and the view's figure are flex columns, not one-track grids**: in a grid, Firefox sizes
+  the row from the picture's natural height.
+* **Grid tracks are `minmax(0, 1fr)`**: a plain `1fr` let the picture widen its column into
+  horizontal scroll.
+* **Names and addresses wrap with `overflow-wrap: anywhere`** wherever a long word would overflow
+  at 200% text. A new or renamed project or technology means sweeping again.
+* The view's business-case switch is native radios read by `:has()`, with no script (ADR-014).
+
+### Footer (DDR-028, DDR-029)
+
+The footer is the only place an address is written out, on screen and on paper. Removing it,
+hiding it or stopping it printing costs the printed CV its contact details. Its links are
+deliberately not underlined.
+
+## Checking a change in a browser
+
+* **The sweep**: every 10px from 300px to 900px, plus 1280px and 1536px, at the default text size
+  and at 200%. Nothing may scroll sideways, and no pair of targets may fail WCAG 2.5.8 (24×24 or
+  the spacing exception; DDR-027 sets no minimum).
+* **Enlarge text through the browser's default font size** (over CDP in Chromium), not the root.
+* **Serve `out/` with `charset=utf-8`**; without it Firefox decodes the chunks wrongly and never
+  hydrates.
+* **With Playwright, click a contents link at its coordinates** with `page.mouse.click`; `click()`
+  scrolls the target into view first and spoils the glide.
