@@ -232,6 +232,35 @@ export const projects: Projects = {
           'Used Claude Code as a virtual cross-functional development team, creating specialised skill workflows for content strategy, UI design, architecture, testing, governance and project management, with every significant design and architecture decision recorded. Integrated MCP tools including Figma and Playwright to connect product design and browser testing.',
         ],
       ],
+      // The site has no knowledge-base entry, so its business case was written in the same five
+      // items as the others, as the owner asked on #231, from what the repository records: the
+      // Content Brief on #25, the ADRs and the DDRs. Its full business case was made in the others'
+      // layout and says no more than they do.
+      businessCase: {
+        items: [
+          {
+            label: '01 — Problem',
+            text: 'Recruiters skim a candidate’s profile quickly and often print it, while the evidence behind a CV’s claims sits elsewhere, and a CV kept apart from a website drifts out of step with it.',
+          },
+          {
+            label: '02 — Product',
+            text: 'A career site that is also its own printed CV, with a view of its own for every role and project, and a downloadable CV kept in step with the page.',
+          },
+          {
+            label: '03 — Key decisions',
+            text: 'The page is the CV · Content separate from code · Static by design · Accessible from the start · Every decision recorded',
+          },
+          {
+            label: '04 — Outcome',
+            text: 'Live career site · Printable CV · A view for every role and project · Automated quality gate · Decision trail',
+          },
+          {
+            label: '05 — My contribution',
+            text: 'Product strategy · Content · UX/UI · Architecture · AI-assisted development · Delivery',
+          },
+        ],
+        file: '/portfolio/career-site/career-site-business-case.pdf',
+      },
       links: [{ text: sourceCode, href: 'https://github.com/aortegablasi96/career-site' }],
     },
   ],

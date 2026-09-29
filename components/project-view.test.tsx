@@ -99,7 +99,7 @@ describe('ProjectView', () => {
   });
 
   it('shows neither the heading nor a paragraph for a project that does not say how it was built', () => {
-    const view = render({ ...careerSite!, howBuilt: undefined });
+    const view = render({ ...careerSite!, howBuilt: undefined, businessCase: undefined });
 
     expect(text(view)).not.toContain(projects.view.howBuilt);
     expect(view).not.toContain('howBuilt');
@@ -112,16 +112,17 @@ describe('ProjectView', () => {
     const view = render(stockPortfolioViewer!);
     const radios = [...view.matchAll(/<input [^>]*>/g)].map(([input]) => input);
 
-    it('is on every view but this site’s, the projects with a business case', () => {
-      expect(projects.projects.filter(({ businessCase }) => businessCase).map(({ name }) => name)).toEqual([
-        numisBook!.name,
-        digitalTwin!.name,
-        stockPortfolioViewer!.name,
-      ]);
-      expect(render(numisBook!)).toContain('radiogroup');
-      expect(render(digitalTwin!)).toContain('radiogroup');
-      expect(render(careerSite!)).not.toContain('radiogroup');
-      expect(render(careerSite!)).not.toContain('<input');
+    // Since this site gained its own on #231, every project has one, so a view without one is a
+    // project with its business case taken away.
+    it('is on every view, since every project has a business case, and on no view without one', () => {
+      expect(projects.projects.filter(({ businessCase }) => businessCase).map(({ name }) => name)).toEqual(
+        projects.projects.map(({ name }) => name),
+      );
+      for (const project of projects.projects) {
+        expect(render(project)).toContain('radiogroup');
+      }
+      expect(render({ ...careerSite!, businessCase: undefined })).not.toContain('radiogroup');
+      expect(render({ ...careerSite!, businessCase: undefined })).not.toContain('<input');
     });
 
     // A view without a business case reads exactly as it did before #231: no wrapper round its
@@ -172,7 +173,7 @@ describe('ProjectView', () => {
 
     // The owner reordered the summary on #231, so key decisions come third and every item is numbered.
     it('shows each item of the business case as a term and its description, in the owner’s order', () => {
-      for (const project of [numisBook!, digitalTwin!, stockPortfolioViewer!]) {
+      for (const project of projects.projects) {
         const items = project.businessCase!.items;
 
         expect(items.map(({ label }) => label)).toEqual([
@@ -208,7 +209,7 @@ describe('ProjectView', () => {
     it('hides "Built with" and the technologies with the overview', () => {
       expect(view).toMatch(new RegExp(`<h2 class="[^"]*overviewOnly[^"]*">${projects.view.builtWith}</h2>`));
       expect(view).toMatch(/<ul class="[^"]*technologies[^"]*overviewOnly[^"]*">/);
-      expect(render(careerSite!)).not.toContain('overviewOnly');
+      expect(render({ ...careerSite!, businessCase: undefined })).not.toContain('overviewOnly');
     });
 
     // The radio takes no room and draws nothing, and its label draws the focus it cannot.
@@ -235,7 +236,7 @@ describe('ProjectView', () => {
     });
 
     it('is each project’s own PDF on its view', () => {
-      for (const project of [numisBook!, digitalTwin!]) {
+      for (const project of [numisBook!, digitalTwin!, careerSite!]) {
         const projectFile = project.businessCase!.file;
 
         expect(projectFile).toBe(`/portfolio/${project.slug}/${project.slug}-business-case.pdf`);
@@ -270,7 +271,7 @@ describe('ProjectView', () => {
     });
 
     it('is on no view without a business case, whose links are as they were', () => {
-      const markup = render(careerSite!);
+      const markup = render({ ...careerSite!, businessCase: undefined });
 
       expect(text(markup)).not.toContain(projects.view.downloadBusinessCase);
       expect(markup).not.toContain('overviewOnly');

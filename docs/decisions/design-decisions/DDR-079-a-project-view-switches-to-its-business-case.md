@@ -22,6 +22,13 @@ sizes: nothing scrolls sideways.
 so every view but this site's has a switch. It was content alone again, and its view was swept the
 same way, with the same result. Its full business case is two pages, where the others are one.
 
+**Last on 2026-09-29, still on #231, this site has one too**, so every view has a switch. The site
+has no knowledge-base entry, so, as the owner asked, its five items and its two-page PDF were
+written from what the repository records, in the others' layout. It was content alone once more,
+and its view was swept the same way, with the same result. The branch that draws no switch is now
+taken by no view, and `components/project-view.test.tsx` exercises it with a project whose
+business case is taken away, as it exercises the gallery.
+
 ## Context
 
 On #231, part of Epic #152, the owner asked for a project's view to switch between the project's
