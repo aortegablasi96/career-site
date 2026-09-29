@@ -18,6 +18,10 @@ Both were content alone, as this record intended, and nothing below changed. Its
 the Stock Portfolio Viewer's was, in both accounts, every 10px from 300px to 900px at both text
 sizes: nothing scrolls sideways.
 
+**Later on 2026-09-29, still on #231, the Digital Twin has one as well**, in the same five items,
+so every view but this site's has a switch. It was content alone again, and its view was swept the
+same way, with the same result. Its full business case is two pages, where the others are one.
+
 ## Context
 
 On #231, part of Epic #152, the owner asked for a project's view to switch between the project's

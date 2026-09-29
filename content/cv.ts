@@ -99,9 +99,12 @@ import type { Cv } from './types';
  * It moved again with #231, because NumisBook gained its business case and the owner reordered the
  * Stock Portfolio Viewer's, so key decisions come third and every item is numbered. Neither states a
  * fact ADR-005 lists, so neither moved the CV.
+ *
+ * It moved again with #231, because the Digital Twin gained its business case. It states no fact
+ * ADR-005 lists, so it did not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '57625ce3b912e6f7268cb33e3bd68c10d65cca1767b4bdcaf01552e5481881f8',
+  contentDigest: '52f1247c9f1bfc79ce6032ddce17ceaee9c6bc468518006e612b22e9873dd2c5',
 };
