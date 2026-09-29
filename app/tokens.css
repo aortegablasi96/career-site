@@ -358,11 +358,14 @@
   --focus-outline-width: 2px;
   --focus-outline-offset: 2px;
 
-  /* The ground a view's picture is shown larger on, per DDR-082, and what is written and drawn on
-     it: the heading's ink as a surface, opaque like the rest of the palette, so a picture's own
-     colours read against a neutral dark, and the card's white on it, 17.85:1. The focus outline
-     there is the white too, because the accent on this ground is 2.84:1, below 1.4.11's 3:1. */
-  --color-surface-enlarged: var(--color-text-heading);
+  /* The veil a view's picture is shown larger on, per DDR-082, and what is written and drawn on
+     it. The veil is the heading's ink at 60%, over the view blurred behind it, as the owner asked
+     on #246: the palette's second translucent colour, after the contents bar's surface, and like
+     it a surface rather than an ink. Over the lightest thing the view draws, the card's white, it
+     is at its lightest, and the card's white on it is 4.69:1 there, so the caption passes 1.4.3 on
+     any view behind it. The focus outline there is the white too, because the accent on the veil
+     at its darkest is 2.84:1, below 1.4.11's 3:1. */
+  --color-surface-enlarged: rgba(15, 23, 42, 0.6);
   --color-on-enlarged: var(--color-surface-card);
 
   /* Spacing, per DDR-013. A base unit of 1rem, halved and doubled, so each step is twice the one
@@ -763,6 +766,14 @@
      picture, so it is pulled up over it by its own size and that step. */
   --project-view-enlarge-size: var(--space-large);
   --project-view-enlarge-pull: calc(-1 * (var(--project-view-enlarge-size) + var(--space-small)));
+  /* How far the view behind a larger picture is blurred, per DDR-082: enough that the view reads as
+     a place rather than as words to read, which the contents bar's 12px, drawn behind an almost
+     opaque surface, is not asked to do. In px, as that blur is. */
+  --project-view-enlarged-blur: 16px;
+  /* How long the picture takes to grow out of its frame and to shrink back into it, per DDR-082:
+     twice the site's 150ms, because the picture travels across the window rather than changing
+     colour in place. Not read at all when the reader prefers reduced motion. */
+  --project-view-enlarge-duration: 300ms;
 
   /* The foot of a project's view, per DDR-052, measured off node 59:118: the two halves stand 24px
      apart, and inside a card the chevron is 12px from the words. Neither is a step of DDR-013's

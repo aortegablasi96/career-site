@@ -126,9 +126,9 @@ determine whether an existing pattern can solve the problem. Significant archite
 reviewed by the Architect and recorded as an ADR. Do not make architectural decisions inside
 implementation work when they have not been approved.
 
-The site has two Client Components, each with its reason recorded in an ADR:
-`components/contents-bar.tsx` (ADR-007) and `components/business-case-slider.tsx` (ADR-015). A
-third one needs a reason of its own.
+The site has three Client Components, each with its reason recorded in an ADR:
+`components/contents-bar.tsx` (ADR-007), `components/business-case-slider.tsx` (ADR-015) and
+`components/larger-picture.tsx` (ADR-018). A fourth one needs a reason of its own.
 
 ## UI and Design
 

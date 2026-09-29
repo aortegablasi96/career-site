@@ -616,10 +616,6 @@ describe('ProjectView', () => {
         caption,
       }));
 
-    /** A rule's body, by its whole selector. */
-    const rule = (selector: string) =>
-      css.match(new RegExp(`(?:^|\\})\\s*${selector.replace(/[.:+()[\]]/g, '\\$&')}\\s*\\{([^}]*)\\}`))?.[1] ?? '';
-
     it('opens every view’s lead picture, with its alternative text, its caption and a way to close it', () => {
       for (const project of projects.projects) {
         const markup = render(project);
@@ -656,43 +652,14 @@ describe('ProjectView', () => {
       expect(markup).not.toContain(`src="${video.media.file}" alt=`);
     });
 
-    it('needs no script: the view stays a Server Component and writes no handler', () => {
+    // ADR-018: the view stays a Server Component, and the movement is the one thing in it that
+    // needs script, which the larger picture's own Client Component holds.
+    it('stays a Server Component, and leaves the movement to the larger picture’s own component', () => {
       const source = readFileSync(new URL('./project-view.tsx', import.meta.url), 'utf8');
 
       expect(source).not.toMatch(/['"]use client['"]/);
       expect(source).not.toMatch(/\bon[A-Z]\w*=/);
-    });
-
-    it('makes the whole picture the target that opens it, and the ground around it the one that closes it', () => {
-      expect(rule('.frame')).toContain('position: relative');
-      expect(rule('.enlarge::after')).toContain('position: absolute');
-      expect(rule('.enlarge::after')).toContain('inset: 0');
-      expect(rule('.close::before')).toContain('position: absolute');
-      expect(rule('.close::before')).toContain('inset: 0');
-      // The picture and its caption are drawn over the ground's target, so choosing them keeps it open.
-      expect(rule('.largerPicture')).toContain('position: relative');
-      expect(rule('.largerCaption')).toContain('position: relative');
-    });
-
-    it('shows the picture whole, within the room there is, never cropped or stretched', () => {
-      const picture = rule('.largerPicture');
-
-      expect(picture).toContain('max-inline-size: 100%');
-      expect(picture).toContain('max-block-size: 100%');
-      expect(picture).not.toMatch(/object-fit|aspect-ratio|(?:^|\s)(?:inline|block)-size/);
-      expect(rule('.larger[open]')).toContain('grid-template-rows: auto minmax(0, 1fr) auto');
-    });
-
-    it('draws focus in white on the dark ground, keeps the view still behind it, and fades only where motion is welcome', () => {
-      expect(rule('.larger :focus-visible')).toContain('outline-color: var(--color-on-enlarged)');
-      expect(rule(':global(html):has(.larger[open])')).toContain('overflow: hidden');
-
-      const motion = css.slice(css.indexOf('@media (prefers-reduced-motion: no-preference)'));
-      expect(css.indexOf('@starting-style')).toBeGreaterThan(css.indexOf('@media (prefers-reduced-motion: no-preference)'));
-      expect(motion).toContain('.larger[open]');
-      expect(css.slice(0, css.indexOf('@media (prefers-reduced-motion: no-preference)'))).not.toMatch(
-        /transition|@starting-style/,
-      );
+      expect(source).toContain("import { LargerPicture } from './larger-picture';");
     });
   });
 

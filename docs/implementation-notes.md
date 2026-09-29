@@ -136,8 +136,8 @@ The page itself is the CV, so what it prints is designed.
 
 ### Contents bar (ADR-007, ADR-008, ADR-009, ADR-013)
 
-* **`components/contents-bar.tsx` is a Client Component**, one of two (the other is the business
-  case slider, ADR-015). It marks the current section with
+* **`components/contents-bar.tsx` is a Client Component**, one of three (the others are the
+  business case slider, ADR-015, and a view's larger picture, ADR-018). It marks the current section with
   `aria-current="location"`, glides on its own links' clicks, and holds the menu's open state below
   the wide breakpoint. `Contents` stays a Server Component and hands it `{ id, link }` per section,
   never the sections' rendered items.
@@ -204,6 +204,14 @@ The page itself is the CV, so what it prints is designed.
   for React; drop it once `@types/react` has them. The opening button follows the picture in the
   flow and is pulled over its corner by a negative margin, because only a pseudo-element may be
   `position: absolute`; its `::after` and the close button's `::before` stretch the targets.
+* **`LargerPicture` is a Client Component only for the movement**: it takes the dialog's `command`
+  and `cancel` events and opens or closes it inside a view transition, handing the one
+  `view-transition-name` (`larger-picture`) from the frame's picture to the larger one and back.
+  Its pseudo-elements are styled in `app/globals.css`. Don't give either picture the name in a
+  stylesheet: two elements with it at once skip the transition.
+* **To watch the movement, slow it down**: set `--project-view-enlarge-duration` on the root to a
+  few seconds before a screenshot. A screenshot or `getAnimations()` straight after the click often
+  catches the view before the transition starts.
 * **The dialog's picture is sized by `max-*-size: 100%` in a `minmax(0, 1fr)` grid row**, which
   keeps it whole and within the window. Measure it after layout settles: read 30ms after a resize
   and an Escape, Playwright reported a stale, squashed height.

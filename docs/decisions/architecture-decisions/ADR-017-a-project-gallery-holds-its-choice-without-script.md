@@ -5,7 +5,9 @@ Status: Accepted
 Date: 2026-09-29
 
 **Amended by ADR-018 (2026-09-29)**: DDR-082 now opens the picture in the frame larger, as a
-native modal dialog opened by the Invoker Commands API, still without script. The popover
+native modal dialog opened by the Invoker Commands API, without script; a third Client Component,
+`LargerPicture`, only moves the picture as it opens and closes. The gallery's choice is still held
+without script. The popover
 alternative below was rejected because DDR-081 decided against an overlay; ADR-018 records why a
 modal dialog, not a popover, is the overlay.
 

@@ -36,7 +36,7 @@ ADR-001 to ADR-018 are accepted.
 | ADR-015 | Amends ADR-007: second Client Component, `BusinessCaseSlider`, holds the item shown (DDR-080) |
 | ADR-016 | Amends ADR-004: lead pictures and the photo at their originals' full resolution; the photo's budget is 200 KB |
 | ADR-017 | Extends ADR-014: a project's gallery holds its picture in native radios (DDR-081); no new Client Component |
-| ADR-018 | Amends ADR-017's overlay rejection: a view's picture opens larger in a modal `dialog` via Invoker Commands (DDR-082); no new Client Component |
+| ADR-018 | Amends ADR-017's overlay rejection and ADR-007: a view's picture opens larger in a modal `dialog` via Invoker Commands, without script (DDR-082); a third Client Component, `LargerPicture`, only moves it |
 
 ## DDRs
 

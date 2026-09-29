@@ -345,11 +345,12 @@ describe('colour tokens', () => {
     ]);
   });
 
-  // Every colour but one. DDR-031 gives the contents bar the design's translucent surface, which
-  // is the one colour on the site that is not opaque, and it is held out here by name.
+  // Every colour but two. DDR-031 gives the contents bar the design's translucent surface, and
+  // DDR-082 gives a view's larger picture its veil, which are the two colours on the site that are
+  // not opaque, and they are held out here by name.
   it('writes every colour as a six-digit hex value or a reference to another colour', () => {
     for (const [name, value] of colors) {
-      if (name === 'surface-bar') {
+      if (name === 'surface-bar' || name === 'surface-enlarged') {
         continue;
       }
 
@@ -439,11 +440,6 @@ describe('colour tokens', () => {
     { foreground: 'google-ink', background: 'surface', asked: 4.5, recorded: 15.39, meets: true },
     { foreground: 'google-border', background: 'surface-card', asked: 3, recorded: 4.53, meets: true },
     { foreground: 'google-border', background: 'surface-google-hover', asked: 3, recorded: 3.9, meets: true },
-    // A view's picture larger, per DDR-082: its caption and the focus outline in the card's white on
-    // the dark ground, and the round close control, white on it. The accent is measured below,
-    // because it is why the outline there is white rather than the accent.
-    { foreground: 'on-enlarged', background: 'surface-enlarged', asked: 4.5, recorded: 17.85, meets: true },
-    { foreground: 'surface-card', background: 'surface-enlarged', asked: 3, recorded: 17.85, meets: true },
     // A role's view, per DDR-059: its header's panel, on the accent's palest tint, carries the job
     // title and, in the muted ink, the dates and the place; the company's pill and each point's
     // number are the accent on its border tint; and a skill is the accent on the palest tint. The
@@ -485,11 +481,29 @@ describe('colour tokens', () => {
     },
   );
 
-  // DDR-082: the focus outline follows the accent everywhere else, and on the larger picture's dark
-  // ground the accent is below 1.4.11's 3:1, so the outline there is drawn in the ground's white.
-  it('draws focus on the larger picture’s ground in white, where the accent fails, per DDR-082', () => {
-    expect(contrast(color('focus'), color('surface-enlarged'))).toBeCloseTo(2.84, 2);
-    expect(contrast(color('on-enlarged'), color('surface-enlarged'))).toBeGreaterThanOrEqual(3);
+  // DDR-082: a view's larger picture is shown over the view blurred behind the heading's ink at 60%,
+  // so what the veil is depends on what is behind it, and it is measured by what it can become, as
+  // the contents bar is. Over the lightest thing a view draws, the card's white, it is at its
+  // lightest, and the caption, the close control and the focus outline, all in the card's white,
+  // measure 4.69:1 on it: the caption passes 1.4.3 and the two marks 1.4.11. Over the heading's own
+  // ink it is at its darkest, and the accent there is 2.84:1, which is why the focus outline on the
+  // veil is the white rather than the accent.
+  it('veils the view behind a larger picture at 60%, and measures what it carries on its lightest and darkest blend, per DDR-082', () => {
+    const [r, g, b, alpha] = colors.get('surface-enlarged')!.match(/[\d.]+/g)!.map(Number);
+    const channels = (hex: string) => [1, 3, 5].map((i) => Number.parseInt(hex.slice(i, i + 2), 16));
+    const hex = (values: readonly number[]) =>
+      `#${values.map((value) => Math.round(value).toString(16).padStart(2, '0')).join('')}`;
+    const over = (under: string) =>
+      hex([r!, g!, b!].map((channel, i) => alpha! * channel + (1 - alpha!) * channels(under)[i]!));
+    const lightest = over(color('surface-card'));
+    const darkest = over(color('text-heading'));
+
+    expect(hex([r!, g!, b!])).toBe(color('text-heading'));
+    expect(alpha).toBe(0.6);
+    expect(contrast(color('on-enlarged'), lightest)).toBeCloseTo(4.69, 2);
+    expect(contrast(color('on-enlarged'), lightest)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(color('focus'), darkest)).toBeCloseTo(2.84, 2);
+    expect(contrast(color('focus'), darkest)).toBeLessThan(3);
   });
 
   // DDR-047: the GitHub pill's hover is as easy to see as the LinkedIn pill's. Between two fills,
@@ -747,11 +761,12 @@ describe('elevation tokens', () => {
   // The palette above is opaque throughout, and this is why: the shadow's ink is translucent black,
   // which is wrong on text, on a border and on a surface, so it is held inside the one value that
   // uses it rather than offered to anything that can read a colour token.
-  // DDR-031 admits one translucent colour, the contents bar's surface. It is a surface rather than
-  // an ink, and the argument above is about inks; it still holds for every one of them.
-  it('keeps its translucent ink out of the palette, whose one translucency is the bar’s surface', () => {
+  // DDR-031 admits one translucent colour, the contents bar's surface, and DDR-082 a second, the
+  // larger picture's veil. Both are surfaces rather than inks, and the argument above is about inks;
+  // it still holds for every one of them.
+  it('keeps its translucent ink out of the palette, whose translucencies are two surfaces', () => {
     for (const [name, value] of colors) {
-      if (name === 'surface-bar') {
+      if (name === 'surface-bar' || name === 'surface-enlarged') {
         continue;
       }
 
@@ -766,8 +781,9 @@ describe('elevation tokens', () => {
     expect(token('shadow-card-highlight')!.match(/rgba\(/g)).toHaveLength(1);
     expect(token('shadow-dates-hover')!.match(/rgba\(/g)).toHaveLength(1);
     expect(token('shadow-thumbnail')!.match(/rgba\(/g)).toHaveLength(2);
-    // Every translucency at the root belongs to a shadow, ten of them, or is the bar's surface.
-    expect(root.match(/rgba\(/g)).toHaveLength(11);
+    // Every translucency at the root belongs to a shadow, ten of them, or is the bar's surface or
+    // the larger picture's veil.
+    expect(root.match(/rgba\(/g)).toHaveLength(12);
   });
 });
 

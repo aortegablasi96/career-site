@@ -9,25 +9,13 @@ import type {
 } from '@/content/types';
 import { BusinessCaseSlider } from './business-case-slider';
 import { Icon } from './icon';
+import { LargerPicture } from './larger-picture';
 import { Media, projectHref } from './projects';
 import styles from './project-view.module.css';
 
 /**
- * The picture in the lead's frame, and the same picture larger, per DDR-082 and ADR-018.
- *
- * Over the picture's corner is a round control with two arrows pointing out, which opens the
- * picture larger, and the whole picture is its target. Larger, the picture is shown whole, on a
- * dark ground that fills the window, with its caption under it and a control that closes it above
- * it; the whole ground around the picture is that control's target too.
- *
- * The larger picture is a native modal `dialog`, opened and closed by the buttons' `command`, so
- * the browser holds whether it is open, keeps keyboard focus inside it and leaves the view behind
- * inert while it is, closes it with Escape, and returns focus to the control that opened it. None
- * of that needs script, per ADR-018, so `ProjectView` stays a Server Component. The picture keeps
- * its alternative text, and the dialog is named by its caption.
- *
- * It is the file the frame already shows, so opening it fetches nothing. A video has its own
- * controls, full screen among them, so it has none of this, per #246.
+ * The picture in the lead's frame: a picture that opens larger, per DDR-082, or a video, which has
+ * its own controls, full screen among them, and so opens nothing, per #246.
  */
 function Frame({
   media,
@@ -40,7 +28,7 @@ function Frame({
   caption: string;
   /** The larger picture's identifier, unique within the view. */
   id: string;
-  /** The two controls' accessible names. */
+  /** The names of the controls that open it larger and close it. */
   enlarge: string;
   close: string;
 }) {
@@ -49,35 +37,14 @@ function Frame({
   }
 
   return (
-    <>
-      <div className={styles.frame}>
-        <Media media={media} className={styles.media} />
-        <button
-          type="button"
-          className={styles.enlarge}
-          commandfor={id}
-          command="show-modal"
-          aria-label={enlarge}
-        >
-          <Icon name="enlarge" />
-        </button>
-      </div>
-      <dialog id={id} className={styles.larger} aria-labelledby={`${id}-caption`}>
-        <button
-          type="button"
-          className={styles.close}
-          commandfor={id}
-          command="close"
-          aria-label={close}
-        >
-          <Icon name="close" />
-        </button>
-        <img className={styles.largerPicture} src={asset(media.file)} alt={media.alt} />
-        <p id={`${id}-caption`} className={styles.largerCaption}>
-          {caption}
-        </p>
-      </dialog>
-    </>
+    <LargerPicture
+      media={media}
+      caption={caption}
+      id={id}
+      enlarge={enlarge}
+      close={close}
+      className={styles.media}
+    />
   );
 }
 
