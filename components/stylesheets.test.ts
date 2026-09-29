@@ -146,7 +146,23 @@ describe('component stylesheets', () => {
       }
     });
 
+    // DDR-080 puts every item of a project's business case in one cell, so the card is as tall as
+    // its tallest item, and draws only the one shown. Nothing is reordered, because only one is ever
+    // visible, so that stylesheet may place its items in the first cell, and only there; without
+    // script it puts them back in the flow, one below the other.
     it('does not reorder content, so the visual order is the markup order', () => {
+      if (name === 'business-case-slider.module.css') {
+        const placed = [...css.matchAll(/\bgrid-(?:area|row|column)\s*:\s*([^;]+);/g)].map(([, value]) =>
+          value.trim(),
+        );
+
+        expect(placed).toEqual(['1 / 1', 'auto']);
+        expect(css.replace(/\bgrid-area\s*:\s*(?:1 \/ 1|auto);/g, '')).not.toMatch(
+          /\border\s*:|-reverse\b|\bgrid-(?:area|row|column)\b/,
+        );
+        return;
+      }
+
       expect(css).not.toMatch(/\border\s*:|-reverse\b|\bgrid-(?:area|row|column)\b/);
     });
 

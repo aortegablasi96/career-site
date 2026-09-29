@@ -311,10 +311,27 @@ export interface RoleView {
   neighbour: (direction: string, company: string, role: string) => string;
 }
 
-/** One item of a project's business case, per DDR-079: its label, such as "01 — Problem", and its text. */
+/**
+ * One item of a project's business case, per DDR-079: its label, such as "01 — Problem", and its
+ * text. Since DDR-080 each item is a slide of its own, which may also carry an icon, a headline and
+ * a key figure, from the fields of the same names under the item in the owner's knowledge base. Each
+ * is left out until the owner fills it, and a slide without one draws nothing in its place.
+ */
 export interface BusinessCaseItem {
   label: string;
   text: string;
+  /** A single character, such as an emoji, beside the headline. It is decoration, so it is not announced. */
+  icon?: string;
+  /** A few words that say what the item is about, above its text. */
+  headline?: string;
+  /** A figure that evidences the item, with the words that say what it counts. */
+  figure?: KeyFigure;
+}
+
+/** A business case item's key figure, per DDR-080: the figure, such as "0", and its caption. */
+export interface KeyFigure {
+  value: string;
+  caption: string;
 }
 
 /**
@@ -433,6 +450,12 @@ export interface ProjectView {
   businessCase: string;
   /** The control that downloads the full business case, shown in place of the links while it is. */
   downloadBusinessCase: string;
+  /**
+   * The business case's two stepping controls, per DDR-080: the one that shows the item before and
+   * the one that shows the item after. Each is the control's accessible name as well as its word.
+   */
+  previousItem: string;
+  nextItem: string;
   /** The label above the technologies. */
   builtWith: string;
   /**

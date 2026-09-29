@@ -105,9 +105,16 @@ import type { Cv } from './types';
  *
  * It moved again with #231, because this site gained its business case, so every project has one.
  * It states no fact ADR-005 lists, so it did not move the CV.
+ *
+ * It moved again with #240, because a project's view gained the words on the two controls that step
+ * through its business case, per DDR-080. A control's word is not a fact ADR-005 lists as shared,
+ * so it did not move the CV.
+ *
+ * It moved again with #240, because every business case item gained its icon and headline. Neither
+ * is a fact ADR-005 lists as shared, so neither moved the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'a64f7c6294c2ccb5501e9e1f69f1238352d032df5b2de14d3b97b584d776eb7d',
+  contentDigest: '1e36302d22f44922f9bd502e78461a0c892f24d235b9bec652c8941a615be87a',
 };

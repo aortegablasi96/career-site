@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import { asset } from '@/app/asset';
 import type {
-  BusinessCaseItem,
   GalleryItem,
   Project,
   ProjectView as ProjectViewStrings,
 } from '@/content/types';
+import { BusinessCaseSlider } from './business-case-slider';
 import { Icon } from './icon';
 import { Media, projectHref } from './projects';
 import styles from './project-view.module.css';
@@ -80,25 +80,6 @@ function Accounts({
         {businessCase}
       </label>
     </div>
-  );
-}
-
-/**
- * A project's business case, per DDR-079: each of the owner's labelled items, in their order, as a
- * term and its description. The labels are not headings, so the view's outline is the same in both
- * accounts but for "How I built it", which the overview carries. The stylesheet hides it until its
- * option is checked.
- */
-function BusinessCase({ items }: { items: readonly BusinessCaseItem[] }) {
-  return (
-    <dl className={styles.businessCase}>
-      {items.map(({ label, text }) => (
-        <div key={label} className={styles.caseItem}>
-          <dt className={styles.caseLabel}>{label}</dt>
-          <dd className={styles.caseText}>{text}</dd>
-        </div>
-      ))}
-    </dl>
   );
 }
 
@@ -190,6 +171,8 @@ export function ProjectView({
     overview: overviewWord,
     businessCase: businessCaseWord,
     downloadBusinessCase,
+    previousItem,
+    nextItem,
     builtWith,
     gallery: galleryTitle,
     newTab,
@@ -255,7 +238,15 @@ export function ProjectView({
                 businessCase={businessCaseWord}
               />
               <div className={styles.overview}>{overview}</div>
-              <BusinessCase items={businessCase.items} />
+              {/* The business case, one item at a time, per DDR-080, which the stylesheet hides
+                  until its option is checked. */}
+              <div className={styles.businessCase}>
+                <BusinessCaseSlider
+                  items={businessCase.items}
+                  previous={previousItem}
+                  next={nextItem}
+                />
+              </div>
             </>
           ) : (
             overview

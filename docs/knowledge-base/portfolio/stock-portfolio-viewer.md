@@ -35,21 +35,46 @@ Used Claude Code as a virtual cross-functional development team, creating specia
 
 Portfolio data is fragmented across brokers, while existing broker interfaces offer limited personalization and cross-portfolio analysis.
 
+- Icon: ⚠️
+- Headline: Portfolio data split across brokers
+- Key figure: 
+- Key figure caption: 
+
 **02 — Product**
 
 A local-first portfolio management application that consolidates broker data into a personalized analytics workspace, complemented by an AI portfolio assistant.
+
+- Icon: 💡
+- Headline: A local-first, personal analytics workspace
+- Key figure: 
+- Key figure caption: 
 
 **03 — Key decisions**
 
 Local-first architecture · IBKR-first MVP · Broker abstraction · AI grounded in portfolio data
 
+- Icon: 🔀
+- Headline: Local-first, starting with IBKR
+- Key figure: 
+- Key figure caption: 
+
 **04 — Outcome**
 
 IBKR MVP · Portfolio analytics · Dividend tracking · AI assistant · Broker-extensible architecture
 
+- Icon: 🏁
+- Headline: An IBKR MVP built to add more brokers
+- Key figure: 
+- Key figure caption: 
+
 **05 — My contribution**
 
 Product strategy · Data pipeline · UX/UI · Architecture · Development · AI-assisted delivery
+
+- Icon: 🛠
+- Headline: From data pipeline to AI-assisted delivery
+- Key figure: 
+- Key figure caption: 
 
 ## Business Case:
 

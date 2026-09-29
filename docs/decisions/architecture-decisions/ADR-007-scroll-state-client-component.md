@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-18
 
+**Amended by ADR-015**: this is no longer the site's only Client Component. `BusinessCaseSlider`
+holds which item of a project's business case is shown, for a reason recorded there, per DDR-080.
+
 **Amended by ADR-013**: the Client Component this record admits also holds whether its menu is
 open below the wide breakpoint, per DDR-075. That is its second reason, recorded as this one was.
 

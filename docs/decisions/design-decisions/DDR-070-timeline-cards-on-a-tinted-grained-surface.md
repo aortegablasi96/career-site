@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-28
 
+**Extended by DDR-080**: a project's business case is drawn as a timeline card is, on the same
+surface, edge and top line, and rests raised.
+
 **Amends DDR-057**, per #204. Every card in the experience and education timelines is drawn on the
 surface the owner drew for it in Figma: a pale gradient with a faint grain over it, a violet edge
 and a white highlight inside its top edge. Before, the card was white with a grey hairline. Its

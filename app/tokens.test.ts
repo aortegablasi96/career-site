@@ -299,6 +299,7 @@ describe('colour tokens', () => {
       'surface-timeline-card-start',
       'surface-timeline-card-middle',
       'surface-timeline-card-end',
+      'surface-case-label',
       'surface-band',
       'surface-bar',
       'text-heading',
@@ -450,6 +451,16 @@ describe('colour tokens', () => {
     { foreground: 'text-heading', background: 'surface-timeline-card-start', asked: 4.5, recorded: 15.97, meets: true },
     { foreground: 'accent', background: 'surface-timeline-card-start', asked: 4.5, recorded: 5.62, meets: true },
     { foreground: 'text-faint', background: 'surface-timeline-card-start', asked: 4.5, recorded: 2.29, meets: false },
+    // A project's business case, per DDR-080, drawn as a timeline card and measured at the same
+    // stop: an item's text, the label on its pill, and the key figure in the accent pass. "Prev",
+    // "Next" and the figure's caption are the muted ink, as the design draws them, and fail as it
+    // does on a tag's tint, which is the same colour. The dots not shown are the accent's pale
+    // tint, drawn to say which item is not shown, and fail 1.4.11; "Prev" and "Next" reach every
+    // item without them.
+    { foreground: 'text-secondary', background: 'surface-timeline-card-start', asked: 4.5, recorded: 6.78, meets: true },
+    { foreground: 'accent', background: 'surface-case-label', asked: 4.5, recorded: 4.87, meets: true },
+    { foreground: 'text-muted', background: 'surface-timeline-card-start', asked: 4.5, recorded: 4.26, meets: false },
+    { foreground: 'border-accent', background: 'surface-timeline-card-start', asked: 3, recorded: 1.33, meets: false },
     // Hairlines that carry nothing, so neither criterion reaches them: the rule beside a section
     // heading, a card's edge against the page it sits on and the white it encloses, and the
     // timeline's spine and dots.
@@ -506,7 +517,7 @@ describe('colour tokens', () => {
   // can be quietly improved without its record being revised with it. The first four are DDR-025's,
   // the next two DDR-035's, and the last two DDR-059's: the muted ink on a role view's panel, and
   // the accent on its pills.
-  it('fails exactly the nine pairings DDR-025, DDR-035, DDR-059 and DDR-070 record as failures, and no others', () => {
+  it('fails exactly the eleven pairings DDR-025, DDR-035, DDR-059, DDR-070 and DDR-080 record as failures, and no others', () => {
     for (const { foreground, background, asked, recorded, meets } of pairings) {
       expect(recorded >= asked, `${foreground} on ${background}`).toBe(meets);
     }
@@ -521,6 +532,8 @@ describe('colour tokens', () => {
       'text-muted',
       'accent',
       'text-faint',
+      'text-muted',
+      'border-accent',
     ]);
   });
 
@@ -990,6 +1003,21 @@ describe('spacing tokens', () => {
   it('spaces a project view’s gallery as `career-site-project` does, per DDR-053', () => {
     expect(rem(token('project-view-gallery-gap')!) * 16).toBe(20);
   });
+
+  // DDR-080's business case, off node 365:26: the card's padding, the 12px between its parts, the
+  // label's pill, the icon and the key figure, and the dots.
+  it('draws a project’s business case as `career-site-experience-business-case` does, per DDR-080', () => {
+    const px = (name: string) => rem(token(name)!) * 16;
+
+    expect(px('business-case-padding')).toBe(24);
+    expect(px('business-case-gap')).toBe(12);
+    expect(px('business-case-label-block')).toBe(2);
+    expect(px('business-case-label-inline')).toBe(10);
+    expect(px('business-case-icon-size')).toBe(24);
+    expect(px('business-case-figure-size')).toBe(24);
+    expect(px('business-case-dot-size')).toBe(6);
+    expect(px('business-case-dot-current')).toBe(20);
+  });
 });
 
 // DDR-014 adapts the scales at the narrow breakpoint, in em, by redefining the role tokens that
@@ -1138,6 +1166,7 @@ const forPaper = [
   { name: 'color-surface-timeline-card-start', value: 'transparent' },
   { name: 'color-surface-timeline-card-middle', value: 'transparent' },
   { name: 'color-surface-timeline-card-end', value: 'transparent' },
+  { name: 'color-surface-case-label', value: 'transparent' },
   { name: 'surface-timeline-card', value: 'none' },
   { name: 'color-surface-bar', value: 'transparent' },
   { name: 'color-surface-tag', value: 'transparent' },

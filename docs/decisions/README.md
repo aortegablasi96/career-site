@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `015`. The next DDR is `080`.** Update both lines when a record lands.
+**The next ADR is `016`. The next DDR is `081`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -18,7 +18,7 @@ reasoning behind it.
 
 ## ADRs
 
-ADR-001 to ADR-014 are accepted.
+ADR-001 to ADR-015 are accepted.
 
 | Record  | Relationship |
 | ------- | ------------ |
@@ -33,10 +33,11 @@ ADR-001 to ADR-014 are accepted.
 | ADR-012 | Amends ADR-010's address: `/portfolio/<slug>`, `#portfolio`, `public/portfolio/<slug>/`; old `/projects/…` not kept |
 | ADR-013 | Amends ADR-007 and ADR-009: the bar also holds its menu's open state (DDR-075) |
 | ADR-014 | A project view's switch is native radios read by CSS (DDR-079); no new Client Component |
+| ADR-015 | Amends ADR-007: second Client Component, `BusinessCaseSlider`, holds the item shown (DDR-080) |
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-079. There are
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-080. There are
 two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
@@ -91,7 +92,8 @@ Each record keeps everything not listed against it.
 * **DDR-022** (type scale): DDR-050 adds the project title size; DDR-077 makes `xx-large` the
   narrow page title.
 * **DDR-023** (faces and weights): DDR-030 corrects the medium row; DDR-031 adds the contents links;
-  DDR-051 sets a project card's name in Lora; DDR-057 drops the italic (six files).
+  DDR-051 sets a project card's name in Lora; DDR-057 drops the italic (six files); DDR-080 sets a
+  business case's key figure in Lora.
 * **DDR-025** (colour): DDR-033 drops the contents links' underline; DDR-035 adds hover and
   underline colours; DDR-036 adopts the ringed dot; DDR-044 adds service colours; DDR-046 adds
   `--color-surface-band`.
@@ -128,4 +130,6 @@ Each record keeps everything not listed against it.
 * **DDR-063, DDR-064**: DDR-074 the column's card lifts by a margin and outlines itself.
 * **DDR-064**: DDR-071 dates glow and the dot darkens.
 * **DDR-066**: DDR-068 degrees carry the UPC's logo.
+* **DDR-070** (timeline card): DDR-080 draws a project's business case as one.
 * **DDR-072**: DDR-076 a line below the question.
+* **DDR-079** (business-case switch): DDR-080 shows the business case one item at a time, in a card.
