@@ -112,9 +112,13 @@ import type { Cv } from './types';
  *
  * It moved again with #240, because every business case item gained its icon and headline. Neither
  * is a fact ADR-005 lists as shared, so neither moved the CV.
+ *
+ * It moved again with #246, because a project's view gained the names of the two controls that open
+ * its picture larger and close it, per DDR-082. Neither is a fact ADR-005 lists as shared, so
+ * neither moved the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '2bd85a7f22dc81d964f54fd4a62094529684a84cbbb43d776ba236a26a838c8d',
+  contentDigest: '1fa79846ca058e984ee62a53ddb6ef61d795768a13bc2509e9a271fe8935e65f',
 };

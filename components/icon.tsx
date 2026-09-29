@@ -8,7 +8,9 @@ import type { ContactIcon } from '@/content/types';
  * location, which is the one mark that is not beside a control. DDR-059 added a clock beside the
  * hint above the experience timeline, and DDR-067 replaces it with an information mark, a circled
  * "i", beside that hint and the projects' alike. DDR-075 adds the contents bar's menu button on a
- * phone: three lines while the menu is closed and a cross while it is open.
+ * phone: three lines while the menu is closed and a cross while it is open. DDR-082 adds two arrows
+ * pointing out of a project view's picture, on the control that opens it larger, and the cross
+ * again, on the control that closes it.
  */
 export type IconName =
   | ContactIcon
@@ -19,7 +21,8 @@ export type IconName =
   | 'location'
   | 'info'
   | 'menu'
-  | 'close';
+  | 'close'
+  | 'enlarge';
 
 /** The marks drawn as lines rather than filled, all on the 24 unit grid. */
 const lineDrawings: readonly IconName[] = [
@@ -31,6 +34,7 @@ const lineDrawings: readonly IconName[] = [
   'info',
   'menu',
   'close',
+  'enlarge',
 ];
 
 /**
@@ -154,4 +158,7 @@ const paths: Record<IconName, React.ReactNode> = {
   menu: <path d="M4 6h16M4 12h16M4 18h16" />,
   // A cross, on the same button while the menu is open, which closes it.
   close: <path d="M18 6 6 18M6 6l12 12" />,
+  // Two arrows pointing out to opposite corners, on the control that opens a view's picture
+  // larger, per DDR-082.
+  enlarge: <path d="M15 3h6v6M21 3l-7 7M9 21H3v-6M3 21l7-7" />,
 };

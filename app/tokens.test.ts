@@ -340,6 +340,8 @@ describe('colour tokens', () => {
       'google-border',
       'surface-google-hover',
       'focus',
+      'surface-enlarged',
+      'on-enlarged',
     ]);
   });
 
@@ -437,6 +439,11 @@ describe('colour tokens', () => {
     { foreground: 'google-ink', background: 'surface', asked: 4.5, recorded: 15.39, meets: true },
     { foreground: 'google-border', background: 'surface-card', asked: 3, recorded: 4.53, meets: true },
     { foreground: 'google-border', background: 'surface-google-hover', asked: 3, recorded: 3.9, meets: true },
+    // A view's picture larger, per DDR-082: its caption and the focus outline in the card's white on
+    // the dark ground, and the round close control, white on it. The accent is measured below,
+    // because it is why the outline there is white rather than the accent.
+    { foreground: 'on-enlarged', background: 'surface-enlarged', asked: 4.5, recorded: 17.85, meets: true },
+    { foreground: 'surface-card', background: 'surface-enlarged', asked: 3, recorded: 17.85, meets: true },
     // A role's view, per DDR-059: its header's panel, on the accent's palest tint, carries the job
     // title and, in the muted ink, the dates and the place; the company's pill and each point's
     // number are the accent on its border tint; and a skill is the accent on the palest tint. The
@@ -477,6 +484,13 @@ describe('colour tokens', () => {
       expect(contrast(color(foreground), color(background))).toBeCloseTo(recorded, 2);
     },
   );
+
+  // DDR-082: the focus outline follows the accent everywhere else, and on the larger picture's dark
+  // ground the accent is below 1.4.11's 3:1, so the outline there is drawn in the ground's white.
+  it('draws focus on the larger picture’s ground in white, where the accent fails, per DDR-082', () => {
+    expect(contrast(color('focus'), color('surface-enlarged'))).toBeCloseTo(2.84, 2);
+    expect(contrast(color('on-enlarged'), color('surface-enlarged'))).toBeGreaterThanOrEqual(3);
+  });
 
   // DDR-047: the GitHub pill's hover is as easy to see as the LinkedIn pill's. Between two fills,
   // "easy to see" is how far apart they are, so the GitHub pair is held at least as far apart as the
@@ -1191,6 +1205,7 @@ const forPaper = [
   { name: 'color-surface-github', value: 'transparent' },
   { name: 'color-surface-github-hover', value: 'transparent' },
   { name: 'color-surface-google-hover', value: 'transparent' },
+  { name: 'color-surface-enlarged', value: 'transparent' },
   { name: 'color-rule', value: 'transparent' },
   { name: 'color-border', value: 'transparent' },
   { name: 'color-border-accent', value: 'transparent' },

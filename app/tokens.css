@@ -358,6 +358,13 @@
   --focus-outline-width: 2px;
   --focus-outline-offset: 2px;
 
+  /* The ground a view's picture is shown larger on, per DDR-082, and what is written and drawn on
+     it: the heading's ink as a surface, opaque like the rest of the palette, so a picture's own
+     colours read against a neutral dark, and the card's white on it, 17.85:1. The focus outline
+     there is the white too, because the accent on this ground is 2.84:1, below 1.4.11's 3:1. */
+  --color-surface-enlarged: var(--color-text-heading);
+  --color-on-enlarged: var(--color-surface-card);
+
   /* Spacing, per DDR-013. A base unit of 1rem, halved and doubled, so each step is twice the one
      below. In rem, so space follows the reader's browser font-size setting with the text it
      separates. A value not on this scale is a decision to make, not a number to write. */
@@ -750,6 +757,12 @@
      a thumbnail a sixth of a card's height visibly moves. */
   --project-view-thumbnail-lift: 0.5rem;
   --project-view-thumbnail-lift-back: calc(-1 * var(--project-view-thumbnail-lift));
+  /* The control that opens a view's picture larger, per DDR-082: a round button the scale's large
+     step across, 32px, which passes WCAG 2.5.8 outright, standing the small step in from the
+     frame's corner. The layer draws none, so it is the view's own. It stands in the flow after the
+     picture, so it is pulled up over it by its own size and that step. */
+  --project-view-enlarge-size: var(--space-large);
+  --project-view-enlarge-pull: calc(-1 * (var(--project-view-enlarge-size) + var(--space-small)));
 
   /* The foot of a project's view, per DDR-052, measured off node 59:118: the two halves stand 24px
      apart, and inside a card the chevron is 12px from the words. Neither is a step of DDR-013's
@@ -994,6 +1007,9 @@
     --color-surface-github: transparent;
     --color-surface-github-hover: transparent;
     --color-surface-google-hover: transparent;
+    /* A view's larger picture, per DDR-082. A view does not print, so this is the rule kept whole
+       rather than a sheet it changes. */
+    --color-surface-enlarged: transparent;
 
     /* No hairline prints. This is the whole of it: the rule beside a section heading, the language
        card's edge, and the timeline's dot and line. Each carries no information, so paper simply

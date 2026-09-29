@@ -467,6 +467,13 @@ export interface ProjectView {
    */
   gallery: string;
   /**
+   * The control on the picture in the lead's frame that opens it larger, per DDR-082, and the one
+   * on the larger picture that closes it. Each is the control's accessible name: the control shows
+   * a mark alone.
+   */
+  enlarge: string;
+  close: string;
+  /**
    * What a project's links say about opening a new tab, per DDR-043 as DDR-050 extends it. It is
    * said only to assistive technology, after the link's text in its accessible name, as a profile
    * pill says it.

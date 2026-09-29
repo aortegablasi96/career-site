@@ -330,6 +330,162 @@
   text-align: center;
 }
 
+/* The picture in the lead's frame and the control that opens it larger, per DDR-082. A flex
+   column, as the figure is, so the picture stretches across it; positioned, so the control's
+   target can cover the picture, below. */
+.frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The control: a round white button with the heading's ink and the site's raised shadow, over the
+   picture's lower right corner, a small step in from both edges. It follows the picture in the
+   markup and on screen, so it is pulled up over it by its own size and that step, and gives the
+   step back below, so the frame is exactly the picture's height. It is 32px across, WCAG 2.5.8's
+   24 by 24 outright. */
+.enlarge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-end;
+  inline-size: var(--project-view-enlarge-size);
+  block-size: var(--project-view-enlarge-size);
+  margin-block: var(--project-view-enlarge-pull) var(--space-small);
+  margin-inline-end: var(--space-small);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-card);
+  box-shadow: var(--shadow-raised);
+  color: var(--color-text-heading);
+  font-size: var(--font-size-large);
+  cursor: zoom-in;
+}
+
+/* The whole picture is the control's target, as a card's name is stretched over its card, so the
+   pointer opens the picture from anywhere on it. The keyboard's focus is drawn on the round button
+   itself. */
+.enlarge::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+}
+
+/* Under the pointer, anywhere on the picture, and on keyboard focus, the button takes the accent
+   and its tint, as the view's outlined control does, per DDR-035. */
+.enlarge:hover,
+.enlarge:focus-visible {
+  background-color: var(--color-surface-hover);
+  color: var(--color-accent);
+}
+
+/* The picture larger, per DDR-082: a modal dialog that fills the window, on a dark ground, with the
+   control that closes it at the top right, the picture whole and centred below it, and its caption
+   under the picture. The browser's own dialog is a box as small as its content, inset from the
+   window by a margin and edged; this one takes the whole window, so its size and limits are handed
+   back to the insets the browser gives a modal dialog, which are the window's edges. */
+.larger {
+  inline-size: auto;
+  block-size: auto;
+  max-inline-size: none;
+  max-block-size: none;
+  margin: 0;
+  padding: var(--space-small);
+  border: 0;
+  background-color: var(--color-surface-enlarged);
+  color: var(--color-on-enlarged);
+}
+
+/* Open, the close control, the picture and the caption are three rows. The picture's row takes
+   what the other two leave, and it can shrink to nothing, so the picture is limited by the room
+   there is rather than widening the window's box. */
+.larger[open] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  row-gap: var(--space-small);
+  justify-items: center;
+  align-items: center;
+}
+
+/* Keyboard focus inside it is drawn in the white, since the accent on the dark ground is 2.84:1. */
+.larger :focus-visible {
+  outline-color: var(--color-on-enlarged);
+}
+
+/* The control that closes it, drawn as the one that opened it is, at the top right. */
+.close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: end;
+  inline-size: var(--project-view-enlarge-size);
+  block-size: var(--project-view-enlarge-size);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-card);
+  color: var(--color-text-heading);
+  font-size: var(--font-size-large);
+  cursor: pointer;
+}
+
+/* The whole ground around the picture is its target, so the pointer closes the picture from
+   anywhere but the picture and its caption, which are drawn over it, below. */
+.close::before {
+  position: absolute;
+  inset: 0;
+  content: '';
+  cursor: zoom-out;
+}
+
+.close:hover,
+.close:focus-visible {
+  background-color: var(--color-surface-hover);
+  color: var(--color-accent);
+}
+
+/* The picture, whole: never cropped, stretched or wider or taller than the room there is, and no
+   larger than its own file, at the frame's large radius. It is drawn over the close control's
+   target, so choosing it does not close it. */
+.largerPicture {
+  position: relative;
+  max-inline-size: 100%;
+  max-block-size: 100%;
+  border-radius: var(--radius-large);
+}
+
+/* The caption, in the white, at the small step and centred, over the close control's target as the
+   picture is, so its words can be selected. */
+.largerCaption {
+  position: relative;
+  max-inline-size: var(--measure);
+  font-size: var(--font-size-small);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+/* The view behind the larger picture does not scroll while it is open, so closing it returns the
+   reader to where they were. */
+:global(html):has(.larger[open]) {
+  overflow: hidden;
+}
+
+/* Where motion is welcome, the larger picture fades in over the site's 150ms. A reader who has
+   asked for less motion sees it at once. */
+@media (prefers-reduced-motion: no-preference) {
+  .larger[open] {
+    transition-property: opacity;
+    transition-duration: var(--hover-transition);
+  }
+
+  @starting-style {
+    .larger[open] {
+      opacity: 0;
+    }
+  }
+}
+
 /* The lead picture and its gallery, per DDR-081 and ADR-017 (node 405:80): one picture in the
    frame, and the row of thumbnails under it. A flex column, so the picture's figure stretches
    across the column as the lead's does. */
@@ -598,5 +754,11 @@
   /* The empty half takes its track, so the project after this one keeps the right one. */
   .half {
     display: block;
+  }
+
+  /* The larger picture keeps the medium step from the window's edges, where a phone keeps the
+     small one so the picture is as large as it can be. */
+  .larger {
+    padding: var(--space-medium);
   }
 }

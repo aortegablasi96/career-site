@@ -182,7 +182,7 @@ The page itself is the CV, so what it prints is designed.
   to a colour the brand publishes; Gmail's M carries its own fills. On paper the pill's ink is the
   brand's colour, because the fill drops.
 
-### Project cards and views (DDR-050 to DDR-055, DDR-079, DDR-081)
+### Project cards and views (DDR-050 to DDR-055, DDR-079, DDR-081, DDR-082)
 
 * **A card's link is its name, stretched over the card**: `.link::after` draws the focus outline,
   `.link::before` extends `--card-lift` below the card so a lifted card doesn't flicker.
@@ -199,6 +199,16 @@ The page itself is the CV, so what it prints is designed.
   pictures; a thirteenth needs a thirteenth rule. `--raised` is worked out from `--chosen`,
   `--pointed` and `--pointing`, and drives the thumbnail's `z-index`, its name's opacity and, in the
   motion query, its lift.
+* **The picture in the frame opens larger** in a modal `dialog` opened by `commandfor`/`command`
+  (ADR-018, DDR-082), with no script. `components/invoker-commands.d.ts` types the two attributes
+  for React; drop it once `@types/react` has them. The opening button follows the picture in the
+  flow and is pulled over its corner by a negative margin, because only a pseudo-element may be
+  `position: absolute`; its `::after` and the close button's `::before` stretch the targets.
+* **The dialog's picture is sized by `max-*-size: 100%` in a `minmax(0, 1fr)` grid row**, which
+  keeps it whole and within the window. Measure it after layout settles: read 30ms after a resize
+  and an Escape, Playwright reported a stale, squashed height.
+* **Serve `out/` from Node, not Python's `http.server`**, when checking pictures: Python's reset
+  connections and left a picture as its alt text on #246.
 * **Playwright's `click()` on a thumbnail times out**: the next thumbnail covers its centre. Click
   its image's left 15px with `page.mouse.click`.
 * A thumbnail's image is `box-sizing: border-box`, or its edge adds 3.2px to its width and its height.

@@ -13,6 +13,75 @@ import { Media, projectHref } from './projects';
 import styles from './project-view.module.css';
 
 /**
+ * The picture in the lead's frame, and the same picture larger, per DDR-082 and ADR-018.
+ *
+ * Over the picture's corner is a round control with two arrows pointing out, which opens the
+ * picture larger, and the whole picture is its target. Larger, the picture is shown whole, on a
+ * dark ground that fills the window, with its caption under it and a control that closes it above
+ * it; the whole ground around the picture is that control's target too.
+ *
+ * The larger picture is a native modal `dialog`, opened and closed by the buttons' `command`, so
+ * the browser holds whether it is open, keeps keyboard focus inside it and leaves the view behind
+ * inert while it is, closes it with Escape, and returns focus to the control that opened it. None
+ * of that needs script, per ADR-018, so `ProjectView` stays a Server Component. The picture keeps
+ * its alternative text, and the dialog is named by its caption.
+ *
+ * It is the file the frame already shows, so opening it fetches nothing. A video has its own
+ * controls, full screen among them, so it has none of this, per #246.
+ */
+function Frame({
+  media,
+  caption,
+  id,
+  enlarge,
+  close,
+}: {
+  media: ProjectMedia;
+  caption: string;
+  /** The larger picture's identifier, unique within the view. */
+  id: string;
+  /** The two controls' accessible names. */
+  enlarge: string;
+  close: string;
+}) {
+  if ('poster' in media) {
+    return <Media media={media} className={styles.media} />;
+  }
+
+  return (
+    <>
+      <div className={styles.frame}>
+        <Media media={media} className={styles.media} />
+        <button
+          type="button"
+          className={styles.enlarge}
+          commandfor={id}
+          command="show-modal"
+          aria-label={enlarge}
+        >
+          <Icon name="enlarge" />
+        </button>
+      </div>
+      <dialog id={id} className={styles.larger} aria-labelledby={`${id}-caption`}>
+        <button
+          type="button"
+          className={styles.close}
+          commandfor={id}
+          command="close"
+          aria-label={close}
+        >
+          <Icon name="close" />
+        </button>
+        <img className={styles.largerPicture} src={asset(media.file)} alt={media.alt} />
+        <p id={`${id}-caption`} className={styles.largerCaption}>
+          {caption}
+        </p>
+      </dialog>
+    </>
+  );
+}
+
+/**
  * A picture's thumbnail in the gallery's row, per DDR-081 (node 405:93): the picture itself, or a
  * video's poster, cropped to the row's small frame.
  *
@@ -51,6 +120,9 @@ function Thumbnail({ media, caption, index }: { media: ProjectMedia; caption: st
  * assistive technology announces each by its caption, and all of it works without script. The
  * lead's radio is checked in the markup, so a view opens on the lead picture.
  *
+ * Each picture carries its own control that opens it larger, per DDR-082, so the one on the picture
+ * shown is the one a reader meets, and it opens that picture, whichever was chosen.
+ *
  * The row shows every picture's thumbnail, as the owner asked on #244, where the design draws two
  * and a count of the rest. It wraps where the column runs out of room.
  *
@@ -61,11 +133,16 @@ function Thumbnail({ media, caption, index }: { media: ProjectMedia; caption: st
 function Pictures({
   name,
   pictures,
+  enlarge,
+  close,
 }: {
   /** The radio group's accessible name. */
   name: string;
   /** The lead picture first, then the gallery's items. */
   pictures: readonly GalleryItem[];
+  /** The names of the controls that open a picture larger and close it, per DDR-082. */
+  enlarge: string;
+  close: string;
 }) {
   return (
     <div role="radiogroup" aria-label={name} className={styles.pictures}>
@@ -80,7 +157,13 @@ function Pictures({
             defaultChecked={index === 0}
           />
           <figure className={styles.figure}>
-            <Media media={media} className={styles.media} />
+            <Frame
+              media={media}
+              caption={caption}
+              id={`picture-${index}-larger`}
+              enlarge={enlarge}
+              close={close}
+            />
             <figcaption id={`picture-${index}-caption`} className={styles.pictureCaption}>
               {caption}
             </figcaption>
@@ -228,6 +311,8 @@ export function ProjectView({
     nextItem,
     builtWith,
     gallery: galleryName,
+    enlarge,
+    close,
     newTab,
     previous: previousWord,
     next: nextWord,
@@ -346,12 +431,18 @@ export function ProjectView({
         </div>
         {/* The lead picture, and where the project has further pictures and videos, their
             thumbnails under it, per DDR-081 (node 405:80). A project the owner has supplied none
-            for shows its lead picture alone, as it did before. */}
+            for shows its lead picture alone, as it did before. Either way, the picture shown can
+            be opened larger, per DDR-082. */}
         {gallery && gallery.length > 0 ? (
-          <Pictures name={galleryName} pictures={[{ media, caption }, ...gallery]} />
+          <Pictures
+            name={galleryName}
+            pictures={[{ media, caption }, ...gallery]}
+            enlarge={enlarge}
+            close={close}
+          />
         ) : (
           <figure className={styles.figure}>
-            <Media media={media} className={styles.media} />
+            <Frame media={media} caption={caption} id="picture-larger" enlarge={enlarge} close={close} />
             <figcaption className={styles.caption}>{caption}</figcaption>
           </figure>
         )}

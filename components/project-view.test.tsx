@@ -134,7 +134,8 @@ describe('ProjectView', () => {
         `${stockPortfolioViewer!.name}</h1><p>${stockPortfolioViewer!.description}</p><h2>${projects.view.howBuilt}</h2>`,
       );
       expect(plain).not.toContain('role="group"');
-      expect(plain).not.toContain('<button');
+      // The one control a view without a business case has is its picture's, per DDR-082.
+      expect(plain.replace(/<button [^>]*command="[^"]*"[^>]*>.*?<\/button>/g, '')).not.toContain('<button');
     });
 
     it('is a group of two radios named for what it switches, the overview first and checked', () => {
@@ -343,7 +344,9 @@ describe('ProjectView', () => {
     expect('alt' in media).toBe(true);
     expect(html).toContain(`alt="${'alt' in media && media.alt}"`);
     expect(html).toMatch(
-      new RegExp(`<figure[^>]*><img [^>]*><figcaption[^>]*>${numisBook!.caption}</figcaption></figure>`),
+      new RegExp(
+        `<figure[^>]*><div[^>]*><img [^>]*>[\\s\\S]*?</dialog><figcaption[^>]*>${numisBook!.caption}</figcaption></figure>`,
+      ),
     );
   });
 
@@ -465,7 +468,7 @@ describe('ProjectView', () => {
 
       expect(markup).toMatch(
         new RegExp(
-          `<input [^>]*id="picture-1"[^>]*/><figure><img [^>]*alt="${alt}"/><figcaption id="picture-1-caption">${picture.caption}</figcaption></figure><input [^>]*id="picture-2"`,
+          `<input [^>]*id="picture-1"[^>]*/><figure><div><img [^>]*alt="${alt}"/><button [\\s\\S]*?</dialog><figcaption id="picture-1-caption">${picture.caption}</figcaption></figure><input [^>]*id="picture-2"`,
         ),
       );
       expect(rule('.pick:not(:checked) + .figure')).toContain('display: none');
@@ -576,6 +579,123 @@ describe('ProjectView', () => {
   });
 
   // DDR-052: the projects on either side of this one, at the foot of the view.
+  // DDR-082 and ADR-018, on #246: the picture in the lead's frame opens larger in a native modal
+  // dialog, opened and closed by its buttons' commands, with no script.
+  describe('the picture larger', () => {
+    const video: GalleryItem = {
+      media: {
+        file: '/gallery-walkthrough.mp4',
+        poster: '/gallery-walkthrough.webp',
+        description: 'A walkthrough of the application, from signing in to adding a coin',
+      },
+      caption: 'Walkthrough demo',
+    };
+
+    /** Each control that opens a picture larger, as the dialog it opens and its name. */
+    const openers = (markup: string) =>
+      [
+        ...markup.matchAll(
+          /<button type="button"[^>]*commandfor="([^"]+)" command="show-modal" aria-label="([^"]*)">/g,
+        ),
+      ].map(([, target, name]) => ({ target, name }));
+
+    /** Each larger picture, as its id, the dialog's name, its close control, its picture and caption. */
+    const dialogs = (markup: string) =>
+      [
+        ...markup.matchAll(
+          /<dialog id="([^"]+)"[^>]*aria-labelledby="([^"]+)"><button type="button"[^>]*commandfor="([^"]+)" command="close" aria-label="([^"]*)">[\s\S]*?<\/button><img [^>]*src="([^"]*)" alt="([^"]*)"\/><p id="([^"]+)"[^>]*>([^<]*)<\/p><\/dialog>/g,
+        ),
+      ].map(([, id, labelledBy, closes, close, source, alt, captionId, caption]) => ({
+        id,
+        labelledBy,
+        closes,
+        close,
+        source,
+        alt,
+        captionId,
+        caption,
+      }));
+
+    /** A rule's body, by its whole selector. */
+    const rule = (selector: string) =>
+      css.match(new RegExp(`(?:^|\\})\\s*${selector.replace(/[.:+()[\]]/g, '\\$&')}\\s*\\{([^}]*)\\}`))?.[1] ?? '';
+
+    it('opens every view’s lead picture, with its alternative text, its caption and a way to close it', () => {
+      for (const project of projects.projects) {
+        const markup = render(project);
+        const [larger] = dialogs(markup);
+        const media = project.media;
+
+        expect('alt' in media).toBe(true);
+        expect(openers(markup)[0]).toEqual({ target: larger!.id, name: projects.view.enlarge });
+        expect(larger).toMatchObject({
+          closes: larger!.id,
+          close: projects.view.close,
+          labelledBy: larger!.captionId,
+          source: 'alt' in media ? media.file : '',
+          alt: 'alt' in media ? media.alt : '',
+          caption: project.caption,
+        });
+      }
+    });
+
+    it('opens whichever picture of a gallery is shown, each by its own control, and no video', () => {
+      const markup = render({ ...numisBook!, gallery: [...numisBook!.gallery!, video] });
+      const pictures = [{ media: numisBook!.media, caption: numisBook!.caption }, ...numisBook!.gallery!];
+      const ids = dialogs(markup).map(({ id }) => id);
+
+      expect(openers(markup).map(({ target }) => target)).toEqual(ids);
+      expect(new Set(ids).size).toBe(pictures.length);
+      expect(dialogs(markup).map(({ caption }) => caption)).toEqual(pictures.map(({ caption }) => caption));
+      // Each control is inside its picture's figure, so the figure a radio hides hides its control.
+      for (const id of ids) {
+        expect(bare(markup)).toMatch(
+          new RegExp(`<figure><div><img [^>]*/><button [^>]*commandfor="${id}"[^>]*>[\\s\\S]*?</dialog><figcaption`),
+        );
+      }
+      expect(markup).not.toContain(`src="${video.media.file}" alt=`);
+    });
+
+    it('needs no script: the view stays a Server Component and writes no handler', () => {
+      const source = readFileSync(new URL('./project-view.tsx', import.meta.url), 'utf8');
+
+      expect(source).not.toMatch(/['"]use client['"]/);
+      expect(source).not.toMatch(/\bon[A-Z]\w*=/);
+    });
+
+    it('makes the whole picture the target that opens it, and the ground around it the one that closes it', () => {
+      expect(rule('.frame')).toContain('position: relative');
+      expect(rule('.enlarge::after')).toContain('position: absolute');
+      expect(rule('.enlarge::after')).toContain('inset: 0');
+      expect(rule('.close::before')).toContain('position: absolute');
+      expect(rule('.close::before')).toContain('inset: 0');
+      // The picture and its caption are drawn over the ground's target, so choosing them keeps it open.
+      expect(rule('.largerPicture')).toContain('position: relative');
+      expect(rule('.largerCaption')).toContain('position: relative');
+    });
+
+    it('shows the picture whole, within the room there is, never cropped or stretched', () => {
+      const picture = rule('.largerPicture');
+
+      expect(picture).toContain('max-inline-size: 100%');
+      expect(picture).toContain('max-block-size: 100%');
+      expect(picture).not.toMatch(/object-fit|aspect-ratio|(?:^|\s)(?:inline|block)-size/);
+      expect(rule('.larger[open]')).toContain('grid-template-rows: auto minmax(0, 1fr) auto');
+    });
+
+    it('draws focus in white on the dark ground, keeps the view still behind it, and fades only where motion is welcome', () => {
+      expect(rule('.larger :focus-visible')).toContain('outline-color: var(--color-on-enlarged)');
+      expect(rule(':global(html):has(.larger[open])')).toContain('overflow: hidden');
+
+      const motion = css.slice(css.indexOf('@media (prefers-reduced-motion: no-preference)'));
+      expect(css.indexOf('@starting-style')).toBeGreaterThan(css.indexOf('@media (prefers-reduced-motion: no-preference)'));
+      expect(motion).toContain('.larger[open]');
+      expect(css.slice(0, css.indexOf('@media (prefers-reduced-motion: no-preference)'))).not.toMatch(
+        /transition|@starting-style/,
+      );
+    });
+  });
+
   describe('the projects on either side', () => {
     const links = (markup: string) =>
       [...markup.matchAll(/<a ([^>]*href="\/portfolio\/[^"/]+"[^>]*)>/g)].map(([, attributes]) => ({

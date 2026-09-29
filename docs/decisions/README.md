@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `018`. The next DDR is `082`.** Update both lines when a record lands.
+**The next ADR is `019`. The next DDR is `083`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -18,7 +18,7 @@ reasoning behind it.
 
 ## ADRs
 
-ADR-001 to ADR-017 are accepted.
+ADR-001 to ADR-018 are accepted.
 
 | Record  | Relationship |
 | ------- | ------------ |
@@ -36,10 +36,11 @@ ADR-001 to ADR-017 are accepted.
 | ADR-015 | Amends ADR-007: second Client Component, `BusinessCaseSlider`, holds the item shown (DDR-080) |
 | ADR-016 | Amends ADR-004: lead pictures and the photo at their originals' full resolution; the photo's budget is 200 KB |
 | ADR-017 | Extends ADR-014: a project's gallery holds its picture in native radios (DDR-081); no new Client Component |
+| ADR-018 | Amends ADR-017's overlay rejection: a view's picture opens larger in a modal `dialog` via Invoker Commands (DDR-082); no new Client Component |
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-081. There are
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-082. There are
 two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
@@ -118,7 +119,8 @@ Each record keeps everything not listed against it.
 * **DDR-044** (service pills): DDR-047 the GitHub hover fill; DDR-073 the email pill's M alone.
 * **DDR-049** (bar title): DDR-075 the menu below the wide breakpoint.
 * **DDR-050** (project view): DDR-052 neighbours; DDR-053 gallery; DDR-078 "How I built it";
-  DDR-079 the business-case switch; DDR-081 the gallery's thumbnails in the lead's column.
+  DDR-079 the business-case switch; DDR-081 the gallery's thumbnails in the lead's column; DDR-082
+  the picture in the lead's frame opens larger.
 * **DDR-051** (project cards): DDR-054 every technology; DDR-055 the lift; DDR-062 the hover
   shadow; DDR-063 the shared card behaviour.
 * **DDR-055, DDR-057, DDR-059, DDR-061**: DDR-063 makes a role card rest raised and lift like a
@@ -135,5 +137,8 @@ Each record keeps everything not listed against it.
 * **DDR-070** (timeline card): DDR-080 draws a project's business case as one.
 * **DDR-072**: DDR-076 a line below the question.
 * **DDR-053** (gallery): DDR-081 makes it a row of thumbnails under the lead picture; its content
-  and video treatment stand.
+  and video treatment stand. DDR-082 takes Option C's lightbox: the picture in the frame opens
+  larger.
+* **DDR-081** (thumbnails): DDR-082 opens the picture in the frame larger, which its Option A
+  rejected; a thumbnail still only chooses the picture.
 * **DDR-079** (business-case switch): DDR-080 shows the business case one item at a time, in a card.
