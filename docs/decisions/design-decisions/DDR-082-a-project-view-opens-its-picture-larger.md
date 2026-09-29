@@ -98,8 +98,11 @@ As the owner asked on #246:
   Escape.
 * **Both take 300ms** (`--project-view-enlarge-duration`), twice the site's 150ms colour change,
   because the picture travels across the window.
-* **The frame's picture is cropped to 16:10 and the larger one is whole**, so while it moves the
-  picture covers the moving box, cropped from the centre, and never stretches.
+* **The frame's picture is cropped to 16:10 and the larger one is whole**, so while it moves only
+  the whole picture is drawn. It covers the moving box, cropped from the centre inside the frame's
+  rounded corners, and never stretches, so at the frame's end it is exactly the frame's crop. The
+  frame's own capture is never drawn beside it: crossfaded, it showed as a second, larger copy
+  behind the picture (#248).
 * **A reader who has asked for less motion** sees it open and close at once, with the same blur and
   veil. So does a reader without script, or in a browser that cannot draw the movement (ADR-018).
 

@@ -49,18 +49,34 @@
    between the page and the blurred veil over the same time. These are the root's pseudo-elements,
    which no module's class can reach, so they are here.
 
-   The frame's picture is cropped to 16:10 and the larger one is whole, so the two are different
-   shapes: each is drawn covering the box that moves between them, cropped from the centre as the
-   frame crops it, rather than stretched to it. */
+   The frame's picture is cropped to 16:10 and the larger one is whole, so the two captures differ
+   in shape and in what they show. Crossfaded, the frame's, zoomed to cover the moving box, drew a
+   second, larger picture behind the first. So only the whole picture's capture is drawn,
+   at full strength throughout, covering the moving box and cropped from the centre as the frame
+   crops it, inside the frame's rounded corners. At the frame's end of the move it is exactly what
+   the frame shows. `LargerPicture` marks the root with the way the picture is moving, which says
+   which capture is the frame's: the one before on opening, the one after on closing. */
 ::view-transition-group(root),
 ::view-transition-group(larger-picture) {
   animation-duration: var(--project-view-enlarge-duration);
+}
+
+::view-transition-group(larger-picture) {
+  overflow: clip;
+  border-radius: var(--radius-large);
 }
 
 ::view-transition-old(larger-picture),
 ::view-transition-new(larger-picture) {
   block-size: 100%;
   object-fit: cover;
+  mix-blend-mode: normal;
+  animation: none;
+}
+
+:root[data-moving='opening']::view-transition-old(larger-picture),
+:root[data-moving='closing']::view-transition-new(larger-picture) {
+  opacity: 0;
 }
 
 body {
