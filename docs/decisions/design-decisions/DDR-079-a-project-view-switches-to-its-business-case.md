@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-28
 
+**Amended by DDR-080** (#240): the business case is no longer the list of items this record
+decides below. It is a card that shows one item at a time, stepped through with "Prev", "Next"
+and a dot per item. The switch, what it hides, the download and its place stand as decided here.
+
 **Adds to DDR-050's introduction and DDR-078**: where a project has a business case, its view
 shows a switch under the name. The switch lets the reader read the business case in place of the
 description and "How I built it", and read them again. While it does, "Built with", the
@@ -55,6 +59,10 @@ It is the site's first control that changes what a page shows without leaving it
 **A segmented control under the name: one pill holding two options, the chosen one filled in the
 accent. The business case is a list of the owner's labelled items, set in the overview's place.**
 Nothing else on the view moves or changes.
+
+**Since DDR-080 (#240)**, the rows below for the business case, an item's label, its text and
+the space between items no longer hold: the business case is a card that shows one item at a time.
+Every other row stands.
 
 | Property          | Value                                            | Why |
 | ----------------- | ------------------------------------------------ | --- |

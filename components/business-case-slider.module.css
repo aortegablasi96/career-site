@@ -1,0 +1,213 @@
+/*
+ * A project's business case, one item at a time, per DDR-080, measured off
+ * `career-site-experience-business-case` (node 365:26).
+ *
+ * The card is drawn as a timeline card is, per DDR-070: the same pale gradient under the same
+ * grain, the same violet edge at the large radius, and the same white line inside its top. It rests
+ * raised, as a role's card does, per DDR-063. Nothing here prints, because a view does not.
+ */
+.card {
+  border: 1px solid var(--color-border-timeline-card);
+  border-radius: var(--radius-large);
+  background: var(--surface-timeline-card);
+  box-shadow: var(--shadow-raised), var(--shadow-card-highlight);
+}
+
+/* The items, all in one cell of a grid of one, so the card is as tall as the tallest of them and
+   its foot stays where it is whichever item is shown. Only the item shown is visible; the others
+   keep their room but are out of the accessibility tree and the tab order, as `visibility: hidden`
+   takes them. Padded by the flow step on a phone, so its column keeps its width for the text, and
+   by the design's 24px from the wide breakpoint. */
+.items {
+  display: grid;
+  row-gap: var(--space-large);
+  padding: var(--space-medium);
+}
+
+/* components/stylesheets.test.ts admits `grid-area` here and nowhere else, per DDR-080: every item
+   takes the same cell and one is drawn, so nothing is reordered. */
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  grid-area: 1 / 1;
+  visibility: hidden;
+}
+
+.shown {
+  visibility: visible;
+}
+
+/* The item's label, in a pill of the accent's tint: bold capitals at the labels' 10px, tracked as
+   the view's other labels are (node 365:30). The capitals are drawn, never written, so assistive
+   technology is handed the owner's own words. */
+.label {
+  padding-block: var(--business-case-label-block);
+  padding-inline: var(--business-case-label-inline);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-case-label);
+  color: var(--color-accent);
+  font-size: var(--font-size-xxxx-small);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-body);
+  letter-spacing: var(--letter-spacing-x-loose);
+  text-transform: uppercase;
+}
+
+/* The icon beside the headline, 12px apart and centred on each other (node 365:33), the flow step
+   below the label. */
+.heading {
+  display: flex;
+  gap: var(--business-case-gap);
+  align-items: center;
+  margin-block-start: var(--space-medium);
+}
+
+.icon {
+  flex-shrink: 0;
+  font-size: var(--business-case-icon-size);
+  line-height: var(--line-height-heading);
+}
+
+/* The headline is an h2, so it takes the serif and weight every h2 does, at the body's 16px rather
+   than a section title's size, and untracked, as the design sets it (node 365:38). */
+.headline {
+  font-size: var(--font-size-large);
+  letter-spacing: 0;
+}
+
+/* The item's text, in the secondary ink at the labels' 13px and the running text's leading
+   (node 365:42), 12px below the headline, or the flow step below the label where there is none. */
+.text {
+  margin-block-start: var(--business-case-gap);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-x-small);
+  line-height: var(--line-height-prose);
+}
+
+.label + .text {
+  margin-block-start: var(--space-medium);
+}
+
+/* The key figure and its caption, on one baseline, below a hairline the width of the card's
+   column (node 365:44). Where the two cannot share a line, the caption wraps below the figure. */
+.figure {
+  display: flex;
+  flex-wrap: wrap;
+  align-self: stretch;
+  column-gap: var(--business-case-gap);
+  align-items: baseline;
+  margin-block-start: var(--space-medium);
+  padding-block-start: var(--space-medium);
+  border-block-start: 1px solid var(--color-border-timeline-card);
+}
+
+/* The figure is in the serif, in the accent, tightened as the page's large text is (node 365:46).
+   Semibold, the heaviest Lora the site carries, where the design draws it bold. */
+.value {
+  color: var(--color-accent);
+  font-family: var(--font-family-heading);
+  font-size: var(--business-case-figure-size);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-heading);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.caption {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xxx-small);
+}
+
+/* The card's foot, below its own hairline: "Prev" at the left, the dots in the middle and "Next" at
+   the right (node 365:54). Where the three cannot share a line, which is only with enlarged text
+   below 440px, they wrap one below the other, in that order, at the start of the line. */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-small);
+  align-items: center;
+  justify-content: space-between;
+  padding-block: var(--business-case-gap);
+  padding-inline: var(--space-medium);
+  border-block-start: 1px solid var(--color-border-timeline-card);
+}
+
+/* "Prev" and "Next", each a button with its chevron, 4px apart, in the muted ink at 11px and
+   medium (node 365:55). A button takes neither the body's face nor its ink, so both are set. */
+.step {
+  display: inline-flex;
+  gap: var(--space-x-small);
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xxx-small);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-body);
+  cursor: pointer;
+}
+
+.step:hover,
+.step:focus-visible {
+  color: var(--color-accent);
+}
+
+/* The dots, 6px apart, one for each item (node 365:60). They are a list, so the browser's own
+   marker and indent go. */
+.dots {
+  display: flex;
+  gap: var(--business-case-dot-size);
+  align-items: center;
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+/* A dot is a button drawn as a 6px pill in the accent's pale tint; the item shown is 20px long and
+   in the accent. It is also its target, and far smaller than WCAG 2.5.8 asks: DDR-080 records that
+   "Prev" and "Next" reach every item and meet it, which is the criterion's equivalent exception. */
+.dot {
+  display: block;
+  inline-size: var(--business-case-dot-size);
+  block-size: var(--business-case-dot-size);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-border-accent);
+  cursor: pointer;
+}
+
+.dot:hover,
+.dot:focus-visible {
+  background-color: var(--color-border-accent-hover);
+}
+
+.dot[aria-current] {
+  inline-size: var(--business-case-dot-current);
+  background-color: var(--color-accent);
+}
+
+/* Without script no control can change the item shown, so every item is shown, one below the
+   other in the owner's order, and the controls are not drawn. */
+@media (scripting: none) {
+  .item {
+    grid-area: auto;
+    visibility: visible;
+  }
+
+  .controls {
+    display: none;
+  }
+}
+
+/* From the wide breakpoint, the design's 24px inside the card and at the ends of its foot. */
+@media (min-width: 48em) {
+  .items {
+    padding: var(--business-case-padding);
+  }
+
+  .controls {
+    padding-inline: var(--business-case-padding);
+  }
+}

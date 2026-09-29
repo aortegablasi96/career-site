@@ -166,6 +166,11 @@
   --color-surface-timeline-card-middle: #f5f3ff;
   --color-surface-timeline-card-end: #fdf4ff;
 
+  /* A business case item's label, per DDR-080: the pill the design draws in the accent at 10%
+     (node 365:30). Every colour here is opaque, so it is written as that tint over the card's
+     gradient at its darkest stop, which is where the pill sits. The accent on it is 4.87:1. */
+  --color-surface-case-label: #dee1fc;
+
   /* The page's second surface, per DDR-046, which amends DDR-025's single page surface. The
      page's parts alternate between it and the page's own off-white, starting with this one on the
      introduction, so the contents bar is set apart from the first view and a reader scrolling
@@ -525,7 +530,8 @@
   /* A timeline card's top edge catches the light, per DDR-070: a white line 1px deep inside the
      card's top, at 75%, as the design draws it on every card in both timelines. It is inset, so it
      reaches past the card nowhere and needs none of the row's room. In px, as every other shadow
-     is. Only a timeline card may read it. */
+     is. Only a timeline card may read it, and, since DDR-080, the business case's card, which is
+     drawn as one. */
   --shadow-card-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.75);
 
   /* A lit timeline entry's dates, per DDR-071: a glow beneath the text in the card's hover ink,
@@ -733,6 +739,22 @@
   --project-neighbour-gap: 1.5rem;
   --project-neighbour-mark-gap: 0.75rem;
 
+  /* A project's business case, per DDR-080, measured off `career-site-experience-business-case`
+     (node 365:26). The card is padded 24px from the wide breakpoint, and 12px separates the icon
+     from the headline, the headline from the text, and the card's foot from its hairline; the label
+     is a pill 2px by 10px round its word. The icon and the key figure are both 24px, and a dot is
+     6px, 6px from the next, and 20px long where it is the item shown. None of these is a step of
+     DDR-013's scale, and the card is the design's to the pixel at its width, so they are measures
+     of the business case's own, as the view's are. */
+  --business-case-padding: 1.5rem;
+  --business-case-gap: 0.75rem;
+  --business-case-label-block: 0.125rem;
+  --business-case-label-inline: 0.625rem;
+  --business-case-icon-size: 1.5rem;
+  --business-case-figure-size: 1.5rem;
+  --business-case-dot-size: 0.375rem;
+  --business-case-dot-current: 1.25rem;
+
   /* A role's view, per DDR-059, measured off `career-site-experience` (node 177:1206). Its header
      is a tinted panel padded by the design's 48px (node 177:1213) from the wide breakpoint; below
      it the panel is padded by the flow step, so a phone with enlarged text keeps its width for the
@@ -939,6 +961,7 @@
     --color-surface-timeline-card-start: transparent;
     --color-surface-timeline-card-middle: transparent;
     --color-surface-timeline-card-end: transparent;
+    --color-surface-case-label: transparent;
     --surface-timeline-card: none;
     --color-surface-bar: transparent;
     --color-surface-tag: transparent;

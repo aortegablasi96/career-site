@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-17
 
+**Amended by DDR-080**: a project's business case sets its key figure in Lora semibold, which
+this record keeps for `h1` and `h2`.
+
 **Amended in one respect by DDR-030**, which corrects the weight table's medium row and writes the
 two declarations that row always implied. No face, no weight, no file and no italic moves; what
 moves is which elements take medium, and the table below says so where it stands.

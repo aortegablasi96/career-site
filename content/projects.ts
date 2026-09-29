@@ -277,6 +277,10 @@ export const projects: Projects = {
     businessCase: 'Business case',
     // The control that takes the links' place while the business case is shown, in the owner's words.
     downloadBusinessCase: 'Download Full Business Case',
+    // The business case's stepping controls, per #240 and DDR-080, as `career-site-experience-business-case`
+    // draws them (node 365:54).
+    previousItem: 'Prev',
+    nextItem: 'Next',
     builtWith: 'Built with',
     // The label above the further pictures and videos of a project, per DDR-053. No project carries
     // gallery media yet, so no view shows it; the media is the owner's to supply, as on #63.

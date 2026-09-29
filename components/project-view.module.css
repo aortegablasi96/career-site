@@ -192,7 +192,9 @@
 }
 
 /* The business case, which shows in place of the overview while its option is checked. A browser
-   that cannot read `:has()` shows the overview alone, as the view read before the switch. */
+   that cannot read `:has()` shows the overview alone, as the view read before the switch. Since
+   DDR-080 it holds the card that shows one item at a time, which business-case-slider.module.css
+   draws. */
 .businessCase {
   display: none;
   margin-block-start: var(--space-medium);
@@ -204,29 +206,6 @@
 
 .text:has(.caseChoice:checked) .businessCase {
   display: block;
-}
-
-/* Each item a flow step below the one before it. */
-.caseItem + .caseItem {
-  margin-block-start: var(--space-flow);
-}
-
-/* An item's label, set as the page's other labels in the accent are, such as a timeline's dates:
-   bold capitals at the view's controls' step, lightly tracked. The capitals are drawn, never
-   written, so assistive technology is handed the owner's own words. */
-.caseLabel {
-  color: var(--color-accent);
-  font-size: var(--font-size-x-small);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: var(--letter-spacing-loose);
-  text-transform: uppercase;
-}
-
-/* Its text, set as the description is. */
-.caseText {
-  margin-block-start: var(--space-x-small);
-  margin-inline-start: 0;
-  line-height: var(--line-height-prose);
 }
 
 /* Every technology, as tags that wrap, 8px apart each way (node 59:32). */

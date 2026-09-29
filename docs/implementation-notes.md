@@ -12,7 +12,7 @@ save the next person from breaking something; don't add story history.
   generated and gitignored.
 * **Tests run in Node** and render with `react-dom/server`. There is no DOM environment or Testing
   Library; add them only for interactive behaviour. `ContentsBar`'s functions are tested against a
-  stubbed `window`.
+  stubbed `window`; the business case slider's stepping is the pure `step`.
 * **A test that imports the root layout mocks `next/font/local`**, whose loaders throw outside the
   Next.js compiler (see `app/layout.test.tsx`).
 * **Vitest's CSS-module stub returns a class for any key**, so `styles[someKey]` is always truthy in
@@ -135,7 +135,8 @@ The page itself is the CV, so what it prints is designed.
 
 ### Contents bar (ADR-007, ADR-008, ADR-009, ADR-013)
 
-* **`components/contents-bar.tsx` is the only Client Component.** It marks the current section with
+* **`components/contents-bar.tsx` is a Client Component**, one of two (the other is the business
+  case slider, ADR-015). It marks the current section with
   `aria-current="location"`, glides on its own links' clicks, and holds the menu's open state below
   the wide breakpoint. `Contents` stays a Server Component and hands it `{ id, link }` per section,
   never the sections' rendered items.
@@ -191,6 +192,11 @@ The page itself is the CV, so what it prints is designed.
 * **Names and addresses wrap with `overflow-wrap: anywhere`** wherever a long word would overflow
   at 200% text. A new or renamed project or technology means sweeping again.
 * The view's business-case switch is native radios read by `:has()`, with no script (ADR-014).
+* **The business case inside it is a Client Component**, `BusinessCaseSlider` (ADR-015, DDR-080).
+  Every item is in the HTML and sits in one grid cell; only `.shown` is `visibility: visible`, which
+  holds the card at its tallest item's height. `components/stylesheets.test.ts` admits `grid-area`
+  in that stylesheet alone. Without script, `(scripting: none)` shows every item and hides the
+  controls. A new, longer item makes every item's card taller: sweep again.
 
 ### Footer (DDR-028, DDR-029)
 

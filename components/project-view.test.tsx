@@ -133,7 +133,8 @@ describe('ProjectView', () => {
       expect(plain).toContain(
         `${stockPortfolioViewer!.name}</h1><p>${stockPortfolioViewer!.description}</p><h2>${projects.view.howBuilt}</h2>`,
       );
-      expect(plain).not.toContain('<dl');
+      expect(plain).not.toContain('role="group"');
+      expect(plain).not.toContain('<button');
     });
 
     it('is a group of two radios named for what it switches, the overview first and checked', () => {
@@ -171,8 +172,9 @@ describe('ProjectView', () => {
       expect(positions).toEqual([...positions].sort((a, b) => a - b));
     });
 
-    // The owner reordered the summary on #231, so key decisions come third and every item is numbered.
-    it('shows each item of the business case as a term and its description, in the owner’s order', () => {
+    // The owner reordered the summary on #231, so key decisions come third and every item is
+    // numbered. Since DDR-080 each item is a slide of the card, named for its label.
+    it('shows each item of the business case as a slide of its label and its text, in the owner’s order', () => {
       for (const project of projects.projects) {
         const items = project.businessCase!.items;
 
@@ -185,12 +187,13 @@ describe('ProjectView', () => {
         ]);
         // NumisBook's and the Digital Twin's items each name an "&", which the markup escapes.
         expect(bare(render(project))).toContain(
-          `<dl>${items.map(({ label, text }) => `<div><dt>${label}</dt><dd>${text.replaceAll('&', '&amp;')}</dd></div>`).join('')}</dl>`,
+          `<div aria-live="polite">${items.map(({ label, text }) => `<div role="group" aria-label="${label}"><p>${label}</p><p>${text.replaceAll('&', '&amp;')}</p></div>`).join('')}</div>`,
         );
       }
     });
 
-    // The labels are terms, not headings, so either account leaves the outline one h1 and h2s.
+    // The labels are not headings, and a headline is an h2, so either account leaves the outline
+    // one h1 and h2s.
     it('keeps one h1 and skips no heading level', () => {
       expect(view.match(/<h1/g)).toHaveLength(1);
       expect(view).not.toMatch(/<h[3-6]/);
