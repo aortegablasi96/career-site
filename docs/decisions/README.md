@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `016`. The next DDR is `081`.** Update both lines when a record lands.
+**The next ADR is `017`. The next DDR is `081`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -18,7 +18,7 @@ reasoning behind it.
 
 ## ADRs
 
-ADR-001 to ADR-015 are accepted.
+ADR-001 to ADR-016 are accepted.
 
 | Record  | Relationship |
 | ------- | ------------ |
@@ -34,6 +34,7 @@ ADR-001 to ADR-015 are accepted.
 | ADR-013 | Amends ADR-007 and ADR-009: the bar also holds its menu's open state (DDR-075) |
 | ADR-014 | A project view's switch is native radios read by CSS (DDR-079); no new Client Component |
 | ADR-015 | Amends ADR-007: second Client Component, `BusinessCaseSlider`, holds the item shown (DDR-080) |
+| ADR-016 | Amends ADR-004: lead pictures and the photo at their originals' full resolution; the photo's budget is 200 KB |
 
 ## DDRs
 

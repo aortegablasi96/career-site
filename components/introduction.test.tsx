@@ -252,13 +252,13 @@ describe('the photo', () => {
     );
   });
 
-  it('is a file the site carries, within the budget ADR-004 sets for it', () => {
+  it('is a file the site carries, within the budget ADR-016 sets for it', () => {
     // statSync throws if the path is wrong, so this holds the path to the file that is published.
     const bytes = statSync(
       new URL(`../public${introduction.photo.file}`, import.meta.url),
     ).size;
 
-    expect(bytes).toBeLessThanOrEqual(100 * 1024);
+    expect(bytes).toBeLessThanOrEqual(200 * 1024);
   });
 });
 

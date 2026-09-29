@@ -16,8 +16,9 @@ const liveSite = 'Live site';
  *
  * Each project gained its media on #50, per DDR-010, and since #63 each is a picture of the
  * application itself running, supplied by the owner and cropped to 4:3. Since #167 each is the
- * owner's newer picture of the application on a laptop, kept at its own 3:2 at 1080 by 720, which
- * the card's 16:9 and the view's 16:10 crop. The alternative text says
+ * owner's newer picture of the application on a laptop, kept at its own 3:2, which the card's 16:9
+ * and the view's 16:10 crop. Since #242 each is served at its original's full 1536 by 1024, per
+ * ADR-016, where it was 1080 by 720. The alternative text says
  * what each picture shows, so a reader who cannot see it learns what a sighted reader does; it
  * leaves out the figures on screen, which are the application's data rather than the project.
  *

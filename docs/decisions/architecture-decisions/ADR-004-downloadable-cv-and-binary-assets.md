@@ -8,6 +8,10 @@ Date: 2026-09-16
 which `next/link` gives the base path itself, and does not go through `asset()`. Every `src`,
 `poster` and `href` on a plain element still does.
 
+**Amended by ADR-016** for a project's lead picture and the owner's photo. Each is served at the
+full resolution of the owner's original, not at the size it is shown (§3). The photo's budget is
+200 KB, where it was 100 KB, and §5's widths are corrected (§5).
+
 Supersedes the part of ADR-002 that rules out a separate CV file. The rest of ADR-002 stands: content
 is still authored as typed TypeScript modules in `content/`, the page is still the CV, and the print
 stylesheet is still what produces it.
@@ -156,6 +160,10 @@ owns. Next.js copies it into `out/` unchanged, and GitHub Pages serves it.
 * **No image pipeline.** No `next/image`, and no `images` configuration in `next.config.ts`. Assets
   are prepared once, by hand, at the size they are shown, and referenced by plain `<img>` and
   `<video>` elements with explicit dimensions.
+
+  > **Amended by ADR-016.** A project's lead picture and the owner's photo are served at their
+  > originals' full resolution rather than at the size they are shown. They are still one WebP file
+  > each, prepared by hand.
 * **One file per asset.** WebP for the photo and the stills, MP4 with H.264 video and AAC audio for
   the demo video, PDF for the CV. No `<picture>`, no second `<source>`, no format fallbacks. Every
   browser the site supports reads all three.
@@ -201,6 +209,9 @@ otherwise wonder why assets are treated differently.
 
 When an asset exceeds its budget, the asset is re-derived. Raising a number here is a change to this
 record, made deliberately, and not something an implementation story decides on its own.
+
+> **Amended by ADR-016.** The profile photo's budget is 200 KB, and it is drawn up to 300px wide
+> (DDR-040). A still is drawn up to 538px wide, and its budget stays 150 KB. The other rows stand.
 
 ## Alternatives Considered
 
