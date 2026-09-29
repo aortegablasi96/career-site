@@ -102,9 +102,12 @@ import type { Cv } from './types';
  *
  * It moved again with #231, because the Digital Twin gained its business case. It states no fact
  * ADR-005 lists, so it did not move the CV.
+ *
+ * It moved again with #231, because this site gained its business case, so every project has one.
+ * It states no fact ADR-005 lists, so it did not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '52f1247c9f1bfc79ce6032ddce17ceaee9c6bc468518006e612b22e9873dd2c5',
+  contentDigest: 'a64f7c6294c2ccb5501e9e1f69f1238352d032df5b2de14d3b97b584d776eb7d',
 };
