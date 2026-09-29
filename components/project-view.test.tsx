@@ -99,11 +99,11 @@ describe('ProjectView', () => {
   });
 
   it('shows neither the heading nor a paragraph for a project that does not say how it was built', () => {
-    const view = render({ ...digitalTwin!, howBuilt: undefined });
+    const view = render({ ...careerSite!, howBuilt: undefined });
 
     expect(text(view)).not.toContain(projects.view.howBuilt);
     expect(view).not.toContain('howBuilt');
-    expect(bare(view)).toContain(`<p>${digitalTwin!.description}</p><h2>${projects.view.builtWith}</h2>`);
+    expect(bare(view)).toContain(`<p>${careerSite!.description}</p><h2>${projects.view.builtWith}</h2>`);
   });
 
   // DDR-079 and ADR-014: a project with a business case can be read as its overview or as that,
@@ -112,17 +112,16 @@ describe('ProjectView', () => {
     const view = render(stockPortfolioViewer!);
     const radios = [...view.matchAll(/<input [^>]*>/g)].map(([input]) => input);
 
-    it('is on NumisBook and the Stock Portfolio Viewer alone, the projects with a business case', () => {
+    it('is on every view but this site’s, the projects with a business case', () => {
       expect(projects.projects.filter(({ businessCase }) => businessCase).map(({ name }) => name)).toEqual([
         numisBook!.name,
+        digitalTwin!.name,
         stockPortfolioViewer!.name,
       ]);
       expect(render(numisBook!)).toContain('radiogroup');
-
-      for (const project of [digitalTwin!, careerSite!]) {
-        expect(render(project)).not.toContain('radiogroup');
-        expect(render(project)).not.toContain('<input');
-      }
+      expect(render(digitalTwin!)).toContain('radiogroup');
+      expect(render(careerSite!)).not.toContain('radiogroup');
+      expect(render(careerSite!)).not.toContain('<input');
     });
 
     // A view without a business case reads exactly as it did before #231: no wrapper round its
@@ -173,7 +172,7 @@ describe('ProjectView', () => {
 
     // The owner reordered the summary on #231, so key decisions come third and every item is numbered.
     it('shows each item of the business case as a term and its description, in the owner’s order', () => {
-      for (const project of [numisBook!, stockPortfolioViewer!]) {
+      for (const project of [numisBook!, digitalTwin!, stockPortfolioViewer!]) {
         const items = project.businessCase!.items;
 
         expect(items.map(({ label }) => label)).toEqual([
@@ -183,7 +182,7 @@ describe('ProjectView', () => {
           '04 — Outcome',
           '05 — My contribution',
         ]);
-        // NumisBook's items name "documentation & media", which the markup escapes.
+        // NumisBook's and the Digital Twin's items each name an "&", which the markup escapes.
         expect(bare(render(project))).toContain(
           `<dl>${items.map(({ label, text }) => `<div><dt>${label}</dt><dd>${text.replaceAll('&', '&amp;')}</dd></div>`).join('')}</dl>`,
         );
@@ -209,7 +208,7 @@ describe('ProjectView', () => {
     it('hides "Built with" and the technologies with the overview', () => {
       expect(view).toMatch(new RegExp(`<h2 class="[^"]*overviewOnly[^"]*">${projects.view.builtWith}</h2>`));
       expect(view).toMatch(/<ul class="[^"]*technologies[^"]*overviewOnly[^"]*">/);
-      expect(render(digitalTwin!)).not.toContain('overviewOnly');
+      expect(render(careerSite!)).not.toContain('overviewOnly');
     });
 
     // The radio takes no room and draws nothing, and its label draws the focus it cannot.
@@ -235,12 +234,14 @@ describe('ProjectView', () => {
       expect(view).toContain(`href="${file}"`);
     });
 
-    it('is NumisBook’s own PDF on its view', () => {
-      const numisBookFile = numisBook!.businessCase!.file;
+    it('is each project’s own PDF on its view', () => {
+      for (const project of [numisBook!, digitalTwin!]) {
+        const projectFile = project.businessCase!.file;
 
-      expect(numisBookFile).toBe('/portfolio/numisbook/numisbook-business-case.pdf');
-      expect(existsSync(new URL(`../public${numisBookFile}`, import.meta.url))).toBe(true);
-      expect(render(numisBook!)).toContain(`href="${numisBookFile}"`);
+        expect(projectFile).toBe(`/portfolio/${project.slug}/${project.slug}-business-case.pdf`);
+        expect(existsSync(new URL(`../public${projectFile}`, import.meta.url))).toBe(true);
+        expect(render(project)).toContain(`href="${projectFile}"`);
+      }
     });
 
     it('downloads in place, as the filled pill, with its own words', () => {
@@ -269,13 +270,11 @@ describe('ProjectView', () => {
     });
 
     it('is on no view without a business case, whose links are as they were', () => {
-      for (const project of [digitalTwin!, careerSite!]) {
-        const markup = render(project);
+      const markup = render(careerSite!);
 
-        expect(text(markup)).not.toContain(projects.view.downloadBusinessCase);
-        expect(markup).not.toContain('overviewOnly');
-        expect(markup).not.toContain('download=""');
-      }
+      expect(text(markup)).not.toContain(projects.view.downloadBusinessCase);
+      expect(markup).not.toContain('overviewOnly');
+      expect(markup).not.toContain('download=""');
     });
   });
 

@@ -138,6 +138,33 @@ export const projects: Projects = {
           ', exposing the agentic RAG pipeline through APIs that connect the AI layer with the frontend.',
         ],
       ],
+      // The "Summary of Business Case" from the owner's knowledge base, as the other two are, per
+      // #231 and DDR-079, and the full business case the owner supplied.
+      businessCase: {
+        items: [
+          {
+            label: '01 — Problem',
+            text: 'Traditional career websites require visitors to navigate static pages to understand a candidate’s experience, creating an opportunity for a more interactive way to explore professional information.',
+          },
+          {
+            label: '02 — Product',
+            text: 'An AI-powered Digital Twin that allows recruiters and visitors to ask natural-language questions about my experience, projects, skills and professional background.',
+          },
+          {
+            label: '03 — Key decisions',
+            text: 'AI as an interface · Grounded professional knowledge · Structured career context · Controlled conversational scope',
+          },
+          {
+            label: '04 — Outcome',
+            text: 'Interactive AI profile · Conversational career exploration · Structured professional knowledge base · AI agent foundation',
+          },
+          {
+            label: '05 — My contribution',
+            text: 'Product strategy · AI & data design · Conversational UX · Knowledge architecture · End-to-end development',
+          },
+        ],
+        file: '/portfolio/digital-twin/digital-twin-business-case.pdf',
+      },
       links: [
         { text: sourceCode, href: 'https://github.com/aortegablasi96/career_conversation_chatbot' },
         { text: liveSite, href: 'https://career-conversation-chatbot.vercel.app' },
