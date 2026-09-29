@@ -1000,7 +1000,7 @@ describe('spacing tokens', () => {
   });
 
   // DDR-081's thumbnails, off node 405:93: 72 by 52, 8px corners and a 1.6px edge, each 36px after
-  // the one before, the count 12px after the last, and the layer's two-layer shadow.
+  // the one before, and the layer's two-layer shadow.
   it('draws a project view’s gallery thumbnails as `career-site-business-case` does, per DDR-081', () => {
     const px = (name: string) => rem(token(name)!) * 16;
 
@@ -1009,8 +1009,9 @@ describe('spacing tokens', () => {
     expect(px('project-view-thumbnail-overlap')).toBe(36);
     expect(px('project-view-thumbnail-edge')).toBeCloseTo(1.6);
     expect(px('project-view-thumbnail-radius')).toBe(8);
-    expect(px('project-view-thumbnail-count-gap')).toBe(12);
     expect(token('project-view-thumbnail-overlap-back')).toBe('calc(-1 * var(--project-view-thumbnail-overlap))');
+    expect(px('project-view-thumbnail-lift')).toBe(2 * px('card-lift'));
+    expect(token('project-view-thumbnail-lift-back')).toBe('calc(-1 * var(--project-view-thumbnail-lift))');
     expect(token('shadow-thumbnail')).toBe('0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)');
   });
 

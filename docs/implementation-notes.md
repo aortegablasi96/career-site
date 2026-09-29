@@ -56,7 +56,7 @@ save the next person from breaking something; don't add story history.
   write their own layout under it. To test either, change the browser's default font size, not
   the root's CSS font size.
 * **`z-index: 1` on the contents bar** keeps the photo's positioned inner shadow from painting over
-  the bar. The only other z-index is the gallery's thumbnails (DDR-081), inside a row with
+  the bar. The only other z-index is the gallery's raised thumbnail (DDR-081), inside a row with
   `isolation: isolate` so they can never rise over the bar. Isolate any new one the same way.
 * **Hover is written `:hover, :focus-visible`**, and the colour transition is written once, on `a`
   in `globals.css`, inside `prefers-reduced-motion: no-preference`. Movement (the card lift) goes
@@ -194,12 +194,17 @@ The page itself is the CV, so what it prints is designed.
   at 200% text. A new or renamed project or technology means sweeping again.
 * The view's business-case switch is native radios read by `:has()`, with no script (ADR-014).
 * **The gallery is native radios too** (ADR-017, DDR-081): each picture's radio is its figure's
-  previous sibling, and `.pick:not(:checked) + .figure` hides the rest. Keep that adjacency. The
-  count is `details`; open, its `::details-content` is `display: contents` so the revealed
-  thumbnails stay on the count's line. Only while open: closed, that box is what hides them.
-  A thumbnail's image is `box-sizing: border-box`, or its edge makes it 75×55.
-* **No project has gallery media**, so a browser check needs a temporary `gallery` in
-  `content/projects.ts`. Revert it before committing.
+  previous sibling, and `.pick:not(:checked) + .figure` hides the rest. Keep that adjacency.
+* **The raised thumbnail is found by place**, one `:nth-of-type` rule per position, for twelve
+  pictures; a thirteenth needs a thirteenth rule. `--raised` is worked out from `--chosen`,
+  `--pointed` and `--pointing`, and drives the thumbnail's `z-index`, its name's opacity and, in the
+  motion query, its lift.
+* **Playwright's `click()` on a thumbnail times out**: the next thumbnail covers its centre. Click
+  its image's left 15px with `page.mouse.click`.
+* A thumbnail's image is `box-sizing: border-box`, or its edge makes it 75×55.
+* **NumisBook is the one view with a gallery** (six pictures), so check the gallery there. A
+  gallery picture is a 1536×1024 WebP like a lead (Pillow, quality 82, method 6), within the same
+  150 KB. The PNG originals in `media/` are gitignored.
 * **The business case inside it is a Client Component**, `BusinessCaseSlider` (ADR-015, DDR-080).
   Every item is in the HTML and sits in one grid cell; only `.shown` is `visibility: visible`, which
   holds the card at its tallest item's height. `components/stylesheets.test.ts` admits `grid-area`

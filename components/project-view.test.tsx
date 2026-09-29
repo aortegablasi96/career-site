@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { introduction } from '@/content/introduction';
@@ -367,9 +367,8 @@ describe('ProjectView', () => {
   });
 
   // DDR-053's gallery, laid out as DDR-081 draws it: thumbnails under the lead picture, and the
-  // chosen one shown in the lead's place, held by native radios per ADR-017. No project states a
-  // gallery yet — the media is the owner's to supply, as on #63 — so the branch that shows one is
-  // exercised here rather than by a page, as the video branch of `Media` has been since #50.
+  // chosen one shown in the lead's place, held by native radios per ADR-017. NumisBook has one; the
+  // stand-in items below exercise what it does not, a video and a gallery of any length.
   describe('the gallery', () => {
     const picture: GalleryItem = {
       media: { file: '/gallery-picture.webp', alt: 'The assistant adding a coin from a photograph' },
@@ -393,24 +392,41 @@ describe('ProjectView', () => {
     const radios = (markup: string) =>
       [...markup.matchAll(/<input [^>]*name="picture"[^>]*>/g)].map(([tag]) => tag);
 
-    /** The thumbnails, in the markup's order, as the radio each chooses and the file it shows. */
+    /** The thumbnails, in the markup's order, as the radio each chooses, its name and its file. */
     const thumbnails = (markup: string) =>
-      [...markup.matchAll(/<label for="(picture-\d+)"[^>]*><img [^>]*src="([^"]*)" alt=""\/><\/label>/g)].map(
-        ([, target, source]) => ({ target, source }),
-      );
+      [
+        ...markup.matchAll(
+          /<label for="(picture-\d+)"[^>]*><span [^>]*aria-hidden="true">([^<]*)<\/span><img [^>]*src="([^"]*)" alt=""\/><\/label>/g,
+        ),
+      ].map(([, target, name, source]) => ({ target, name, source }));
 
     /** A rule's body, by its whole selector. */
     const rule = (selector: string) =>
       css.match(new RegExp(`(?:^|\\})\\s*${selector.replace(/[.:+()]/g, '\\$&')}\\s*\\{([^}]*)\\}`))?.[1] ?? '';
 
     it('leaves a view whose project has no gallery media as it was: the lead picture alone', () => {
-      for (const project of projects.projects) {
-        expect(project.gallery).toBeUndefined();
+      for (const project of projects.projects.filter(({ gallery }) => !gallery)) {
         expect(radios(render(project))).toHaveLength(0);
-        expect(render(project)).not.toContain('<details');
+        expect(render(project)).toContain(`<figcaption class="`);
       }
 
-      expect(withGallery([])).toBe(html);
+      expect(withGallery([])).toBe(render({ ...numisBook!, gallery: undefined }));
+    });
+
+    // The owner's pictures, supplied on #244: each is a file the site carries, reached by its own
+    // path, within the budget ADR-004 sets for a still, as a lead picture is.
+    it('shows NumisBook’s gallery, each picture a file within the budget for a still', () => {
+      const gallery = numisBook!.gallery ?? [];
+
+      expect(gallery).toHaveLength(6);
+      expect(radios(html)).toHaveLength(7);
+      for (const { media, caption } of gallery) {
+        const bytes = statSync(new URL(`../public${media.file}`, import.meta.url)).size;
+
+        expect(bytes).toBeLessThanOrEqual(150 * 1024);
+        expect('alt' in media && media.alt.length).toBeTruthy();
+        expect(text(html)).toContain(caption.replace(/’/g, '’'));
+      }
     });
 
     it('draws no "Gallery" heading, and keeps one h1', () => {
@@ -456,18 +472,10 @@ describe('ProjectView', () => {
       expect(rule('.pick:focus-visible + .figure .media')).toContain('outline:');
     });
 
-    it('shows two thumbnails and no count where there are two pictures', () => {
-      const markup = withGallery([picture]);
-
-      expect(thumbnails(markup).map(({ target }) => target)).toEqual(['picture-0', 'picture-1']);
-      expect(markup).not.toContain('<details');
-    });
-
-    // DDR-081: the row shows two thumbnails, then a count of the rest, which discloses them. The
-    // radios stay outside it, so the keyboard reaches every picture whether it is open or not.
-    it('follows the first two thumbnails with a count that discloses the rest', () => {
+    // DDR-081, as the owner asked on #244: every picture's thumbnail is in the row, in the order
+    // the content gives, and nothing hides any of them.
+    it('shows every picture’s thumbnail, the lead first, with no count', () => {
       const markup = withGallery([picture, video, third]);
-      const details = markup.match(/<details[^>]*>([\s\S]*?)<\/details>/)?.[1] ?? '';
 
       expect(thumbnails(markup).map(({ target }) => target)).toEqual([
         'picture-0',
@@ -475,10 +483,52 @@ describe('ProjectView', () => {
         'picture-2',
         'picture-3',
       ]);
-      expect(projects.view.more(2)).toBe('+2 more');
-      expect(bare(details)).toMatch(/^<summary>\+2 more<\/summary>/);
-      expect(thumbnails(details).map(({ target }) => target)).toEqual(['picture-2', 'picture-3']);
-      expect(radios(details)).toHaveLength(0);
+      expect(markup).not.toContain('<details');
+    });
+
+    // DDR-081, as the owner asked on #244: the chosen thumbnail rises with its picture's name above
+    // it, so the name moves there from under the frame. It is the caption, hidden from assistive
+    // technology on the thumbnail because the radio is already named by it.
+    it('names each thumbnail by its caption, which the frame no longer shows', () => {
+      const markup = withGallery([picture, video]);
+
+      expect(thumbnails(markup).map(({ name }) => name)).toEqual([
+        numisBook!.caption.replace(/’/g, '’'),
+        picture.caption,
+        video.caption,
+      ]);
+      expect(rule('.pictureCaption')).toContain('display: none');
+      expect(markup).toMatch(/<figcaption id="picture-0-caption" class="[^"]*pictureCaption/);
+      // A project without a gallery keeps its caption under its picture.
+      expect(render(digitalTwin!)).toMatch(/<figcaption class="[^"]*caption/);
+    });
+
+    // The chosen thumbnail is found by place, one rule for each of twelve, because its radio is
+    // beside its picture rather than beside it. Every gallery must fit: a thirteenth picture would
+    // never rise.
+    it('raises the chosen thumbnail for every picture a gallery may hold', () => {
+      for (let place = 1; place <= 12; place += 1) {
+        expect(css).toContain(
+          `.pictures:has(.pick:nth-of-type(${place}):checked) .thumbnail:nth-of-type(${place})`,
+        );
+      }
+      expect(css).not.toContain('.pick:nth-of-type(13)');
+      for (const { gallery = [] } of projects.projects) {
+        expect(gallery.length + 1).toBeLessThanOrEqual(12);
+      }
+    });
+
+    // One thumbnail is raised: the pointer's while the pointer is on the row, the chosen one
+    // otherwise. It comes to the front and shows its name; it moves only where motion is welcome.
+    it('raises one thumbnail at a time, and moves it only where motion is welcome', () => {
+      expect(rule('.thumbnail')).toContain('z-index: var(--raised)');
+      expect(rule('.thumbnailName')).toContain('opacity: var(--raised)');
+      expect(rule('.thumbnail:hover')).toContain('--pointed: 1');
+      expect(rule('.pictures:has(.thumbnail:hover)')).toContain('--pointing: 1');
+      expect(css).toMatch(
+        /@media \(prefers-reduced-motion: no-preference\) \{\s*\.thumbnail \{\s*translate: 0 calc\(var\(--raised\) \* var\(--project-view-thumbnail-lift-back\)\);/,
+      );
+      expect(css.replace(/@media \(prefers-reduced-motion[\s\S]*?\n\}/g, '')).not.toMatch(/translate:[^;]*raised/);
     });
 
     // A thumbnail shows its own picture, or a video's poster, and says nothing: the radio is named
@@ -512,16 +562,15 @@ describe('ProjectView', () => {
       expect(withGallery([video])).toContain('src="/gallery-walkthrough.mp4"');
     });
 
-    // DDR-081: the thumbnails overlap by half, the first drawn over the second, inside a row that
-    // isolates them from the contents bar; the count stands clear of the last.
-    it('draws the row as the design does, the count clear of every thumbnail', () => {
+    // DDR-081: the thumbnails overlap by half, each over the one before, and wrap inside a row that
+    // isolates them from the contents bar.
+    it('draws the row as the design does, overlapping by half and wrapping', () => {
+      expect(rule('.thumbnails')).toContain('flex-wrap: wrap');
       expect(rule('.thumbnails')).toContain('isolation: isolate');
       expect(rule('.thumbnails')).toContain('padding-inline-start: var(--project-view-thumbnail-overlap)');
       expect(rule('.thumbnail')).toContain('margin-inline-start: var(--project-view-thumbnail-overlap-back)');
-      expect(rule('.thumbnail:first-child')).toContain('z-index: 1');
+      expect(rule('.thumbnailImage')).toContain('box-sizing: border-box');
       expect(rule('.thumbnailImage')).toContain('object-fit: cover');
-      expect(rule('.count')).toContain('margin-inline-start: var(--project-view-thumbnail-count-gap)');
-      expect(rule('.count + .thumbnail')).toContain('margin-inline-start: var(--project-view-thumbnail-count-gap)');
     });
   });
 

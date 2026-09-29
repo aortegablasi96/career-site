@@ -710,8 +710,9 @@
      by it, and a change to the smallest space on the page should not change how far a card moves.
 
      In rem, so the movement keeps its proportion to the card as the reader's text grows, as the
-     card's own measures do. It is the only length on the site that is a distance travelled, so a
-     second piece of motion is a decision to take rather than this token to reach for. */
+     card's own measures do. It was the only length on the site that is a distance travelled, so a
+     second piece of motion is a decision to take rather than this token to reach for: DDR-081 took
+     one, `--project-view-thumbnail-lift`. */
   --card-lift: 0.25rem;
   /* The lift as a margin, for a card in the timeline's column, per DDR-074, which rises by giving up
      space above it rather than by moving: written here because it is arithmetic on a token. */
@@ -732,8 +733,7 @@
 
   /* A view's gallery, per DDR-081, measured off `career-site-business-case` (node 405:93): a
      thumbnail is 72 by 52 with 8px corners and a 1.6px edge, each one starts 36px after the one
-     before it, so it overlaps half of it, and the count stands 12px after the last. None is a step
-     of DDR-013's scale, and the corner is not one of its three radii, so all are measures of the
+     before it, so it overlaps half of it. None is a step of DDR-013's scale, and the corner is not one of its three radii, so all are measures of the
      view's own, as the ones above are. In rem, so a thumbnail keeps its proportion to the count
      beside it when text is enlarged. */
   --project-view-thumbnail-width: 4.5rem;
@@ -741,8 +741,12 @@
   --project-view-thumbnail-overlap: 2.25rem;
   --project-view-thumbnail-edge: 0.1rem;
   --project-view-thumbnail-radius: 0.5rem;
-  --project-view-thumbnail-count-gap: 0.75rem;
   --project-view-thumbnail-overlap-back: calc(-1 * var(--project-view-thumbnail-overlap));
+  /* How far the chosen thumbnail rises, per DDR-081, where the owner asked on #244 for it to move
+     "a bit up". It is the site's second distance travelled, after `--card-lift`, and twice it, so
+     a thumbnail a sixth of a card's height visibly moves. */
+  --project-view-thumbnail-lift: 0.5rem;
+  --project-view-thumbnail-lift-back: calc(-1 * var(--project-view-thumbnail-lift));
 
   /* The foot of a project's view, per DDR-052, measured off node 59:118: the two halves stand 24px
      apart, and inside a card the chevron is 12px from the words. Neither is a step of DDR-013's

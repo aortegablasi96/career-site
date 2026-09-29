@@ -12,21 +12,23 @@ import { Icon } from './icon';
 import { Media, projectHref } from './projects';
 import styles from './project-view.module.css';
 
-/** How many thumbnails the gallery's row shows before the count of the rest, per DDR-081. */
-const thumbnailsBeforeCount = 2;
-
 /**
  * A picture's thumbnail in the gallery's row, per DDR-081 (node 405:93): the picture itself, or a
  * video's poster, cropped to the row's small frame.
  *
  * It is the label of the picture's radio, so choosing it shows that picture in the lead's frame.
- * The radio is named by the picture's caption and the picture in the frame carries its
- * alternative text, so the thumbnail's image is decorative and says nothing twice. A label is not
- * in the tab order: the keyboard reaches the pictures through their radios.
+ * Above the image is the picture's name, which the stylesheet shows over the chosen thumbnail as it
+ * rises, per DDR-081. The radio is named by the same caption and the picture in the frame carries
+ * its alternative text, so the name and the image are hidden from assistive technology and say
+ * nothing twice. A label is not in the tab order: the keyboard reaches the pictures through their
+ * radios.
  */
-function Thumbnail({ media, index }: { media: ProjectMedia; index: number }) {
+function Thumbnail({ media, caption, index }: { media: ProjectMedia; caption: string; index: number }) {
   return (
     <label htmlFor={`picture-${index}`} className={styles.thumbnail}>
+      <span className={styles.thumbnailName} aria-hidden="true">
+        {caption}
+      </span>
       <img
         className={styles.thumbnailImage}
         src={asset('poster' in media ? media.poster : media.file)}
@@ -38,8 +40,10 @@ function Thumbnail({ media, index }: { media: ProjectMedia; index: number }) {
 
 /**
  * A project's lead picture and its gallery, per DDR-081 and ADR-017, as `career-site-business-case`
- * draws them (node 405:80): one picture in the lead's frame with its caption, and under it a row of
- * thumbnails, the lead's first. Choosing a thumbnail shows its picture in the frame.
+ * draws them (node 405:80): one picture in the lead's frame, and under it a row of thumbnails, the
+ * lead's first. Choosing a thumbnail shows its picture in the frame, and the chosen thumbnail rises
+ * with the picture's name above it, as the owner asked on #244. The name is the picture's caption,
+ * which the frame no longer shows beneath it.
  *
  * The pictures are a native radio group, as the business-case switch is, per ADR-014: each picture
  * is a radio followed by its `figure`, and the stylesheet shows the figure whose radio is checked.
@@ -47,9 +51,8 @@ function Thumbnail({ media, index }: { media: ProjectMedia; index: number }) {
  * assistive technology announces each by its caption, and all of it works without script. The
  * lead's radio is checked in the markup, so a view opens on the lead picture.
  *
- * The row shows the first two thumbnails, then a count of the rest, as the design draws it. The
- * count is a native disclosure: choosing it shows the rest of the row after it. The radios are not
- * inside it, so the keyboard reaches every picture whether it is open or not.
+ * The row shows every picture's thumbnail, as the owner asked on #244, where the design draws two
+ * and a count of the rest. It wraps where the column runs out of room.
  *
  * A video plays only when the reader starts it and fetches nothing before that, because it is drawn
  * by the same `Media` the lead picture is, per DDR-010 and ADR-004. One view is one page, so the
@@ -57,17 +60,13 @@ function Thumbnail({ media, index }: { media: ProjectMedia; index: number }) {
  */
 function Pictures({
   name,
-  more,
   pictures,
 }: {
   /** The radio group's accessible name. */
   name: string;
-  more: (count: number) => string;
   /** The lead picture first, then the gallery's items. */
   pictures: readonly GalleryItem[];
 }) {
-  const rest = pictures.slice(thumbnailsBeforeCount);
-
   return (
     <div role="radiogroup" aria-label={name} className={styles.pictures}>
       {pictures.map(({ media, caption }, index) => (
@@ -82,24 +81,16 @@ function Pictures({
           />
           <figure className={styles.figure}>
             <Media media={media} className={styles.media} />
-            <figcaption id={`picture-${index}-caption`} className={styles.caption}>
+            <figcaption id={`picture-${index}-caption`} className={styles.pictureCaption}>
               {caption}
             </figcaption>
           </figure>
         </Fragment>
       ))}
       <div className={styles.thumbnails}>
-        {pictures.slice(0, thumbnailsBeforeCount).map(({ media }, index) => (
-          <Thumbnail key={media.file} media={media} index={index} />
+        {pictures.map(({ media, caption }, index) => (
+          <Thumbnail key={media.file} media={media} caption={caption} index={index} />
         ))}
-        {rest.length > 0 && (
-          <details className={styles.more}>
-            <summary className={styles.count}>{more(rest.length)}</summary>
-            {rest.map(({ media }, index) => (
-              <Thumbnail key={media.file} media={media} index={thumbnailsBeforeCount + index} />
-            ))}
-          </details>
-        )}
       </div>
     </div>
   );
@@ -237,7 +228,6 @@ export function ProjectView({
     nextItem,
     builtWith,
     gallery: galleryName,
-    more,
     newTab,
     previous: previousWord,
     next: nextWord,
@@ -358,7 +348,7 @@ export function ProjectView({
             thumbnails under it, per DDR-081 (node 405:80). A project the owner has supplied none
             for shows its lead picture alone, as it did before. */}
         {gallery && gallery.length > 0 ? (
-          <Pictures name={galleryName} more={more} pictures={[{ media, caption }, ...gallery]} />
+          <Pictures name={galleryName} pictures={[{ media, caption }, ...gallery]} />
         ) : (
           <figure className={styles.figure}>
             <Media media={media} className={styles.media} />

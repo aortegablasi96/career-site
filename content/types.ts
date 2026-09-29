@@ -467,11 +467,6 @@ export interface ProjectView {
    */
   gallery: string;
   /**
-   * The count after the gallery's first two thumbnails, from the number of the rest: "+2 more", per
-   * DDR-081. Choosing it shows the rest of the thumbnails.
-   */
-  more: (count: number) => string;
-  /**
    * What a project's links say about opening a new tab, per DDR-043 as DDR-050 extends it. It is
    * said only to assistive technology, after the link's text in its accessible name, as a profile
    * pill says it.

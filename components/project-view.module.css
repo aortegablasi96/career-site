@@ -366,40 +366,92 @@
   outline-offset: var(--focus-outline-offset);
 }
 
-/* The row of thumbnails, 16px under the caption (node 405:93). Each thumbnail after the first
+/* A gallery picture's caption is the name above its chosen thumbnail, per DDR-081, so the frame
+   does not show it. It stays in the markup: it is its figure's caption and its radio's name. */
+.pictureCaption {
+  display: none;
+}
+
+/* The row of thumbnails, 16px under the picture (node 405:93). Each thumbnail after the first
    starts half a thumbnail after the one before it, so they overlap, and the row is padded by that
    half so the first, pulled back like the rest, starts at the column's edge — as does the first of
-   any line a long row wraps to. It isolates what it draws, so the thumbnail raised above its
-   neighbours can never rise over the contents bar, the site's other z-index. */
+   any line the row wraps to. The thumbnails stand on one baseline, their images at the foot, so a
+   name of two lines above one takes room above the row rather than pushing its image down. The
+   row isolates what it draws, so a raised thumbnail can never rise over the contents bar, the
+   site's other z-index. */
 .thumbnails {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-end;
   row-gap: var(--space-small);
   margin-block-start: var(--space-medium);
   padding-inline-start: var(--project-view-thumbnail-overlap);
   isolation: isolate;
 }
 
-/* A thumbnail is its label, the picture's whole target. The design draws the first over the
-   second; one the count shows is drawn over the one before it, in the markup's order. Under the
-   pointer a thumbnail comes to the front, so a covered one can be seen whole before it is
-   chosen. */
+/* A thumbnail is its label, the picture's whole target: the name above the image. Each is drawn
+   over the one before it, in the markup's order, so every one shows at least its first half and
+   the last shows whole. (The design draws two, the first over the second; with every picture in
+   the row, that would cover a middle one on both sides.)
+
+   One thumbnail is raised at a time, per DDR-081: it comes to the front, whole, shows its name and,
+   where motion is welcome, rises. It is the chosen one, or while the pointer is on a thumbnail,
+   that one, so the pointer previews what choosing it does and only one name ever shows.
+   `--raised` is 1 for that thumbnail and 0 for the rest, worked out from three flags, below. */
 .thumbnail {
+  --raised: calc(
+    var(--pointing, 0) * var(--pointed, 0) + (1 - var(--pointing, 0)) * var(--chosen, 0)
+  );
+
   position: relative;
+  z-index: var(--raised);
   display: inline-flex;
+  flex-direction: column;
   flex-shrink: 0;
+  gap: var(--space-x-small);
+  align-items: center;
   margin-inline-start: var(--project-view-thumbnail-overlap-back);
-  vertical-align: middle;
   cursor: pointer;
 }
 
-.thumbnail:first-child {
-  z-index: 1;
+/* The chosen thumbnail. Its radio is in the frame, beside its picture, so the stylesheet cannot
+   pair the two by adjacency; it pairs them by place instead, one rule for each, for up to twelve
+   pictures. `components/project-view.test.tsx` holds every gallery to that, so a thirteenth picture
+   fails the suite rather than a thumbnail that never rises. */
+.pictures:has(.pick:nth-of-type(1):checked) .thumbnail:nth-of-type(1),
+.pictures:has(.pick:nth-of-type(2):checked) .thumbnail:nth-of-type(2),
+.pictures:has(.pick:nth-of-type(3):checked) .thumbnail:nth-of-type(3),
+.pictures:has(.pick:nth-of-type(4):checked) .thumbnail:nth-of-type(4),
+.pictures:has(.pick:nth-of-type(5):checked) .thumbnail:nth-of-type(5),
+.pictures:has(.pick:nth-of-type(6):checked) .thumbnail:nth-of-type(6),
+.pictures:has(.pick:nth-of-type(7):checked) .thumbnail:nth-of-type(7),
+.pictures:has(.pick:nth-of-type(8):checked) .thumbnail:nth-of-type(8),
+.pictures:has(.pick:nth-of-type(9):checked) .thumbnail:nth-of-type(9),
+.pictures:has(.pick:nth-of-type(10):checked) .thumbnail:nth-of-type(10),
+.pictures:has(.pick:nth-of-type(11):checked) .thumbnail:nth-of-type(11),
+.pictures:has(.pick:nth-of-type(12):checked) .thumbnail:nth-of-type(12) {
+  --chosen: 1;
 }
 
+/* The pointer's thumbnail, and the row it is in. */
 .thumbnail:hover {
-  z-index: 2;
+  --pointed: 1;
+}
+
+.pictures:has(.thumbnail:hover) {
+  --pointing: 1;
+}
+
+/* The picture's name, in the caption's faint ink at 11px, which is what it was under the frame. It
+   is as wide as the thumbnail and wraps inside it, so it can never widen the row or push the page
+   sideways, and it is drawn only over the raised thumbnail. */
+.thumbnailName {
+  inline-size: var(--project-view-thumbnail-width);
+  color: var(--color-text-faint);
+  font-size: var(--font-size-xxx-small);
+  text-align: center;
+  overflow-wrap: anywhere;
+  opacity: var(--raised);
 }
 
 /* The design's thumbnail (node 405:103): 72 by 52 at 8px corners, edged in white and raised by its
@@ -420,46 +472,21 @@
   border-color: var(--color-accent);
 }
 
-/* The thumbnails after the first two and the count that discloses them, per DDR-081. Its content
-   is inline, so the count and the thumbnails it shows flow as one line that wraps, in every
-   browser, whatever it does with a disclosure's own layout. */
-.more {
-  min-inline-size: 0;
-}
+/* The raised thumbnail rises by the design's lift, and its name fades in, where the reader has not
+   asked for less motion. Movement is written inside the query as well as its transition, as the
+   cards' lift is: a reader who prefers less motion sees the name and the thumbnail in front, and
+   nothing move. */
+@media (prefers-reduced-motion: no-preference) {
+  .thumbnail {
+    translate: 0 calc(var(--raised) * var(--project-view-thumbnail-lift-back));
+    transition-property: translate;
+    transition-duration: var(--hover-transition);
+  }
 
-/* The browser wraps what a disclosure holds in a block of its own, which would start the thumbnails
-   on a line below the count. Open, that block steps aside, so they follow the count on its line.
-   A browser that cannot name the block shows them on the line below, which is still the row. */
-.more[open]::details-content {
-  display: contents;
-}
-
-/* The count, in the caption's faint ink at 11px (node 405:96), 12px after the last thumbnail, so
-   no thumbnail covers it. The browser's disclosure triangle is not drawn: the design draws none,
-   and the words say what it does. It takes the accent under the pointer and on keyboard focus, as
-   the way back does, per DDR-035. */
-.count {
-  display: inline-flex;
-  margin-inline-start: var(--project-view-thumbnail-count-gap);
-  color: var(--color-text-faint);
-  font-size: var(--font-size-xxx-small);
-  list-style: none;
-  vertical-align: middle;
-  cursor: pointer;
-}
-
-.count::-webkit-details-marker {
-  display: none;
-}
-
-.count:hover,
-.count:focus-visible {
-  color: var(--color-accent);
-}
-
-/* The first thumbnail the count shows stands the same 12px after it. */
-.count + .thumbnail {
-  margin-inline-start: var(--project-view-thumbnail-count-gap);
+  .thumbnailName {
+    transition-property: opacity;
+    transition-duration: var(--hover-transition);
+  }
 }
 
 /* The foot of the view, per DDR-052: the projects on either side of this one, below the design's
