@@ -109,9 +109,12 @@ import type { Cv } from './types';
  * It moved again with #240, because a project's view gained the words on the two controls that step
  * through its business case, per DDR-080. A control's word is not a fact ADR-005 lists as shared,
  * so it did not move the CV.
+ *
+ * It moved again with #240, because every business case item gained its icon and headline. Neither
+ * is a fact ADR-005 lists as shared, so neither moved the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'c21f4f8e87e3dc1091888f69ebea434a3f27fb2e1705f95d36b3393ffa7ed6ab',
+  contentDigest: '1e36302d22f44922f9bd502e78461a0c892f24d235b9bec652c8941a615be87a',
 };

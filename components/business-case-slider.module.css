@@ -20,6 +20,7 @@
    by the design's 24px from the wide breakpoint. */
 .items {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   row-gap: var(--space-large);
   padding: var(--space-medium);
 }
@@ -70,10 +71,14 @@
 }
 
 /* The headline is an h2, so it takes the serif and weight every h2 does, at the body's 16px rather
-   than a section title's size, and untracked, as the design sets it (node 365:38). */
+   than a section title's size, and untracked, as the design sets it (node 365:38). Measured at 300px
+   with text at 200%, "Collectors" beside its icon is wider than the card leaves it, so the headline
+   may shrink below its longest word and break it, as the view's names do. */
 .headline {
+  min-inline-size: 0;
   font-size: var(--font-size-large);
   letter-spacing: 0;
+  overflow-wrap: anywhere;
 }
 
 /* The item's text, in the secondary ink at the labels' 13px and the running text's leading

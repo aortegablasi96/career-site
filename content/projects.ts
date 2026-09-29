@@ -82,22 +82,32 @@ export const projects: Projects = {
         items: [
           {
             label: '01 — Problem',
+            icon: '⚠️',
+            headline: 'Collectors lack a single source of truth',
             text: 'Coin collectors often manage inventory, purchase documentation and collection information across spreadsheets, cloud storage and physical documents, making the collection difficult to manage and analyse.',
           },
           {
             label: '02 — Product',
+            icon: '💡',
+            headline: 'One place for the whole collection',
             text: 'A cloud-based SaaS platform that centralises coin inventory, images and documentation while providing collection analytics and an AI assistant for natural-language exploration.',
           },
           {
             label: '03 — Key decisions',
+            icon: '🔀',
+            headline: 'Cloud-first, with AI grounded in the data',
             text: 'Cloud-first architecture · Structured collection data model · Integrated documentation & media · AI grounded in collection data',
           },
           {
             label: '04 — Outcome',
+            icon: '🏁',
+            headline: 'A production SaaS MVP',
             text: 'Production SaaS MVP · Collection management · Analytics · AI assistant · Extensible data architecture',
           },
           {
             label: '05 — My contribution',
+            icon: '🛠',
+            headline: 'From strategy to end-to-end development',
             text: 'Product strategy · Data architecture · UX/UI · Database & media infrastructure · AI · End-to-end development',
           },
         ],
@@ -144,22 +154,32 @@ export const projects: Projects = {
         items: [
           {
             label: '01 — Problem',
+            icon: '⚠️',
+            headline: 'Static pages make visitors dig for answers',
             text: 'Traditional career websites require visitors to navigate static pages to understand a candidate’s experience, creating an opportunity for a more interactive way to explore professional information.',
           },
           {
             label: '02 — Product',
+            icon: '💡',
+            headline: 'Ask about my career in plain language',
             text: 'An AI-powered Digital Twin that allows recruiters and visitors to ask natural-language questions about my experience, projects, skills and professional background.',
           },
           {
             label: '03 — Key decisions',
+            icon: '🔀',
+            headline: 'AI as the interface, grounded in facts',
             text: 'AI as an interface · Grounded professional knowledge · Structured career context · Controlled conversational scope',
           },
           {
             label: '04 — Outcome',
+            icon: '🏁',
+            headline: 'An interactive AI profile',
             text: 'Interactive AI profile · Conversational career exploration · Structured professional knowledge base · AI agent foundation',
           },
           {
             label: '05 — My contribution',
+            icon: '🛠',
+            headline: 'From AI design to end-to-end development',
             text: 'Product strategy · AI & data design · Conversational UX · Knowledge architecture · End-to-end development',
           },
         ],
@@ -191,22 +211,32 @@ export const projects: Projects = {
         items: [
           {
             label: '01 — Problem',
+            icon: '⚠️',
+            headline: 'Portfolio data split across brokers',
             text: 'Portfolio data is fragmented across brokers, while existing broker interfaces offer limited personalisation and cross-portfolio analysis.',
           },
           {
             label: '02 — Product',
+            icon: '💡',
+            headline: 'A local-first, personal analytics workspace',
             text: 'A local-first portfolio management application that consolidates broker data into a personalised analytics workspace, complemented by an AI portfolio assistant.',
           },
           {
             label: '03 — Key decisions',
+            icon: '🔀',
+            headline: 'Local-first, starting with IBKR',
             text: 'Local-first architecture · IBKR-first MVP · Broker abstraction · AI grounded in portfolio data',
           },
           {
             label: '04 — Outcome',
+            icon: '🏁',
+            headline: 'An IBKR MVP built to add more brokers',
             text: 'IBKR MVP · Portfolio analytics · Dividend tracking · AI assistant · Broker-extensible architecture',
           },
           {
             label: '05 — My contribution',
+            icon: '🛠',
+            headline: 'From data pipeline to AI-assisted delivery',
             text: 'Product strategy · Data pipeline · UX/UI · Architecture · Development · AI-assisted delivery',
           },
         ],
@@ -240,22 +270,32 @@ export const projects: Projects = {
         items: [
           {
             label: '01 — Problem',
+            icon: '⚠️',
+            headline: 'CVs drift from the evidence behind them',
             text: 'Recruiters skim a candidate’s profile quickly and often print it, while the evidence behind a CV’s claims sits elsewhere, and a CV kept apart from a website drifts out of step with it.',
           },
           {
             label: '02 — Product',
+            icon: '💡',
+            headline: 'A career site that is its own CV',
             text: 'A career site that is also its own printed CV, with a view of its own for every role and project, and a downloadable CV kept in step with the page.',
           },
           {
             label: '03 — Key decisions',
+            icon: '🔀',
+            headline: 'The page is the CV',
             text: 'The page is the CV · Content separate from code · Static by design · Accessible from the start · Every decision recorded',
           },
           {
             label: '04 — Outcome',
+            icon: '🏁',
+            headline: 'Live, printable and every decision traced',
             text: 'Live career site · Printable CV · A view for every role and project · Automated quality gate · Decision trail',
           },
           {
             label: '05 — My contribution',
+            icon: '🛠',
+            headline: 'From product strategy to delivery',
             text: 'Product strategy · Content · UX/UI · Architecture · AI-assisted development · Delivery',
           },
         ],

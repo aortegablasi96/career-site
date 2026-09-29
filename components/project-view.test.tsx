@@ -187,7 +187,7 @@ describe('ProjectView', () => {
         ]);
         // NumisBook's and the Digital Twin's items each name an "&", which the markup escapes.
         expect(bare(render(project))).toContain(
-          `<div aria-live="polite">${items.map(({ label, text }) => `<div role="group" aria-label="${label}"><p>${label}</p><p>${text.replaceAll('&', '&amp;')}</p></div>`).join('')}</div>`,
+          `<div aria-live="polite">${items.map(({ label, text, icon, headline }) => `<div role="group" aria-label="${label}"><p>${label}</p><div><span aria-hidden="true">${icon}</span><h2>${headline}</h2></div><p>${text.replaceAll('&', '&amp;')}</p></div>`).join('')}</div>`,
         );
       }
     });

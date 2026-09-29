@@ -8,16 +8,19 @@ import { BusinessCaseSlider, step } from './business-case-slider';
 // DDR-080: a project's business case as a card that shows one item at a time. The markup is read
 // as the server renders it, which is what a reader meets before hydration and without script; what
 // the controls do is `step`, and the browser checks on #240.
-const { items } = projects.projects[0]!.businessCase!;
+const { items: filled } = projects.projects[0]!.businessCase!;
+// The items as they read before the owner filled any field, so each part can be added one at a time.
+const items = filled.map(({ label, text }) => ({ label, text }));
 const { previousItem, nextItem } = projects.view;
 
-function render(slides: readonly BusinessCaseItem[] = items): string {
+function render(slides: readonly BusinessCaseItem[] = filled): string {
   return renderToStaticMarkup(
     <BusinessCaseSlider items={slides} previous={previousItem} next={nextItem} />,
   );
 }
 
 const html = render();
+const plain = render(items);
 
 /** The markup without its classes, which the CSS-module stub hashes, so its elements can be read in order. */
 const bare = (markup: string) => markup.replace(/ class="[^"]*"/g, '');
@@ -81,12 +84,27 @@ describe('BusinessCaseSlider', () => {
     expect(bare(html)).toMatch(/<\/button><ul><li><button/);
   });
 
-  // No project's entry fills them yet, so a slide is its label and its text alone, with nothing
-  // drawn where the rest would be.
+  // A slide with nothing filled is its label and its text alone, with nothing drawn where the rest
+  // would be.
   it('draws no icon, headline or figure the owner has left empty', () => {
-    expect(html).not.toContain('<h2');
-    expect(html).not.toContain('aria-hidden="true">');
-    expect(bare(html)).toContain(`<p>${items[0]!.label}</p><p>${items[0]!.text}</p></div>`);
+    expect(plain).not.toContain('<h2');
+    expect(plain).not.toContain('aria-hidden="true">');
+    expect(bare(plain)).toContain(`<p>${items[0]!.label}</p><p>${items[0]!.text}</p></div>`);
+  });
+
+  // Since the owner asked on #240, every item has the Figma file's icon for its kind and a headline.
+  it('draws each project’s icons and headlines, one of each on every item', () => {
+    for (const project of projects.projects) {
+      for (const { icon, headline, figure } of project.businessCase!.items) {
+        expect(icon).toMatch(/^\S+$/u);
+        expect(headline).toBeTruthy();
+        expect(figure).toBeUndefined();
+      }
+      expect(project.businessCase!.items.map(({ icon }) => icon)).toEqual(['⚠️', '💡', '🔀', '🏁', '🛠']);
+    }
+    expect(bare(html)).toContain(
+      `<p>${filled[0]!.label}</p><div><span aria-hidden="true">${filled[0]!.icon}</span><h2>${filled[0]!.headline}</h2></div>`,
+    );
   });
 
   it('draws each part the owner fills, the headline as an h2 and the icon unannounced', () => {
