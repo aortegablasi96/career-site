@@ -1,8 +1,10 @@
+import { Fragment } from 'react';
 import Link from 'next/link';
 import { asset } from '@/app/asset';
 import type {
   GalleryItem,
   Project,
+  ProjectMedia,
   ProjectView as ProjectViewStrings,
 } from '@/content/types';
 import { BusinessCaseSlider } from './business-case-slider';
@@ -11,35 +13,86 @@ import { Media, projectHref } from './projects';
 import styles from './project-view.module.css';
 
 /**
- * Further pictures and videos of the project, per DDR-053, as the design draws them (node 59:84):
- * the "Gallery" label, then the items two to a row from the wide breakpoint and one below it, each
- * in the lead picture's shape with its caption beneath.
+ * A picture's thumbnail in the gallery's row, per DDR-081 (node 405:93): the picture itself, or a
+ * video's poster, cropped to the row's small frame.
  *
- * It is a list, because the items are several of one thing and their number is worth announcing,
- * and each item is a `figure` with its `figcaption`, as the lead picture is, so the caption is tied
- * to what it names rather than standing loose under it. The label is an `h2`, as "Built with" is,
- * so the view's outline stays the project, what it is built with, and what there is to see of it.
- *
- * A video plays only when the reader starts it, shows its poster until then and fetches nothing
- * before that, because it is drawn by the same `Media` the lead picture is, per DDR-010 and
- * ADR-004. A view with nothing to show renders no gallery at all: `ProjectView` leaves it out
- * rather than this drawing an empty one, since a heading over nothing is worse than no heading.
+ * It is the label of the picture's radio, so choosing it shows that picture in the lead's frame.
+ * Above the image is the picture's name, which the stylesheet shows over the chosen thumbnail as it
+ * rises, per DDR-081. The radio is named by the same caption and the picture in the frame carries
+ * its alternative text, so the name and the image are hidden from assistive technology and say
+ * nothing twice. A label is not in the tab order: the keyboard reaches the pictures through their
+ * radios.
  */
-function Gallery({ title, items }: { title: string; items: readonly GalleryItem[] }) {
+function Thumbnail({ media, caption, index }: { media: ProjectMedia; caption: string; index: number }) {
   return (
-    <>
-      <h2 className={styles.galleryTitle}>{title}</h2>
-      <ul className={styles.gallery}>
-        {items.map(({ media, caption }) => (
-          <li key={media.file}>
-            <figure className={styles.figure}>
-              <Media media={media} className={styles.media} />
-              <figcaption className={styles.galleryCaption}>{caption}</figcaption>
-            </figure>
-          </li>
+    <label htmlFor={`picture-${index}`} className={styles.thumbnail}>
+      <span className={styles.thumbnailName} aria-hidden="true">
+        {caption}
+      </span>
+      <img
+        className={styles.thumbnailImage}
+        src={asset('poster' in media ? media.poster : media.file)}
+        alt=""
+      />
+    </label>
+  );
+}
+
+/**
+ * A project's lead picture and its gallery, per DDR-081 and ADR-017, as `career-site-business-case`
+ * draws them (node 405:80): one picture in the lead's frame, and under it a row of thumbnails, the
+ * lead's first. Choosing a thumbnail shows its picture in the frame, and the chosen thumbnail rises
+ * with the picture's name above it, as the owner asked on #244. The name is the picture's caption,
+ * which the frame no longer shows beneath it.
+ *
+ * The pictures are a native radio group, as the business-case switch is, per ADR-014: each picture
+ * is a radio followed by its `figure`, and the stylesheet shows the figure whose radio is checked.
+ * So the browser holds the choice, the keyboard moves between the pictures with the arrow keys,
+ * assistive technology announces each by its caption, and all of it works without script. The
+ * lead's radio is checked in the markup, so a view opens on the lead picture.
+ *
+ * The row shows every picture's thumbnail, as the owner asked on #244, where the design draws two
+ * and a count of the rest. It wraps where the column runs out of room.
+ *
+ * A video plays only when the reader starts it and fetches nothing before that, because it is drawn
+ * by the same `Media` the lead picture is, per DDR-010 and ADR-004. One view is one page, so the
+ * radios' `name` and the identifiers need only be unique within it.
+ */
+function Pictures({
+  name,
+  pictures,
+}: {
+  /** The radio group's accessible name. */
+  name: string;
+  /** The lead picture first, then the gallery's items. */
+  pictures: readonly GalleryItem[];
+}) {
+  return (
+    <div role="radiogroup" aria-label={name} className={styles.pictures}>
+      {pictures.map(({ media, caption }, index) => (
+        <Fragment key={media.file}>
+          <input
+            type="radio"
+            name="picture"
+            id={`picture-${index}`}
+            className={styles.pick}
+            aria-labelledby={`picture-${index}-caption`}
+            defaultChecked={index === 0}
+          />
+          <figure className={styles.figure}>
+            <Media media={media} className={styles.media} />
+            <figcaption id={`picture-${index}-caption`} className={styles.pictureCaption}>
+              {caption}
+            </figcaption>
+          </figure>
+        </Fragment>
+      ))}
+      <div className={styles.thumbnails}>
+        {pictures.map(({ media, caption }, index) => (
+          <Thumbnail key={media.file} media={media} caption={caption} index={index} />
         ))}
-      </ul>
-    </>
+      </div>
+    </div>
   );
 }
 
@@ -139,9 +192,9 @@ function Neighbour({
  * breakpoint: the project's name, what it is, what it is built with and the links that lead to it,
  * and beside them its lead picture with a caption. Below the breakpoint the two are one column, in
  * the same order, so the picture follows the links; the markup order is the visual order at both
- * widths, per DDR-014. Below them, where the project has any, a gallery of further pictures and
- * videos, per DDR-053. At the foot, below a divider, the projects on either side of this one, per
- * DDR-052.
+ * widths, per DDR-014. Where the project has further pictures and videos, their thumbnails stand
+ * under the lead picture's caption, and choosing one shows it in the lead's place, per DDR-081. At
+ * the foot, below a divider, the projects on either side of this one, per DDR-052.
  *
  * Every word is the project's own record, stated once in `content/` and shown on the page as well,
  * per ADR-002, and the words around it are the view's strings beside the projects. The name is the
@@ -174,7 +227,7 @@ export function ProjectView({
     previousItem,
     nextItem,
     builtWith,
-    gallery: galleryTitle,
+    gallery: galleryName,
     newTab,
     previous: previousWord,
     next: nextWord,
@@ -291,14 +344,18 @@ export function ProjectView({
             </ul>
           )}
         </div>
-        <figure className={styles.figure}>
-          <Media media={media} className={styles.media} />
-          <figcaption className={styles.caption}>{caption}</figcaption>
-        </figure>
+        {/* The lead picture, and where the project has further pictures and videos, their
+            thumbnails under it, per DDR-081 (node 405:80). A project the owner has supplied none
+            for shows its lead picture alone, as it did before. */}
+        {gallery && gallery.length > 0 ? (
+          <Pictures name={galleryName} pictures={[{ media, caption }, ...gallery]} />
+        ) : (
+          <figure className={styles.figure}>
+            <Media media={media} className={styles.media} />
+            <figcaption className={styles.caption}>{caption}</figcaption>
+          </figure>
+        )}
       </div>
-      {/* Further pictures and videos, below the introduction, per DDR-053 (node 59:84). A project
-          the owner has supplied none for shows no gallery and no heading. */}
-      {gallery && gallery.length > 0 && <Gallery title={galleryTitle} items={gallery} />}
       {/* The projects on either side of this one, below the design's divider (node 59:117). The
           first project has nothing before it and the last nothing after it, and neither view
           shows a card in that half: the projects are the page's order, not a ring, per DDR-052. */}

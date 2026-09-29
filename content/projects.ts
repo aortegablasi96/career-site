@@ -34,10 +34,12 @@ const liveSite = 'Live site';
  * Since #156 a view also leads to the projects on either side of this one, per DDR-052, which adds
  * the two words those links show and what they are called. The order here is the order they follow.
  *
- * Since #155 a view can also show a gallery of further pictures and videos below its introduction,
- * per DDR-053. No project states one yet: each file is the owner's to supply, as on #63, and a
- * project with no `gallery` shows no gallery and no heading. Adding one is content alone — a list
- * of media and captions here, and the files in `public/` — with no change to a component.
+ * Since #155 a view can also show a gallery of further pictures and videos, per DDR-053, and since
+ * #244 as thumbnails under the lead picture, per DDR-081. NumisBook has one, from the owner's
+ * mockups; each file is the owner's to supply, as on #63, and a project with no `gallery` shows its
+ * lead picture alone.
+ * Adding one is content alone — a list of media and captions here, and the files in `public/` —
+ * with no change to a component.
  *
  * Since #154 the page shows each project as a card leading to its view, per DDR-051, and a card says
  * what the project is in one sentence, its `summary`, rather than the full description. Since #227
@@ -68,6 +70,34 @@ export const projects: Projects = {
       slug: 'numisbook',
       media: { file: '/portfolio/numisbook/lead.webp', alt: 'NumisBook on a laptop, showing a coin’s record: the details of a silver tetradrachm of Mark Antony and Cleopatra beside its photograph, with the coin’s invoice below the photograph' },
       caption: 'A coin’s record',
+      // The owner's mockups of the application's other screens, supplied on #244, in the order of
+      // its navigation. Each description says only what its screen shows.
+      gallery: [
+        {
+          media: { file: '/portfolio/numisbook/gallery-dashboard.webp', alt: 'NumisBook on a laptop, showing its dashboard: the number of collections and coins and the total paid, above the most recent acquisitions, each with both faces of its coin and its price' },
+          caption: 'The dashboard',
+        },
+        {
+          media: { file: '/portfolio/numisbook/gallery-collections.webp', alt: 'NumisBook on a laptop, showing the collections, Spanish Empire and Roman Republic, Imperatorial & Empire, each as a card with a photograph of one of its coins' },
+          caption: 'The collections',
+        },
+        {
+          media: { file: '/portfolio/numisbook/gallery-coin-list.webp', alt: 'NumisBook on a laptop in its dark theme, showing the coins of the Roman Republic, Imperatorial & Empire collection in a table, below a search and filters for metal, category, denomination, mint, grade and year' },
+          caption: 'A collection’s coins',
+        },
+        {
+          media: { file: '/portfolio/numisbook/gallery-coin-view.webp', alt: 'NumisBook on a laptop in its dark theme, showing a coin’s record: a silver denarius of Brutus with its details, description, catalogue references and provenance, beside its photograph and its invoice' },
+          caption: 'A denarius of Brutus',
+        },
+        {
+          media: { file: '/portfolio/numisbook/gallery-portfolio.webp', alt: 'NumisBook on a laptop in its dark theme, showing the portfolio: the total paid, a chart of the acquisition cost over time, and a bar chart splitting each coin’s cost into hammer price, premium, tax and shipping' },
+          caption: 'The portfolio',
+        },
+        {
+          media: { file: '/portfolio/numisbook/gallery-settings.webp', alt: 'NumisBook on a laptop, showing the settings: the profile’s display name and email, the language, theme and base currency, and a danger zone for deleting the account' },
+          caption: 'The settings',
+        },
+      ],
       summary: 'An intelligent coin collection management SaaS.',
       technologies: ['Next.js', 'TypeScript', 'PostgreSQL on Neon', 'OpenAI', 'Vercel', 'Cloudflare R2'],
       description:
@@ -323,8 +353,7 @@ export const projects: Projects = {
     previousItem: 'Prev',
     nextItem: 'Next',
     builtWith: 'Built with',
-    // The label above the further pictures and videos of a project, per DDR-053. No project carries
-    // gallery media yet, so no view shows it; the media is the owner's to supply, as on #63.
+    // The name of a project's gallery thumbnails, per DDR-081, said only to assistive technology.
     gallery: 'Gallery',
     // The same words a profile pill says, from the one place they are stated.
     newTab: introduction.newTab,

@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-20
 
+**Amended by DDR-081 (2026-09-29)**: the gallery is a row of thumbnails under the lead picture, and
+choosing one shows it in the lead's place. This record's label, its full-size list, its 20px gap and
+its one or two items to a row are withdrawn; its content, empty state and video treatment stand.
+
 **Amends DDR-050 in one respect**: a project's view can now show a gallery of further pictures and
 videos between its introduction and its foot. Everything else DDR-050 decides — the view's address,
 its way back, its introduction, its two columns and its spacing — is unchanged, and this record
@@ -86,6 +90,8 @@ first video adds `captions` beside `poster` and renders a `<track kind="captions
 this one shipping a shape nothing fills.
 
 ### Its shape and its space
+
+*Withdrawn by DDR-081, with the next section: the gallery is a row of thumbnails.*
 
 * **An item is the lead picture's 16:10 at the large radius**, which is what the design draws
   (node 59:90 is 492 by 307.5, as node 59:71 is 560 by 350). So the gallery writes no ratio of its

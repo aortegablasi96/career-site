@@ -90,13 +90,10 @@
   line-height: var(--line-height-prose);
 }
 
-/* "How I built it", "Built with" and "Gallery", set as the design's labels are: 10px bold
-   capitals, tracked and in the faint ink (nodes 59:30 and 59:86); the first is DDR-078's, set as
-   the second is. All are h2, so none takes a section title's serif, size or tracking. They stand
-   at different distances from what is above them — the first two inside the view's text column,
-   the last opening a block below it — so each sets its own space above. */
-.label,
-.galleryTitle {
+/* "How I built it" and "Built with", set as the design's labels are: 10px bold capitals, tracked
+   and in the faint ink (node 59:30); the first is DDR-078's, set as the second is. Both are h2, so
+   neither takes a section title's serif, size or tracking. */
+.label {
   color: var(--color-text-faint);
   font-family: var(--font-family-body);
   font-size: var(--font-size-xxxx-small);
@@ -104,9 +101,6 @@
   line-height: var(--line-height-body);
   letter-spacing: var(--letter-spacing-x-loose);
   text-transform: uppercase;
-}
-
-.label {
   margin-block-start: var(--space-large);
 }
 
@@ -304,7 +298,8 @@
   display: flex;
 }
 
-/* A picture and its caption — the lead one, and each item of the gallery, per DDR-053 — in a column
+/* A picture and its caption — the lead one, or the gallery's picture shown in its place, per
+   DDR-081 — in a column
    that is its grid track's width whatever the picture's own, so the picture can stretch to it
    without widening it. It is a flex column rather than a grid of one track: measured on #159,
    Firefox sizes a grid row from the picture's own height rather than the 16:10 it is drawn at, and
@@ -319,7 +314,7 @@
 /* A picture or video, as wide as its column, in the design's 16:10 and at the large radius (nodes
    59:71 and 59:90, which are 560 by 350 and 492 by 307.5). A 4:3 file is cropped to it from the
    centre rather than distorted. It stretches across the column, so no width is written for it, and
-   the lead picture and a gallery item are drawn alike because the design draws them alike. */
+   a gallery picture shown in the lead's place is drawn as the lead is. */
 .media {
   align-self: stretch;
   aspect-ratio: var(--project-view-media-ratio);
@@ -327,43 +322,173 @@
   object-fit: cover;
 }
 
-/* A caption, below its picture in the faint ink at 11px, 8px under it (nodes 59:81 and 59:100).
-   The lead picture's is centred under a picture that fills its column; a gallery item's begins at
-   the picture's edge, as the design sets it. */
-.caption,
-.galleryCaption {
+/* A caption, below its picture in the faint ink at 11px, 8px under it and centred (node 59:81). */
+.caption {
   margin-block-start: var(--space-small);
   color: var(--color-text-faint);
   font-size: var(--font-size-xxx-small);
-}
-
-.caption {
   text-align: center;
 }
 
-/* The gallery, per DDR-053 (node 59:84): the "Gallery" label a section boundary below the
-   introduction, and the items 20px under it. */
-.galleryTitle {
-  margin-block-start: var(--space-boundary);
+/* The lead picture and its gallery, per DDR-081 and ADR-017 (node 405:80): one picture in the
+   frame, and the row of thumbnails under it. A flex column, so the picture's figure stretches
+   across the column as the lead's does. */
+.pictures {
+  display: flex;
+  flex-direction: column;
 }
 
-/* The items themselves: one column below the wide breakpoint and two equal ones from it, 20px
-   apart each way, as the design draws them. A column's minimum is 0 rather than its content's, so
-   a 560px file can neither widen its column nor push a narrow screen sideways, which is what #153
-   found for the lead picture. They are a list, so the browser's own marker and indent go: what
-   separates two items is the grid.
+/* A picture's radio takes no room and draws nothing, as the business-case switch's does: its
+   thumbnail is what the pointer chooses, and the picture it shows draws its focus, below. It is
+   still the control, so the keyboard and assistive technology reach it as they would a drawn one. */
+.pick {
+  margin: 0;
+  inline-size: 0;
+  block-size: 0;
+  appearance: none;
+}
 
-   Below the breakpoint one item to a row is the arrangement, per DDR-053: the design draws no
-   narrow view, and two 16:10 pictures side by side on a phone would be about 130px wide each,
-   which is too small to show anything an application is doing. Each item keeps its shape at every
-   width, because the shape is the picture's `aspect-ratio` and not a pair of lengths. */
-.gallery {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--project-view-gallery-gap);
-  margin-block-start: var(--project-view-gallery-gap);
-  padding-inline-start: 0;
-  list-style: none;
+.pick:focus-visible {
+  outline: none;
+}
+
+/* Only the picture whose radio is checked is shown. Its radio is the figure's previous sibling, so
+   one rule serves any number of pictures, and a picture not shown is out of the accessibility
+   tree. */
+.pick:not(:checked) + .figure {
+  display: none;
+}
+
+/* Keyboard focus is on the radio, and the picture it shows draws it, since the arrow keys change
+   that picture. */
+.pick:focus-visible + .figure .media {
+  outline: var(--focus-outline-width) solid var(--color-focus);
+  outline-offset: var(--focus-outline-offset);
+}
+
+/* A gallery picture's caption is the name above its chosen thumbnail, per DDR-081, so the frame
+   does not show it. It stays in the markup: it is its figure's caption and its radio's name. */
+.pictureCaption {
+  display: none;
+}
+
+/* The row of thumbnails, 16px under the picture (node 405:93) and centred under it, as the owner
+   asked on #244. Each thumbnail after the first is pulled back over the one before it by the
+   overlap, and the row is padded by the same length so the first, pulled back like the rest, stays
+   inside it. The padding and the first thumbnail's overhang are the same length on the same side,
+   so a centred line of thumbnails is centred under the picture exactly, on every line the row
+   wraps to. The thumbnails stand on one baseline, their images at the foot, so a name of two lines
+   above one takes room above the row rather than pushing its image down. The row isolates what it
+   draws, so a raised thumbnail can never rise over the contents bar, the site's other z-index. */
+.thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-end;
+  row-gap: var(--space-small);
+  margin-block-start: var(--space-medium);
+  padding-inline-start: var(--project-view-thumbnail-overlap);
+  isolation: isolate;
+}
+
+/* A thumbnail is its label, the picture's whole target: the name above the image. Each is drawn
+   over the one before it, in the markup's order, so every one shows at least its first half and
+   the last shows whole. (The design draws two, the first over the second; with every picture in
+   the row, that would cover a middle one on both sides.)
+
+   One thumbnail is raised at a time, per DDR-081: it comes to the front, whole, shows its name and,
+   where motion is welcome, rises. It is the chosen one, or while the pointer is on a thumbnail,
+   that one, so the pointer previews what choosing it does and only one name ever shows.
+   `--raised` is 1 for that thumbnail and 0 for the rest, worked out from three flags, below. */
+.thumbnail {
+  --raised: calc(
+    var(--pointing, 0) * var(--pointed, 0) + (1 - var(--pointing, 0)) * var(--chosen, 0)
+  );
+
+  position: relative;
+  z-index: var(--raised);
+  display: inline-flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: var(--space-x-small);
+  align-items: center;
+  margin-inline-start: var(--project-view-thumbnail-overlap-back);
+  cursor: pointer;
+}
+
+/* The chosen thumbnail. Its radio is in the frame, beside its picture, so the stylesheet cannot
+   pair the two by adjacency; it pairs them by place instead, one rule for each, for up to twelve
+   pictures. `components/project-view.test.tsx` holds every gallery to that, so a thirteenth picture
+   fails the suite rather than a thumbnail that never rises. */
+.pictures:has(.pick:nth-of-type(1):checked) .thumbnail:nth-of-type(1),
+.pictures:has(.pick:nth-of-type(2):checked) .thumbnail:nth-of-type(2),
+.pictures:has(.pick:nth-of-type(3):checked) .thumbnail:nth-of-type(3),
+.pictures:has(.pick:nth-of-type(4):checked) .thumbnail:nth-of-type(4),
+.pictures:has(.pick:nth-of-type(5):checked) .thumbnail:nth-of-type(5),
+.pictures:has(.pick:nth-of-type(6):checked) .thumbnail:nth-of-type(6),
+.pictures:has(.pick:nth-of-type(7):checked) .thumbnail:nth-of-type(7),
+.pictures:has(.pick:nth-of-type(8):checked) .thumbnail:nth-of-type(8),
+.pictures:has(.pick:nth-of-type(9):checked) .thumbnail:nth-of-type(9),
+.pictures:has(.pick:nth-of-type(10):checked) .thumbnail:nth-of-type(10),
+.pictures:has(.pick:nth-of-type(11):checked) .thumbnail:nth-of-type(11),
+.pictures:has(.pick:nth-of-type(12):checked) .thumbnail:nth-of-type(12) {
+  --chosen: 1;
+}
+
+/* The pointer's thumbnail, and the row it is in. */
+.thumbnail:hover {
+  --pointed: 1;
+}
+
+.pictures:has(.thumbnail:hover) {
+  --pointing: 1;
+}
+
+/* The picture's name, in the caption's faint ink at 11px, which is what it was under the frame. It
+   is as wide as the thumbnail and wraps inside it, so it can never widen the row or push the page
+   sideways, and it is drawn only over the raised thumbnail. */
+.thumbnailName {
+  inline-size: var(--project-view-thumbnail-width);
+  color: var(--color-text-faint);
+  font-size: var(--font-size-xxx-small);
+  text-align: center;
+  overflow-wrap: anywhere;
+  opacity: var(--raised);
+}
+
+/* A thumbnail: 96 by 64, as the owner asked on #244, at the design's 8px corners, edged in white
+   and raised by its soft shadow (node 405:103), with the picture cropped from the centre rather
+   than stretched. The edge is inside the 96 by 64, as the design draws it inside its 72 by 52. */
+.thumbnailImage {
+  box-sizing: border-box;
+  inline-size: var(--project-view-thumbnail-width);
+  block-size: var(--project-view-thumbnail-height);
+  border: var(--project-view-thumbnail-edge) solid var(--color-surface-card);
+  border-radius: var(--project-view-thumbnail-radius);
+  box-shadow: var(--shadow-thumbnail);
+  object-fit: cover;
+}
+
+/* Under the pointer its edge takes the accent, per DDR-035. */
+.thumbnail:hover .thumbnailImage {
+  border-color: var(--color-accent);
+}
+
+/* The raised thumbnail rises by the design's lift, and its name fades in, where the reader has not
+   asked for less motion. Movement is written inside the query as well as its transition, as the
+   cards' lift is: a reader who prefers less motion sees the name and the thumbnail in front, and
+   nothing move. */
+@media (prefers-reduced-motion: no-preference) {
+  .thumbnail {
+    translate: 0 calc(var(--raised) * var(--project-view-thumbnail-lift-back));
+    transition-property: translate;
+    transition-duration: var(--hover-transition);
+  }
+
+  .thumbnailName {
+    transition-property: opacity;
+    transition-duration: var(--hover-transition);
+  }
 }
 
 /* The foot of the view, per DDR-052: the projects on either side of this one, below the design's
@@ -454,8 +579,7 @@
 }
 
 /* From here the text and the picture stand side by side, each as wide as the other, both from the
-   top; the name takes the design's size; and the gallery's items and the two neighbouring projects
-   stand two to a row. This is the one width a component may write, per DDR-014. */
+   top; the name takes the design's size; and the two neighbouring projects stand side by side. This is the one width a component may write, per DDR-014. */
 @media (min-width: 48em) {
   .columns {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -465,10 +589,6 @@
 
   .name {
     font-size: var(--font-size-project-title);
-  }
-
-  .gallery {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .neighbours {
