@@ -12,6 +12,12 @@ where the links did. Everything DDR-050, DDR-052, DDR-053 and
 DDR-078 decide stands, and a view whose project has no business case is unchanged. It **adds no
 token**, and it supersedes nothing. ADR-014 records how the switch holds its state.
 
+**Since 2026-09-29, still on #231, NumisBook has a business case too**, and the owner reordered
+both summaries to five numbered items: Problem, Product, Key decisions, Outcome and My contribution.
+Both were content alone, as this record intended, and nothing below changed. Its view was swept as
+the Stock Portfolio Viewer's was, in both accounts, every 10px from 300px to 900px at both text
+sizes: nothing scrolls sideways.
+
 ## Context
 
 On #231, part of Epic #152, the owner asked for a project's view to switch between the project's
