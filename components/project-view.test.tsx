@@ -562,10 +562,11 @@ describe('ProjectView', () => {
       expect(withGallery([video])).toContain('src="/gallery-walkthrough.mp4"');
     });
 
-    // DDR-081: the thumbnails overlap by half, each over the one before, and wrap inside a row that
-    // isolates them from the contents bar.
-    it('draws the row as the design does, overlapping by half and wrapping', () => {
+    // DDR-081: the thumbnails overlap, each over the one before, and wrap, centred under the
+    // picture, inside a row that isolates them from the contents bar.
+    it('draws the row centred under the picture, overlapping and wrapping', () => {
       expect(rule('.thumbnails')).toContain('flex-wrap: wrap');
+      expect(rule('.thumbnails')).toContain('justify-content: center');
       expect(rule('.thumbnails')).toContain('isolation: isolate');
       expect(rule('.thumbnails')).toContain('padding-inline-start: var(--project-view-thumbnail-overlap)');
       expect(rule('.thumbnail')).toContain('margin-inline-start: var(--project-view-thumbnail-overlap-back)');

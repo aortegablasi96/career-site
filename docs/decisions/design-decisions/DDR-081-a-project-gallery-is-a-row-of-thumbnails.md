@@ -30,6 +30,7 @@ choices on #244:
 * **An old carousel's effect**: the chosen thumbnail moves a bit up and its name appears above it.
   The owner chose to move the name there from under the frame rather than show it twice, and for
   the pointer to preview the effect before a thumbnail is chosen.
+* **A row centred under the picture, bigger and wider** than the layer's.
 
 ## Decision
 
@@ -58,7 +59,7 @@ comes to the front, rises and shows the picture's name above it.**
   thumbnail, that one, so the pointer previews what choosing it does and only one name ever shows.
 * **A raised thumbnail comes to the front**, whole, over the ones beside it.
 * **Its name appears above it**: the picture's caption, in the caption's 11px faint ink, centred and
-  as wide as the thumbnail, wrapping inside it. So a long name takes two lines rather than widening
+  as wide as the thumbnail (96px), wrapping inside it. So a long name takes two lines rather than widening
   the row or pushing a phone's page sideways.
 * **It rises by `--project-view-thumbnail-lift`, 8px**, twice a card's lift, and its name fades in,
   over the site's 150ms. Both happen only where the reader has not asked for less motion. A reader
@@ -75,6 +76,8 @@ comes to the front, rises and shows the picture's name above it.**
 * **Each thumbnail is drawn over the one before it**, so every one shows at least its first half
   and the last shows whole. The layer draws the first over the second, but with every picture in
   the row that order would cover a middle thumbnail on both sides.
+* **The row is centred under the picture**, as the owner asked, and each line it wraps to is
+  centred too.
 * **The row wraps** where the column runs out of room, with the same overlap on every line. It
   stands `--space-medium` (16px) under the picture. The thumbnails stand on their images' foot, so
   a two-line name takes room above the row rather than pushing its image down.
@@ -82,13 +85,14 @@ comes to the front, rises and shows the picture's name above it.**
 
 ### The thumbnails' look
 
-Every value is the layer's, as tokens of the view's own. None is a step of DDR-013's scale.
+The size is the owner's, and every other value is the layer's, as tokens of the view's own. None is
+a step of DDR-013's scale.
 
 | Token | Value | Design |
 | ----- | ----- | ------ |
-| `--project-view-thumbnail-width` | 4.5rem | 72px |
-| `--project-view-thumbnail-height` | 3.25rem | 52px |
-| `--project-view-thumbnail-overlap` | 2.25rem | the second starts 36px after the first |
+| `--project-view-thumbnail-width` | 6rem | 96px, where the layer draws 72, as the owner asked for bigger |
+| `--project-view-thumbnail-height` | 4rem | 64px, where the layer draws 52: the 3:2 of the owner's pictures |
+| `--project-view-thumbnail-overlap` | 2.25rem | 36px, the layer's; each covered thumbnail shows 60px |
 | `--project-view-thumbnail-edge` | 0.1rem | 1.6px |
 | `--project-view-thumbnail-radius` | 0.5rem | 8px; the view's own, so DDR-013's three radii stay three |
 | `--project-view-thumbnail-lift` | 0.5rem | the owner's "a bit up"; not in the layer |
@@ -96,13 +100,15 @@ Every value is the layer's, as tokens of the view's own. None is a step of DDR-0
 
 * The edge is white, which is `--color-surface-card`. The name is `--font-size-xxx-small` in
   `--color-text-faint`, which is DDR-025's failing pairing, already held by name.
-* A thumbnail shows its own picture, cropped from the centre to 72 by 52, never stretched. A video
-  shows its poster.
+* A thumbnail shows its own picture, cropped from the centre to 96 by 64, never stretched. The
+  owner's pictures are 3:2, so none of them is cropped. A video shows its poster.
+* Seven thumbnails make a row of 456px, inside the design's 474px column, so NumisBook's gallery
+  is one line from the wide breakpoint.
 
 ### Target size
 
 **Every thumbnail passes WCAG 2.5.8 without the spacing exception.** The part of a covered
-thumbnail that is not covered is 36 by 52px, larger than 24 by 24. DDR-027's rule that no target
+thumbnail that is not covered is 60 by 64px, larger than 24 by 24. DDR-027's rule that no target
 has a minimum of its own stands.
 
 ### On a phone

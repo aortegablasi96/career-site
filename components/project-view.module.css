@@ -372,16 +372,18 @@
   display: none;
 }
 
-/* The row of thumbnails, 16px under the picture (node 405:93). Each thumbnail after the first
-   starts half a thumbnail after the one before it, so they overlap, and the row is padded by that
-   half so the first, pulled back like the rest, starts at the column's edge — as does the first of
-   any line the row wraps to. The thumbnails stand on one baseline, their images at the foot, so a
-   name of two lines above one takes room above the row rather than pushing its image down. The
-   row isolates what it draws, so a raised thumbnail can never rise over the contents bar, the
-   site's other z-index. */
+/* The row of thumbnails, 16px under the picture (node 405:93) and centred under it, as the owner
+   asked on #244. Each thumbnail after the first is pulled back over the one before it by the
+   overlap, and the row is padded by the same length so the first, pulled back like the rest, stays
+   inside it. The padding and the first thumbnail's overhang are the same length on the same side,
+   so a centred line of thumbnails is centred under the picture exactly, on every line the row
+   wraps to. The thumbnails stand on one baseline, their images at the foot, so a name of two lines
+   above one takes room above the row rather than pushing its image down. The row isolates what it
+   draws, so a raised thumbnail can never rise over the contents bar, the site's other z-index. */
 .thumbnails {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   align-items: flex-end;
   row-gap: var(--space-small);
   margin-block-start: var(--space-medium);
@@ -454,9 +456,9 @@
   opacity: var(--raised);
 }
 
-/* The design's thumbnail (node 405:103): 72 by 52 at 8px corners, edged in white and raised by its
-   soft shadow, with the picture cropped from the centre rather than stretched. The edge is inside
-   the 72 by 52, as the design draws it. */
+/* A thumbnail: 96 by 64, as the owner asked on #244, at the design's 8px corners, edged in white
+   and raised by its soft shadow (node 405:103), with the picture cropped from the centre rather
+   than stretched. The edge is inside the 96 by 64, as the design draws it inside its 72 by 52. */
 .thumbnailImage {
   box-sizing: border-box;
   inline-size: var(--project-view-thumbnail-width);

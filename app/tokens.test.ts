@@ -999,13 +999,14 @@ describe('spacing tokens', () => {
     expect(rem(token('project-view-label-gap')!) * 16).toBe(12);
   });
 
-  // DDR-081's thumbnails, off node 405:93: 72 by 52, 8px corners and a 1.6px edge, each 36px after
-  // the one before, and the layer's two-layer shadow.
+  // DDR-081's thumbnails: 96 by 64 as the owner asked on #244, and off node 405:93 their 8px
+  // corners, 1.6px edge, 36px overlap and two-layer shadow.
   it('draws a project view’s gallery thumbnails as `career-site-business-case` does, per DDR-081', () => {
     const px = (name: string) => rem(token(name)!) * 16;
 
-    expect(px('project-view-thumbnail-width')).toBe(72);
-    expect(px('project-view-thumbnail-height')).toBe(52);
+    // The owner's bigger thumbnail, in the pictures' 3:2, with the layer's 36px overlap.
+    expect(px('project-view-thumbnail-width')).toBe(96);
+    expect(px('project-view-thumbnail-height')).toBe(64);
     expect(px('project-view-thumbnail-overlap')).toBe(36);
     expect(px('project-view-thumbnail-edge')).toBeCloseTo(1.6);
     expect(px('project-view-thumbnail-radius')).toBe(8);

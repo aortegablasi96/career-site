@@ -731,13 +731,16 @@
   --project-view-rule-gap: 1.5rem;
   --project-view-label-gap: 0.75rem;
 
-  /* A view's gallery, per DDR-081, measured off `career-site-business-case` (node 405:93): a
-     thumbnail is 72 by 52 with 8px corners and a 1.6px edge, each one starts 36px after the one
-     before it, so it overlaps half of it. None is a step of DDR-013's scale, and the corner is not one of its three radii, so all are measures of the
-     view's own, as the ones above are. In rem, so a thumbnail keeps its proportion to the count
-     beside it when text is enlarged. */
-  --project-view-thumbnail-width: 4.5rem;
-  --project-view-thumbnail-height: 3.25rem;
+  /* A view's gallery, per DDR-081. The layer `career-site-business-case` (node 405:93) draws a
+     thumbnail 72 by 52 with 8px corners and a 1.6px edge, each overlapping the one before it by
+     36px. The owner asked on #244 for the row to be bigger and wider, so a thumbnail is 96 by 64,
+     the 3:2 of the owner's pictures, and keeps the layer's 36px overlap, corners and edge: each
+     covered thumbnail shows 60px of itself, and seven make a row of 456px, inside the design's
+     474px column. None is a step of DDR-013's scale, and the corner is not one of its three
+     radii, so all are measures of the view's own, as the ones above are. In rem, so a thumbnail
+     keeps its proportion to the name above it when text is enlarged. */
+  --project-view-thumbnail-width: 6rem;
+  --project-view-thumbnail-height: 4rem;
   --project-view-thumbnail-overlap: 2.25rem;
   --project-view-thumbnail-edge: 0.1rem;
   --project-view-thumbnail-radius: 0.5rem;

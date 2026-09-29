@@ -201,7 +201,7 @@ The page itself is the CV, so what it prints is designed.
   motion query, its lift.
 * **Playwright's `click()` on a thumbnail times out**: the next thumbnail covers its centre. Click
   its image's left 15px with `page.mouse.click`.
-* A thumbnail's image is `box-sizing: border-box`, or its edge makes it 75×55.
+* A thumbnail's image is `box-sizing: border-box`, or its edge adds 3.2px to its width and its height.
 * **NumisBook is the one view with a gallery** (six pictures), so check the gallery there. A
   gallery picture is a 1536×1024 WebP like a lead (Pillow, quality 82, method 6), within the same
   150 KB. The PNG originals in `media/` are gitignored.
