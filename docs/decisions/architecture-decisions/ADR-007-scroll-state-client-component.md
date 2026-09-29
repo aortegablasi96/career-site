@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-18
 
+**Amended by ADR-018**: a third Client Component, `LargerPicture`, moves a project view's picture
+between its frame and the window as it opens and closes, per DDR-082. The dialog it moves opens
+and closes without script; the movement is its only reason.
+
 **Amended by ADR-015**: this is no longer the site's only Client Component. `BusinessCaseSlider`
 holds which item of a project's business case is shown, for a reason recorded there, per DDR-080.
 

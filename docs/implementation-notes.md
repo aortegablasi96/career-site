@@ -136,8 +136,8 @@ The page itself is the CV, so what it prints is designed.
 
 ### Contents bar (ADR-007, ADR-008, ADR-009, ADR-013)
 
-* **`components/contents-bar.tsx` is a Client Component**, one of two (the other is the business
-  case slider, ADR-015). It marks the current section with
+* **`components/contents-bar.tsx` is a Client Component**, one of three (the others are the
+  business case slider, ADR-015, and a view's larger picture, ADR-018). It marks the current section with
   `aria-current="location"`, glides on its own links' clicks, and holds the menu's open state below
   the wide breakpoint. `Contents` stays a Server Component and hands it `{ id, link }` per section,
   never the sections' rendered items.
@@ -182,7 +182,7 @@ The page itself is the CV, so what it prints is designed.
   to a colour the brand publishes; Gmail's M carries its own fills. On paper the pill's ink is the
   brand's colour, because the fill drops.
 
-### Project cards and views (DDR-050 to DDR-055, DDR-079, DDR-081)
+### Project cards and views (DDR-050 to DDR-055, DDR-079, DDR-081, DDR-082)
 
 * **A card's link is its name, stretched over the card**: `.link::after` draws the focus outline,
   `.link::before` extends `--card-lift` below the card so a lifted card doesn't flicker.
@@ -199,6 +199,24 @@ The page itself is the CV, so what it prints is designed.
   pictures; a thirteenth needs a thirteenth rule. `--raised` is worked out from `--chosen`,
   `--pointed` and `--pointing`, and drives the thumbnail's `z-index`, its name's opacity and, in the
   motion query, its lift.
+* **The picture in the frame opens larger** in a modal `dialog` opened by `commandfor`/`command`
+  (ADR-018, DDR-082), with no script. `components/invoker-commands.d.ts` types the two attributes
+  for React; drop it once `@types/react` has them. The opening button follows the picture in the
+  flow and is pulled over its corner by a negative margin, because only a pseudo-element may be
+  `position: absolute`; its `::after` and the close button's `::before` stretch the targets.
+* **`LargerPicture` is a Client Component only for the movement**: it takes the dialog's `command`
+  and `cancel` events and opens or closes it inside a view transition, handing the one
+  `view-transition-name` (`larger-picture`) from the frame's picture to the larger one and back.
+  Its pseudo-elements are styled in `app/globals.css`. Don't give either picture the name in a
+  stylesheet: two elements with it at once skip the transition.
+* **To watch the movement, slow it down**: set `--project-view-enlarge-duration` on the root to a
+  few seconds before a screenshot. A screenshot or `getAnimations()` straight after the click often
+  catches the view before the transition starts.
+* **The dialog's picture is sized by `max-*-size: 100%` in a `minmax(0, 1fr)` grid row**, which
+  keeps it whole and within the window. Measure it after layout settles: read 30ms after a resize
+  and an Escape, Playwright reported a stale, squashed height.
+* **Serve `out/` from Node, not Python's `http.server`**, when checking pictures: Python's reset
+  connections and left a picture as its alt text on #246.
 * **Playwright's `click()` on a thumbnail times out**: the next thumbnail covers its centre. Click
   its image's left 15px with `page.mouse.click`.
 * A thumbnail's image is `box-sizing: border-box`, or its edge adds 3.2px to its width and its height.

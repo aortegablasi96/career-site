@@ -9,8 +9,44 @@ import type {
 } from '@/content/types';
 import { BusinessCaseSlider } from './business-case-slider';
 import { Icon } from './icon';
+import { LargerPicture } from './larger-picture';
 import { Media, projectHref } from './projects';
 import styles from './project-view.module.css';
+
+/**
+ * The picture in the lead's frame: a picture that opens larger, per DDR-082, or a video, which has
+ * its own controls, full screen among them, and so opens nothing, per #246.
+ */
+function Frame({
+  media,
+  caption,
+  id,
+  enlarge,
+  close,
+}: {
+  media: ProjectMedia;
+  caption: string;
+  /** The larger picture's identifier, unique within the view. */
+  id: string;
+  /** The names of the controls that open it larger and close it. */
+  enlarge: string;
+  close: string;
+}) {
+  if ('poster' in media) {
+    return <Media media={media} className={styles.media} />;
+  }
+
+  return (
+    <LargerPicture
+      media={media}
+      caption={caption}
+      id={id}
+      enlarge={enlarge}
+      close={close}
+      className={styles.media}
+    />
+  );
+}
 
 /**
  * A picture's thumbnail in the gallery's row, per DDR-081 (node 405:93): the picture itself, or a
@@ -51,6 +87,9 @@ function Thumbnail({ media, caption, index }: { media: ProjectMedia; caption: st
  * assistive technology announces each by its caption, and all of it works without script. The
  * lead's radio is checked in the markup, so a view opens on the lead picture.
  *
+ * Each picture carries its own control that opens it larger, per DDR-082, so the one on the picture
+ * shown is the one a reader meets, and it opens that picture, whichever was chosen.
+ *
  * The row shows every picture's thumbnail, as the owner asked on #244, where the design draws two
  * and a count of the rest. It wraps where the column runs out of room.
  *
@@ -61,11 +100,16 @@ function Thumbnail({ media, caption, index }: { media: ProjectMedia; caption: st
 function Pictures({
   name,
   pictures,
+  enlarge,
+  close,
 }: {
   /** The radio group's accessible name. */
   name: string;
   /** The lead picture first, then the gallery's items. */
   pictures: readonly GalleryItem[];
+  /** The names of the controls that open a picture larger and close it, per DDR-082. */
+  enlarge: string;
+  close: string;
 }) {
   return (
     <div role="radiogroup" aria-label={name} className={styles.pictures}>
@@ -80,7 +124,13 @@ function Pictures({
             defaultChecked={index === 0}
           />
           <figure className={styles.figure}>
-            <Media media={media} className={styles.media} />
+            <Frame
+              media={media}
+              caption={caption}
+              id={`picture-${index}-larger`}
+              enlarge={enlarge}
+              close={close}
+            />
             <figcaption id={`picture-${index}-caption`} className={styles.pictureCaption}>
               {caption}
             </figcaption>
@@ -228,6 +278,8 @@ export function ProjectView({
     nextItem,
     builtWith,
     gallery: galleryName,
+    enlarge,
+    close,
     newTab,
     previous: previousWord,
     next: nextWord,
@@ -346,12 +398,18 @@ export function ProjectView({
         </div>
         {/* The lead picture, and where the project has further pictures and videos, their
             thumbnails under it, per DDR-081 (node 405:80). A project the owner has supplied none
-            for shows its lead picture alone, as it did before. */}
+            for shows its lead picture alone, as it did before. Either way, the picture shown can
+            be opened larger, per DDR-082. */}
         {gallery && gallery.length > 0 ? (
-          <Pictures name={galleryName} pictures={[{ media, caption }, ...gallery]} />
+          <Pictures
+            name={galleryName}
+            pictures={[{ media, caption }, ...gallery]}
+            enlarge={enlarge}
+            close={close}
+          />
         ) : (
           <figure className={styles.figure}>
-            <Media media={media} className={styles.media} />
+            <Frame media={media} caption={caption} id="picture-larger" enlarge={enlarge} close={close} />
             <figcaption className={styles.caption}>{caption}</figcaption>
           </figure>
         )}

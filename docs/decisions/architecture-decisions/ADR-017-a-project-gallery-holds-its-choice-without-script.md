@@ -4,6 +4,13 @@ Status: Accepted
 
 Date: 2026-09-29
 
+**Amended by ADR-018 (2026-09-29)**: DDR-082 now opens the picture in the frame larger, as a
+native modal dialog opened by the Invoker Commands API, without script; a third Client Component,
+`LargerPicture`, only moves the picture as it opens and closes. The gallery's choice is still held
+without script. The popover
+alternative below was rejected because DDR-081 decided against an overlay; ADR-018 records why a
+modal dialog, not a popover, is the overlay.
+
 **Extends ADR-014 to the gallery, and amends nothing.** A project's view gains a second control with
 state, per DDR-081: which picture its lead frame shows, and which thumbnail is raised. It gains
 **no Client Component**. The state is held by native radio buttons and read by the stylesheet. The
@@ -76,7 +83,8 @@ Cons:
 ### The popover API, one popover per picture
 
 Cons:
-* DDR-081 decides against an overlay.
+* DDR-081 decides against an overlay. (DDR-082 later decides for one, and ADR-018 builds it as a
+  modal dialog, because a popover is not modal.)
 
 ## Consequences
 

@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-29
 
+**Amended by DDR-082 (2026-09-29)**: the picture in the lead's frame, whichever the thumbnails
+chose, can be opened larger over the page, which Option A and "What choosing a thumbnail does"
+rejected. Choosing a thumbnail still shows its picture in the frame and opens nothing.
+
 **Amends DDR-053 in its layout, and DDR-050 in its lead picture.** A project's gallery is no longer
 a full-size section below the introduction. It is a row of small thumbnails under the lead picture.
 Choosing one shows that picture in the lead's place, and the chosen thumbnail rises with the
@@ -40,8 +44,9 @@ comes to the front, rises and shows the picture's name above it.**
 
 ### What choosing a thumbnail does
 
-* **It shows that picture in the lead's frame, at the lead's size.** The frame is already the
-  largest a picture is drawn on the view. An enlarged view over the page would be a pattern the
+* **It shows that picture in the lead's frame, at the lead's size.** Since DDR-082 the picture in the
+  frame can be opened larger by a control of its own; choosing a thumbnail still opens nothing.
+  The frame was the largest a picture was drawn on the view. An enlarged view over the page would be a pattern the
   design does not draw. #155 left it out for that reason.
 * **The lead picture is the first thumbnail**, so a reader who has chosen another can go back to
   it.
@@ -127,6 +132,9 @@ links. It wraps to a second line where seven thumbnails do not fit.
 ## Alternatives Considered
 
 ### Option A: choosing a thumbnail opens the picture larger, over the page
+
+**Amended by DDR-082**: the picture shown in the frame opens larger by its own control. A
+thumbnail still only chooses the picture.
 
 Cons:
 * An overlay the design does not draw, with its own closing control and focus handling. #155 left

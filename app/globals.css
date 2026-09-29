@@ -43,6 +43,26 @@
   }
 }
 
+/* A project view's picture growing out of its frame and shrinking back into it, per DDR-082 and
+   ADR-018. `LargerPicture` starts the transition only where the reader has not asked for less
+   motion, so nothing here runs for a reader who has. The browser draws the rest of the view fading
+   between the page and the blurred veil over the same time. These are the root's pseudo-elements,
+   which no module's class can reach, so they are here.
+
+   The frame's picture is cropped to 16:10 and the larger one is whole, so the two are different
+   shapes: each is drawn covering the box that moves between them, cropped from the centre as the
+   frame crops it, rather than stretched to it. */
+::view-transition-group(root),
+::view-transition-group(larger-picture) {
+  animation-duration: var(--project-view-enlarge-duration);
+}
+
+::view-transition-old(larger-picture),
+::view-transition-new(larger-picture) {
+  block-size: 100%;
+  object-fit: cover;
+}
+
 body {
   /* The browser's 8px default is not on the spacing scale. The page gutter, on main, replaces
      it. */

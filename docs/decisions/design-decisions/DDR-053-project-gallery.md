@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-20
 
+**Amended by DDR-082 (2026-09-29)**: the picture in the lead's frame can be opened larger, over
+the page, which Option C below rejected. Everything else stands.
+
 **Amended by DDR-081 (2026-09-29)**: the gallery is a row of thumbnails under the lead picture, and
 choosing one shows it in the lead's place. This record's label, its full-size list, its 20px gap and
 its one or two items to a row are withdrawn; its content, empty state and video treatment stand.
@@ -173,6 +176,9 @@ Rejected. At 320px each item is about 130px wide, which shows nothing of an appl
 gallery whose pictures cannot be read is worse than no gallery.
 
 ### Option C: a horizontal carousel or a lightbox on a narrow screen
+
+**The lightbox is amended by DDR-082**: the owner asked on #246 for the picture in the lead's frame
+to open larger, over the page, at every width. The carousel stays rejected.
 
 Rejected. The design draws neither, the story excludes an enlarged view outright, and both are
 interaction patterns with keyboard, focus and reduced-motion costs that a column of pictures does

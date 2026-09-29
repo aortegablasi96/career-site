@@ -355,6 +355,10 @@ export const projects: Projects = {
     builtWith: 'Built with',
     // The name of a project's gallery thumbnails, per DDR-081, said only to assistive technology.
     gallery: 'Gallery',
+    // The controls that open the picture in the lead's frame larger and close it again, per #246
+    // and DDR-082. Each shows a mark alone, so these are said only to assistive technology.
+    enlarge: 'View larger',
+    close: 'Close',
     // The same words a profile pill says, from the one place they are stated.
     newTab: introduction.newTab,
     // The name first, so a row of tabs shows which project each is, then the owner's, as the page's
