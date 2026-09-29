@@ -33,20 +33,45 @@ Built the backend with **FastAPI**, exposing the agentic RAG pipeline through AP
 
 Traditional career websites require visitors to navigate static pages to understand a candidate's experience, creating an opportunity for a more interactive way to explore professional information.
 
+- Icon: 
+- Headline: 
+- Key figure: 
+- Key figure caption: 
+
 **02 — Product**
 
 An AI-powered Digital Twin that allows recruiters and visitors to ask natural-language questions about my experience, projects, skills and professional background.
+
+- Icon: 
+- Headline: 
+- Key figure: 
+- Key figure caption: 
 
 **03 — Key decisions**
 
 AI as an interface · Grounded professional knowledge · Structured career context · Controlled conversational scope
 
+- Icon: 
+- Headline: 
+- Key figure: 
+- Key figure caption: 
+
 04 — Outcome
 Interactive AI profile · Conversational career exploration · Structured professional knowledge base · AI agent foundation
+
+- Icon: 
+- Headline: 
+- Key figure: 
+- Key figure caption: 
 
 **05 — My contribution**
 
 Product strategy · AI & data design · Conversational UX · Knowledge architecture · End-to-end development
+
+- Icon: 
+- Headline: 
+- Key figure: 
+- Key figure caption: 
 
 ## Business Case:
 
