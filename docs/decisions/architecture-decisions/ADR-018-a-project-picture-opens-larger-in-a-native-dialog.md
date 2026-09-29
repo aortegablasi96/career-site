@@ -4,6 +4,12 @@ Status: Accepted
 
 Date: 2026-09-29
 
+**Amended by ADR-019 (2026-09-30)**: a gallery's larger picture now hands over to its neighbour's,
+per DDR-083. Each step control points at the neighbour's dialog with a command of the page's own,
+`--show-in-place`, and the neighbour's `LargerPicture` closes the open dialog, checks its own radio
+and opens its own. So `LargerPicture` also holds that hand-over, and without script the step controls
+are not drawn. Everything else here stands.
+
 **Extends ADR-014 and ADR-017, amends the part of ADR-017 that rejects an overlay, and amends
 ADR-007 with the site's third Client Component.** A project's view gains a third piece of state, per
 DDR-082: whether its picture is open larger. A native modal `dialog` holds it, opened and closed by
@@ -72,6 +78,9 @@ transition, so the picture moves between the frame and the window.**
   blurred view does not shift sideways.
 
 ### What script adds: the movement
+
+> **Amended by ADR-019.** In a gallery, script also hands one picture's dialog over to its
+> neighbour's, which no built-in command can do.
 
 * **`LargerPicture` is a Client Component** (`components/larger-picture.tsx`) holding a frame's
   picture, its control and its dialog. `ProjectView` stays a Server Component and renders it for

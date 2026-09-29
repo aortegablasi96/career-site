@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-29
 
+**Amended by DDR-083 (2026-09-30)**: a gallery's larger picture now steps to the picture before and
+after it, in place, with its place among them under its caption, as the owner asked on #250. That
+reverses Option D below. Everything else here stands.
+
 **Amends DDR-053 (Option C) and DDR-081 (Option A)**, which both rejected an enlarged view of a
 picture over the page. The owner asked for one on #246, so the picture in a project view's lead
 frame can now be opened larger, in a view of its own over the page, and closed again. Everything
@@ -176,6 +180,9 @@ Cons:
   is, so that needs the movement ADR-018 records.
 
 ### Option D: moving between the gallery's pictures while one is open
+
+> **Amended by DDR-083.** The owner asked for it on #250, so a gallery's larger picture now steps
+> between the pictures. This option is no longer rejected.
 
 Cons:
 * #246 leaves it out. The thumbnails already choose the picture, and browsing inside the enlarged

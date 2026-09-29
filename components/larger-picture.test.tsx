@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import { glide, LargerPicture, moves, movingName } from './larger-picture';
+import { glide, LargerPicture, moves, movingName, swap, swapCommand } from './larger-picture';
 
 // DDR-082 and ADR-018, on #246: the picture in a project view's lead frame opens larger in a native
 // modal dialog, opened and closed by its buttons' commands without script, and where the reader
@@ -32,6 +32,26 @@ const html = renderToStaticMarkup(
     enlarge="View larger"
     close="Close"
     className="media"
+  />,
+);
+
+/** The same picture as the third of a gallery's seven, per DDR-083. */
+const stepping = renderToStaticMarkup(
+  <LargerPicture
+    media={{ file: '/portfolio/example/lead.webp', alt: 'The application on a laptop' }}
+    caption="The dashboard"
+    id="picture-2-larger"
+    enlarge="View larger"
+    close="Close"
+    className="media"
+    steps={{
+      choice: 'picture-2',
+      previous: 'picture-1-larger',
+      next: 'picture-3-larger',
+      position: '3 of 7',
+      previousName: 'Previous picture',
+      nextName: 'Next picture',
+    }}
   />,
 );
 
@@ -106,6 +126,75 @@ describe('LargerPicture', () => {
     expect(group).toContain('overflow: clip');
     expect(group).toContain('border-radius: var(--radius-large)');
     expect(hidden).toContain('opacity: 0');
+  });
+
+  // DDR-083 and ADR-019, on #250: in a gallery, the caption stands between the controls that step
+  // to the neighbours, each pointing at its neighbour's dialog with a command of the page's own,
+  // and where the picture stands is under the caption and in the dialog's name.
+  describe('the steps between a gallery’s pictures', () => {
+    it('points each control at its neighbour’s dialog, and names the dialog by its caption and place', () => {
+      expect(stepping).toContain('aria-labelledby="picture-2-larger-caption picture-2-larger-position"');
+      expect(stepping).toMatch(
+        new RegExp(
+          `<img [^>]*/><div class="[^"]*"><button type="button" class="[^"]*" commandfor="picture-1-larger" command="${swapCommand}" aria-label="Previous picture">[^]*?</button><div class="[^"]*"><p id="picture-2-larger-caption" class="[^"]*">The dashboard</p><p id="picture-2-larger-position" class="[^"]*">3 of 7</p></div><button type="button" class="[^"]*" commandfor="picture-3-larger" command="${swapCommand}" aria-label="Next picture">[^]*?</button></div></dialog>$`,
+        ),
+      );
+      // A command of the page's own starts with two dashes, so the browser does nothing with it.
+      expect(swapCommand).toMatch(/^--/);
+    });
+
+    it('gives a lone picture neither control nor place', () => {
+      expect(html).not.toContain(swapCommand);
+      expect(html).not.toContain('-position');
+    });
+
+    it('draws the controls as the close control, over the ground’s target, and not without script', () => {
+      expect(css).toMatch(/\.close,\s*\.step\s*\{/);
+      expect(rule(css, '.step')).toContain('position: relative');
+      expect(rule(css, '.foot')).toContain('grid-template-columns: auto minmax(0, 1fr) auto');
+      expect(rule(css, '.foot')).toContain('justify-self: stretch');
+      const block = css.match(/@media \(scripting: none\) \{([\s\S]*?)\n\}/)?.[1] ?? '';
+
+      expect(block).toMatch(/\.step\s*\{\s*display: none;\s*\}/);
+    });
+
+    it('closes one dialog, chooses the other picture, focuses its opener, opens its dialog, and keeps focus in place', () => {
+      const seen: string[] = [];
+      const button = (name: string) => ({ focus: () => seen.push(`focus ${name}`) });
+      const [close, previous, next] = [button('close'), button('previous'), button('next')];
+      const choice = {
+        set checked(value: boolean) {
+          seen.push(`checked ${value}`);
+        },
+        get checked() {
+          return false;
+        },
+      };
+
+      swap(
+        { close: () => seen.push('close'), querySelectorAll: () => [{}, {}, 'next'] },
+        choice,
+        { focus: (options) => seen.push(`focus opener ${options.preventScroll}`) },
+        { showModal: () => seen.push('showModal'), querySelectorAll: () => [close, previous, next] },
+        'next',
+      );
+
+      expect(seen).toEqual(['close', 'checked true', 'focus opener true', 'showModal', 'focus next']);
+    });
+
+    it('leaves focus where the browser puts it when none of the dialog’s controls had it', () => {
+      const seen: string[] = [];
+
+      swap(
+        { close: () => {}, querySelectorAll: () => [] },
+        { checked: false },
+        { focus: () => {} },
+        { showModal: () => seen.push('showModal'), querySelectorAll: () => [{ focus: () => seen.push('focus') }] },
+        null,
+      );
+
+      expect(seen).toEqual(['showModal']);
+    });
   });
 
   describe('the movement', () => {

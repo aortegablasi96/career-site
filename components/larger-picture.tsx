@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type KeyboardEvent } from 'react';
 import { asset } from '@/app/asset';
 import type { Image } from '@/content/types';
 import { Icon } from './icon';
@@ -72,6 +72,52 @@ export function glide(
 }
 
 /**
+ * The page's own command a gallery's step control gives the neighbour's larger picture, per
+ * ADR-019: show yourself in place of the picture I am on.
+ */
+export const swapCommand = '--show-in-place';
+
+/**
+ * Shows another picture of the gallery larger in place of this one, per DDR-083 and ADR-019: this
+ * dialog closes, the other picture's radio is checked, so the frame shows it and its thumbnail is
+ * the chosen one, and its dialog opens. Its opening control is focused before it opens, so closing
+ * it returns focus there, to the control on the picture the frame now shows, as the browser returns
+ * it when that control opens the dialog itself. Last, focus goes to the control in the new dialog
+ * that stands where focus was in this one, so a reader who pressed "Next" can press it again.
+ */
+export function swap(
+  from: { close: () => void; querySelectorAll: (selector: 'button') => ArrayLike<unknown> },
+  choice: { checked: boolean },
+  opener: { focus: (options: { preventScroll: boolean }) => void },
+  to: { showModal: () => void; querySelectorAll: (selector: 'button') => ArrayLike<{ focus: () => void }> },
+  focused: unknown,
+): void {
+  const place = Array.prototype.indexOf.call(from.querySelectorAll('button'), focused);
+
+  from.close();
+  choice.checked = true;
+  opener.focus({ preventScroll: true });
+  to.showModal();
+  if (place >= 0) {
+    to.querySelectorAll('button')[place]?.focus();
+  }
+}
+
+/** The steps between a gallery's pictures, per DDR-083, which a lone picture does not have. */
+export interface Steps {
+  /** The identifier of this picture's radio, which chooses it for the frame. */
+  choice: string;
+  /** The larger pictures before and after this one. */
+  previous: string;
+  next: string;
+  /** Where the picture stands among the gallery's: "3 of 7". */
+  position: string;
+  /** The two controls' accessible names. */
+  previousName: string;
+  nextName: string;
+}
+
+/**
  * The picture in a project view's lead frame, and the same picture larger, per DDR-082 and ADR-018.
  *
  * Over the picture's corner is a round control with two arrows pointing out, which opens the
@@ -91,6 +137,15 @@ export function glide(
  * picture grows out of its frame and shrinks back into it. Without script, or where it cannot, the
  * browser's own behaviour stands and the picture appears and goes at once.
  *
+ * In a gallery it also steps between the pictures, per DDR-083 and ADR-019: under the picture, the
+ * caption stands between a control that shows the picture before and one that shows the picture
+ * after, with where it stands among them below it, and the arrow keys step too. Stepping closes
+ * this dialog and opens the neighbour's, and chooses its picture for the frame, so the reader closes
+ * on the frame showing the last picture they saw. Each control points at its neighbour's dialog, as
+ * the others point at theirs, with a command of the page's own, and the neighbour shows itself.
+ * Moving from one dialog to another is two commands, which no button's markup can give, so without
+ * script the two controls are not drawn, and each picture opens and closes as it does alone.
+ *
  * It is the file the frame already shows, so opening it fetches nothing. The frame's picture is
  * drawn as `Media` draws a picture, with the class the view gives it.
  */
@@ -101,6 +156,7 @@ export function LargerPicture({
   enlarge,
   close,
   className,
+  steps,
 }: {
   media: Image;
   caption: string;
@@ -111,17 +167,41 @@ export function LargerPicture({
   close: string;
   /** The frame picture's class, from the view, which also draws a gallery radio's focus on it. */
   className: string;
+  /** In a gallery, the pictures before and after this one, per DDR-083. A lone picture has none. */
+  steps?: Steps;
 }) {
   const framed = useRef<HTMLImageElement>(null);
   const larger = useRef<HTMLImageElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
 
+  const opener = useRef<HTMLButtonElement>(null);
+  const before = useRef<HTMLButtonElement>(null);
+  const after = useRef<HTMLButtonElement>(null);
+  const choice = steps?.choice;
+
+  // The arrow keys step too, as they step between the gallery's radios, per DDR-083, by pressing
+  // the control that steps that way.
+  function onKeyDown(event: KeyboardEvent) {
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
+      return;
+    }
+
+    const control =
+      event.key === 'ArrowLeft' ? before.current : event.key === 'ArrowRight' ? after.current : null;
+
+    if (control) {
+      event.preventDefault();
+      control.click();
+    }
+  }
+
   useEffect(() => {
     const box = dialog.current;
     const small = framed.current;
     const large = larger.current;
+    const control = opener.current;
 
-    if (!box || !small || !large) {
+    if (!box || !small || !large || !control) {
       return;
     }
 
@@ -131,7 +211,27 @@ export function LargerPicture({
     // A button's command reaches the dialog first as a cancelable event, so the dialog can be
     // opened or closed inside a transition rather than at once.
     function onCommand(event: Event) {
-      const { command } = event as Event & { command?: string };
+      const { command, source } = event as Event & { command?: string; source?: Element | null };
+
+      // A neighbour's step control asks this picture to show itself in place of the neighbour's,
+      // per DDR-083: where motion is welcome, the one fades into the other inside a view
+      // transition, and elsewhere it changes at once.
+      if (command === swapCommand) {
+        const from = source?.closest('dialog');
+        const radio = choice && document.getElementById(choice);
+
+        if (from && radio instanceof HTMLInputElement) {
+          const focused = document.activeElement;
+          const change = () => swap(from, radio, control!, box!, focused);
+
+          if (moves(document, matchMedia)) {
+            start(change);
+          } else {
+            change();
+          }
+        }
+        return;
+      }
 
       if ((command !== 'show-modal' && command !== 'close') || !moves(document, matchMedia)) {
         return;
@@ -163,13 +263,14 @@ export function LargerPicture({
       box.removeEventListener('command', onCommand);
       box.removeEventListener('cancel', onCancel);
     };
-  }, []);
+  }, [choice]);
 
   return (
     <>
       <div className={styles.frame}>
         <img ref={framed} className={className} src={asset(media.file)} alt={media.alt} />
         <button
+          ref={opener}
           type="button"
           className={styles.enlarge}
           commandfor={id}
@@ -179,7 +280,13 @@ export function LargerPicture({
           <Icon name="enlarge" />
         </button>
       </div>
-      <dialog ref={dialog} id={id} className={styles.larger} aria-labelledby={`${id}-caption`}>
+      <dialog
+        ref={dialog}
+        id={id}
+        className={styles.larger}
+        aria-labelledby={steps ? `${id}-caption ${id}-position` : `${id}-caption`}
+        onKeyDown={steps ? onKeyDown : undefined}
+      >
         <button
           type="button"
           className={styles.close}
@@ -190,9 +297,42 @@ export function LargerPicture({
           <Icon name="close" />
         </button>
         <img ref={larger} className={styles.picture} src={asset(media.file)} alt={media.alt} />
-        <p id={`${id}-caption`} className={styles.caption}>
-          {caption}
-        </p>
+        {steps ? (
+          <div className={styles.foot}>
+            <button
+              ref={before}
+              type="button"
+              className={styles.step}
+              commandfor={steps.previous}
+              command={swapCommand}
+              aria-label={steps.previousName}
+            >
+              <Icon name="back" />
+            </button>
+            <div className={styles.words}>
+              <p id={`${id}-caption`} className={styles.caption}>
+                {caption}
+              </p>
+              <p id={`${id}-position`} className={styles.caption}>
+                {steps.position}
+              </p>
+            </div>
+            <button
+              ref={after}
+              type="button"
+              className={styles.step}
+              commandfor={steps.next}
+              command={swapCommand}
+              aria-label={steps.nextName}
+            >
+              <Icon name="forward" />
+            </button>
+          </div>
+        ) : (
+          <p id={`${id}-caption`} className={styles.caption}>
+            {caption}
+          </p>
+        )}
       </dialog>
     </>
   );

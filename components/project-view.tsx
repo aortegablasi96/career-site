@@ -9,7 +9,7 @@ import type {
 } from '@/content/types';
 import { BusinessCaseSlider } from './business-case-slider';
 import { Icon } from './icon';
-import { LargerPicture } from './larger-picture';
+import { LargerPicture, type Steps } from './larger-picture';
 import { Media, projectHref } from './projects';
 import styles from './project-view.module.css';
 
@@ -23,6 +23,7 @@ function Frame({
   id,
   enlarge,
   close,
+  steps,
 }: {
   media: ProjectMedia;
   caption: string;
@@ -31,6 +32,8 @@ function Frame({
   /** The names of the controls that open it larger and close it. */
   enlarge: string;
   close: string;
+  /** In a gallery of more than one picture, the pictures before and after it, per DDR-083. */
+  steps?: Steps;
 }) {
   if ('poster' in media) {
     return <Media media={media} className={styles.media} />;
@@ -44,6 +47,7 @@ function Frame({
       enlarge={enlarge}
       close={close}
       className={styles.media}
+      steps={steps}
     />
   );
 }
@@ -88,7 +92,10 @@ function Thumbnail({ media, caption, index }: { media: ProjectMedia; caption: st
  * lead's radio is checked in the markup, so a view opens on the lead picture.
  *
  * Each picture carries its own control that opens it larger, per DDR-082, so the one on the picture
- * shown is the one a reader meets, and it opens that picture, whichever was chosen.
+ * shown is the one a reader meets, and it opens that picture, whichever was chosen. Larger, each
+ * steps to the picture before and after it, per DDR-083, in the thumbnails' order and in a loop, as
+ * the business case's items do (DDR-080). A video opens nothing larger, so the steps pass over it,
+ * and the place they show counts the pictures alone.
  *
  * The row shows every picture's thumbnail, as the owner asked on #244, where the design draws two
  * and a count of the rest. It wraps where the column runs out of room.
@@ -102,6 +109,9 @@ function Pictures({
   pictures,
   enlarge,
   close,
+  previousPicture,
+  nextPicture,
+  position,
 }: {
   /** The radio group's accessible name. */
   name: string;
@@ -110,7 +120,29 @@ function Pictures({
   /** The names of the controls that open a picture larger and close it, per DDR-082. */
   enlarge: string;
   close: string;
+  /** The names of the controls that step between the larger pictures, and the place, per DDR-083. */
+  previousPicture: string;
+  nextPicture: string;
+  position: (place: number, count: number) => string;
 }) {
+  /** Where each picture that opens larger stands in the gallery: every item but a video. */
+  const larger = pictures.flatMap(({ media }, index) => ('poster' in media ? [] : [index]));
+  const neighbour = (place: number) => `picture-${larger[(place + larger.length) % larger.length]}-larger`;
+  const steps = (index: number): Steps | undefined => {
+    const place = larger.indexOf(index);
+
+    return larger.length > 1 && place >= 0
+      ? {
+          choice: `picture-${index}`,
+          previous: neighbour(place - 1),
+          next: neighbour(place + 1),
+          position: position(place + 1, larger.length),
+          previousName: previousPicture,
+          nextName: nextPicture,
+        }
+      : undefined;
+  };
+
   return (
     <div role="radiogroup" aria-label={name} className={styles.pictures}>
       {pictures.map(({ media, caption }, index) => (
@@ -130,6 +162,7 @@ function Pictures({
               id={`picture-${index}-larger`}
               enlarge={enlarge}
               close={close}
+              steps={steps(index)}
             />
             <figcaption id={`picture-${index}-caption`} className={styles.pictureCaption}>
               {caption}
@@ -280,6 +313,9 @@ export function ProjectView({
     gallery: galleryName,
     enlarge,
     close,
+    previousPicture,
+    nextPicture,
+    position,
     newTab,
     previous: previousWord,
     next: nextWord,
@@ -406,6 +442,9 @@ export function ProjectView({
             pictures={[{ media, caption }, ...gallery]}
             enlarge={enlarge}
             close={close}
+            previousPicture={previousPicture}
+            nextPicture={nextPicture}
+            position={position}
           />
         ) : (
           <figure className={styles.figure}>
