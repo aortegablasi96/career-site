@@ -126,10 +126,12 @@ import type { Cv } from './types';
  * the CV. It moved with #252 once more, because NumisBook's gallery is now the owner's pictures of
  * its window, seven where the mockups were six, and their alternative text describes them. And
  * once more, because the Digital Twin gained its gallery: two pictures, on its own page and in
- * Telegram, each with a caption and alternative text.
+ * Telegram, each with a caption and alternative text. And once more when #252 was reopened,
+ * because this site gained its gallery: seven pictures of its own window, each with a caption and
+ * alternative text. None is a fact ADR-005 lists as shared, so none moved the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '96ad8b18fdefeca5787418668581958145e90b1073b1099362d0eb9d2dff819d',
+  contentDigest: '01519cdcaa86091891081967b558aed86e89f6eec8e31dcd2f2c923b1eaaf9e0',
 };

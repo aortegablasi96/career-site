@@ -21,6 +21,9 @@ function render(project: Project, neighbours: { previous?: Project; next?: Proje
 }
 
 const [numisBook, digitalTwin, stockPortfolioViewer, careerSite] = projects.projects;
+// Since this site gained its own on #252, every project has a gallery, so a project without one is
+// this site with its gallery taken away.
+const withoutGallery: Project = { ...careerSite!, gallery: undefined };
 const html = render(numisBook!);
 
 /** The markup's text, as a reader meets it. */
@@ -123,8 +126,8 @@ describe('ProjectView', () => {
       for (const project of projects.projects) {
         expect(render(project)).toContain('radiogroup');
       }
-      expect(render({ ...careerSite!, businessCase: undefined })).not.toContain('radiogroup');
-      expect(render({ ...careerSite!, businessCase: undefined })).not.toContain('<input');
+      expect(render({ ...withoutGallery, businessCase: undefined })).not.toContain('radiogroup');
+      expect(render({ ...withoutGallery, businessCase: undefined })).not.toContain('<input');
     });
 
     // A view without a business case reads exactly as it did before #231: no wrapper round its
@@ -342,8 +345,8 @@ describe('ProjectView', () => {
 
   // A project without a gallery, since DDR-084: one with a gallery shows that in the lead's place.
   it('shows the lead picture with its alternative text and its caption below it', () => {
-    const media = careerSite!.media;
-    const view = render(careerSite!);
+    const media = withoutGallery.media;
+    const view = render(withoutGallery);
 
     expect('alt' in media).toBe(true);
     expect(view).toContain(`alt="${'alt' in media && media.alt}"`);
@@ -414,10 +417,8 @@ describe('ProjectView', () => {
       css.match(new RegExp(`(?:^|\\})\\s*${selector.replace(/[.:+()]/g, '\\$&')}\\s*\\{([^}]*)\\}`))?.[1] ?? '';
 
     it('leaves a view whose project has no gallery media as it was: the lead picture alone', () => {
-      for (const project of projects.projects.filter(({ gallery }) => !gallery)) {
-        expect(radios(render(project))).toHaveLength(0);
-        expect(render(project)).toContain(`<figcaption class="`);
-      }
+      expect(radios(render(withoutGallery))).toHaveLength(0);
+      expect(render(withoutGallery)).toContain(`<figcaption class="`);
 
       expect(withGallery([])).toBe(render({ ...numisBook!, gallery: undefined }));
     });
@@ -461,6 +462,23 @@ describe('ProjectView', () => {
 
       expect(gallery).toHaveLength(2);
       expect(radios(view)).toHaveLength(2);
+      for (const { media, caption } of gallery) {
+        const bytes = statSync(new URL(`../public${media.file}`, import.meta.url)).size;
+
+        expect(bytes).toBeLessThanOrEqual(150 * 1024);
+        expect('alt' in media && media.alt.length).toBeTruthy();
+        expect(text(view)).toContain(caption);
+      }
+    });
+
+    // Pictures of the site's own window, made from the site as the owner asked when #252 was
+    // reopened, and held as the owner's pictures are.
+    it('shows this site’s gallery, each picture a file within the budget for a still', () => {
+      const gallery = careerSite!.gallery ?? [];
+      const view = render(careerSite!);
+
+      expect(gallery).toHaveLength(7);
+      expect(radios(view)).toHaveLength(7);
       for (const { media, caption } of gallery) {
         const bytes = statSync(new URL(`../public${media.file}`, import.meta.url)).size;
 
@@ -568,7 +586,7 @@ describe('ProjectView', () => {
       expect(rule('.pictureCaption')).toContain('display: none');
       expect(markup).toMatch(/<figcaption id="picture-0-caption" class="[^"]*pictureCaption/);
       // A project without a gallery keeps its caption under its picture.
-      expect(render(careerSite!)).toMatch(/<figcaption class="[^"]*caption/);
+      expect(render(withoutGallery)).toMatch(/<figcaption class="[^"]*caption/);
     });
 
     // The chosen thumbnail is found by place, one rule for each of twelve, because its radio is
@@ -754,7 +772,7 @@ describe('ProjectView', () => {
     });
 
     it('gives a lone picture no controls to step and no place, and a gallery of one picture and a video none either', () => {
-      const lone = dialogs(render(careerSite!));
+      const lone = dialogs(render(withoutGallery));
       const withVideo = dialogs(render({ ...numisBook!, gallery: [numisBook!.gallery![0]!, video] }));
 
       for (const [larger] of [lone, withVideo]) {

@@ -38,7 +38,9 @@ const liveSite = 'Live site';
  * #244 as thumbnails under the lead picture, per DDR-081. NumisBook has one, and since #252 the
  * Stock Portfolio Viewer and the Digital Twin each have one; each is the owner's pictures of the
  * application's window, which on #252 replaced NumisBook's mockups. Each file is the owner's to
- * supply, as on #63, and a project with no `gallery` shows its lead picture alone.
+ * supply, as on #63, but for this site's: when #252 was reopened the owner asked for its gallery to
+ * be made from the site itself, so every project now has one. A project with no `gallery` would
+ * show its lead picture alone.
  * Adding one is content alone — a list of media and captions here, and the files in `public/` —
  * with no change to a component.
  *
@@ -325,6 +327,40 @@ export const projects: Projects = {
       slug: 'career-site',
       media: { file: '/portfolio/career-site/lead.webp', alt: 'This site on a laptop, showing its introduction: the owner’s photo, name, positioning line and summary, above the contact and CV controls' },
       caption: 'The introduction',
+      // Pictures of the site's own window, which the owner asked on #252 to have made from the site
+      // itself, as its first picture was on #63: the page from its top to its end, as its contents
+      // links reach each section, then a project's view and a role's. Each is the window at 1536 by
+      // 816, as the live site drew it on 2026-09-30. Each description says only what its screen shows.
+      gallery: [
+        {
+          media: { file: '/portfolio/career-site/gallery-introduction.webp', alt: 'This site’s window, showing its introduction: the owner’s photo beside a greeting, the name, the positioning line, the location and the summary, above the contact and CV controls and the start of the experience timeline' },
+          caption: 'The introduction',
+        },
+        {
+          media: { file: '/portfolio/career-site/gallery-experience.webp', alt: 'This site’s window, showing its experience: five roles as cards along a timeline, each under its dates, with its company’s logo, the job title and the place, above the start of the portfolio' },
+          caption: 'The experience timeline',
+        },
+        {
+          media: { file: '/portfolio/career-site/gallery-portfolio.webp', alt: 'This site’s window, showing its portfolio: the cards of NumisBook and the Digital Twin, each with a picture of the application on a laptop, its name, one sentence and its technologies, above the top of the next two cards' },
+          caption: 'The portfolio',
+        },
+        {
+          media: { file: '/portfolio/career-site/gallery-skills.webp', alt: 'This site’s window, showing its skills in four groups, product and delivery, AI, data and IoT, and tools, each listing its skills by level: advanced, proficient or basic' },
+          caption: 'The skills',
+        },
+        {
+          media: { file: '/portfolio/career-site/gallery-education.webp', alt: 'This site’s window, showing the end of the page: two degrees and two certifications as cards along a timeline, the four languages with their levels, and the footer with the contact addresses' },
+          caption: 'Education and languages',
+        },
+        {
+          media: { file: '/portfolio/career-site/gallery-project-view.webp', alt: 'This site’s window, showing a project’s view, NumisBook’s: its name, a switch between the overview and the business case, its description, how it was built, its technologies and its links, beside a picture of the application above a row of thumbnails' },
+          caption: 'A project’s view',
+        },
+        {
+          media: { file: '/portfolio/career-site/gallery-role-view.webp', alt: 'This site’s window, showing a role’s view, the current one at ABB: the company, the dates and the place above the job title, then four numbered responsibilities and achievements' },
+          caption: 'A role’s view',
+        },
+      ],
       summary: 'A career site that doubles as its own printed CV.',
       technologies: ['Next.js', 'TypeScript', 'CSS Modules', 'GitHub Pages'],
       description:

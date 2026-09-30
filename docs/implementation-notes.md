@@ -244,8 +244,9 @@ The page itself is the CV, so what it prints is designed.
 * **Playwright's `click()` on a thumbnail times out**: the next thumbnail covers its centre. Click
   its image's left 15px with `page.mouse.click`.
 * A thumbnail's image is `box-sizing: border-box`, or its edge adds 3.2px to its width and its height.
-* **Three views have a gallery**: NumisBook (seven pictures), the Stock Portfolio Viewer (four) and
-  the Digital Twin (two), so check the gallery on each; this site's view is the one without. A
+* **Every view has a gallery**: NumisBook (seven pictures), the Stock Portfolio Viewer (four), the
+  Digital Twin (two) and this site (seven), so check the gallery on each; no view is without one,
+  and the tests take this site's away to have one. A
   gallery picture is a WebP at its original's size (Pillow, quality 82, method 6), within the same
   150 KB as a lead. Each is the application's window: the Stock Portfolio Viewer's at about
   1535×815, NumisBook's at about 1915×907, but for its Collections (1917×877) and its light coin
@@ -254,6 +255,12 @@ The page itself is the CV, so what it prints is designed.
   NumisBook, more on the Digital Twin. An edge the capture added is trimmed before encoding: a
   transparent row or column, which would become a black line, and the pale line around the Digital
   Twin's page. The PNG originals in `media/` are gitignored.
+* **This site's gallery pictures are captures of the site itself** (#252), which the others are not:
+  the live site in Chromium, in a window 1551×816 so that the page is 1536px wide beside its
+  scrollbar, captured without the scrollbar at 1536×816. The page's five are its top and the place
+  each contents link scrolls to (Education's is the page's end); the two views are NumisBook's and
+  ABB's, unscrolled. The site does not regenerate them: after a change that shows in one, capture
+  it again, or the gallery shows an older site.
 * **The business case inside it is a Client Component**, `BusinessCaseSlider` (ADR-015, DDR-080).
   Every item is in the HTML and sits in one grid cell; only `.shown` is `visibility: visible`, which
   holds the card at its tallest item's height. `components/stylesheets.test.ts` admits `grid-area`
