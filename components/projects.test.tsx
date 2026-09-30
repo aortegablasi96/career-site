@@ -9,7 +9,7 @@ const howBuiltWords = ({ howBuilt = [] }: Project) =>
   howBuilt
     .map((paragraph) => paragraph.map((part) => (typeof part === 'string' ? part : part.strong)).join(''))
     .join(' ');
-import { Media, Projects, projectRows } from './projects';
+import { Projects, projectRows } from './projects';
 
 // Rendered with the real content, a row at a time as the page renders it, since what the cards say
 // and lead to is what #154 asks for.
@@ -164,8 +164,6 @@ describe('a card’s picture', () => {
 
   it('reaches every file through asset(), so it resolves under the Pages base path', () => {
     expect(source).toContain('asset(still.src)');
-    expect(source).toContain('asset(media.file)');
-    expect(source).toContain('asset(media.poster)');
   });
 
   it('is a file the site carries, within the budget ADR-004 sets for a still', () => {
@@ -195,63 +193,6 @@ describe('a card’s picture', () => {
     expect(markup).not.toContain('<video');
     expect(markup).toMatch(/<img [^>]*src="\/project-digital-twin\.webp"/);
     expect(markup).toContain('alt="The Digital Twin chatbot answering a question"');
-  });
-});
-
-// DDR-010 gives the Digital Twin its demo video in place of a still, and a project's view shows it,
-// per DDR-050. The file itself is outstanding on #63, so no project carries one yet; this renders
-// one to hold the markup the record asks for.
-describe('a project’s media as a video', () => {
-  const markup = renderToStaticMarkup(
-    <Media
-      media={{
-        file: '/project-digital-twin.mp4',
-        poster: '/project-digital-twin.webp',
-        width: 1920,
-        height: 1080,
-        description: 'The Digital Twin chatbot answering a question',
-      }}
-      className="media"
-    />,
-  );
-  const video = markup.match(/<video[^>]*>/)?.[0] ?? '';
-  const still = markup.match(/<img[^>]*>/)?.[0] ?? '';
-
-  it('shows the video with controls, per DDR-010', () => {
-    expect(video).toMatch(/\bcontrols\b/);
-  });
-
-  it('neither plays nor repeats by itself, per DDR-010', () => {
-    expect(video).not.toMatch(/\bautoplay\b|\bloop\b/);
-  });
-
-  it('shows its poster and fetches nothing until it is played, per ADR-004', () => {
-    expect(video).toContain('poster="/project-digital-twin.webp"');
-    expect(video).toContain('preload="none"');
-  });
-
-  it('carries an accessible name describing what it shows, and is not hidden', () => {
-    expect(video).toContain('aria-label="The Digital Twin chatbot answering a question"');
-    expect(video).not.toContain('aria-hidden');
-  });
-
-  // Measured on #52, a video element cannot be the printed still: Edge prints an empty box and
-  // Firefox the poster under a controls bar. So the poster is rendered a second time, as an image,
-  // and exactly one of the two is displayed, per DDR-015.
-  it('carries its poster as an image for paper, described in the same words', () => {
-    expect(still).toContain('src="/project-digital-twin.webp"');
-    expect(still).toContain('alt="The Digital Twin chatbot answering a question"');
-  });
-
-  it('marks the two so that exactly one is shown, and gives both the class it is handed', () => {
-    // A CSS Module is hashed when it is imported, so the class is read back by its last part.
-    const classes = (markup: string) => markup.match(/class="([^"]*)"/)?.[1]?.split(' ') ?? [];
-    const last = (markup: string) => (classes(markup).at(-1) ?? '').replace(/^_|_[^_]*$/g, '');
-
-    expect(last(video)).toBe('onScreen');
-    expect(last(still)).toBe('onPaper');
-    expect(classes(video)[0]).toBe('media');
-    expect(classes(still)[0]).toBe('media');
   });
 });
 
@@ -431,12 +372,6 @@ describe('project styles', () => {
 
   it('keeps a row of cards whole on paper', () => {
     expect(rule('.row', paper)).toMatch(/break-inside:\s*avoid;/);
-  });
-
-  it('shows a view’s video on screen and its poster still on paper, per DDR-015', () => {
-    expect(rule('.onPaper')).toMatch(/display:\s*none;/);
-    expect(rule('.onScreen', paper)).toMatch(/display:\s*none;/);
-    expect(rule('.onPaper', paper)).toMatch(/display:\s*block;/);
   });
 });
 

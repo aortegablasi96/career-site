@@ -205,21 +205,7 @@ section > .row {
   }
 }
 
-/* The projects' view shows a video with its poster still and prints the still, per DDR-015; `Media`
-   marks the two. A card shows the still alone, so it needs neither. */
-.onPaper {
-  display: none;
-}
-
 @media print {
-  .onScreen {
-    display: none;
-  }
-
-  .onPaper {
-    display: block;
-  }
-
   /* A row is two cards side by side, and is kept whole on paper, as the language cards are. */
   .row {
     break-inside: avoid;

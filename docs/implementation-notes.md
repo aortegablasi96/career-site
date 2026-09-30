@@ -92,8 +92,8 @@ The page itself is the CV, so what it prints is designed.
   A contact link writes `::after { content: none }`.
 * **Firefox ignores `break-after: avoid`**, so `section.tsx` wraps a heading and its first item in
   one block kept whole. Timeline sections are `breakable`, because kept whole they cost a sheet.
-* **No print-only content**, except a role's points (DDR-057). A video's poster is rendered again
-  as an image, and exactly one of the two displays per medium.
+* **No print-only content**, except a role's points (DDR-057). A video's frame is its poster, as
+  an image, so it prints as one (DDR-089).
 * **A linked timeline card is `position: static` on paper**; positioned, both browsers wrote its
   text at the foot of the sheet's PDF.
 * **Check print by saving PDFs in Edge and Firefox**, with background graphics on and off, and
@@ -208,7 +208,8 @@ The page itself is the CV, so what it prints is designed.
   a lone picture's figure) carries them as `--project-view-box-ratio` and `--project-view-box-width`
   in its `style` attribute. The dialogs are inside it, so they inherit both; a dialog moved outside
   it would lose them. The frame is the box (`.media` takes its `aspect-ratio`) and the picture in it
-  is whole, as wide as the box and centred (DDR-085), with no `object-fit`. A video is the box.
+  is whole, as wide as the box and centred (DDR-085), with no `object-fit`. A video's frame is its
+  poster, drawn as a picture's is.
 * **A gallery shows only what it lists** (DDR-084): the view opens on its first item, and the lead
   picture stays on the card unless the gallery lists it too. A gallery of one is drawn as a lone
   picture, with no radios.
@@ -274,9 +275,15 @@ The page itself is the CV, so what it prints is designed.
   sound track, as `gallery-walkthrough.mp4`, and its first frame as `gallery-walkthrough.webp`. The
   recordings are in `media/`; ffmpeg is not in the repository. Before it is played a video takes
   its shape from its poster, so **a poster must be its video's size**, or the frame jumps on play.
-  A video left playing plays on, out of sight, when another picture is chosen; that is decided,
-  and only for a video without sound. To check one locally, serve `out/` from a server that
-  answers byte ranges with 206, or the video plays but cannot be moved through.
+  **A video plays only larger** (DDR-089, ADR-022): `LargerPicture` shows its poster in the frame and
+  the `<video>` in the dialog, and its dialog's `close` pauses it, however it closes, stepping
+  included. Without script nothing pauses it; that is decided, and only for a video without sound.
+  The arrow keys are the video's while it has focus (`stepKey`), so they move through it rather
+  than step. `disablePictureInPicture` takes away the floating window. `controlsList="nodownload"`
+  only reaches Chrome and Edge; the declined `contextmenu` needs script, and Firefox opens its menu
+  anyway with Shift held. To check one locally, serve
+  `out/` from a server that answers byte ranges with 206, or the video plays but cannot be moved
+  through.
 * **This site's gallery pictures are captures of the site itself** (#252), which the others are not:
   the live site in Chromium, in a window 1551×816 so that the page is 1536px wide beside its
   scrollbar, captured without the scrollbar at 1536×816. The page's five are its top and the place

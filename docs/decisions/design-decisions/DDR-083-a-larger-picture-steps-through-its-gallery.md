@@ -11,6 +11,9 @@ without closing it. Everything else DDR-082 decides stands: the control that ope
 veil and the blur, the picture shown whole, the control that closes it, and its movement into and out
 of the frame. ADR-019 records how one picture's dialog hands over to the next.
 
+**Amended by DDR-089 (2026-09-30)**: the steps now reach a gallery's video, which opens larger as a
+picture does, and the place counts every item of the gallery. Everything else here stands.
+
 **Amended by DDR-084 (2026-09-30)** in the order of the steps: the pictures are the gallery's own,
 without the lead, so NumisBook's are six and its first says "1 of 6".
 

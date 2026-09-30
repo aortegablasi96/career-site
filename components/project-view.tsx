@@ -11,7 +11,7 @@ import type {
 import { BusinessCaseSlider } from './business-case-slider';
 import { Icon } from './icon';
 import { LargerPicture, type Steps } from './larger-picture';
-import { Media, projectHref } from './projects';
+import { projectHref } from './projects';
 import styles from './project-view.module.css';
 
 /**
@@ -35,8 +35,8 @@ export function box(media: readonly PixelSize[]): CSSProperties {
 }
 
 /**
- * The picture in the lead's frame: a picture that opens larger, per DDR-082, or a video, which has
- * its own controls, full screen among them, and so opens nothing, per #246.
+ * The picture in the lead's frame, which opens larger, per DDR-082. A video is shown as its still
+ * and opens larger the same way, to be played there, per DDR-089.
  */
 function Frame({
   media,
@@ -53,13 +53,9 @@ function Frame({
   /** The names of the controls that open it larger and close it. */
   enlarge: string;
   close: string;
-  /** In a gallery of more than one picture, the pictures before and after it, per DDR-083. */
+  /** In a gallery, the items before and after it, per DDR-083. */
   steps?: Steps;
 }) {
-  if ('poster' in media) {
-    return <Media media={media} className={styles.media} />;
-  }
-
   return (
     <LargerPicture
       media={media}
@@ -117,10 +113,10 @@ function Thumbnail({ media, caption, index }: { media: ProjectMedia; caption: st
  * first picture's radio is checked in the markup, so a view opens on the gallery's first picture.
  *
  * Each picture carries its own control that opens it larger, per DDR-082, so the one on the picture
- * shown is the one a reader meets, and it opens that picture, whichever was chosen. Larger, each
- * steps to the picture before and after it, per DDR-083, in the thumbnails' order and in a loop, as
- * the business case's items do (DDR-080). A video opens nothing larger, so the steps pass over it,
- * and the place they show counts the pictures alone.
+ * shown is the one a reader meets, and it opens that picture, whichever was chosen. A video does too,
+ * and is played larger, per DDR-089. Larger, each steps to the item before and after it, per DDR-083
+ * as DDR-089 amends it, in the thumbnails' order and in a loop, as the business case's items do
+ * (DDR-080), and the place they show counts every item.
  *
  * The row shows every picture's thumbnail, as the owner asked on #244, where the design draws two
  * and a count of the rest. It wraps where the column runs out of room.
@@ -129,9 +125,9 @@ function Thumbnail({ media, caption, index }: { media: ProjectMedia; caption: st
  * is one height whichever is chosen, the row under it never moves, and each larger picture is one
  * size. The group hands the box to its stylesheets, and its dialogs inherit it.
  *
- * A video plays only when the reader starts it and fetches nothing before that, because it is drawn
- * by the same `Media` the lead picture is, per DDR-010 and ADR-004. One view is one page, so the
- * radios' `name` and the identifiers need only be unique within it.
+ * A video plays only when the reader starts it, larger, and fetches nothing before that, per DDR-010
+ * and ADR-004. One view is one page, so the radios' `name` and the identifiers need only be unique
+ * within it.
  */
 function Pictures({
   name,
@@ -154,23 +150,16 @@ function Pictures({
   nextPicture: string;
   position: (place: number, count: number) => string;
 }) {
-  /** Where each picture that opens larger stands in the gallery: every item but a video. */
-  const larger = pictures.flatMap(({ media }, index) => ('poster' in media ? [] : [index]));
-  const neighbour = (place: number) => `picture-${larger[(place + larger.length) % larger.length]}-larger`;
-  const steps = (index: number): Steps | undefined => {
-    const place = larger.indexOf(index);
-
-    return larger.length > 1 && place >= 0
-      ? {
-          choice: `picture-${index}`,
-          previous: neighbour(place - 1),
-          next: neighbour(place + 1),
-          position: position(place + 1, larger.length),
-          previousName: previousPicture,
-          nextName: nextPicture,
-        }
-      : undefined;
-  };
+  const count = pictures.length;
+  const neighbour = (index: number) => `picture-${(index + count) % count}-larger`;
+  const steps = (index: number): Steps => ({
+    choice: `picture-${index}`,
+    previous: neighbour(index - 1),
+    next: neighbour(index + 1),
+    position: position(index + 1, count),
+    previousName: previousPicture,
+    nextName: nextPicture,
+  });
 
   return (
     <div

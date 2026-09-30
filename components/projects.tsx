@@ -1,47 +1,8 @@
 import Link from 'next/link';
 import { asset } from '@/app/asset';
-import type { Project, ProjectMedia } from '@/content/types';
+import type { Project } from '@/content/types';
 import { Hint } from './hint';
 import styles from './projects.module.css';
-
-/**
- * What a project looks like running, per DDR-010: a still, or the demo video with a poster still.
- *
- * A project's view shows it, per DDR-050, and hands in the class that sizes it. A card on the page
- * does not use this: it shows a still whatever the media is, per DDR-051, below.
- *
- * A still says what it shows in its alternative text; the video carries the same sentence as its
- * accessible name and again as the text a browser that cannot play it shows instead. Nothing
- * depends on watching it.
- *
- * The video has controls, does not autoplay and does not loop, per DDR-010, and fetches nothing
- * until someone presses play, per ADR-004: the poster is what a visitor sees until then, and it is
- * a committed still of its own rather than a frame pulled out of the video.
- */
-export function Media({ media, className }: { media: ProjectMedia; className: string }) {
-  if ('poster' in media) {
-    return (
-      <>
-        <video
-          className={`${className} ${styles.onScreen}`}
-          src={asset(media.file)}
-          poster={asset(media.poster)}
-          preload="none"
-          controls
-          aria-label={media.description}
-        >
-          {media.description}
-        </video>
-        {/* The same still, for paper. A video element cannot be one: measured on #52, Edge prints an
-            empty box with a dead scrubber and no poster at all, and Firefox prints the poster under
-            a controls bar. Exactly one of the two is displayed at any time. */}
-        <img className={`${className} ${styles.onPaper}`} src={asset(media.poster)} alt={media.description} />
-      </>
-    );
-  }
-
-  return <img className={className} src={asset(media.file)} alt={media.alt} />;
-}
 
 /** A project view's route, per ADR-010. `next/link` puts the base path in front of it. */
 export function projectHref(slug: string): string {

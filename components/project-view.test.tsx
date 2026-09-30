@@ -627,7 +627,7 @@ describe('ProjectView', () => {
         expect(media.description.length).toBeTruthy();
         expect(thumbnails(view).at(-1)).toMatchObject({ name: caption, source: media.poster });
         expect(bare(view)).toContain(
-          `<video src="${media.file}" poster="${media.poster}" preload="none" controls="" aria-label="${media.description}">`,
+          `<video src="${media.file}" poster="${media.poster}" width="${media.width}" height="${media.height}" preload="none" controls="" controlsList="nodownload" disablePictureInPicture="" aria-label="${media.description}">`,
         );
       }
     });
@@ -783,16 +783,21 @@ describe('ProjectView', () => {
     });
 
     // DDR-010 and ADR-004: nothing is fetched until someone presses play, and the poster is what is
-    // seen until then.
-    it('leaves a video unplayed and unfetched until the reader starts it', () => {
-      const element = withGallery([video]).match(/<video[^>]*>/)?.[0] ?? '';
+    // seen until then. DDR-089: its controls offer no download, and it plays only larger.
+    it('leaves a video unplayed and unfetched until the reader starts it, with no download control and no floating window', () => {
+      const markup = withGallery([video]);
+      const element = markup.match(/<video[^>]*>/)?.[0] ?? '';
       const description = 'poster' in video.media ? video.media.description : '';
 
       expect(element).toContain('preload="none"');
       expect(element).toContain('controls=""');
+      expect(element).toContain('controlsList="nodownload"');
+      expect(element).toContain('disablePictureInPicture=""');
       expect(element).toContain('poster="/gallery-walkthrough.webp"');
       expect(element).toContain(`aria-label="${description}"`);
-      expect(element).not.toContain('autoplay');
+      expect(element).not.toMatch(/\bautoplay\b|\bloop\b/);
+      expect(markup.match(/<video/g)).toHaveLength(1);
+      expect(bare(markup)).toMatch(/<dialog [^>]*>[\s\S]*<video [\s\S]*<\/dialog>/);
     });
 
     // Every path a picture or video is reached by goes through `asset()`, per ADR-004, so it
@@ -879,9 +884,10 @@ describe('ProjectView', () => {
       }
     });
 
-    it('opens whichever picture of a gallery is shown, each by its own control, and no video', () => {
-      const markup = render({ ...numisBook!, gallery: [...stills(numisBook!), video] });
-      const pictures = stills(numisBook!);
+    // DDR-089, on #265: a video opens larger as a picture does, its still in the frame.
+    it('opens whichever item of a gallery is shown, each by its own control, its video too', () => {
+      const pictures = [...stills(numisBook!), video];
+      const markup = render({ ...numisBook!, gallery: pictures });
       const ids = dialogs(markup).map(({ id }) => id);
 
       expect(openers(markup).map(({ target }) => target)).toEqual(ids);
@@ -893,6 +899,12 @@ describe('ProjectView', () => {
           new RegExp(`<figure><div><img [^>]*/><button [^>]*commandfor="${id}"[^>]*>[\\s\\S]*?</dialog><figcaption`),
         );
       }
+      // In the frame the video is its still, described in the video's own words, and it plays
+      // nowhere but larger.
+      const description = 'poster' in video.media ? video.media.description : '';
+      expect(bare(markup)).toMatch(
+        new RegExp(`<figure><div><img src="/gallery-walkthrough\\.webp" alt="${description}"[^>]*/><button [^>]*commandfor="${ids.at(-1)}"`),
+      );
       expect(markup).not.toContain(`src="${video.media.file}" alt=`);
     });
 
@@ -902,8 +914,8 @@ describe('ProjectView', () => {
       const larger = dialogs(html);
       const count = larger.length;
 
-      // NumisBook's pictures: its video, the gallery's last item, opens nothing larger.
-      expect(count).toBe(stills(numisBook!).length);
+      // NumisBook's pictures and its video, the gallery's last item, per DDR-089.
+      expect(count).toBe(numisBook!.gallery!.length);
       larger.forEach(({ id, labelledBy, captionId, positionId, position, steps }, place) => {
         expect(labelledBy).toBe(`${captionId} ${positionId}`);
         expect(position).toBe(projects.view.position(place + 1, count));
@@ -919,26 +931,31 @@ describe('ProjectView', () => {
       );
     });
 
-    it('passes over a gallery’s video, which opens nothing larger, and counts only the pictures', () => {
+    // DDR-089, on #265: the steps reach a video, wherever it stands, and the place counts it.
+    it('steps to and from a gallery’s video, counting every item', () => {
       const [first, second, third] = numisBook!.gallery!;
       const markup = render({ ...numisBook!, gallery: [first!, second!, video, third!] });
       const larger = dialogs(markup);
 
-      expect(larger.map(({ id }) => id)).toEqual(['picture-0-larger', 'picture-1-larger', 'picture-3-larger']);
-      expect(larger[1]!.steps.map(({ target }) => target)).toEqual(['picture-0-larger', 'picture-3-larger']);
-      expect(larger.map(({ position }) => position)).toEqual(['1 of 3', '2 of 3', '3 of 3']);
-      expect(larger[2]!.position).toBe(projects.view.position(3, 3));
+      expect(larger.map(({ id }) => id)).toEqual([0, 1, 2, 3].map((index) => `picture-${index}-larger`));
+      expect(larger[1]!.steps.map(({ target }) => target)).toEqual(['picture-0-larger', 'picture-2-larger']);
+      expect(larger[2]!.steps.map(({ target }) => target)).toEqual(['picture-1-larger', 'picture-3-larger']);
+      expect(larger.map(({ position }) => position)).toEqual(['1 of 4', '2 of 4', '3 of 4', '4 of 4']);
+      expect(larger[2]!.caption).toBe(video.caption);
     });
 
-    it('gives a lone picture no controls to step and no place, and a gallery of one picture and a video none either', () => {
-      const lone = dialogs(render(withoutGallery));
+    it('gives a lone picture no controls to step and no place, and a picture and a video steps between the two', () => {
+      const [lone] = dialogs(render(withoutGallery));
       const withVideo = dialogs(render({ ...numisBook!, gallery: [numisBook!.gallery![0]!, video] }));
 
-      for (const [larger] of [lone, withVideo]) {
-        expect(larger!.steps).toEqual([]);
-        expect(larger!.position).toBeUndefined();
-        expect(larger!.labelledBy).toBe(larger!.captionId);
-      }
+      expect(lone!.steps).toEqual([]);
+      expect(lone!.position).toBeUndefined();
+      expect(lone!.labelledBy).toBe(lone!.captionId);
+      expect(withVideo.map(({ steps }) => steps.map(({ target }) => target))).toEqual([
+        ['picture-1-larger', 'picture-1-larger'],
+        ['picture-0-larger', 'picture-0-larger'],
+      ]);
+      expect(withVideo.map(({ position }) => position)).toEqual(['1 of 2', '2 of 2']);
     });
 
     // ADR-018: the view stays a Server Component, and the movement is the one thing in it that

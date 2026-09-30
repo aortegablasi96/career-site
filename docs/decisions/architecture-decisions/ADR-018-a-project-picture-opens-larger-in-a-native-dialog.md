@@ -4,6 +4,11 @@ Status: Accepted
 
 Date: 2026-09-29
 
+**Amended by ADR-022 (2026-09-30)**: `LargerPicture` now carries a gallery's video too, per DDR-089.
+The frame shows its still and the dialog the video, with `preload="none"` and
+`controlsList="nodownload"`. Script also pauses the video when its dialog closes and declines the
+browser's menu on it. Everything else here stands.
+
 **Amended by ADR-019 (2026-09-30)**: a gallery's larger picture now hands over to its neighbour's,
 per DDR-083. Each step control points at the neighbour's dialog with a command of the page's own,
 `--show-in-place`, and the neighbour's `LargerPicture` closes the open dialog, checks its own radio

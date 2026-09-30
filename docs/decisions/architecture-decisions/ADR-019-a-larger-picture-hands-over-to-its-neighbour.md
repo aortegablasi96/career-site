@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-30
 
+**Amended by ADR-022 (2026-09-30)**: the steps now reach a gallery's video, which opens larger in
+the same dialog, per DDR-089, so the view no longer passes over videos. Everything else here stands.
+
 **Amends ADR-018.** A gallery's larger picture can now show the picture before or after it in place,
 per DDR-083. Each step control points at its neighbour's dialog by `commandfor`, as the other
 controls point at theirs, with a command of the page's own, `--show-in-place`. The neighbour's
@@ -56,7 +59,7 @@ stands where focus was.**
 ### The view
 
 * **`ProjectView` stays a Server Component.** It works out each picture's neighbours among the
-  gallery's pictures, passing over videos, in a loop, and passes them to `LargerPicture` with the
+  gallery's pictures, passing over videos *(amended by ADR-022: every item is a step now)*, in a loop, and passes them to `LargerPicture` with the
   place ("3 of 7") and the controls' names.
 * **A lone picture gets no `steps`**, and `LargerPicture` renders its dialog as ADR-018 does.
 
