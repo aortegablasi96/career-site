@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { asset } from './asset';
 
 // ADR-004 routes every reference to a binary asset through asset(), so that it resolves under the
@@ -52,5 +52,21 @@ describe('asset', () => {
 
     expect(config).toContain(`basePath: process.env.${variable}`);
     expect(helper).toContain(`process.env.${variable}`);
+  });
+
+  // A Client Component calls the helper in the browser too, once a link renders its view there, and
+  // the browser has only the variables the build writes into its code. Without this, the larger
+  // picture's frame lost the base path after a link and 404ed on the live site alone (#261).
+  it('has next.config.ts write the base path into the browser’s code as well', async () => {
+    process.env[variable] = '/career-site';
+    vi.resetModules();
+    const deployed = (await import('../next.config')).default;
+
+    delete process.env[variable];
+    vi.resetModules();
+    const local = (await import('../next.config')).default;
+
+    expect(deployed.env).toEqual({ [variable]: '/career-site' });
+    expect(local.env).toEqual({ [variable]: '' });
   });
 });

@@ -9,8 +9,10 @@
  * `components/assets.test.ts` insists on it: the mistake is invisible on the machine that makes it.
  *
  * The variable is read here rather than captured at module scope so that the value is the one the
- * build was given. Every component on this site is a Server Component rendered during the export,
- * per ADR-001, so this resolves at build time and nothing reaches the browser but the finished path.
+ * build was given. A Server Component resolves it during the export. A Client Component, such as
+ * `components/larger-picture.tsx` (ADR-018), also renders in the browser when a link opens its view,
+ * so `next.config.ts` hands the variable to its `env` as well, and the build writes the path into
+ * the browser's code. Without that, the browser's value was empty and its pictures 404ed (#261).
  *
  * Paths themselves are data and live in `content/`, beside the alternative text they belong with,
  * per ADR-002. A component receives one as a prop and passes it through here.

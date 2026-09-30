@@ -128,8 +128,10 @@ The page itself is the CV, so what it prints is designed.
   gallery files), `experiences/<slug>/`, `education/<institution>/`. Moving a file changes its
   address. `public/**/*.png` and `public/**/media/` are gitignored for the owner's originals.
 * **Every binary `src`, `poster` and `href` goes through `app/asset.ts`**, so it resolves under
-  `PAGES_BASE_PATH`; `components/assets.test.ts` enforces it. A `next/link` href is a route and is
-  exempt. Internal links use `prefetch={false}`, or each view would prefetch every picture on the
+  `PAGES_BASE_PATH`; `components/assets.test.ts` enforces it. A Client Component renders in the
+  browser too, after a link, so `next.config.ts` hands the variable to `env` as well: without it
+  the browser's value is empty, and the pictures 404 on the live site only (#261). A `next/link`
+  href is a route and is exempt. Internal links use `prefetch={false}`, or each view would prefetch every picture on the
   page.
 * **Views are static routes** (`app/portfolio/[slug]`, `app/experience/[slug]`) with
   `generateStaticParams` and `dynamicParams = false`.
