@@ -119,13 +119,14 @@ The page itself is the CV, so what it prints is designed.
   the owner confirms PMI's written authorization.
 * **A project**: `summary` is its slogan, `description` and `howBuilt` are from the owner's
   knowledge base, `businessCase` holds the items and a PDF, `gallery` is `GalleryItem`s. A video
-  with speech needs a captions track, which the `Video` type does not carry yet (DDR-053).
+  has no sound track (DDR-087), and the suite fails on one that has: a video with sound needs the
+  captions track that the `Video` type does not carry yet (DDR-053).
 * **`content/cv.ts` carries a digest** that `content/cv.test.ts` checks against the content modules.
   A change to a fact ADR-005 lists fails the suite until the CV file is brought into step; the
   file is the owner's.
 * **`public/` is arranged by view**: `home/` (photo, CV), `portfolio/<slug>/` (`lead.webp` and
   gallery files), `experiences/<slug>/`, `education/<institution>/`. Moving a file changes its
-  address. `public/**/*.png` is gitignored for the owner's originals.
+  address. `public/**/*.png` and `public/**/media/` are gitignored for the owner's originals.
 * **Every binary `src`, `poster` and `href` goes through `app/asset.ts`**, so it resolves under
   `PAGES_BASE_PATH`; `components/assets.test.ts` enforces it. A `next/link` href is a route and is
   exempt. Internal links use `prefetch={false}`, or each view would prefetch every picture on the
@@ -255,6 +256,14 @@ The page itself is the CV, so what it prints is designed.
   NumisBook, more on the Digital Twin. An edge the capture added is trimmed before encoding: a
   transparent row or column, which would become a black line, and the pale line around the Digital
   Twin's page. The PNG originals in `media/` are gitignored.
+* **NumisBook's gallery and the Stock Portfolio Viewer's each end with a video** (#259, DDR-087,
+  ADR-020): the owner's recording, re-encoded by ADR-020's ffmpeg recipe at its own size, with no
+  sound track, as `gallery-walkthrough.mp4`, and its first frame as `gallery-walkthrough.webp`. The
+  recordings are in `media/`; ffmpeg is not in the repository. Before it is played a video takes
+  its shape from its poster, so **a poster must be its video's size**, or the frame jumps on play.
+  A video left playing plays on, out of sight, when another picture is chosen; that is decided,
+  and only for a video without sound. To check one locally, serve `out/` from a server that
+  answers byte ranges with 206, or the video plays but cannot be moved through.
 * **This site's gallery pictures are captures of the site itself** (#252), which the others are not:
   the live site in Chromium, in a window 1551×816 so that the page is 1536px wide beside its
   scrollbar, captured without the scrollbar at 1536×816. The page's five are its top and the place

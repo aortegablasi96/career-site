@@ -67,6 +67,9 @@ original is replaced, the new file is made the same way.
 The company and university logos are not covered by this decision. They stay at the size they are
 drawn (`docs/implementation-notes.md`). Gallery media is not covered either, because none exists yet.
 
+> **Read with ADR-020 (2026-09-30).** A gallery's pictures have been served at their originals' size
+> since #252, encoded the same way, and ADR-020 decides the same for a gallery's video.
+
 ### 2. The photo's budget is 200 KB
 
 The full-resolution photo is 149 KB. A budget of 150 KB would leave a replacement photo 1 KB of

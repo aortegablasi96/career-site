@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-29
 
+**Read with DDR-087 (2026-09-30)**: the first gallery videos are silent, stand last in their rows,
+and are not paused when another picture is chosen, which answers the first risk below.
+
 **Amended by DDR-082 (2026-09-29)**: the picture in the lead's frame, whichever the thumbnails
 chose, can be opened larger over the page, which Option A and "What choosing a thumbnail does"
 rejected. Choosing a thumbnail still shows its picture in the frame and opens nothing.
@@ -198,7 +201,7 @@ Tradeoffs:
 Risks:
 * **A video that is playing keeps playing when another picture is chosen**, out of sight, because
   nothing pauses it without script. No gallery video exists. The story that brings the first one
-  decides this, alongside its captions (DDR-053).
+  decides this, alongside its captions (DDR-053). *Decided by DDR-087, on #259.*
 * NumisBook's six pictures, supplied by the owner on #244, are the first real gallery. A gallery
   on another project is measured again when it lands.
 

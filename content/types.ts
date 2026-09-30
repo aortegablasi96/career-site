@@ -45,9 +45,9 @@ export interface Image {
  * A video this site carries, per ADR-004: one committed MP4, with a poster still beside it and
  * nothing fetched until someone presses play.
  *
- * The poster is a separate committed file rather than a frame pulled out of the video, because
- * ADR-004 rules out an image pipeline, and because DDR-010 prints the poster where the video
- * element itself cannot go.
+ * The poster is a separate committed file, made once from the video's first frame (DDR-087), rather
+ * than a frame pulled out of the video as the site is built, because ADR-004 rules out an image
+ * pipeline, and because DDR-010 prints the poster where the video element itself cannot go.
  */
 export interface Video {
   /** Where the file sits, as a path from the site's root, reached through `asset()` as an image is. */
@@ -77,9 +77,10 @@ export type ProjectMedia = Image | Video;
  * sighted reader is told; the media's own `alt` or `description` still describes it in full, so it
  * adds nothing the alternative text does not already say.
  *
- * A video with speech carries a captions track before it may land, per DDR-053 and WCAG 1.2. No
- * gallery video exists yet, so `Video` has no field for one: the story that brings the first video
- * adds it, rather than the site shipping a shape nothing fills.
+ * A video with speech carries a captions track before it may land, per DDR-053 and WCAG 1.2. The
+ * videos the site carries are silent recordings, per DDR-087, so `Video` has no field for one: the
+ * first video with sound adds it, rather than the site shipping a shape nothing fills. Until then
+ * `components/project-view.test.tsx` holds every video to having no sound track at all.
  */
 export interface GalleryItem {
   media: ProjectMedia;
