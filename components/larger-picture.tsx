@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, type KeyboardEvent } from 'react';
 import { asset } from '@/app/asset';
-import type { Image, PixelSize } from '@/content/types';
+import type { ProjectMedia } from '@/content/types';
 import { Icon } from './icon';
 import styles from './larger-picture.module.css';
 
@@ -103,6 +103,40 @@ export function swap(
   }
 }
 
+/** Which step control an arrow key presses, per DDR-083. */
+export type Way = 'before' | 'after';
+
+/**
+ * The step an arrow key takes, per DDR-083: the left arrow the one before, the right arrow the one
+ * after. A key held with a modifier is the browser's, and a key pressed on the video is the video's,
+ * which moves through it with the arrows, per DDR-089.
+ */
+export function stepKey(event: {
+  key: string;
+  altKey: boolean;
+  ctrlKey: boolean;
+  metaKey: boolean;
+  shiftKey: boolean;
+  target: EventTarget | { localName?: string } | null;
+}): Way | null {
+  if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
+    return null;
+  }
+  if (event.target && 'localName' in event.target && event.target.localName === 'video') {
+    return null;
+  }
+
+  return event.key === 'ArrowLeft' ? 'before' : event.key === 'ArrowRight' ? 'after' : null;
+}
+
+/**
+ * Declines the browser's own menu on a video, which offers to save its file, per DDR-089 and
+ * ADR-022. Without script the menu is offered, and Firefox always offers it with Shift held.
+ */
+export function withhold(event: { preventDefault: () => void }): void {
+  event.preventDefault();
+}
+
 /** The steps between a gallery's pictures, per DDR-083, which a lone picture does not have. */
 export interface Steps {
   /** The identifier of this picture's radio, which chooses it for the frame. */
@@ -110,7 +144,7 @@ export interface Steps {
   /** The larger pictures before and after this one. */
   previous: string;
   next: string;
-  /** Where the picture stands among the gallery's: "3 of 7". */
+  /** Where the picture stands among the gallery's items: "3 of 7". */
   position: string;
   /** The two controls' accessible names. */
   previousName: string;
@@ -150,6 +184,12 @@ export interface Steps {
  *
  * It is the file the frame already shows, so opening it fetches nothing.
  *
+ * A video opens the same way, per DDR-089 and ADR-022: the frame shows its still, which is its
+ * poster, and the dialog shows the video with the browser's controls, waiting for the reader to
+ * play it. It fetches nothing until they do, per ADR-004, and closing the dialog pauses it. Its
+ * controls offer no download in Chrome and Edge, and the browser's menu on it, which offers to save
+ * it, is declined. Without script the menu is offered, and closing does not pause it.
+ *
  * Both pictures stand in the view's box, per DDR-088: the frame is the box, with the class the view
  * gives it, and the picture is as wide as it and centred in it; larger, the box is as large as the
  * room allows at its shape, and the picture is as wide as that. The view says what the box is. Each
@@ -164,7 +204,7 @@ export function LargerPicture({
   className,
   steps,
 }: {
-  media: Image & PixelSize;
+  media: ProjectMedia;
   caption: string;
   /** The larger picture's identifier, unique within the view. */
   id: string;
@@ -177,7 +217,7 @@ export function LargerPicture({
   steps?: Steps;
 }) {
   const framed = useRef<HTMLImageElement>(null);
-  const larger = useRef<HTMLImageElement>(null);
+  const larger = useRef<HTMLImageElement & HTMLVideoElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
 
   const opener = useRef<HTMLButtonElement>(null);
@@ -188,12 +228,8 @@ export function LargerPicture({
   // The arrow keys step too, as they step between the gallery's radios, per DDR-083, by pressing
   // the control that steps that way.
   function onKeyDown(event: KeyboardEvent) {
-    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
-      return;
-    }
-
-    const control =
-      event.key === 'ArrowLeft' ? before.current : event.key === 'ArrowRight' ? after.current : null;
+    const way = stepKey(event);
+    const control = way === 'before' ? before.current : way === 'after' ? after.current : null;
 
     if (control) {
       event.preventDefault();
@@ -262,14 +298,28 @@ export function LargerPicture({
       glide(start, large!, small!, () => box!.close(), root, 'closing');
     }
 
+    // However the dialog closes, a video in it stops, per DDR-089, and plays on from there when the
+    // reader opens it again and presses play.
+    function onClose() {
+      if (large instanceof HTMLVideoElement) {
+        large.pause();
+      }
+    }
+
     box.addEventListener('command', onCommand);
     box.addEventListener('cancel', onCancel);
+    box.addEventListener('close', onClose);
 
     return () => {
       box.removeEventListener('command', onCommand);
       box.removeEventListener('cancel', onCancel);
+      box.removeEventListener('close', onClose);
     };
   }, [choice]);
+
+  // A video's still is its poster, described by the video's description, per DDR-089.
+  const still = 'poster' in media ? { src: media.poster, alt: media.description } : { src: media.file, alt: media.alt };
+  const video = 'poster' in media ? media : undefined;
 
   return (
     <>
@@ -277,8 +327,8 @@ export function LargerPicture({
         <img
           ref={framed}
           className={styles.framed}
-          src={asset(media.file)}
-          alt={media.alt}
+          src={asset(still.src)}
+          alt={still.alt}
           width={media.width}
           height={media.height}
         />
@@ -310,14 +360,32 @@ export function LargerPicture({
           <Icon name="close" />
         </button>
         <div className={styles.room}>
-          <img
-            ref={larger}
-            className={styles.picture}
-            src={asset(media.file)}
-            alt={media.alt}
-            width={media.width}
-            height={media.height}
-          />
+          {video ? (
+            <video
+              ref={larger}
+              className={styles.picture}
+              src={asset(video.file)}
+              poster={asset(video.poster)}
+              width={media.width}
+              height={media.height}
+              preload="none"
+              controls
+              controlsList="nodownload"
+              aria-label={video.description}
+              onContextMenu={withhold}
+            >
+              {video.description}
+            </video>
+          ) : (
+            <img
+              ref={larger}
+              className={styles.picture}
+              src={asset(still.src)}
+              alt={still.alt}
+              width={media.width}
+              height={media.height}
+            />
+          )}
         </div>
         {steps ? (
           <div className={styles.foot}>

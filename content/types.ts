@@ -47,12 +47,12 @@ export interface Image {
  *
  * The poster is a separate committed file, made once from the video's first frame (DDR-087), rather
  * than a frame pulled out of the video as the site is built, because ADR-004 rules out an image
- * pipeline, and because DDR-010 prints the poster where the video element itself cannot go.
+ * pipeline. A view's frame shows it, and opens the video larger to be played there, per DDR-089.
  */
 export interface Video {
   /** Where the file sits, as a path from the site's root, reached through `asset()` as an image is. */
   file: string;
-  /** The still shown before the video is played, and what prints, per DDR-010. Also a path. */
+  /** The still shown before the video is played, in the frame and larger, per DDR-089. Also a path. */
   poster: string;
   /**
    * What the video shows, for a reader who does not watch it. It is the video's accessible name as

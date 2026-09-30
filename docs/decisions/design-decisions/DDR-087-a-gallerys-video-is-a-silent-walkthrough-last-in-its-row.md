@@ -4,6 +4,11 @@ Status: Accepted
 
 Date: 2026-09-30
 
+**Amended by DDR-089 (2026-09-30)**: the video no longer plays in the frame. The frame shows its
+still, which opens the video larger, as a picture opens, and the steps reach it. Closing it pauses
+it where the page has script, and nothing the video offers downloads it. Everything else here stands:
+its place, its still, its name, its description, its silence and its thumbnail.
+
 **Answers what DDR-053, DDR-081 and DDR-084 left to the story that brings the first video**, and
 amends DDR-053 in one respect: the captions track arrives with the first video that has sound, not
 with the first video. Everything else those records decide stands: a video is a gallery item like
@@ -57,7 +62,8 @@ owner's to change.
   has, `components/project-view.test.tsx` fails if any video the site carries has a sound track. The
   first video with sound adds the field, the `<track kind="captions">` and its own check, as DDR-053
   asks, and changes this one.
-* **Nothing pauses it when another picture is chosen.** ADR-017 stands, and the view gains no
+* **Nothing pauses it when another picture is chosen.** *(Amended by DDR-089: it plays only larger,
+  and closing it pauses it where the page has script.)* ADR-017 stands, and the view gains no
   script. A silent video playing out of sight is heard by no one. It costs the reader their place:
   the video plays on, and may have ended when they come back to it.
 * **No mark on its thumbnail says it is a video.** The design draws a play mark on its placeholder,

@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-29
 
+**Amended by DDR-089 (2026-09-30)**: a video in the frame now opens larger too, as the owner asked on
+#265. Its own controls offer full screen only once it is playing, so "Only pictures" below no longer
+holds. Everything else here stands.
+
 **Amended by DDR-088 (2026-09-30)**: the control that opens the picture larger stands at the lower
 right corner of the view's box, which is its target, rather than the picture's; and larger, every
 picture of a view is shown at one width, in the same box as large as the window allows, never wider
@@ -46,6 +50,9 @@ is on the view where they were.**
   one shown.
 * **Only pictures.** A video's own controls offer full screen, so a video in the frame carries no
   control.
+
+  > **Amended by DDR-089.** A video's controls offer full screen only once it is playing, so a
+  > video in the frame now shows its still with the same control, and opens larger as a picture does.
 * **The file the frame already shows**, so opening it fetches nothing.
 
 ### The control that opens it

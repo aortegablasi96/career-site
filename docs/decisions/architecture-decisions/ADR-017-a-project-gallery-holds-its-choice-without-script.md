@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-29
 
+**Amended by ADR-022 (2026-09-30)**: a gallery's video no longer plays in the frame. It plays only
+in the larger picture's dialog, which pauses it as it closes where the page has script, per DDR-089.
+The gallery's choice is still held without script.
+
 **Amended by ADR-018 (2026-09-29)**: DDR-082 now opens the picture in the frame larger, as a
 native modal dialog opened by the Invoker Commands API, without script; a third Client Component,
 `LargerPicture`, only moves the picture as it opens and closes. The gallery's choice is still held
@@ -113,7 +117,8 @@ Tradeoffs:
 Risks:
 * **Without script, nothing pauses a video that is playing when another picture is chosen.** No
   gallery video exists. If the first one needs this, it is a reason for script, and a new record.
-  *DDR-087: the first two are silent and do not need it. A video with sound would.*
+  *DDR-087: the first two are silent and do not need it. A video with sound would.* *ADR-022: a
+  video now plays only in its larger dialog, and closing that pauses it where the page has script.*
 * A browser may restore the checked radio when the reader returns to a view through the history.
 
 ## Related Documents

@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import { glide, LargerPicture, moves, movingName, swap, swapCommand } from './larger-picture';
+import { glide, LargerPicture, moves, movingName, stepKey, swap, swapCommand, withhold } from './larger-picture';
 
 // DDR-082 and ADR-018, on #246: the picture in a project view's lead frame opens larger in a native
 // modal dialog, opened and closed by its buttons' commands without script, and where the reader
@@ -52,6 +52,24 @@ const stepping = renderToStaticMarkup(
       previousName: 'Previous picture',
       nextName: 'Next picture',
     }}
+  />,
+);
+
+/** A gallery's video, per DDR-089: its still in the frame, the video larger. */
+const video = renderToStaticMarkup(
+  <LargerPicture
+    media={{
+      file: '/portfolio/example/gallery-walkthrough.mp4',
+      poster: '/portfolio/example/gallery-walkthrough.webp',
+      width: 1920,
+      height: 1080,
+      description: 'A silent walkthrough of the application',
+    }}
+    caption="Video walkthrough"
+    id="picture-6-larger"
+    enlarge="View larger"
+    close="Close"
+    className="media"
   />,
 );
 
@@ -255,6 +273,65 @@ describe('LargerPicture', () => {
       );
 
       expect(seen).toEqual(['showModal']);
+    });
+  });
+
+  // DDR-089 and ADR-022, on #265: a video opens larger as a picture does, and plays only there.
+  describe('a video', () => {
+    it('shows its still in the frame, described in the video’s words, with the control that opens it', () => {
+      expect(video).toMatch(
+        /<div class="[^" ]+ media"><img class="[^"]*" src="\/portfolio\/example\/gallery-walkthrough\.webp" alt="A silent walkthrough of the application" width="1920" height="1080"\/><button type="button" class="[^"]*" commandfor="picture-6-larger" command="show-modal" aria-label="View larger">/,
+      );
+    });
+
+    it('shows the video larger, with its controls and no download, fetching nothing until it is played', () => {
+      expect(video).toMatch(
+        /<\/button><div class="[^"]*"><video class="[^"]*" src="\/portfolio\/example\/gallery-walkthrough\.mp4" poster="\/portfolio\/example\/gallery-walkthrough\.webp" width="1920" height="1080" preload="none" controls="" controlsList="nodownload" aria-label="A silent walkthrough of the application">A silent walkthrough of the application<\/video><\/div><p id="picture-6-larger-caption" class="[^"]*">Video walkthrough<\/p><\/dialog>$/,
+      );
+      expect(video).not.toMatch(/\bautoplay\b|\bloop\b/);
+      expect(video.match(/<video/g)).toHaveLength(1);
+    });
+
+    it('declines the browser’s menu on the video, which offers to save it', () => {
+      let declined = false;
+
+      withhold({ preventDefault: () => (declined = true) });
+      expect(declined).toBe(true);
+    });
+
+    // The pause is the dialog's `close` listener, which a static render cannot reach; the source
+    // holds it, and the Tester's browser check on #265 plays and closes it.
+    it('pauses the video whenever its dialog closes', () => {
+      const source = readFileSync(new URL('./larger-picture.tsx', import.meta.url), 'utf8');
+
+      expect(source).toMatch(/function onClose\(\) \{\s*if \(large instanceof HTMLVideoElement\) \{\s*large\.pause\(\);/);
+      expect(source).toContain("box.addEventListener('close', onClose);");
+      expect(source).toContain("box.removeEventListener('close', onClose);");
+    });
+  });
+
+  // DDR-083: the arrow keys step, as they step between the gallery's radios. DDR-089: on the video
+  // they are the video's.
+  describe('the arrow keys', () => {
+    const key = (name: string, more: Partial<Parameters<typeof stepKey>[0]> = {}) =>
+      stepKey({ key: name, altKey: false, ctrlKey: false, metaKey: false, shiftKey: false, target: null, ...more });
+
+    it('step before with the left arrow and after with the right, and do nothing else', () => {
+      expect(key('ArrowLeft')).toBe('before');
+      expect(key('ArrowRight')).toBe('after');
+      expect(key('ArrowUp')).toBeNull();
+      expect(key('Enter')).toBeNull();
+    });
+
+    it('leave a key held with a modifier to the browser', () => {
+      for (const modifier of ['altKey', 'ctrlKey', 'metaKey', 'shiftKey'] as const) {
+        expect(key('ArrowRight', { [modifier]: true })).toBeNull();
+      }
+    });
+
+    it('leave a key pressed on the video to the video, which moves through it', () => {
+      expect(key('ArrowRight', { target: { localName: 'video' } })).toBeNull();
+      expect(key('ArrowRight', { target: { localName: 'button' } })).toBe('after');
     });
   });
 
