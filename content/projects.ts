@@ -72,7 +72,7 @@ export const projects: Projects = {
     {
       name: 'NumisBook',
       slug: 'numisbook',
-      media: { file: '/portfolio/numisbook/lead.webp', alt: 'NumisBook on a laptop, showing a coin’s record: the details of a silver tetradrachm of Mark Antony and Cleopatra beside its photograph, with the coin’s invoice below the photograph' },
+      media: { file: '/portfolio/numisbook/lead.webp', width: 1536, height: 1024, alt: 'NumisBook on a laptop, showing a coin’s record: the details of a silver tetradrachm of Mark Antony and Cleopatra beside its photograph, with the coin’s invoice below the photograph' },
       caption: 'A coin’s record',
       // The owner's pictures of the application's window, in the order of its navigation. On #252
       // they replaced the mockups #244 supplied, and the coin's record is there in both themes. Each
@@ -80,31 +80,31 @@ export const projects: Projects = {
       // screen shows.
       gallery: [
         {
-          media: { file: '/portfolio/numisbook/gallery-dashboard.webp', alt: 'NumisBook’s window, showing its dashboard: the number of collections and coins and the total paid, above links to the collections and the portfolio and the most recent acquisitions, each with both faces of its coin and its price' },
+          media: { file: '/portfolio/numisbook/gallery-dashboard.webp', width: 1911, height: 909, alt: 'NumisBook’s window, showing its dashboard: the number of collections and coins and the total paid, above links to the collections and the portfolio and the most recent acquisitions, each with both faces of its coin and its price' },
           caption: 'The dashboard',
         },
         {
-          media: { file: '/portfolio/numisbook/gallery-collections.webp', alt: 'NumisBook’s window, showing the collections, Spanish Empire and Roman Republic, Imperatorial & Empire, each as a card with a photograph of one of its coins' },
+          media: { file: '/portfolio/numisbook/gallery-collections.webp', width: 1917, height: 877, alt: 'NumisBook’s window, showing the collections, Spanish Empire and Roman Republic, Imperatorial & Empire, each as a card with a photograph of one of its coins' },
           caption: 'The collections',
         },
         {
-          media: { file: '/portfolio/numisbook/gallery-coin-list.webp', alt: 'NumisBook’s window in its dark theme, showing the coins of the Roman Republic, Imperatorial & Empire collection in a table, below a search and filters for metal, category, denomination, mint, grade and year' },
+          media: { file: '/portfolio/numisbook/gallery-coin-list.webp', width: 1919, height: 907, alt: 'NumisBook’s window in its dark theme, showing the coins of the Roman Republic, Imperatorial & Empire collection in a table, below a search and filters for metal, category, denomination, mint, grade and year' },
           caption: 'A collection’s coins',
         },
         {
-          media: { file: '/portfolio/numisbook/gallery-coin-view.webp', alt: 'NumisBook’s window in its dark theme, showing a coin’s record: a silver denarius of Brutus with its details, description, catalogue references and provenance, beside its photograph and its invoice' },
+          media: { file: '/portfolio/numisbook/gallery-coin-view.webp', width: 1913, height: 908, alt: 'NumisBook’s window in its dark theme, showing a coin’s record: a silver denarius of Brutus with its details, description, catalogue references and provenance, beside its photograph and its invoice' },
           caption: 'A denarius of Brutus',
         },
         {
-          media: { file: '/portfolio/numisbook/gallery-coin-view-light.webp', alt: 'NumisBook’s window in its light theme, showing a coin’s record: a silver tetradrachm of Mark Antony and Cleopatra with its details, description, catalogue references and price, beside its photograph and its invoice' },
+          media: { file: '/portfolio/numisbook/gallery-coin-view-light.webp', width: 1529, height: 688, alt: 'NumisBook’s window in its light theme, showing a coin’s record: a silver tetradrachm of Mark Antony and Cleopatra with its details, description, catalogue references and price, beside its photograph and its invoice' },
           caption: 'A tetradrachm of Mark Antony and Cleopatra',
         },
         {
-          media: { file: '/portfolio/numisbook/gallery-portfolio.webp', alt: 'NumisBook’s window in its dark theme, showing the portfolio: the total paid, a chart of the acquisition cost over time, and a bar chart splitting each coin’s cost into hammer price, premium, tax and shipping' },
+          media: { file: '/portfolio/numisbook/gallery-portfolio.webp', width: 1914, height: 903, alt: 'NumisBook’s window in its dark theme, showing the portfolio: the total paid, a chart of the acquisition cost over time, and a bar chart splitting each coin’s cost into hammer price, premium, tax and shipping' },
           caption: 'The portfolio',
         },
         {
-          media: { file: '/portfolio/numisbook/gallery-settings.webp', alt: 'NumisBook’s window, showing the settings: the profile’s display name, with its email blacked out, the language, theme and base currency, and a danger zone for deleting the account' },
+          media: { file: '/portfolio/numisbook/gallery-settings.webp', width: 1916, height: 907, alt: 'NumisBook’s window, showing the settings: the profile’s display name, with its email blacked out, the language, theme and base currency, and a danger zone for deleting the account' },
           caption: 'The settings',
         },
         // The owner's recording of the application, supplied on #259, last in the gallery, per
@@ -114,6 +114,8 @@ export const projects: Projects = {
           media: {
             file: '/portfolio/numisbook/gallery-walkthrough.mp4',
             poster: '/portfolio/numisbook/gallery-walkthrough.webp',
+            width: 1918,
+            height: 906,
             description: 'A silent screen recording of NumisBook, a minute long. From the sign-in page it enters the demo collection and goes through the dashboard, the collections, the coins of one collection, the record of a tetradrachm of Mark Antony and Cleopatra with its photographs, the portfolio’s charts and the settings, where the theme changes to dark and back. It ends with the assistant answering what it can do.',
           },
           caption: 'Video walkthrough',
@@ -173,18 +175,18 @@ export const projects: Projects = {
     {
       name: 'Digital Twin',
       slug: 'digital-twin',
-      media: { file: '/portfolio/digital-twin/lead.webp', alt: 'The Digital Twin on a laptop, as Andreu’s AI assistant in a chat, introducing itself and answering a question about Andreu’s AI expertise' },
+      media: { file: '/portfolio/digital-twin/lead.webp', width: 1536, height: 1024, alt: 'The Digital Twin on a laptop, as Andreu’s AI assistant in a chat, introducing itself and answering a question about Andreu’s AI expertise' },
       caption: 'The chatbot answering a question',
       // The owner's pictures of the chatbot in the two places it answers, supplied on #252: its own
       // page first, then Telegram. Each is the window as the owner captured it, within the pale line
       // the capture drew around it. Each description says only what its screen shows.
       gallery: [
         {
-          media: { file: '/portfolio/digital-twin/gallery-chat.webp', alt: 'The Digital Twin’s own page, showing a chat with Andreu Ortega’s AI assistant: it introduces itself, then answers a question about its AI expertise with a list that covers generative AI, agentic AI and AI projects' },
+          media: { file: '/portfolio/digital-twin/gallery-chat.webp', width: 1276, height: 603, alt: 'The Digital Twin’s own page, showing a chat with Andreu Ortega’s AI assistant: it introduces itself, then answers a question about its AI expertise with a list that covers generative AI, agentic AI and AI projects' },
           caption: 'The chatbot on its own page',
         },
         {
-          media: { file: '/portfolio/digital-twin/gallery-telegram.webp', alt: 'The Digital Twin in Telegram, as the bot Andreu’s Career Bot: it introduces itself as the AI career assistant for Andreu Ortega and suggests four questions, then begins to answer which kinds of roles fit his experience' },
+          media: { file: '/portfolio/digital-twin/gallery-telegram.webp', width: 1280, height: 768, alt: 'The Digital Twin in Telegram, as the bot Andreu’s Career Bot: it introduces itself as the AI career assistant for Andreu Ortega and suggests four questions, then begins to answer which kinds of roles fit his experience' },
           caption: 'The chatbot in Telegram',
         },
       ],
@@ -258,26 +260,26 @@ export const projects: Projects = {
     {
       name: 'Stock Portfolio Viewer',
       slug: 'stock-portfolio-viewer',
-      media: { file: '/portfolio/stock-portfolio-viewer/lead.webp', alt: 'The Stock Portfolio Viewer on a laptop, showing its Allocation view: the invested value, the number of positions and the largest holding, above a map of Europe with donut charts for each country' },
+      media: { file: '/portfolio/stock-portfolio-viewer/lead.webp', width: 1536, height: 1024, alt: 'The Stock Portfolio Viewer on a laptop, showing its Allocation view: the invested value, the number of positions and the largest holding, above a map of Europe with donut charts for each country' },
       caption: 'The Allocation view',
       // The owner's pictures of the application's other views, supplied on #252, in the order of
       // its navigation. Each is the application's window as the owner captured it, wider than the
       // lead's 3:2. Each description says only what its view shows.
       gallery: [
         {
-          media: { file: '/portfolio/stock-portfolio-viewer/gallery-portfolio.webp', alt: 'The Stock Portfolio Viewer’s window, showing its Portfolio view: the net liquidation value, the cash and the holdings’ value, above a table of the holdings with each one’s quantity, price, market value, weight and unrealised profit or loss' },
+          media: { file: '/portfolio/stock-portfolio-viewer/gallery-portfolio.webp', width: 1535, height: 812, alt: 'The Stock Portfolio Viewer’s window, showing its Portfolio view: the net liquidation value, the cash and the holdings’ value, above a table of the holdings with each one’s quantity, price, market value, weight and unrealised profit or loss' },
           caption: 'The Portfolio view',
         },
         {
-          media: { file: '/portfolio/stock-portfolio-viewer/gallery-dividends.webp', alt: 'The Stock Portfolio Viewer’s window, showing its Dividends view: the gross income, the withholding tax and the net income, above the upcoming dividends and a bar chart of the gross income and the withholding tax over time' },
+          media: { file: '/portfolio/stock-portfolio-viewer/gallery-dividends.webp', width: 1535, height: 813, alt: 'The Stock Portfolio Viewer’s window, showing its Dividends view: the gross income, the withholding tax and the net income, above the upcoming dividends and a bar chart of the gross income and the withholding tax over time' },
           caption: 'The Dividends view',
         },
         {
-          media: { file: '/portfolio/stock-portfolio-viewer/gallery-trades.webp', alt: 'The Stock Portfolio Viewer’s window, showing its Trades view: the realised profit or loss, short-term and long-term, and the unrealised, above a table of the realised gains by ticker beside the best and the worst of them, and the start of the trade history' },
+          media: { file: '/portfolio/stock-portfolio-viewer/gallery-trades.webp', width: 1535, height: 814, alt: 'The Stock Portfolio Viewer’s window, showing its Trades view: the realised profit or loss, short-term and long-term, and the unrealised, above a table of the realised gains by ticker beside the best and the worst of them, and the start of the trade history' },
           caption: 'The Trades view',
         },
         {
-          media: { file: '/portfolio/stock-portfolio-viewer/gallery-assistant.webp', alt: 'The Stock Portfolio Viewer’s window, showing its Assistant view: the investor profile, with the tags of an investing style and targets for currency exposure and sector weight, beside a chat in which the assistant answers whether the portfolio is over-concentrated in any single currency' },
+          media: { file: '/portfolio/stock-portfolio-viewer/gallery-assistant.webp', width: 1535, height: 815, alt: 'The Stock Portfolio Viewer’s window, showing its Assistant view: the investor profile, with the tags of an investing style and targets for currency exposure and sector weight, beside a chat in which the assistant answers whether the portfolio is over-concentrated in any single currency' },
           caption: 'The Assistant view',
         },
         // The owner's recording of the application, supplied on #259 and held as NumisBook's is.
@@ -285,6 +287,8 @@ export const projects: Projects = {
           media: {
             file: '/portfolio/stock-portfolio-viewer/gallery-walkthrough.mp4',
             poster: '/portfolio/stock-portfolio-viewer/gallery-walkthrough.webp',
+            width: 1920,
+            height: 1018,
             description: 'A silent screen recording of the Stock Portfolio Viewer, a minute and a half long. It goes through the views in turn: the Portfolio view’s holdings, the Performance view’s charts over two periods, the Allocation view’s map and its tables by sector, country and currency, the Dividends view’s income over time, and the Trades view’s realised gains and trade history. It ends in the Assistant view, where the investor profile is opened and the assistant answers whether the portfolio is over-concentrated in any single currency.',
           },
           caption: 'Video walkthrough',
@@ -346,7 +350,7 @@ export const projects: Projects = {
     {
       name: 'This site',
       slug: 'career-site',
-      media: { file: '/portfolio/career-site/lead.webp', alt: 'This site on a laptop, showing its introduction: the owner’s photo, name, positioning line and summary, above the contact and CV controls' },
+      media: { file: '/portfolio/career-site/lead.webp', width: 1536, height: 1024, alt: 'This site on a laptop, showing its introduction: the owner’s photo, name, positioning line and summary, above the contact and CV controls' },
       caption: 'The introduction',
       // Pictures of the site's own window, which the owner asked on #252 to have made from the site
       // itself, as its first picture was on #63: the page from its top to its end, as its contents
@@ -354,31 +358,31 @@ export const projects: Projects = {
       // 816, as the live site drew it on 2026-09-30. Each description says only what its screen shows.
       gallery: [
         {
-          media: { file: '/portfolio/career-site/gallery-introduction.webp', alt: 'This site’s window, showing its introduction: the owner’s photo beside a greeting, the name, the positioning line, the location and the summary, above the contact and CV controls and the start of the experience timeline' },
+          media: { file: '/portfolio/career-site/gallery-introduction.webp', width: 1536, height: 816, alt: 'This site’s window, showing its introduction: the owner’s photo beside a greeting, the name, the positioning line, the location and the summary, above the contact and CV controls and the start of the experience timeline' },
           caption: 'The introduction',
         },
         {
-          media: { file: '/portfolio/career-site/gallery-experience.webp', alt: 'This site’s window, showing its experience: five roles as cards along a timeline, each under its dates, with its company’s logo, the job title and the place, above the start of the portfolio' },
+          media: { file: '/portfolio/career-site/gallery-experience.webp', width: 1536, height: 816, alt: 'This site’s window, showing its experience: five roles as cards along a timeline, each under its dates, with its company’s logo, the job title and the place, above the start of the portfolio' },
           caption: 'The experience timeline',
         },
         {
-          media: { file: '/portfolio/career-site/gallery-portfolio.webp', alt: 'This site’s window, showing its portfolio: the cards of NumisBook and the Digital Twin, each with a picture of the application on a laptop, its name, one sentence and its technologies, above the top of the next two cards' },
+          media: { file: '/portfolio/career-site/gallery-portfolio.webp', width: 1536, height: 816, alt: 'This site’s window, showing its portfolio: the cards of NumisBook and the Digital Twin, each with a picture of the application on a laptop, its name, one sentence and its technologies, above the top of the next two cards' },
           caption: 'The portfolio',
         },
         {
-          media: { file: '/portfolio/career-site/gallery-skills.webp', alt: 'This site’s window, showing its skills in four groups, product and delivery, AI, data and IoT, and tools, each listing its skills by level: advanced, proficient or basic' },
+          media: { file: '/portfolio/career-site/gallery-skills.webp', width: 1536, height: 816, alt: 'This site’s window, showing its skills in four groups, product and delivery, AI, data and IoT, and tools, each listing its skills by level: advanced, proficient or basic' },
           caption: 'The skills',
         },
         {
-          media: { file: '/portfolio/career-site/gallery-education.webp', alt: 'This site’s window, showing the end of the page: two degrees and two certifications as cards along a timeline, the four languages with their levels, and the footer with the contact addresses' },
+          media: { file: '/portfolio/career-site/gallery-education.webp', width: 1536, height: 816, alt: 'This site’s window, showing the end of the page: two degrees and two certifications as cards along a timeline, the four languages with their levels, and the footer with the contact addresses' },
           caption: 'Education and languages',
         },
         {
-          media: { file: '/portfolio/career-site/gallery-project-view.webp', alt: 'This site’s window, showing a project’s view, NumisBook’s: its name, a switch between the overview and the business case, its description, how it was built, its technologies and its links, beside a picture of the application above a row of thumbnails' },
+          media: { file: '/portfolio/career-site/gallery-project-view.webp', width: 1536, height: 816, alt: 'This site’s window, showing a project’s view, NumisBook’s: its name, a switch between the overview and the business case, its description, how it was built, its technologies and its links, beside a picture of the application above a row of thumbnails' },
           caption: 'A project’s view',
         },
         {
-          media: { file: '/portfolio/career-site/gallery-role-view.webp', alt: 'This site’s window, showing a role’s view, the current one at ABB: the company, the dates and the place above the job title, then four numbered responsibilities and achievements' },
+          media: { file: '/portfolio/career-site/gallery-role-view.webp', width: 1536, height: 816, alt: 'This site’s window, showing a role’s view, the current one at ABB: the company, the dates and the place above the job title, then four numbered responsibilities and achievements' },
           caption: 'A role’s view',
         },
       ],

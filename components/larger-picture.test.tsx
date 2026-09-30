@@ -26,7 +26,7 @@ const rule = (sheet: string, selector: string) =>
 
 const html = renderToStaticMarkup(
   <LargerPicture
-    media={{ file: '/portfolio/example/lead.webp', alt: 'The application on a laptop' }}
+    media={{ file: '/portfolio/example/lead.webp', width: 1536, height: 1024, alt: 'The application on a laptop' }}
     caption="The dashboard"
     id="picture-larger"
     enlarge="View larger"
@@ -38,7 +38,7 @@ const html = renderToStaticMarkup(
 /** The same picture as the third of a gallery's seven, per DDR-083. */
 const stepping = renderToStaticMarkup(
   <LargerPicture
-    media={{ file: '/portfolio/example/lead.webp', alt: 'The application on a laptop' }}
+    media={{ file: '/portfolio/example/lead.webp', width: 1536, height: 1024, alt: 'The application on a laptop' }}
     caption="The dashboard"
     id="picture-2-larger"
     enlarge="View larger"
@@ -56,15 +56,17 @@ const stepping = renderToStaticMarkup(
 );
 
 describe('LargerPicture', () => {
-  it('draws the frame’s picture with the view’s class, and the control that opens it, before hydration', () => {
+  // DDR-088, on #263: the frame is the view's box, and each picture carries its own size, so its
+  // place holds its shape before its file arrives.
+  it('makes the frame the view’s box, with the picture and the control that opens it inside, before hydration', () => {
     expect(html).toMatch(
-      /<div class="[^"]*"><img class="media" src="\/portfolio\/example\/lead\.webp" alt="The application on a laptop"\/><button type="button" class="[^"]*" commandfor="picture-larger" command="show-modal" aria-label="View larger">/,
+      /<div class="[^" ]+ media"><img class="[^"]*" src="\/portfolio\/example\/lead\.webp" alt="The application on a laptop" width="1536" height="1024"\/><button type="button" class="[^"]*" commandfor="picture-larger" command="show-modal" aria-label="View larger">/,
     );
   });
 
   it('renders the dialog closed, named by its caption, with its close control first', () => {
     expect(html).toMatch(
-      /<dialog id="picture-larger" class="[^"]*" aria-labelledby="picture-larger-caption"><button type="button" class="[^"]*" commandfor="picture-larger" command="close" aria-label="Close">[\s\S]*?<\/button><img class="[^"]*" src="\/portfolio\/example\/lead\.webp" alt="The application on a laptop"\/><p id="picture-larger-caption" class="[^"]*">The dashboard<\/p><\/dialog>$/,
+      /<dialog id="picture-larger" class="[^"]*" aria-labelledby="picture-larger-caption"><button type="button" class="[^"]*" commandfor="picture-larger" command="close" aria-label="Close">[\s\S]*?<\/button><div class="[^"]*"><img class="[^"]*" src="\/portfolio\/example\/lead\.webp" alt="The application on a laptop" width="1536" height="1024"\/><\/div><p id="picture-larger-caption" class="[^"]*">The dashboard<\/p><\/dialog>$/,
     );
     expect(html).not.toMatch(/<dialog[^>]* open/);
   });
@@ -80,12 +82,43 @@ describe('LargerPicture', () => {
     expect(rule(css, '.caption')).toContain('position: relative');
   });
 
-  it('shows the picture whole, within the room there is, never cropped or stretched', () => {
-    const picture = rule(css, '.picture');
+  // DDR-088: in the frame, the picture is as wide as the box, which is the view's tallest shape, and
+  // centred in it, with the control at the box's corner rather than the picture's.
+  it('stands the picture whole in the box, centred, with the control at the box’s lower right corner', () => {
+    const frame = rule(css, '.frame');
+    const framed = rule(css, '.framed');
+    const enlarge = rule(css, '.enlarge');
 
-    expect(picture).toContain('max-inline-size: 100%');
-    expect(picture).toContain('max-block-size: 100%');
-    expect(picture).not.toMatch(/object-fit|aspect-ratio|(?:^|\s)(?:inline|block)-size/);
+    expect(frame).toContain('display: grid');
+    expect(frame).toContain('grid-template-rows: minmax(0, 1fr)');
+    expect(framed).toContain('grid-area: 1 / 1');
+    expect(framed).toContain('align-self: center');
+    expect(framed).toContain('inline-size: var(--project-view-box-width)');
+    expect(framed).toContain('max-inline-size: 100%');
+    expect(framed).toContain('block-size: auto');
+    expect(framed).toContain('border-radius: var(--radius-large)');
+    expect(framed).not.toMatch(/object-fit|aspect-ratio/);
+    expect(enlarge).toContain('grid-area: 1 / 1');
+    expect(enlarge).toContain('align-self: end');
+    expect(enlarge).toContain('justify-self: end');
+    expect(enlarge).toContain('margin: var(--space-small)');
+  });
+
+  // DDR-088: larger, the box is as large as the room allows at its shape, and no wider than the
+  // view's narrowest file, so every picture of a view is shown at one width, none larger than its file.
+  it('shows every picture whole at the box’s width, within the room there is, never cropped or stretched', () => {
+    const picture = rule(css, '.picture');
+    const room = rule(css, '.room');
+
+    expect(room).toContain('container-type: size');
+    expect(room).toContain('align-self: stretch');
+    expect(room).toContain('justify-self: stretch');
+    expect(room).toContain('place-items: center');
+    expect(room).not.toContain('position');
+    expect(picture).toContain('inline-size: var(--project-view-box-width)');
+    expect(picture).toContain('max-inline-size: min(100%, 100cqb * var(--project-view-box-ratio))');
+    expect(picture).toContain('block-size: auto');
+    expect(picture).not.toMatch(/object-fit|aspect-ratio/);
     expect(rule(css, '.larger[open]')).toContain('grid-template-rows: auto minmax(0, 1fr) auto');
   });
 
@@ -136,7 +169,7 @@ describe('LargerPicture', () => {
       expect(stepping).toContain('aria-labelledby="picture-2-larger-caption picture-2-larger-position"');
       expect(stepping).toMatch(
         new RegExp(
-          `<img [^>]*/><div class="[^"]*"><button type="button" class="[^"]*" commandfor="picture-1-larger" command="${swapCommand}" aria-label="Previous picture">[^]*?</button><div class="[^"]*"><p id="picture-2-larger-caption" class="[^"]*">The dashboard</p><p id="picture-2-larger-position" class="[^"]*">3 of 7</p></div><button type="button" class="[^"]*" commandfor="picture-3-larger" command="${swapCommand}" aria-label="Next picture">[^]*?</button></div></dialog>$`,
+          `<img [^>]*/></div><div class="[^"]*"><button type="button" class="[^"]*" commandfor="picture-1-larger" command="${swapCommand}" aria-label="Previous picture">[^]*?</button><div class="[^"]*"><p id="picture-2-larger-caption" class="[^"]*">The dashboard</p><p id="picture-2-larger-position" class="[^"]*">3 of 7</p></div><button type="button" class="[^"]*" commandfor="picture-3-larger" command="${swapCommand}" aria-label="Next picture">[^]*?</button></div></dialog>$`,
         ),
       );
       // A command of the page's own starts with two dashes, so the browser does nothing with it.
@@ -153,6 +186,9 @@ describe('LargerPicture', () => {
       expect(rule(css, '.step')).toContain('position: relative');
       expect(rule(css, '.foot')).toContain('grid-template-columns: auto minmax(0, 1fr) auto');
       expect(rule(css, '.foot')).toContain('justify-self: stretch');
+      // DDR-088: the controls stand at the row's foot, level with the place, so a caption of two
+      // lines grows the row upwards and moves neither.
+      expect(rule(css, '.foot')).toContain('align-items: end');
       const block = css.match(/@media \(scripting: none\) \{([\s\S]*?)\n\}/)?.[1] ?? '';
 
       expect(block).toMatch(/\.step\s*\{\s*display: none;\s*\}/);
@@ -172,9 +208,12 @@ describe('LargerPicture', () => {
       expect(rule(wide, '.before')).toContain('grid-area: before');
       expect(rule(wide, '.after')).toContain('grid-area: after');
       // The picture and the close control are placed only in a gallery's dialog.
-      expect(rule(wide, '.stepped .picture')).toContain('grid-area: picture');
+      expect(rule(wide, '.stepped .room')).toContain('grid-area: picture');
       expect(rule(wide, '.stepped .close')).toContain('grid-area: close');
-      expect(css.replace(wide, '')).not.toMatch(/grid-area|grid-template-areas|display: contents/);
+      // Outside it, only the frame's picture and control share the box's one cell, per DDR-088.
+      expect(css.replace(wide, '').replace(/grid-area: 1 \/ 1;/g, '')).not.toMatch(
+        /grid-area|grid-template-areas|display: contents/,
+      );
 
       expect(stepping).toMatch(/<dialog id="picture-2-larger" class="[^" ]+ [^" ]+"/);
       expect(html).toMatch(/<dialog id="picture-larger" class="[^" ]+"/);

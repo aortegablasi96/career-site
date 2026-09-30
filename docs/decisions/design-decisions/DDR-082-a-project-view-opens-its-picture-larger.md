@@ -4,6 +4,11 @@ Status: Accepted
 
 Date: 2026-09-29
 
+**Amended by DDR-088 (2026-09-30)**: the control that opens the picture larger stands at the lower
+right corner of the view's box, which is its target, rather than the picture's; and larger, every
+picture of a view is shown at one width, in the same box as large as the window allows, never wider
+than the view's narrowest file. Everything else here stands.
+
 **Amended by DDR-083 (2026-09-30)**: a gallery's larger picture now steps to the picture before and
 after it, in place, with its place among them under its caption, as the owner asked on #250. That
 reverses Option D below. Everything else here stands.

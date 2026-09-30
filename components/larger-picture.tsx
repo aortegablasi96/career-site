@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, type KeyboardEvent } from 'react';
 import { asset } from '@/app/asset';
-import type { Image } from '@/content/types';
+import type { Image, PixelSize } from '@/content/types';
 import { Icon } from './icon';
 import styles from './larger-picture.module.css';
 
@@ -120,8 +120,8 @@ export interface Steps {
 /**
  * The picture in a project view's lead frame, and the same picture larger, per DDR-082 and ADR-018.
  *
- * Over the picture's corner is a round control with two arrows pointing out, which opens the
- * picture larger, and the whole picture is its target. Larger, the picture is shown whole, over the
+ * At the box's lower right corner is a round control with two arrows pointing out, which opens the
+ * picture larger, and the whole box is its target, per DDR-088. Larger, the picture is shown whole, over the
  * view blurred behind a dark veil, with its caption under it and a control that closes it above
  * it; the whole ground around the picture is that control's target too.
  *
@@ -148,8 +148,12 @@ export interface Steps {
  * Moving from one dialog to another is two commands, which no button's markup can give, so without
  * script the two controls are not drawn, and each picture opens and closes as it does alone.
  *
- * It is the file the frame already shows, so opening it fetches nothing. The frame's picture is
- * drawn as `Media` draws a picture, with the class the view gives it.
+ * It is the file the frame already shows, so opening it fetches nothing.
+ *
+ * Both pictures stand in the view's box, per DDR-088: the frame is the box, with the class the view
+ * gives it, and the picture is as wide as it and centred in it; larger, the box is as large as the
+ * room allows at its shape, and the picture is as wide as that. The view says what the box is. Each
+ * picture carries its own size, so its place holds its shape before its file arrives.
  */
 export function LargerPicture({
   media,
@@ -160,14 +164,14 @@ export function LargerPicture({
   className,
   steps,
 }: {
-  media: Image;
+  media: Image & PixelSize;
   caption: string;
   /** The larger picture's identifier, unique within the view. */
   id: string;
   /** The two controls' accessible names. */
   enlarge: string;
   close: string;
-  /** The frame picture's class, from the view, which also draws a gallery radio's focus on it. */
+  /** The frame's class, from the view: the box, which also draws a gallery radio's focus. */
   className: string;
   /** In a gallery, the pictures before and after this one, per DDR-083. A lone picture has none. */
   steps?: Steps;
@@ -269,8 +273,15 @@ export function LargerPicture({
 
   return (
     <>
-      <div className={styles.frame}>
-        <img ref={framed} className={className} src={asset(media.file)} alt={media.alt} />
+      <div className={`${styles.frame} ${className}`}>
+        <img
+          ref={framed}
+          className={styles.framed}
+          src={asset(media.file)}
+          alt={media.alt}
+          width={media.width}
+          height={media.height}
+        />
         <button
           ref={opener}
           type="button"
@@ -298,7 +309,16 @@ export function LargerPicture({
         >
           <Icon name="close" />
         </button>
-        <img ref={larger} className={styles.picture} src={asset(media.file)} alt={media.alt} />
+        <div className={styles.room}>
+          <img
+            ref={larger}
+            className={styles.picture}
+            src={asset(media.file)}
+            alt={media.alt}
+            width={media.width}
+            height={media.height}
+          />
+        </div>
         {steps ? (
           <div className={styles.foot}>
             <button

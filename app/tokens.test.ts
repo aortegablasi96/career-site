@@ -1021,8 +1021,10 @@ describe('spacing tokens', () => {
     }
   });
 
-  it('draws a project view’s media, its rule and its label as `career-site-project` does, per DDR-050', () => {
-    expect(token('project-view-media-ratio')).toBe('16 / 10');
+  // Since DDR-088 the view's media takes the shape of its tallest picture, which the view hands its
+  // stylesheet, so the design's 16:10 is no longer a token.
+  it('draws a project view’s rule and its label as `career-site-project` does, per DDR-050', () => {
+    expect(token('project-view-media-ratio')).toBeUndefined();
     expect(rem(token('project-view-rule-width')!) * 16).toBe(40);
     expect(rem(token('project-view-rule-height')!) * 16).toBe(6);
     expect(rem(token('project-view-rule-gap')!) * 16).toBe(24);
