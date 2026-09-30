@@ -4,6 +4,12 @@ Status: Accepted
 
 Date: 2026-09-30
 
+**Amended by DDR-088 (2026-09-30)**: every picture a view shows now stands in one box at the shape
+of the view's tallest picture, as the owner asked on #263, which Option B below rejected. Each
+picture is still whole and as wide as the column; a wider one leaves bands above and below it. The
+control and a gallery radio's focus belong to the box, the corners to the picture, and the box holds
+its shape before the files arrive, which answers the first risk and the tradeoff about 16:10.
+
 **Amends DDR-050 (the right column's 16:10 crop) and DDR-081 ("at the lead's size").** The picture
 in a view's frame is shown whole, as wide as its column and at its own shape. It is no longer
 cropped to the design's 16:10. Everything else those records decide stands: the frame's width and

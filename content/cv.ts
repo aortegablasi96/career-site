@@ -133,9 +133,13 @@ import type { Cv } from './types';
  * It moved again with #259, because NumisBook's gallery and the Stock Portfolio Viewer's each
  * gained the owner's video, with its still, its name and a description of what it shows, per
  * DDR-087. None is a fact ADR-005 lists as shared, so none moved the CV.
+ *
+ * It moved again with #263, because every project picture and video now records its size in
+ * pixels, per ADR-021, so a view can show them all in one box. A picture's size is not a fact
+ * ADR-005 lists as shared, so it did not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '8987d4147530ca6f911e3a684a17b33ae2a12d566c1198be459aa6c641011888',
+  contentDigest: 'd40236915734dcb90bdaa9ae2ccb2d4d2a014c9ba593d44f58a21e2410a87a6d',
 };

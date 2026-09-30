@@ -311,14 +311,17 @@
   margin: 0;
 }
 
-/* A picture or video, as wide as its column and at the large radius (nodes 59:71 and 59:90), shown
-   whole at its own shape, per DDR-085, as the owner asked on #254, where the design's 16:10 cropped
-   it. It stretches across the column, so no width is written for it, and its height follows its
-   shape. The design's 16:10 is the shape it holds until its file arrives, so the view moves little
-   when it does. A gallery picture shown in the lead's place is drawn as the lead is. */
+/* The view's box, per DDR-088, as the owner asked on #263: as wide as its column, at the shape of
+   the tallest picture the view shows, which the view hands in. Every picture and video stands in it
+   whole, as DDR-085 has it, so the frame is one height whichever the reader chooses, and nothing
+   below it moves. It holds its shape before any file arrives. It draws nothing: the picture keeps
+   its own corners, and a wider one leaves the page's own ground above and below it. The box's
+   large radius rounds a gallery radio's focus, drawn around it, below, and a video, which is drawn
+   as the box and fits its own picture inside it. A gallery picture shown in the lead's place is
+   drawn as the lead is. */
 .media {
   align-self: stretch;
-  aspect-ratio: auto var(--project-view-media-ratio);
+  aspect-ratio: var(--project-view-box-ratio);
   border-radius: var(--radius-large);
 }
 
@@ -359,8 +362,8 @@
   display: none;
 }
 
-/* Keyboard focus is on the radio, and the picture it shows draws it, since the arrow keys change
-   that picture. */
+/* Keyboard focus is on the radio, and the box that shows its picture draws it, since the arrow keys
+   change that picture; the box is one size, so the outline stays where it is as they do. */
 .pick:focus-visible + .figure .media {
   outline: var(--focus-outline-width) solid var(--color-focus);
   outline-offset: var(--focus-outline-offset);

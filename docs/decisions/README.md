@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `021`. The next DDR is `088`.** Update both lines when a record lands.
+**The next ADR is `022`. The next DDR is `089`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -18,13 +18,13 @@ reasoning behind it.
 
 ## ADRs
 
-ADR-001 to ADR-020 are accepted.
+ADR-001 to ADR-021 are accepted.
 
 | Record  | Relationship |
 | ------- | ------------ |
 | ADR-004 | Supersedes the part of ADR-002 that rules out a separate CV file |
 | ADR-005 | Supersedes the part of ADR-004 that makes the CV a PDF saved from the page |
-| ADR-006 | Refines ADR-001: which literals a component stylesheet may write |
+| ADR-006 | Refines ADR-001: which literals a component stylesheet may write; ADR-021 adds one limit |
 | ADR-007 | First Client Component, `ContentsBar`: it reads the scroll position. Not a precedent |
 | ADR-008 | Amends ADR-007: the bar also handles its links' clicks (smooth scroll, DDR-041) |
 | ADR-009 | Amends ADR-007: the bar renders its links, to mark the current one (DDR-042) |
@@ -39,10 +39,11 @@ ADR-001 to ADR-020 are accepted.
 | ADR-018 | Amends ADR-017's overlay rejection and ADR-007: a view's picture opens larger in a modal `dialog` via Invoker Commands, without script (DDR-082); a third Client Component, `LargerPicture`, only moves it |
 | ADR-019 | Amends ADR-018: a gallery's larger picture hands over to its neighbour's by a command of the page's own, `--show-in-place` (DDR-083); still `LargerPicture`, and no stepping without script |
 | ADR-020 | Amends ADR-004: a video at its recording's pixel size, with no audio track where it has no sound (DDR-087); the budgets stand |
+| ADR-021 | A project picture's content carries its pixel size; a view hands its box (DDR-088) to its stylesheets in a `style` attribute; amends ADR-006 with `min(100%, 100cqb * var(--token))` on `max-inline-size` |
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-087. There are
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-088. There are
 two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
@@ -124,7 +125,8 @@ Each record keeps everything not listed against it.
 * **DDR-050** (project view): DDR-052 neighbours; DDR-053 gallery; DDR-078 "How I built it";
   DDR-079 the business-case switch; DDR-081 the gallery's thumbnails in the lead's column; DDR-082
   the picture in the lead's frame opens larger; DDR-084 a view with a gallery shows that in the
-  lead's place; DDR-085 the frame shows its picture whole, not cropped to 16:10.
+  lead's place; DDR-085 the frame shows its picture whole, not cropped to 16:10; DDR-088 every
+  picture a view shows stands in one box, at its tallest picture's shape.
 * **DDR-051** (project cards): DDR-054 every technology; DDR-055 the lift; DDR-062 the hover
   shadow; DDR-063 the shared card behaviour.
 * **DDR-055, DDR-057, DDR-059, DDR-061**: DDR-063 makes a role card rest raised and lift like a
@@ -150,7 +152,10 @@ Each record keeps everything not listed against it.
   DDR-085 shows the picture in the frame at its own shape. DDR-087 answers its risk: a playing
   video is not paused when another picture is chosen.
 * **DDR-082** (picture larger): DDR-083 steps between a gallery's pictures while one is open, which
-  its Option D rejected; the frame follows the last picture seen.
+  its Option D rejected; the frame follows the last picture seen. DDR-088 puts the opening control
+  at the box's corner and shows every larger picture of a view at one width.
+* **DDR-085** (picture whole): DDR-088 stands every picture of a view in one box, which its Option B
+  rejected; the picture stays whole and keeps its corners.
 * **DDR-083** (steps): DDR-084 takes the lead out of the order; DDR-086 stands the controls at the
   window's left and right edges from the wide breakpoint, which its Option B rejected.
 * **DDR-079** (business-case switch): DDR-080 shows the business case one item at a time, in a card.

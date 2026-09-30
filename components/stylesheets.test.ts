@@ -45,6 +45,14 @@ const tokensOrRoom =
 const tokensOrWord =
   /^(?:0|auto|none|min-content|var\(--[\w-]+\))(?:\s+(?:0|auto|none|min-content|var\(--[\w-]+\)))*$/;
 
+/**
+ * On `max-inline-size` alone, ADR-021 admits one more limit: no wider than the room there is, nor
+ * than the room's height at the box's shape, per DDR-088. It names the space there is, as `100%`
+ * does, measured on the element's container, and the shape is the view's own, read from its
+ * pictures, so there is no number a token could hold either.
+ */
+const roomAtShape = /^min\(100%, 100cqb \* var\(--[\w-]+\)\)$/;
+
 /** The two properties ADR-006 lets `100%` through on. */
 const maximum = /^max-(?:inline|block)-size$/;
 
@@ -108,7 +116,9 @@ describe('component stylesheets', () => {
 
     it('sets sizes, space, tracking and elevation from tokens only, per ADR-006', () => {
       for (const { property, value } of declarations(css)) {
-        if (maximum.test(property)) {
+        if (property === 'max-inline-size' && roomAtShape.test(value)) {
+          continue;
+        } else if (maximum.test(property)) {
           expect(value).toMatch(tokensOrRoom);
         } else if (minimum.test(property)) {
           expect(value).toMatch(tokensOrWord);
@@ -168,14 +178,24 @@ describe('component stylesheets', () => {
       // the caption. So that stylesheet may place the dialog's five parts by name, inside the wide
       // breakpoint and nowhere else. The controls keep their order, so the keyboard still meets
       // them as they are drawn. It is admitted once, and a second is a decision.
+      //
+      // DDR-088 stands the frame's picture and the control that opens it in the box's one cell, as
+      // the business case's slides share theirs: the picture, then the control over its corner, in
+      // the markup's order.
       if (name === 'larger-picture.module.css') {
         const wide = css.match(/@media \(min-width: 48em\) \{([\s\S]*?)\n\}/)?.[1] ?? '';
         const placed = [...wide.matchAll(/\bgrid-area\s*:\s*([^;]+);/g)].map(([, value]) => value.trim());
+        const stacked = [...css.replace(wide, '').matchAll(/\bgrid-area\s*:\s*([^;]+);/g)].map(([, value]) =>
+          value.trim(),
+        );
 
         expect(placed).toEqual(['close', 'picture', 'before', 'words', 'after']);
-        expect(css.replace(wide, wide.replace(/\bgrid-area\s*:\s*\w+;/g, ''))).not.toMatch(
-          /\border\s*:|-reverse\b|\bgrid-(?:area|row|column)\b/,
-        );
+        expect(stacked).toEqual(['1 / 1', '1 / 1']);
+        expect(
+          css
+            .replace(wide, wide.replace(/\bgrid-area\s*:\s*\w+;/g, ''))
+            .replace(/\bgrid-area\s*:\s*1 \/ 1;/g, ''),
+        ).not.toMatch(/\border\s*:|-reverse\b|\bgrid-(?:area|row|column)\b/);
         return;
       }
 

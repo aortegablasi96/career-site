@@ -1,10 +1,11 @@
 import { existsSync, readFileSync, statSync } from 'node:fs';
+import type { CSSProperties } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { introduction } from '@/content/introduction';
 import { projects } from '@/content/projects';
 import type { GalleryItem, Project } from '@/content/types';
-import { ProjectView } from './project-view';
+import { box, ProjectView } from './project-view';
 
 // Rendered with the real content, since what a view says is the project's own record, per #153,
 // with the projects on either side of it, per #156.
@@ -61,6 +62,25 @@ function tracks(file: string): string[] {
 
   return kinds;
 }
+/**
+ * A WebP's size in pixels, read from its first chunk: the extended header's canvas, or the lossy or
+ * lossless bitstream's own.
+ */
+function webpSize(file: string): { width: number; height: number } {
+  const bytes = readFileSync(new URL(`../public${file}`, import.meta.url));
+  const chunk = bytes.toString('latin1', 12, 16);
+
+  if (chunk === 'VP8X') {
+    return { width: bytes.readUIntLE(24, 3) + 1, height: bytes.readUIntLE(27, 3) + 1 };
+  }
+  if (chunk === 'VP8L') {
+    const bits = bytes.readUInt32LE(21);
+
+    return { width: (bits & 0x3fff) + 1, height: ((bits >>> 14) & 0x3fff) + 1 };
+  }
+  return { width: bytes.readUInt16LE(26) & 0x3fff, height: bytes.readUInt16LE(28) & 0x3fff };
+}
+
 const html = render(numisBook!);
 
 /** The markup's text, as a reader meets it. */
@@ -394,14 +414,70 @@ describe('ProjectView', () => {
     );
   });
 
-  // DDR-085, on #254: the picture is whole, as wide as its column and at its own shape, where
-  // DDR-050 cropped it to the design's 16:10. That shape only holds its place until the file arrives.
-  it('shows the picture whole at its own shape, neither cropped nor stretched', () => {
-    const media = css.match(/\.media\s*\{([^}]*)\}/)?.[1] ?? '';
+  // DDR-088, on #263: every picture a view shows stands in one box, as wide as the column, at the
+  // shape of the view's tallest picture, which the view hands its stylesheet. The picture inside is
+  // whole, as DDR-085 has it; the box holds its shape before any file arrives.
+  describe('the box', () => {
+    /** The box a view's markup hands its stylesheet, as its shape and its greatest width. */
+    const boxes = (markup: string) =>
+      [...markup.matchAll(/style="--project-view-box-ratio:([^;"]+);--project-view-box-width:([^;"]+)"/g)].map(
+        ([, ratio, width]) => ({ ratio, width }),
+      );
 
-    expect(media).toContain('aspect-ratio: auto var(--project-view-media-ratio)');
-    expect(media).toContain('align-self: stretch');
-    expect(media).not.toMatch(/object-fit|(?:^|\s)(?:inline|block)-size/);
+    it('is the column’s width, at the shape the view hands it, neither cropping nor stretching', () => {
+      const media = css.match(/\.media\s*\{([^}]*)\}/)?.[1] ?? '';
+
+      expect(media).toContain('aspect-ratio: var(--project-view-box-ratio)');
+      expect(media).toContain('align-self: stretch');
+      expect(media).not.toMatch(/object-fit|(?:^|\s)(?:inline|block)-size/);
+    });
+
+    it('takes the shape of the tallest picture or video, and the narrowest file’s width', () => {
+      expect(box([{ width: 1276, height: 603 }, { width: 1280, height: 768 }])).toEqual({
+        '--project-view-box-ratio': '1280 / 768',
+        '--project-view-box-width': '1276px',
+      });
+      expect(box([{ width: 1920, height: 1018 }, { width: 1535, height: 815 }])).toEqual({
+        '--project-view-box-ratio': '1535 / 815',
+        '--project-view-box-width': '1535px',
+      });
+      expect(box([{ width: 1536, height: 1024 }])).toEqual({
+        '--project-view-box-ratio': '1536 / 1024',
+        '--project-view-box-width': '1536px',
+      });
+    });
+
+    it('is one for every picture of a gallery, handed to the whole group, and a lone picture’s own', () => {
+      for (const project of projects.projects) {
+        const markup = render(project);
+        const media = project.gallery!.map((item) => item.media);
+
+        expect(boxes(markup)).toEqual([
+          {
+            ratio: box(media)['--project-view-box-ratio' as keyof CSSProperties],
+            width: box(media)['--project-view-box-width' as keyof CSSProperties],
+          },
+        ]);
+        expect(markup).toMatch(/<div role="radiogroup" aria-label="Gallery" class="[^"]*" style="--project-view-box-ratio/);
+      }
+
+      const lone = render(withoutGallery);
+
+      expect(boxes(lone)).toEqual([{ ratio: '1536 / 1024', width: '1536px' }]);
+      expect(lone).toMatch(/<figure class="[^"]*" style="--project-view-box-ratio/);
+    });
+  });
+
+  // ADR-021: each picture's size is the content's, and it is its file's, so a picture the owner
+  // replaces with one of another size fails here rather than standing in a box of the wrong shape.
+  it('records each picture’s and video’s size as its file’s', () => {
+    const media = projects.projects.flatMap(({ media, gallery = [] }) => [media, ...gallery.map((item) => item.media)]);
+
+    for (const item of media) {
+      const still = 'poster' in item ? item.poster : item.file;
+
+      expect({ still, ...webpSize(still) }).toEqual({ still, width: item.width, height: item.height });
+    }
   });
 
   // #159: in a grid of one track, Firefox sizes the row from the picture's own height rather than
@@ -420,19 +496,21 @@ describe('ProjectView', () => {
   // video and a gallery of any length.
   describe('the gallery', () => {
     const picture: GalleryItem = {
-      media: { file: '/gallery-picture.webp', alt: 'The assistant adding a coin from a photograph' },
+      media: { file: '/gallery-picture.webp', width: 1536, height: 1024, alt: 'The assistant adding a coin from a photograph' },
       caption: 'AI assistant in action',
     };
     const video: GalleryItem = {
       media: {
         file: '/gallery-walkthrough.mp4',
         poster: '/gallery-walkthrough.webp',
+        width: 1920,
+        height: 1080,
         description: 'A walkthrough of the application, from signing in to adding a coin',
       },
       caption: 'Walkthrough demo',
     };
     const third: GalleryItem = {
-      media: { file: '/gallery-collections.webp', alt: 'The collections, each with its coins' },
+      media: { file: '/gallery-collections.webp', width: 1536, height: 1024, alt: 'The collections, each with its coins' },
       caption: 'Collections',
     };
     const withGallery = (gallery: readonly GalleryItem[]) => render({ ...numisBook!, gallery });
@@ -638,7 +716,7 @@ describe('ProjectView', () => {
 
       expect(markup).toMatch(
         new RegExp(
-          `<input [^>]*id="picture-0"[^>]*/><figure><div><img [^>]*alt="${alt}"/><button [\\s\\S]*?</dialog><figcaption id="picture-0-caption">${picture.caption}</figcaption></figure><input [^>]*id="picture-1"`,
+          `<input [^>]*id="picture-0"[^>]*/><figure><div><img [^>]*alt="${alt}"[^>]*/><button [\\s\\S]*?</dialog><figcaption id="picture-0-caption">${picture.caption}</figcaption></figure><input [^>]*id="picture-1"`,
         ),
       );
       expect(rule('.pick:not(:checked) + .figure')).toContain('display: none');
@@ -746,6 +824,8 @@ describe('ProjectView', () => {
       media: {
         file: '/gallery-walkthrough.mp4',
         poster: '/gallery-walkthrough.webp',
+        width: 1920,
+        height: 1080,
         description: 'A walkthrough of the application, from signing in to adding a coin',
       },
       caption: 'Walkthrough demo',
@@ -768,7 +848,7 @@ describe('ProjectView', () => {
         ([, id, labelledBy, body]) => {
           const [, closes, close] =
             body!.match(/^<button type="button"[^>]*commandfor="([^"]+)" command="close" aria-label="([^"]*)">/) ?? [];
-          const [, source, alt] = body!.match(/<\/button><img [^>]*src="([^"]*)" alt="([^"]*)"\/>/) ?? [];
+          const [, source, alt] = body!.match(/<\/button><div[^>]*><img [^>]*src="([^"]*)" alt="([^"]*)"[^>]*\/>/) ?? [];
           const [, captionId, caption] = body!.match(/<p id="([^"]+-caption)"[^>]*>([^<]*)<\/p>/) ?? [];
           const [, positionId, position] = body!.match(/<p id="([^"]+-position)"[^>]*>([^<]*)<\/p>/) ?? [];
           const steps = [
@@ -835,7 +915,7 @@ describe('ProjectView', () => {
       });
       // In the markup's order, which is the visual order: the caption stands between the two controls.
       expect(bare(html)).toMatch(
-        /<\/button><img [^>]*\/><div><button [^>]*aria-label="Previous picture">[\s\S]*?<\/button><div><p id="picture-0-larger-caption">[^<]*<\/p><p id="picture-0-larger-position">[^<]*<\/p><\/div><button [^>]*aria-label="Next picture">/,
+        /<\/button><div><img [^>]*\/><\/div><div><button [^>]*aria-label="Previous picture">[\s\S]*?<\/button><div><p id="picture-0-larger-caption">[^<]*<\/p><p id="picture-0-larger-position">[^<]*<\/p><\/div><button [^>]*aria-label="Next picture">/,
       );
     });
 

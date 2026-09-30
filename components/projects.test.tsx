@@ -185,6 +185,8 @@ describe('a card’s picture', () => {
       media: {
         file: '/project-digital-twin.mp4',
         poster: '/project-digital-twin.webp',
+        width: 1920,
+        height: 1080,
         description: 'The Digital Twin chatbot answering a question',
       },
     };
@@ -205,6 +207,8 @@ describe('a project’s media as a video', () => {
       media={{
         file: '/project-digital-twin.mp4',
         poster: '/project-digital-twin.webp',
+        width: 1920,
+        height: 1080,
         description: 'The Digital Twin chatbot answering a question',
       }}
       className="media"

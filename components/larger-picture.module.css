@@ -1,34 +1,48 @@
 /*
  * A project view's picture in its frame, and the same picture larger, per DDR-082 and ADR-018.
  *
- * The frame's picture itself takes the view's class, so the view draws it as it draws any picture
- * in the frame, and a gallery radio's focus on it. What is here is the control that opens it and
- * the dialog it opens.
+ * The frame takes the view's class, which makes it the view's box, per DDR-088, and draws a gallery
+ * radio's focus on it. What is here is the picture in it, the control that opens it and the dialog
+ * it opens.
  */
 
-/* The picture in the lead's frame and the control that opens it larger. A flex column, as the
-   view's figure is, so the picture stretches across it; positioned, so the control's target can
-   cover the picture, below. */
+/* The frame: the view's box, with the picture and the control that opens it larger in its one
+   cell, so neither pushes the other. Positioned, so the control's target can cover the box,
+   below. */
 .frame {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
 }
 
-/* The control: a round white button with the heading's ink and the site's raised shadow, over the
-   picture's lower right corner, a small step in from both edges. It follows the picture in the
-   markup and on screen, so it is pulled up over it by its own size and that step, and gives the
-   step back below, so the frame is exactly the picture's height. It is 32px across, WCAG 2.5.8's
-   24 by 24 outright. */
+/* The picture, whole: as wide as the box, since the box is the view's tallest shape, and centred
+   in it, so a wider picture leaves an equal band above and below it. It is no wider than the
+   view's narrowest file, as the larger picture is not, and its height follows its own shape. The
+   corners are its own, at the frame's large radius. */
+.framed {
+  grid-area: 1 / 1;
+  align-self: center;
+  justify-self: center;
+  inline-size: var(--project-view-box-width);
+  max-inline-size: 100%;
+  block-size: auto;
+  border-radius: var(--radius-large);
+}
+
+/* The control: a round white button with the heading's ink and the site's raised shadow, at the
+   box's lower right corner, a small step in from both edges, per DDR-088, so it stands in one
+   place whichever picture the box shows. It is 32px across, WCAG 2.5.8's 24 by 24 outright. */
 .enlarge {
+  grid-area: 1 / 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  align-self: flex-end;
+  align-self: end;
+  justify-self: end;
   inline-size: var(--project-view-enlarge-size);
   block-size: var(--project-view-enlarge-size);
-  margin-block: var(--project-view-enlarge-pull) var(--space-small);
-  margin-inline-end: var(--space-small);
+  margin: var(--space-small);
   padding: 0;
   border: 0;
   border-radius: var(--radius-pill);
@@ -39,16 +53,16 @@
   cursor: zoom-in;
 }
 
-/* The whole picture is the control's target, as a card's name is stretched over its card, so the
-   pointer opens the picture from anywhere on it. The keyboard's focus is drawn on the round button
-   itself. */
+/* The whole box is the control's target, as a card's name is stretched over its card, so the
+   pointer opens the picture from anywhere on it or its bands. The keyboard's focus is drawn on the
+   round button itself. */
 .enlarge::after {
   position: absolute;
   inset: 0;
   content: '';
 }
 
-/* Under the pointer, anywhere on the picture, and on keyboard focus, the button takes the accent
+/* Under the pointer, anywhere on the box, and on keyboard focus, the button takes the accent
    and its tint, as the view's outlined control does, per DDR-035. */
 .enlarge:hover,
 .enlarge:focus-visible {
@@ -131,13 +145,28 @@
   color: var(--color-accent);
 }
 
-/* The picture, whole: never cropped, stretched or wider or taller than the room there is, and no
-   larger than its own file, at the frame's large radius. It is drawn over the close control's
-   target, so choosing it does not close it. */
+/* The room the picture's row leaves, in which the view's box stands as large as it can at its
+   shape, per DDR-088. It measures itself rather than its content, so its picture can neither widen
+   the window's box nor lengthen its row. It draws nothing and is not over the close control's
+   target, so its bands close the picture, as the ground does. */
+.room {
+  align-self: stretch;
+  justify-self: stretch;
+  display: grid;
+  place-items: center;
+  container-type: size;
+}
+
+/* The picture, whole, as wide as the box: no wider than the room, nor than the room's height at
+   the box's shape, nor than the view's narrowest file, so every picture of a view is shown at one
+   width and none larger than its own file. Its height follows its own shape, which is never taller
+   than the box's, and it is centred in the room. It is at the frame's large radius, and drawn over
+   the close control's target, so choosing it does not close it. */
 .picture {
   position: relative;
-  max-inline-size: 100%;
-  max-block-size: 100%;
+  inline-size: var(--project-view-box-width);
+  max-inline-size: min(100%, 100cqb * var(--project-view-box-ratio));
+  block-size: auto;
   border-radius: var(--radius-large);
 }
 
@@ -156,12 +185,15 @@
    where the picture stands among the gallery's under it. The row spans the window, so a thumb
    reaches both controls on a phone, and it leaves the picture its whole row. What the controls and
    the words leave is still the ground, which closes the picture. From the wide breakpoint the two
-   controls leave this row, below. */
+   controls leave this row, below.
+
+   The controls stand at the row's foot, level with the place, per DDR-088, so a caption that wraps
+   to a second line grows the row upwards and leaves the controls and the place where they are. */
 .foot {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   column-gap: var(--space-small);
-  align-items: center;
+  align-items: end;
   justify-self: stretch;
 }
 
@@ -220,7 +252,7 @@
     grid-area: close;
   }
 
-  .stepped .picture {
+  .stepped .room {
     grid-area: picture;
   }
 

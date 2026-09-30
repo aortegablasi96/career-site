@@ -43,10 +43,12 @@ save the next person from breaking something; don't add story history.
 * **`components/stylesheets.test.ts` holds every module stylesheet** to:
   * tokens only for sizes, spaces, `letter-spacing`, `line-height` and each `box-shadow` layer;
   * literals per ADR-006: `0`, `auto` and `none` anywhere, `100%` on `max-inline-size` and
-    `max-block-size`, `min-content` on `min-inline-size` and `min-block-size`. The rule behind the
+    `max-block-size`, `min-content` on `min-inline-size` and `min-block-size`, and, on
+    `max-inline-size` alone, `min(100%, 100cqb * var(--token))` (ADR-021). The rule behind the
     list: *a limit may name the space there is or the space the content needs; a size may not*;
   * no reordering (visual order is markup order, so no `order` and no `grid-column` placement),
-    but for the larger picture's five named areas inside the wide breakpoint (DDR-086);
+    but for the larger picture's five named areas inside the wide breakpoint (DDR-086), and the
+    frame's picture and opening control sharing the box's one cell, `grid-area: 1 / 1` (DDR-088);
   * `position: absolute` only on a pseudo-element and on the contents bar's menu panel, `.list`;
     `position: sticky` on the contents bar alone;
   * only one width media query, `(min-width: 48em)`, which may be written `(min-width: 48em), print`
@@ -118,7 +120,9 @@ The page itself is the CV, so what it prints is designed.
 * **A credential** has `href` and an optional `logo`. No PMI or PMP logo and no Credly badge until
   the owner confirms PMI's written authorization.
 * **A project**: `summary` is its slogan, `description` and `howBuilt` are from the owner's
-  knowledge base, `businessCase` holds the items and a PDF, `gallery` is `GalleryItem`s. A video
+  knowledge base, `businessCase` holds the items and a PDF, `gallery` is `GalleryItem`s. Every
+  picture and video carries `width` and `height`, its file's size in pixels (a video's, its
+  poster's), which the suite reads from the WebP header and fails on when they differ (ADR-021). A video
   has no sound track (DDR-087), and the suite fails on one that has: a video with sound needs the
   captions track that the `Video` type does not carry yet (DDR-053).
 * **`content/cv.ts` carries a digest** that `content/cv.test.ts` checks against the content modules.
@@ -199,9 +203,12 @@ The page itself is the CV, so what it prints is designed.
 * The view's business-case switch is native radios read by `:has()`, with no script (ADR-014).
 * **The gallery is native radios too** (ADR-017, DDR-081): each picture's radio is its figure's
   previous sibling, and `.pick:not(:checked) + .figure` hides the rest. Keep that adjacency.
-* **The frame shows a picture whole, at its own shape** (DDR-085): `aspect-ratio: auto` with the
-  design's 16:10 as the shape held until the file arrives, and no `object-fit`. So the frame's
-  height differs between views, and a gallery of mixed shapes would move its thumbnails.
+* **Every picture of a view stands in one box** (DDR-088, ADR-021): `box()` in `project-view.tsx`
+  works out the tallest picture's shape and the narrowest file's width, and the gallery's group (or
+  a lone picture's figure) carries them as `--project-view-box-ratio` and `--project-view-box-width`
+  in its `style` attribute. The dialogs are inside it, so they inherit both; a dialog moved outside
+  it would lose them. The frame is the box (`.media` takes its `aspect-ratio`) and the picture in it
+  is whole, as wide as the box and centred (DDR-085), with no `object-fit`. A video is the box.
 * **A gallery shows only what it lists** (DDR-084): the view opens on its first item, and the lead
   picture stays on the card unless the gallery lists it too. A gallery of one is drawn as a lone
   picture, with no radios.
@@ -212,8 +219,9 @@ The page itself is the CV, so what it prints is designed.
 * **The picture in the frame opens larger** in a modal `dialog` opened by `commandfor`/`command`
   (ADR-018, DDR-082), with no script. `components/invoker-commands.d.ts` types the two attributes
   for React; drop it once `@types/react` has them. The opening button follows the picture in the
-  flow and is pulled over its corner by a negative margin, because only a pseudo-element may be
-  `position: absolute`; its `::after` and the close button's `::before` stretch the targets.
+  box's one grid cell and stands at its lower right corner, because only a pseudo-element may be
+  `position: absolute`; its `::after` and the close button's `::before` stretch the targets. The
+  button must not be positioned, or its `::after` covers only the button.
 * **`LargerPicture` is a Client Component for the movement and, in a gallery, the hand-over**
   (below). For the movement it takes the dialog's `command`
   and `cancel` events and opens or closes it inside a view transition, handing the one
@@ -239,8 +247,11 @@ The page itself is the CV, so what it prints is designed.
 * **To watch the movement, slow it down**: set `--project-view-enlarge-duration` on the root to a
   few seconds before a screenshot. A screenshot or `getAnimations()` straight after the click often
   catches the view before the transition starts.
-* **The dialog's picture is sized by `max-*-size: 100%` in a `minmax(0, 1fr)` grid row**, which
-  keeps it whole and within the window. Measure it after layout settles: read 30ms after a resize
+* **The dialog's picture stands in `.room`, a size container in the `minmax(0, 1fr)` grid row**,
+  and is `--project-view-box-width` wide, no wider than `min(100%, 100cqb * ratio)`: the box as large
+  as the room allows at its shape. `.room` must stay unpositioned, so its bands close the picture.
+  Below 48em the step buttons stand at the foot of the caption's row (`align-items: end`), so a
+  caption of two lines does not move them. Measure after layout settles: read 30ms after a resize
   and an Escape, Playwright reported a stale, squashed height.
 * **Serve `out/` from Node, not Python's `http.server`**, when checking pictures: Python's reset
   connections and left a picture as its alt text on #246.
@@ -254,8 +265,8 @@ The page itself is the CV, so what it prints is designed.
   150 KB as a lead. Each is the application's window: the Stock Portfolio Viewer's at about
   1535×815, NumisBook's at about 1915×907, but for its Collections (1917×877) and its light coin
   record (1529×688), and the Digital Twin's at 1276×603 on its own page and 1280×768 in Telegram.
-  Where a gallery's pictures differ in shape its thumbnails move between pictures: a few pixels on
-  NumisBook, more on the Digital Twin. An edge the capture added is trimmed before encoding: a
+  Since DDR-088 pictures of different shapes share one box, so nothing moves between them; a
+  wider one has bands, 33px above and below the Digital Twin's chat at the wide width. An edge the capture added is trimmed before encoding: a
   transparent row or column, which would become a black line, and the pale line around the Digital
   Twin's page. The PNG originals in `media/` are gitignored.
 * **NumisBook's gallery and the Stock Portfolio Viewer's each end with a video** (#259, DDR-087,

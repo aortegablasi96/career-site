@@ -728,15 +728,14 @@
      space above it rather than by moving: written here because it is arithmetic on a token. */
   --card-lift-back: calc(-1 * var(--card-lift));
 
-  /* A project's view, per DDR-050, measured off `career-site-project`. The lead media is the
-     design's 16:10 (node 59:71) only until its file arrives: since DDR-085 a picture is shown whole
-     at its own shape, and this is the shape its place holds while it loads. Its width is its
-     column's, so it has none here. The rule above the title
+  /* A project's view, per DDR-050, measured off `career-site-project`. The media is not the
+     design's 16:10 (node 59:71): since DDR-088 every picture a view shows stands in one box at the
+     shape of its tallest picture, which the view reads from its content and hands its stylesheet,
+     and its width is its column's, so it has neither here. The rule above the title
      is 40 by 6px, 24px above the name (node 59:21), and the label above the technologies stands
      12px above them (node 59:54). Neither 24px nor 12px is a step of DDR-013's scale, and the view
      is the design's to the pixel at its width, so they are measures of the view's own, as the
      timeline's are. */
-  --project-view-media-ratio: 16 / 10;
   --project-view-rule-width: 2.5rem;
   --project-view-rule-height: 0.375rem;
   --project-view-rule-gap: 1.5rem;
@@ -763,10 +762,8 @@
   --project-view-thumbnail-lift-back: calc(-1 * var(--project-view-thumbnail-lift));
   /* The control that opens a view's picture larger, per DDR-082: a round button the scale's large
      step across, 32px, which passes WCAG 2.5.8 outright, standing the small step in from the
-     frame's corner. The layer draws none, so it is the view's own. It stands in the flow after the
-     picture, so it is pulled up over it by its own size and that step. */
+     box's corner, per DDR-088. The layer draws none, so it is the view's own. */
   --project-view-enlarge-size: var(--space-large);
-  --project-view-enlarge-pull: calc(-1 * (var(--project-view-enlarge-size) + var(--space-small)));
   /* How far the view behind a larger picture is blurred, per DDR-082: enough that the view reads as
      a place rather than as words to read, which the contents bar's 12px, drawn behind an almost
      opaque surface, is not asked to do. In px, as that blur is. */

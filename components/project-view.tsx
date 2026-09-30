@@ -1,8 +1,9 @@
-import { Fragment } from 'react';
+import { Fragment, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { asset } from '@/app/asset';
 import type {
   GalleryItem,
+  PixelSize,
   Project,
   ProjectMedia,
   ProjectView as ProjectViewStrings,
@@ -12,6 +13,26 @@ import { Icon } from './icon';
 import { LargerPicture, type Steps } from './larger-picture';
 import { Media, projectHref } from './projects';
 import styles from './project-view.module.css';
+
+/**
+ * The box every picture a view shows stands in, per DDR-088 and ADR-021, as the two properties its
+ * stylesheets read. Its shape is the tallest of the pictures' and videos' own, so each is as wide as
+ * the box and a wider one leaves a band above and below it: the frame is one height whichever
+ * picture it shows, and the larger picture one size whichever the reader steps to. Its greatest
+ * width is the narrowest file's, so the larger picture never shows a picture larger than its own
+ * file, per DDR-082. A lone picture's box is the picture itself.
+ */
+export function box(media: readonly PixelSize[]): CSSProperties {
+  const tallest = media.reduce((one, other) =>
+    other.height * one.width > one.height * other.width ? other : one,
+  );
+  const narrowest = Math.min(...media.map(({ width }) => width));
+
+  return {
+    '--project-view-box-ratio': `${tallest.width} / ${tallest.height}`,
+    '--project-view-box-width': `${narrowest}px`,
+  } as CSSProperties;
+}
 
 /**
  * The picture in the lead's frame: a picture that opens larger, per DDR-082, or a video, which has
@@ -104,6 +125,10 @@ function Thumbnail({ media, caption, index }: { media: ProjectMedia; caption: st
  * The row shows every picture's thumbnail, as the owner asked on #244, where the design draws two
  * and a count of the rest. It wraps where the column runs out of room.
  *
+ * Every picture and video stands in one box, per DDR-088, as the owner asked on #263, so the frame
+ * is one height whichever is chosen, the row under it never moves, and each larger picture is one
+ * size. The group hands the box to its stylesheets, and its dialogs inherit it.
+ *
  * A video plays only when the reader starts it and fetches nothing before that, because it is drawn
  * by the same `Media` the lead picture is, per DDR-010 and ADR-004. One view is one page, so the
  * radios' `name` and the identifiers need only be unique within it.
@@ -148,7 +173,12 @@ function Pictures({
   };
 
   return (
-    <div role="radiogroup" aria-label={name} className={styles.pictures}>
+    <div
+      role="radiogroup"
+      aria-label={name}
+      className={styles.pictures}
+      style={box(pictures.map(({ media }) => media))}
+    >
       {pictures.map(({ media, caption }, index) => (
         <Fragment key={media.file}>
           <input
@@ -457,7 +487,7 @@ export function ProjectView({
             position={position}
           />
         ) : (
-          <figure className={styles.figure}>
+          <figure className={styles.figure} style={box([only.media])}>
             <Frame
               media={only.media}
               caption={only.caption}

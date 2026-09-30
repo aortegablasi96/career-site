@@ -62,11 +62,22 @@ export interface Video {
 }
 
 /**
- * What a project shows beside its text, per DDR-010: a still of the application running, or its
- * demo video with a poster still. Both are 4:3 and both are described, so an entry reads correctly
- * whether or not its asset arrives.
+ * A picture's size in pixels, as its file was prepared, per ADR-021: a video's is its recording's,
+ * which its poster shares. `components/project-view.test.tsx` holds each to its file.
  */
-export type ProjectMedia = Image | Video;
+export interface PixelSize {
+  width: number;
+  height: number;
+}
+
+/**
+ * What a project shows beside its text, per DDR-010: a still of the application running, or its
+ * demo video with a poster still. Both are described, so an entry reads correctly whether or not
+ * its asset arrives. Both carry their size in pixels, per ADR-021, so a project's view can give
+ * every picture it shows one box of its tallest picture's shape, per DDR-088, and hold each
+ * picture's place before its file arrives.
+ */
+export type ProjectMedia = (Image | Video) & PixelSize;
 
 /**
  * One picture or video in a project view's gallery, per DDR-053, shown as a thumbnail under the

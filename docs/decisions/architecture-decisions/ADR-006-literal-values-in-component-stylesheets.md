@@ -9,6 +9,10 @@ custom properties defined once at the root stands exactly as written. What this 
 line between a design value and a value that is not one, which ADR-001 left to judgement and which
 `components/stylesheets.test.ts` has been enforcing on its own reading of it.
 
+**Amended by ADR-021 (2026-09-30)**: on `max-inline-size` alone, a stylesheet may also write
+`min(100%, 100cqb * var(--token))`, no wider than the room nor than the room's height at a shape
+the content gives. It names the space there is, as `100%` does.
+
 ## Context
 
 ADR-001 decides that design tokens are defined once as custom properties at the root and that
