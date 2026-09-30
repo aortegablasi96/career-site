@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `020`. The next DDR is `086`.** Update both lines when a record lands.
+**The next ADR is `020`. The next DDR is `087`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -41,7 +41,7 @@ ADR-001 to ADR-019 are accepted.
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-085. There are
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-086. There are
 two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
@@ -83,6 +83,7 @@ Each record keeps everything not listed against it.
   breakpoint redefine `--rhythm-scale` and `--contents-bar-title-row`; DDR-040 takes
   `--page-padding-block` off the narrow breakpoint; DDR-050 adds `--font-size-project-title-narrow`;
   DDR-057 lets a timeline scroll sideways inside itself; DDR-077 takes the page title off the narrow
+  breakpoint; DDR-086 lets one stylesheet, the larger picture's, place its content from the wide
   breakpoint.
 * **DDR-015** (print): DDR-022 raises the base to 12pt; DDR-025 splits the dropped decoration into
   three hairlines; DDR-032 lets printed addresses break anywhere; DDR-038 keeps 1.5 leading on
@@ -147,5 +148,6 @@ Each record keeps everything not listed against it.
   DDR-085 shows the picture in the frame at its own shape.
 * **DDR-082** (picture larger): DDR-083 steps between a gallery's pictures while one is open, which
   its Option D rejected; the frame follows the last picture seen.
-* **DDR-083** (steps): DDR-084 takes the lead out of the order.
+* **DDR-083** (steps): DDR-084 takes the lead out of the order; DDR-086 stands the controls at the
+  window's left and right edges from the wide breakpoint, which its Option B rejected.
 * **DDR-079** (business-case switch): DDR-080 shows the business case one item at a time, in a card.

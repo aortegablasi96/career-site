@@ -139,7 +139,9 @@ export interface Steps {
  *
  * In a gallery it also steps between the pictures, per DDR-083 and ADR-019: under the picture, the
  * caption stands between a control that shows the picture before and one that shows the picture
- * after, with where it stands among them below it, and the arrow keys step too. Stepping closes
+ * after, with where it stands among them below it, and the arrow keys step too. From the wide
+ * breakpoint the two controls stand at the window's left and right edges instead, level with the
+ * picture's middle, per DDR-086; that is the stylesheet's doing, and the markup is one. Stepping closes
  * this dialog and opens the neighbour's, and chooses its picture for the frame, so the reader closes
  * on the frame showing the last picture they saw. Each control points at its neighbour's dialog, as
  * the others point at theirs, with a command of the page's own, and the neighbour shows itself.
@@ -283,7 +285,7 @@ export function LargerPicture({
       <dialog
         ref={dialog}
         id={id}
-        className={styles.larger}
+        className={steps ? `${styles.larger} ${styles.stepped}` : styles.larger}
         aria-labelledby={steps ? `${id}-caption ${id}-position` : `${id}-caption`}
         onKeyDown={steps ? onKeyDown : undefined}
       >
@@ -302,7 +304,7 @@ export function LargerPicture({
             <button
               ref={before}
               type="button"
-              className={styles.step}
+              className={`${styles.step} ${styles.before}`}
               commandfor={steps.previous}
               command={swapCommand}
               aria-label={steps.previousName}
@@ -320,7 +322,7 @@ export function LargerPicture({
             <button
               ref={after}
               type="button"
-              className={styles.step}
+              className={`${styles.step} ${styles.after}`}
               commandfor={steps.next}
               command={swapCommand}
               aria-label={steps.nextName}

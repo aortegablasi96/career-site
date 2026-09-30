@@ -163,6 +163,22 @@ describe('component stylesheets', () => {
         return;
       }
 
+      // DDR-086 stands a gallery's larger picture between its two step controls from the wide
+      // breakpoint, where the markup is the phone's: the picture, then the controls either side of
+      // the caption. So that stylesheet may place the dialog's five parts by name, inside the wide
+      // breakpoint and nowhere else. The controls keep their order, so the keyboard still meets
+      // them as they are drawn. It is admitted once, and a second is a decision.
+      if (name === 'larger-picture.module.css') {
+        const wide = css.match(/@media \(min-width: 48em\) \{([\s\S]*?)\n\}/)?.[1] ?? '';
+        const placed = [...wide.matchAll(/\bgrid-area\s*:\s*([^;]+);/g)].map(([, value]) => value.trim());
+
+        expect(placed).toEqual(['close', 'picture', 'before', 'words', 'after']);
+        expect(css.replace(wide, wide.replace(/\bgrid-area\s*:\s*\w+;/g, ''))).not.toMatch(
+          /\border\s*:|-reverse\b|\bgrid-(?:area|row|column)\b/,
+        );
+        return;
+      }
+
       expect(css).not.toMatch(/\border\s*:|-reverse\b|\bgrid-(?:area|row|column)\b/);
     });
 

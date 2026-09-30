@@ -45,7 +45,8 @@ save the next person from breaking something; don't add story history.
   * literals per ADR-006: `0`, `auto` and `none` anywhere, `100%` on `max-inline-size` and
     `max-block-size`, `min-content` on `min-inline-size` and `min-block-size`. The rule behind the
     list: *a limit may name the space there is or the space the content needs; a size may not*;
-  * no reordering (visual order is markup order, so no `order` and no `grid-column` placement);
+  * no reordering (visual order is markup order, so no `order` and no `grid-column` placement),
+    but for the larger picture's five named areas inside the wide breakpoint (DDR-086);
   * `position: absolute` only on a pseudo-element and on the contents bar's menu panel, `.list`;
     `position: sticky` on the contents bar alone;
   * only one width media query, `(min-width: 48em)`, which may be written `(min-width: 48em), print`
@@ -226,6 +227,12 @@ The page itself is the CV, so what it prints is designed.
   `click()` the step button, so both take one path. The hand-over is a root crossfade with no
   `view-transition-name`, so it never touches `data-moving`. `@media (scripting: none)` hides the
   step buttons.
+* **The larger picture has two layouts from one markup** (DDR-086). Below 48em the step buttons are
+  in the caption's row, `.foot`. From 48em `.foot` is `display: contents`, so its three children join
+  the dialog's grid, and `grid-template-areas` stands the buttons either side of the picture. Only a
+  gallery's dialog, `.stepped`, takes that grid; a lone picture's keeps its one column. The markup
+  order stays the phone's, which keeps the tab order close, previous, next. Check both layouts, and
+  a lone picture, after any change to the dialog.
 * **To watch the movement, slow it down**: set `--project-view-enlarge-duration` on the root to a
   few seconds before a screenshot. A screenshot or `getAnimations()` straight after the click often
   catches the view before the transition starts.

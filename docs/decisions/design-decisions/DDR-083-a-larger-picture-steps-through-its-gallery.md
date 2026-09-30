@@ -14,6 +14,10 @@ of the frame. ADR-019 records how one picture's dialog hands over to the next.
 **Amended by DDR-084 (2026-09-30)** in the order of the steps: the pictures are the gallery's own,
 without the lead, so NumisBook's are six and its first says "1 of 6".
 
+**Amended by DDR-086 (2026-09-30)** in where the controls sit: from the wide breakpoint they stand at
+the window's left and right edges, level with the picture's middle, as the owner asked on #256.
+Below it they stay at the lower corners. That takes Option B below, from the wide breakpoint only.
+
 ## Context
 
 NumisBook's gallery has seven pictures, each a screen of the application. Since #246 a reader can
@@ -38,7 +42,9 @@ are a loop. On closing, the frame shows the last picture the reader saw.**
   control (DDR-082).
 * **At the window's lower corners**, a small step in on a phone and a medium one from the wide
   breakpoint, as the close control is at its upper right. On a phone a thumb reaches both, and the
-  picture keeps its whole row, so the controls cover none of it (DDR-082, Option E).
+  picture keeps its whole row, so the controls cover none of it (DDR-082, Option E). **Amended by
+  DDR-086**: from the wide breakpoint they stand at the window's left and right edges, level with
+  the picture's middle, and the lower corners are the phone's.
 * **Their accessible names are "Previous picture" and "Next picture"**, from `content/`. Each shows
   a chevron alone.
 * **What the controls and the caption leave in their row is still the ground**, and choosing it
@@ -113,6 +119,9 @@ Cons:
 * On a phone held upright, the picture is its narrowest, and they would cover the most of it.
 
 ### Option B: the controls in columns beside the picture
+
+> **Amended by DDR-086.** The owner asked for it on #256, so from the wide breakpoint the controls
+> stand in columns beside the picture. Below it this option is still rejected, for the reason here.
 
 Pros:
 * Nothing covers the picture.
