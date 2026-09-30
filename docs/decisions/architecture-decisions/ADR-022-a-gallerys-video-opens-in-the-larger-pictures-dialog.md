@@ -27,7 +27,7 @@ The issue asked three things:
 
 **The view hands a video to `LargerPicture` as it hands a picture. The frame shows the video's still,
 as an `<img>`. The dialog shows the `<video>` with `preload="none"`, `controls` and
-`controlsList="nodownload"`. The component adds three listeners: on its dialog's `close`, it pauses
+`controlsList="nodownload"` and `disablePictureInPicture`. The component adds three listeners: on its dialog's `close`, it pauses
 the video; on the video's `contextmenu`, it declines the menu; and its arrow-key handler leaves a
 key that comes from the video to the video.**
 
@@ -58,6 +58,7 @@ key that comes from the video to the video.**
 | Chrome's and Edge's controls menu | `controlsList="nodownload"` | No |
 | Firefox's controls | They have no download item | No |
 | The browser's menu on the video, in all three | `contextmenu` declined on the video | Yes |
+| Picture-in-picture, in all three (DDR-089) | `disablePictureInPicture` | No |
 
 * **Not withheld**: the browser's menu without script, and Firefox's menu when Shift is held,
   which Firefox never lets a page decline. The file is served from the site like every other asset,

@@ -279,8 +279,9 @@ The page itself is the CV, so what it prints is designed.
   the `<video>` in the dialog, and its dialog's `close` pauses it, however it closes, stepping
   included. Without script nothing pauses it; that is decided, and only for a video without sound.
   The arrow keys are the video's while it has focus (`stepKey`), so they move through it rather
-  than step. `controlsList="nodownload"` only reaches Chrome and Edge; the declined `contextmenu`
-  needs script, and Firefox opens its menu anyway with Shift held. To check one locally, serve
+  than step. `disablePictureInPicture` takes away the floating window. `controlsList="nodownload"`
+  only reaches Chrome and Edge; the declined `contextmenu` needs script, and Firefox opens its menu
+  anyway with Shift held. To check one locally, serve
   `out/` from a server that answers byte ranges with 206, or the video plays but cannot be moved
   through.
 * **This site's gallery pictures are captures of the site itself** (#252), which the others are not:

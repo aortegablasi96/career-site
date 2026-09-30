@@ -284,9 +284,9 @@ describe('LargerPicture', () => {
       );
     });
 
-    it('shows the video larger, with its controls and no download, fetching nothing until it is played', () => {
+    it('shows the video larger, with its controls, no download and no floating window, fetching nothing until it is played', () => {
       expect(video).toMatch(
-        /<\/button><div class="[^"]*"><video class="[^"]*" src="\/portfolio\/example\/gallery-walkthrough\.mp4" poster="\/portfolio\/example\/gallery-walkthrough\.webp" width="1920" height="1080" preload="none" controls="" controlsList="nodownload" aria-label="A silent walkthrough of the application">A silent walkthrough of the application<\/video><\/div><p id="picture-6-larger-caption" class="[^"]*">Video walkthrough<\/p><\/dialog>$/,
+        /<\/button><div class="[^"]*"><video class="[^"]*" src="\/portfolio\/example\/gallery-walkthrough\.mp4" poster="\/portfolio\/example\/gallery-walkthrough\.webp" width="1920" height="1080" preload="none" controls="" controlsList="nodownload" disablePictureInPicture="" aria-label="A silent walkthrough of the application">A silent walkthrough of the application<\/video><\/div><p id="picture-6-larger-caption" class="[^"]*">Video walkthrough<\/p><\/dialog>$/,
       );
       expect(video).not.toMatch(/\bautoplay\b|\bloop\b/);
       expect(video.match(/<video/g)).toHaveLength(1);

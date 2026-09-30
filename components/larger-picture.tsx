@@ -187,8 +187,9 @@ export interface Steps {
  * A video opens the same way, per DDR-089 and ADR-022: the frame shows its still, which is its
  * poster, and the dialog shows the video with the browser's controls, waiting for the reader to
  * play it. It fetches nothing until they do, per ADR-004, and closing the dialog pauses it. Its
- * controls offer no download in Chrome and Edge, and the browser's menu on it, which offers to save
- * it, is declined. Without script the menu is offered, and closing does not pause it.
+ * controls offer no download in Chrome and Edge, nor a floating picture-in-picture window, and the
+ * browser's menu on it, which offers to save it, is declined. Without script the menu is offered,
+ * and closing does not pause it.
  *
  * Both pictures stand in the view's box, per DDR-088: the frame is the box, with the class the view
  * gives it, and the picture is as wide as it and centred in it; larger, the box is as large as the
@@ -371,6 +372,7 @@ export function LargerPicture({
               preload="none"
               controls
               controlsList="nodownload"
+              disablePictureInPicture
               aria-label={video.description}
               onContextMenu={withhold}
             >

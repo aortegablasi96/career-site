@@ -71,8 +71,10 @@ the browser's own controls. Nothing the video offers downloads it.**
   menu, and the page asks them to leave it out. Firefox's controls have none.
 * **The browser's menu on the video is not offered** where the page has script. That is the
   right-click menu, the long press and the keyboard's menu key. It is the menu that says "Save video
-  as" in Chrome, Edge and Firefox. It also holds loop, speed and picture-in-picture, which a reader
-  loses with it.
+  as" in Chrome, Edge and Firefox. It also holds loop and speed, which a reader loses with it.
+* **The video cannot float in a window of its own.** Picture-in-picture, which Chrome and Edge list
+  in their controls' menu and Firefox draws as a button over the video, is not offered, as the
+  owner asked on #265. The video is watched on the view, larger, or at full screen.
 * **What stays**, recorded as limits:
   * Without script, the browser's menu is offered.
   * In Firefox, holding Shift while right-clicking always opens its menu.
@@ -145,7 +147,8 @@ Benefits:
 
 Tradeoffs:
 * A reader cannot watch the video in the frame.
-* The browser's menu on the video is gone, with its loop, speed and picture-in-picture.
+* The browser's menu on the video is gone, with its loop and speed.
+* A reader cannot keep the video playing in a floating window while they read the view.
 * In the frame, a video looks like a picture until it is opened. The chosen thumbnail's name says it
   is a video, as it did.
 * Watching takes two actions: opening, then playing.

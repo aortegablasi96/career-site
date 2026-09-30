@@ -40,7 +40,7 @@ ADR-001 to ADR-022 are accepted.
 | ADR-019 | Amends ADR-018: a gallery's larger picture hands over to its neighbour's by a command of the page's own, `--show-in-place` (DDR-083); still `LargerPicture`, and no stepping without script |
 | ADR-020 | Amends ADR-004: a video at its recording's pixel size, with no audio track where it has no sound (DDR-087); the budgets stand |
 | ADR-021 | A project picture's content carries its pixel size; a view hands its box (DDR-088) to its stylesheets in a `style` attribute; amends ADR-006 with `min(100%, 100cqb * var(--token))` on `max-inline-size` |
-| ADR-022 | Amends ADR-018, ADR-019 and ADR-017: a gallery's video opens in `LargerPicture`'s dialog (DDR-089) and pauses as it closes; `controlsList="nodownload"` and a declined `contextmenu` withhold its download; `Media` goes |
+| ADR-022 | Amends ADR-018, ADR-019 and ADR-017: a gallery's video opens in `LargerPicture`'s dialog (DDR-089) and pauses as it closes; `controlsList="nodownload"` and a declined `contextmenu` withhold its download; `disablePictureInPicture` its floating window; `Media` goes |
 
 ## DDRs
 

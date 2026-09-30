@@ -627,7 +627,7 @@ describe('ProjectView', () => {
         expect(media.description.length).toBeTruthy();
         expect(thumbnails(view).at(-1)).toMatchObject({ name: caption, source: media.poster });
         expect(bare(view)).toContain(
-          `<video src="${media.file}" poster="${media.poster}" width="${media.width}" height="${media.height}" preload="none" controls="" controlsList="nodownload" aria-label="${media.description}">`,
+          `<video src="${media.file}" poster="${media.poster}" width="${media.width}" height="${media.height}" preload="none" controls="" controlsList="nodownload" disablePictureInPicture="" aria-label="${media.description}">`,
         );
       }
     });
@@ -784,7 +784,7 @@ describe('ProjectView', () => {
 
     // DDR-010 and ADR-004: nothing is fetched until someone presses play, and the poster is what is
     // seen until then. DDR-089: its controls offer no download, and it plays only larger.
-    it('leaves a video unplayed and unfetched until the reader starts it, with no download control', () => {
+    it('leaves a video unplayed and unfetched until the reader starts it, with no download control and no floating window', () => {
       const markup = withGallery([video]);
       const element = markup.match(/<video[^>]*>/)?.[0] ?? '';
       const description = 'poster' in video.media ? video.media.description : '';
@@ -792,6 +792,7 @@ describe('ProjectView', () => {
       expect(element).toContain('preload="none"');
       expect(element).toContain('controls=""');
       expect(element).toContain('controlsList="nodownload"');
+      expect(element).toContain('disablePictureInPicture=""');
       expect(element).toContain('poster="/gallery-walkthrough.webp"');
       expect(element).toContain(`aria-label="${description}"`);
       expect(element).not.toMatch(/\bautoplay\b|\bloop\b/);
