@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `020`. The next DDR is `087`.** Update both lines when a record lands.
+**The next ADR is `021`. The next DDR is `088`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -18,7 +18,7 @@ reasoning behind it.
 
 ## ADRs
 
-ADR-001 to ADR-019 are accepted.
+ADR-001 to ADR-020 are accepted.
 
 | Record  | Relationship |
 | ------- | ------------ |
@@ -38,10 +38,11 @@ ADR-001 to ADR-019 are accepted.
 | ADR-017 | Extends ADR-014: a project's gallery holds its picture in native radios (DDR-081); no new Client Component |
 | ADR-018 | Amends ADR-017's overlay rejection and ADR-007: a view's picture opens larger in a modal `dialog` via Invoker Commands, without script (DDR-082); a third Client Component, `LargerPicture`, only moves it |
 | ADR-019 | Amends ADR-018: a gallery's larger picture hands over to its neighbour's by a command of the page's own, `--show-in-place` (DDR-083); still `LargerPicture`, and no stepping without script |
+| ADR-020 | Amends ADR-004: a video at its recording's pixel size, with no audio track where it has no sound (DDR-087); the budgets stand |
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-086. There are
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-087. There are
 two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
@@ -141,11 +142,13 @@ Each record keeps everything not listed against it.
 * **DDR-072**: DDR-076 a line below the question.
 * **DDR-053** (gallery): DDR-081 makes it a row of thumbnails under the lead picture; its content
   and video treatment stand. DDR-082 takes Option C's lightbox: the picture in the frame opens
-  larger.
+  larger. DDR-087 brings the first videos, silent and last in their rows: captions wait for the
+  first video with sound, and a check holds every video to no sound track until then.
 * **DDR-081** (thumbnails): DDR-082 opens the picture in the frame larger, which its Option A
   rejected; a thumbnail still only chooses the picture. DDR-084 takes the lead out of the row, which
   its Option B rejected: a gallery shows only the pictures it lists, and the view opens on the first.
-  DDR-085 shows the picture in the frame at its own shape.
+  DDR-085 shows the picture in the frame at its own shape. DDR-087 answers its risk: a playing
+  video is not paused when another picture is chosen.
 * **DDR-082** (picture larger): DDR-083 steps between a gallery's pictures while one is open, which
   its Option D rejected; the frame follows the last picture seen.
 * **DDR-083** (steps): DDR-084 takes the lead out of the order; DDR-086 stands the controls at the

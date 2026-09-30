@@ -4,6 +4,11 @@ Status: Accepted
 
 Date: 2026-09-20
 
+**Amended by DDR-087 (2026-09-30)**: the first gallery videos landed on #259, and they are silent.
+The captions track now arrives with the first video that has sound, where "A video" below says the
+first video; until then a check holds every video to having no sound track. DDR-087 also decides a
+video's place, its name and its still.
+
 **Amended by DDR-082 (2026-09-29)**: the picture in the lead's frame can be opened larger, over
 the page, which Option C below rejected. Everything else stands.
 
@@ -91,6 +96,9 @@ walkthrough is worth narrating, and captions serve a reader in a quiet room as w
 No gallery video exists yet, so `Video` carries no field for a track: the story that brings the
 first video adds `captions` beside `poster` and renders a `<track kind="captions">`, rather than
 this one shipping a shape nothing fills.
+
+*Amended by DDR-087: the first videos have no sound, so the field waits for the first that has,
+and the suite fails if a video with a sound track lands before it.*
 
 ### Its shape and its space
 

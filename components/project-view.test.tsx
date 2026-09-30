@@ -24,6 +24,43 @@ const [numisBook, digitalTwin, stockPortfolioViewer, careerSite] = projects.proj
 // Since this site gained its own on #252, every project has a gallery, so a project without one is
 // this site with its gallery taken away.
 const withoutGallery: Project = { ...careerSite!, gallery: undefined };
+/** A project's gallery pictures: every item but a video, which #259 brought to two galleries. */
+const stills = ({ gallery = [] }: Project) => gallery.filter(({ media }) => !('poster' in media));
+/** Every video the site carries, as a project's lead or in its gallery, with the project it is of. */
+const videos = projects.projects.flatMap(({ slug, media, gallery = [] }) =>
+  [media, ...gallery.map((item) => item.media)].flatMap((item) => ('poster' in item ? [{ slug, video: item }] : [])),
+);
+
+/**
+ * The kinds of track an MP4 carries, read from each track's handler in the file's `moov` box:
+ * `vide` for pictures and `soun` for sound.
+ */
+function tracks(file: string): string[] {
+  const bytes = readFileSync(new URL(`../public${file}`, import.meta.url));
+  let moov = bytes.subarray(0, 0);
+
+  // The file is a run of boxes, each its length, then its four-letter type, then its content.
+  for (let at = 0; at + 8 <= bytes.length; ) {
+    const length = bytes.readUInt32BE(at);
+
+    if (bytes.toString('latin1', at + 4, at + 8) === 'moov') {
+      moov = bytes.subarray(at, at + length);
+    }
+    // A length of 0 runs to the file's end, and 1 is a longer box than the site's budget allows.
+    if (length < 8) {
+      break;
+    }
+    at += length;
+  }
+
+  const kinds: string[] = [];
+
+  for (let at = moov.indexOf('hdlr', 0, 'latin1'); at !== -1; at = moov.indexOf('hdlr', at + 4, 'latin1')) {
+    kinds.push(moov.toString('latin1', at + 12, at + 16));
+  }
+
+  return kinds;
+}
 const html = render(numisBook!);
 
 /** The markup's text, as a reader meets it. */
@@ -426,10 +463,11 @@ describe('ProjectView', () => {
     // The owner's pictures, which on #252 replaced #244's: each is a file the site carries, reached by its own
     // path, within the budget ADR-004 sets for a still, as a lead picture is.
     it('shows NumisBook’s gallery, each picture a file within the budget for a still', () => {
-      const gallery = numisBook!.gallery ?? [];
+      const gallery = stills(numisBook!);
 
       expect(gallery).toHaveLength(7);
-      expect(radios(html)).toHaveLength(7);
+      // The seven pictures and the video #259 added after them.
+      expect(radios(html)).toHaveLength(8);
       for (const { media, caption } of gallery) {
         const bytes = statSync(new URL(`../public${media.file}`, import.meta.url)).size;
 
@@ -441,11 +479,12 @@ describe('ProjectView', () => {
 
     // The owner's pictures, supplied on #252, held as NumisBook's are.
     it('shows the Stock Portfolio Viewer’s gallery, each picture a file within the budget for a still', () => {
-      const gallery = stockPortfolioViewer!.gallery ?? [];
+      const gallery = stills(stockPortfolioViewer!);
       const view = render(stockPortfolioViewer!);
 
       expect(gallery).toHaveLength(4);
-      expect(radios(view)).toHaveLength(4);
+      // The four pictures and the video #259 added after them.
+      expect(radios(view)).toHaveLength(5);
       for (const { media, caption } of gallery) {
         const bytes = statSync(new URL(`../public${media.file}`, import.meta.url)).size;
 
@@ -488,6 +527,45 @@ describe('ProjectView', () => {
       }
     });
 
+    // DDR-087 and ADR-020, on #259: the owner's recordings of NumisBook and the Stock Portfolio
+    // Viewer are the site's first videos. Each is its gallery's last item, a file within ADR-004's
+    // budget for a video, beside a still of its first frame within the budget for a still.
+    it('ends NumisBook’s gallery and the Stock Portfolio Viewer’s with the owner’s video, each within its budget', () => {
+      expect(videos.map(({ slug }) => slug)).toEqual([numisBook!.slug, stockPortfolioViewer!.slug]);
+
+      for (const project of [numisBook!, stockPortfolioViewer!]) {
+        const { media, caption } = project.gallery!.at(-1)!;
+        const view = render(project);
+
+        expect(media).toMatchObject({
+          file: `/portfolio/${project.slug}/gallery-walkthrough.mp4`,
+          poster: `/portfolio/${project.slug}/gallery-walkthrough.webp`,
+        });
+        if (!('poster' in media)) {
+          continue;
+        }
+        expect(statSync(new URL(`../public${media.file}`, import.meta.url)).size).toBeLessThanOrEqual(6 * 1024 * 1024);
+        expect(statSync(new URL(`../public${media.poster}`, import.meta.url)).size).toBeLessThanOrEqual(150 * 1024);
+        expect(media.description.length).toBeTruthy();
+        expect(thumbnails(view).at(-1)).toMatchObject({ name: caption, source: media.poster });
+        expect(bare(view)).toContain(
+          `<video src="${media.file}" poster="${media.poster}" preload="none" controls="" aria-label="${media.description}">`,
+        );
+      }
+    });
+
+    // DDR-053 lets no video with speech land without captions, and `Video` has no field for a
+    // track. DDR-087 holds the rule until it has: a video the site carries has no sound track at
+    // all, so there is nothing to caption, and its description stands in for the pictures.
+    it('carries no sound in any video, which has no captions to go with it', () => {
+      expect(videos.length).toBeGreaterThan(0);
+
+      for (const { video } of videos) {
+        expect(tracks(video.file)).toContain('vide');
+        expect(tracks(video.file)).not.toContain('soun');
+      }
+    });
+
     // DDR-084, as the owner asked on #253: the lead picture is the card's, and a view with a
     // gallery shows the gallery alone, so a reader who came from the card does not see it twice.
     it('leaves the lead picture out of a gallery, which shows only the pictures it lists', () => {
@@ -498,7 +576,7 @@ describe('ProjectView', () => {
 
         expect(view).not.toContain(`src="${project.media.file}"`);
         expect(thumbnails(view).map(({ source }) => source)).toEqual(
-          project.gallery!.map(({ media }) => media.file),
+          project.gallery!.map(({ media }) => ('poster' in media ? media.poster : media.file)),
         );
       }
 
@@ -722,8 +800,8 @@ describe('ProjectView', () => {
     });
 
     it('opens whichever picture of a gallery is shown, each by its own control, and no video', () => {
-      const markup = render({ ...numisBook!, gallery: [...numisBook!.gallery!, video] });
-      const pictures = numisBook!.gallery!;
+      const markup = render({ ...numisBook!, gallery: [...stills(numisBook!), video] });
+      const pictures = stills(numisBook!);
       const ids = dialogs(markup).map(({ id }) => id);
 
       expect(openers(markup).map(({ target }) => target)).toEqual(ids);
@@ -744,7 +822,8 @@ describe('ProjectView', () => {
       const larger = dialogs(html);
       const count = larger.length;
 
-      expect(count).toBe(numisBook!.gallery!.length);
+      // NumisBook's pictures: its video, the gallery's last item, opens nothing larger.
+      expect(count).toBe(stills(numisBook!).length);
       larger.forEach(({ id, labelledBy, captionId, positionId, position, steps }, place) => {
         expect(labelledBy).toBe(`${captionId} ${positionId}`);
         expect(position).toBe(projects.view.position(place + 1, count));

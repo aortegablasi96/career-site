@@ -17,8 +17,8 @@ certifications, languages, footer) that is also the printable CV; a view per pro
 `/portfolio/<slug>` and per role at `/experience/<slug>`; and a separately designed CV file,
 `public/home/andreu-ortega-blasi-cv.pdf`. The redesign epics #42 and #70 are complete.
 
-**Still open**, each the owner's to supply or decide: a role's `skills`; a project's
-video; a PMI logo (only with PMI's written authorization); the CV file catching up with the page's
+**Still open**, each the owner's to supply or decide: a role's `skills`; a video for the Digital
+Twin and for this site; a PMI logo (only with PMI's written authorization); the CV file catching up with the page's
 job titles (DDR-060); and a custom domain (ADR-003 lists the steps).
 
 ## Commands
@@ -86,7 +86,7 @@ the owner has decided that **the design prevails**, including over records writt
 conformance: a value that fails is recorded as failing, held by name in `app/tokens.test.ts`, and
 shipped. The file lags the owner's later choices, so adopt only what an issue names.
 
-The owner supplies every photo, picture, logo and the CV file. Don't capture pictures of the owner
+The owner supplies every photo, picture, video, logo and the CV file. Don't capture pictures of the owner
 or their applications, and don't draw placeholders (a monogram or gradient) in a picture's place.
 The one exception is this site's own gallery, which is captured from the site when the owner asks
 (#252).

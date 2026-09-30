@@ -40,7 +40,8 @@ const liveSite = 'Live site';
  * application's window, which on #252 replaced NumisBook's mockups. Each file is the owner's to
  * supply, as on #63, but for this site's: when #252 was reopened the owner asked for its gallery to
  * be made from the site itself, so every project now has one. A project with no `gallery` would
- * show its lead picture alone.
+ * show its lead picture alone. Since #259 NumisBook's and the Stock Portfolio Viewer's each end with
+ * the owner's recording of the application, the site's first videos, per DDR-087 and ADR-020.
  * Adding one is content alone — a list of media and captions here, and the files in `public/` —
  * with no change to a component.
  *
@@ -105,6 +106,17 @@ export const projects: Projects = {
         {
           media: { file: '/portfolio/numisbook/gallery-settings.webp', alt: 'NumisBook’s window, showing the settings: the profile’s display name, with its email blacked out, the language, theme and base currency, and a danger zone for deleting the account' },
           caption: 'The settings',
+        },
+        // The owner's recording of the application, supplied on #259, last in the gallery, per
+        // DDR-087. It has no sound, so its description says in words everything it shows, and its
+        // still is its first frame.
+        {
+          media: {
+            file: '/portfolio/numisbook/gallery-walkthrough.mp4',
+            poster: '/portfolio/numisbook/gallery-walkthrough.webp',
+            description: 'A silent screen recording of NumisBook, a minute long. From the sign-in page it enters the demo collection and goes through the dashboard, the collections, the coins of one collection, the record of a tetradrachm of Mark Antony and Cleopatra with its photographs, the portfolio’s charts and the settings, where the theme changes to dark and back. It ends with the assistant answering what it can do.',
+          },
+          caption: 'Video walkthrough',
         },
       ],
       summary: 'An intelligent coin collection management SaaS.',
@@ -267,6 +279,15 @@ export const projects: Projects = {
         {
           media: { file: '/portfolio/stock-portfolio-viewer/gallery-assistant.webp', alt: 'The Stock Portfolio Viewer’s window, showing its Assistant view: the investor profile, with the tags of an investing style and targets for currency exposure and sector weight, beside a chat in which the assistant answers whether the portfolio is over-concentrated in any single currency' },
           caption: 'The Assistant view',
+        },
+        // The owner's recording of the application, supplied on #259 and held as NumisBook's is.
+        {
+          media: {
+            file: '/portfolio/stock-portfolio-viewer/gallery-walkthrough.mp4',
+            poster: '/portfolio/stock-portfolio-viewer/gallery-walkthrough.webp',
+            description: 'A silent screen recording of the Stock Portfolio Viewer, a minute and a half long. It goes through the views in turn: the Portfolio view’s holdings, the Performance view’s charts over two periods, the Allocation view’s map and its tables by sector, country and currency, the Dividends view’s income over time, and the Trades view’s realised gains and trade history. It ends in the Assistant view, where the investor profile is opened and the assistant answers whether the portfolio is over-concentrated in any single currency.',
+          },
+          caption: 'Video walkthrough',
         },
       ],
       summary: 'An on-premise AI-enabled portfolio management assistant.',

@@ -12,6 +12,10 @@ which `next/link` gives the base path itself, and does not go through `asset()`.
 full resolution of the owner's original, not at the size it is shown (§3). The photo's budget is
 200 KB, where it was 100 KB, and §5's widths are corrected (§5).
 
+**Amended by ADR-020** for a video. It is served at the pixel size of the owner's recording, not at
+the size it is shown, and a recording without sound is served with no audio track (§3). §5's
+budgets stand.
+
 Supersedes the part of ADR-002 that rules out a separate CV file. The rest of ADR-002 stands: content
 is still authored as typed TypeScript modules in `content/`, the page is still the CV, and the print
 stylesheet is still what produces it.
@@ -167,6 +171,9 @@ owns. Next.js copies it into `out/` unchanged, and GitHub Pages serves it.
 * **One file per asset.** WebP for the photo and the stills, MP4 with H.264 video and AAC audio for
   the demo video, PDF for the CV. No `<picture>`, no second `<source>`, no format fallbacks. Every
   browser the site supports reads all three.
+
+  > **Amended by ADR-020.** A video is served at its recording's pixel size, and a recording
+  > without sound has no audio track. It is still one MP4 file, prepared by hand.
 * **The video carries a poster still and `preload="none"`**, so it costs nothing until someone presses
   play. The poster is a separate committed still, and it is what prints, per DDR-010.
 * **Replacing an asset replaces the file.** Variants and sizes do not accumulate beside it.

@@ -129,9 +129,13 @@ import type { Cv } from './types';
  * Telegram, each with a caption and alternative text. And once more when #252 was reopened,
  * because this site gained its gallery: seven pictures of its own window, each with a caption and
  * alternative text. None is a fact ADR-005 lists as shared, so none moved the CV.
+ *
+ * It moved again with #259, because NumisBook's gallery and the Stock Portfolio Viewer's each
+ * gained the owner's video, with its still, its name and a description of what it shows, per
+ * DDR-087. None is a fact ADR-005 lists as shared, so none moved the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '01519cdcaa86091891081967b558aed86e89f6eec8e31dcd2f2c923b1eaaf9e0',
+  contentDigest: '8987d4147530ca6f911e3a684a17b33ae2a12d566c1198be459aa6c641011888',
 };

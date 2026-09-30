@@ -11,5 +11,7 @@
 *.tsbuildinfo
 next-env.d.ts
 
-# The owner's full-size originals, kept beside the files made from them but never shipped
+# The owner's full-size originals, kept beside the files made from them but never shipped: every
+# PNG, and a view's media/ folder, which also holds the recordings its videos are made from
 public/**/*.png
+public/**/media/

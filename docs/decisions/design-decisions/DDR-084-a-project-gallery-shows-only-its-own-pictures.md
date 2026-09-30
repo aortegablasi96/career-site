@@ -104,6 +104,7 @@ Risks:
   before; now it is the first picture seen. DDR-085 answers it: the frame shows a picture whole.
 * **A gallery whose first item is a video** opens on the video's poster, with nothing to open
   larger. No gallery has a video. The story that brings the first one decides its place.
+  *Decided by DDR-087, on #259: a video is its gallery's last item.*
 
 ## Related Documents
 
