@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `020`. The next DDR is `084`.** Update both lines when a record lands.
+**The next ADR is `020`. The next DDR is `086`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -41,7 +41,7 @@ ADR-001 to ADR-019 are accepted.
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-083. There are
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-085. There are
 two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
@@ -121,7 +121,8 @@ Each record keeps everything not listed against it.
 * **DDR-049** (bar title): DDR-075 the menu below the wide breakpoint.
 * **DDR-050** (project view): DDR-052 neighbours; DDR-053 gallery; DDR-078 "How I built it";
   DDR-079 the business-case switch; DDR-081 the gallery's thumbnails in the lead's column; DDR-082
-  the picture in the lead's frame opens larger.
+  the picture in the lead's frame opens larger; DDR-084 a view with a gallery shows that in the
+  lead's place; DDR-085 the frame shows its picture whole, not cropped to 16:10.
 * **DDR-051** (project cards): DDR-054 every technology; DDR-055 the lift; DDR-062 the hover
   shadow; DDR-063 the shared card behaviour.
 * **DDR-055, DDR-057, DDR-059, DDR-061**: DDR-063 makes a role card rest raised and lift like a
@@ -141,7 +142,10 @@ Each record keeps everything not listed against it.
   and video treatment stand. DDR-082 takes Option C's lightbox: the picture in the frame opens
   larger.
 * **DDR-081** (thumbnails): DDR-082 opens the picture in the frame larger, which its Option A
-  rejected; a thumbnail still only chooses the picture.
+  rejected; a thumbnail still only chooses the picture. DDR-084 takes the lead out of the row, which
+  its Option B rejected: a gallery shows only the pictures it lists, and the view opens on the first.
+  DDR-085 shows the picture in the frame at its own shape.
 * **DDR-082** (picture larger): DDR-083 steps between a gallery's pictures while one is open, which
   its Option D rejected; the frame follows the last picture seen.
+* **DDR-083** (steps): DDR-084 takes the lead out of the order.
 * **DDR-079** (business-case switch): DDR-080 shows the business case one item at a time, in a card.

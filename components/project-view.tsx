@@ -79,17 +79,21 @@ function Thumbnail({ media, caption, index }: { media: ProjectMedia; caption: st
 }
 
 /**
- * A project's lead picture and its gallery, per DDR-081 and ADR-017, as `career-site-business-case`
- * draws them (node 405:80): one picture in the lead's frame, and under it a row of thumbnails, the
- * lead's first. Choosing a thumbnail shows its picture in the frame, and the chosen thumbnail rises
- * with the picture's name above it, as the owner asked on #244. The name is the picture's caption,
- * which the frame no longer shows beneath it.
+ * A project's gallery, per DDR-081 and ADR-017, as `career-site-business-case` draws it (node
+ * 405:80): one picture in the lead's frame, and under it a row of thumbnails. Choosing a thumbnail
+ * shows its picture in the frame, and the chosen thumbnail rises with the picture's name above it,
+ * as the owner asked on #244. The name is the picture's caption, which the frame no longer shows
+ * beneath it.
+ *
+ * The pictures are the ones the gallery lists, per DDR-084, as the owner asked on #253, where
+ * DDR-081 put the lead's first: the lead picture is what the project's card shows on the page, and
+ * a view shows it again only where the gallery lists it.
  *
  * The pictures are a native radio group, as the business-case switch is, per ADR-014: each picture
  * is a radio followed by its `figure`, and the stylesheet shows the figure whose radio is checked.
  * So the browser holds the choice, the keyboard moves between the pictures with the arrow keys,
  * assistive technology announces each by its caption, and all of it works without script. The
- * lead's radio is checked in the markup, so a view opens on the lead picture.
+ * first picture's radio is checked in the markup, so a view opens on the gallery's first picture.
  *
  * Each picture carries its own control that opens it larger, per DDR-082, so the one on the picture
  * shown is the one a reader meets, and it opens that picture, whichever was chosen. Larger, each
@@ -115,7 +119,7 @@ function Pictures({
 }: {
   /** The radio group's accessible name. */
   name: string;
-  /** The lead picture first, then the gallery's items. */
+  /** The gallery's items, in the content's order. */
   pictures: readonly GalleryItem[];
   /** The names of the controls that open a picture larger and close it, per DDR-082. */
   enlarge: string;
@@ -275,9 +279,10 @@ function Neighbour({
  * breakpoint: the project's name, what it is, what it is built with and the links that lead to it,
  * and beside them its lead picture with a caption. Below the breakpoint the two are one column, in
  * the same order, so the picture follows the links; the markup order is the visual order at both
- * widths, per DDR-014. Where the project has further pictures and videos, their thumbnails stand
- * under the lead picture's caption, and choosing one shows it in the lead's place, per DDR-081. At
- * the foot, below a divider, the projects on either side of this one, per DDR-052.
+ * widths, per DDR-014. Where the project has a gallery of pictures and videos, the view shows those
+ * in the lead's place, per DDR-084: the first of them in the frame, and their thumbnails under it,
+ * each choosing the picture the frame shows, per DDR-081. At the foot, below a divider, the
+ * projects on either side of this one, per DDR-052.
  *
  * Every word is the project's own record, stated once in `content/` and shown on the page as well,
  * per ADR-002, and the words around it are the view's strings beside the projects. The name is the
@@ -337,6 +342,9 @@ export function ProjectView({
   /** A class for a part of the overview, which the business case hides where the project has one. */
   const overviewOnly = (className: string) =>
     businessCase ? `${className} ${styles.overviewOnly}` : className;
+
+  /** The picture a view without a row of thumbnails shows: a gallery's one, or the lead, per DDR-084. */
+  const only: GalleryItem = gallery?.[0] ?? { media, caption };
 
   const overview = (
     <>
@@ -432,14 +440,16 @@ export function ProjectView({
             </ul>
           )}
         </div>
-        {/* The lead picture, and where the project has further pictures and videos, their
-            thumbnails under it, per DDR-081 (node 405:80). A project the owner has supplied none
-            for shows its lead picture alone, as it did before. Either way, the picture shown can
-            be opened larger, per DDR-082. */}
-        {gallery && gallery.length > 0 ? (
+        {/* Where the project has a gallery, its pictures and videos, with their thumbnails under
+            the one shown, per DDR-081 (node 405:80). They are the gallery's own, per DDR-084: the
+            lead picture is the card's, and a view shows it again only where the gallery lists it.
+            A project the owner has supplied none for shows its lead picture alone, as it did
+            before, and a gallery of one shows that one the same way. Either way, the picture shown
+            can be opened larger, per DDR-082. */}
+        {gallery && gallery.length > 1 ? (
           <Pictures
             name={galleryName}
-            pictures={[{ media, caption }, ...gallery]}
+            pictures={gallery}
             enlarge={enlarge}
             close={close}
             previousPicture={previousPicture}
@@ -448,8 +458,14 @@ export function ProjectView({
           />
         ) : (
           <figure className={styles.figure}>
-            <Frame media={media} caption={caption} id="picture-larger" enlarge={enlarge} close={close} />
-            <figcaption className={styles.caption}>{caption}</figcaption>
+            <Frame
+              media={only.media}
+              caption={only.caption}
+              id="picture-larger"
+              enlarge={enlarge}
+              close={close}
+            />
+            <figcaption className={styles.caption}>{only.caption}</figcaption>
           </figure>
         )}
       </div>

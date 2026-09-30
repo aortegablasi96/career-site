@@ -50,7 +50,8 @@ describe('ProjectView', () => {
       projects.view.builtWith,
       ...numisBook!.technologies,
       ...numisBook!.links.map(({ text }) => text),
-      numisBook!.caption,
+      // The first picture's caption: since DDR-084 a view with a gallery opens on the gallery's first.
+      numisBook!.gallery![0]!.caption,
     ];
     const shown = text(html);
     const positions = order.map((part) => shown.indexOf(part));
@@ -110,7 +111,8 @@ describe('ProjectView', () => {
   // through a native radio group the stylesheet draws as one pill, with no script.
   describe('the switch between the overview and the business case', () => {
     const view = render(stockPortfolioViewer!);
-    const radios = [...view.matchAll(/<input [^>]*>/g)].map(([input]) => input);
+    // The switch's own radios: since #252 this view has a gallery, whose pictures are radios too.
+    const radios = [...view.matchAll(/<input [^>]*name="account"[^>]*>/g)].map(([input]) => input);
 
     // Since this site gained its own on #231, every project has one, so a view without one is a
     // project with its business case taken away.
@@ -338,25 +340,28 @@ describe('ProjectView', () => {
     }
   });
 
+  // A project without a gallery, since DDR-084: one with a gallery shows that in the lead's place.
   it('shows the lead picture with its alternative text and its caption below it', () => {
-    const media = numisBook!.media;
+    const media = careerSite!.media;
+    const view = render(careerSite!);
 
     expect('alt' in media).toBe(true);
-    expect(html).toContain(`alt="${'alt' in media && media.alt}"`);
-    expect(html).toMatch(
+    expect(view).toContain(`alt="${'alt' in media && media.alt}"`);
+    expect(view).toMatch(
       new RegExp(
-        `<figure[^>]*><div[^>]*><img [^>]*>[\\s\\S]*?</dialog><figcaption[^>]*>${numisBook!.caption}</figcaption></figure>`,
+        `<figure[^>]*><div[^>]*><img [^>]*>[\\s\\S]*?</dialog><figcaption[^>]*>${careerSite!.caption}</figcaption></figure>`,
       ),
     );
   });
 
-  // DDR-050: the design's 16:10, which crops a 4:3 picture rather than distorting it.
-  it('keeps the picture in the design’s shape without stretching it', () => {
+  // DDR-085, on #254: the picture is whole, as wide as its column and at its own shape, where
+  // DDR-050 cropped it to the design's 16:10. That shape only holds its place until the file arrives.
+  it('shows the picture whole at its own shape, neither cropped nor stretched', () => {
     const media = css.match(/\.media\s*\{([^}]*)\}/)?.[1] ?? '';
 
-    expect(media).toContain('aspect-ratio: var(--project-view-media-ratio)');
-    expect(media).toContain('object-fit: cover');
+    expect(media).toContain('aspect-ratio: auto var(--project-view-media-ratio)');
     expect(media).toContain('align-self: stretch');
+    expect(media).not.toMatch(/object-fit|(?:^|\s)(?:inline|block)-size/);
   });
 
   // #159: in a grid of one track, Firefox sizes the row from the picture's own height rather than
@@ -369,9 +374,10 @@ describe('ProjectView', () => {
     expect(figure).toContain('flex-direction: column');
   });
 
-  // DDR-053's gallery, laid out as DDR-081 draws it: thumbnails under the lead picture, and the
-  // chosen one shown in the lead's place, held by native radios per ADR-017. NumisBook has one; the
-  // stand-in items below exercise what it does not, a video and a gallery of any length.
+  // DDR-053's gallery, laid out as DDR-081 draws it: thumbnails under the frame, and the chosen one
+  // shown in it, held by native radios per ADR-017. Since DDR-084 the pictures are the gallery's
+  // own, without the lead. NumisBook has one; the stand-in items below exercise what it does not, a
+  // video and a gallery of any length.
   describe('the gallery', () => {
     const picture: GalleryItem = {
       media: { file: '/gallery-picture.webp', alt: 'The assistant adding a coin from a photograph' },
@@ -416,12 +422,12 @@ describe('ProjectView', () => {
       expect(withGallery([])).toBe(render({ ...numisBook!, gallery: undefined }));
     });
 
-    // The owner's pictures, supplied on #244: each is a file the site carries, reached by its own
+    // The owner's pictures, which on #252 replaced #244's: each is a file the site carries, reached by its own
     // path, within the budget ADR-004 sets for a still, as a lead picture is.
     it('shows NumisBook’s gallery, each picture a file within the budget for a still', () => {
       const gallery = numisBook!.gallery ?? [];
 
-      expect(gallery).toHaveLength(6);
+      expect(gallery).toHaveLength(7);
       expect(radios(html)).toHaveLength(7);
       for (const { media, caption } of gallery) {
         const bytes = statSync(new URL(`../public${media.file}`, import.meta.url)).size;
@@ -432,6 +438,74 @@ describe('ProjectView', () => {
       }
     });
 
+    // The owner's pictures, supplied on #252, held as NumisBook's are.
+    it('shows the Stock Portfolio Viewer’s gallery, each picture a file within the budget for a still', () => {
+      const gallery = stockPortfolioViewer!.gallery ?? [];
+      const view = render(stockPortfolioViewer!);
+
+      expect(gallery).toHaveLength(4);
+      expect(radios(view)).toHaveLength(4);
+      for (const { media, caption } of gallery) {
+        const bytes = statSync(new URL(`../public${media.file}`, import.meta.url)).size;
+
+        expect(bytes).toBeLessThanOrEqual(150 * 1024);
+        expect('alt' in media && media.alt.length).toBeTruthy();
+        expect(text(view)).toContain(caption);
+      }
+    });
+
+    // The owner's pictures, supplied on #252, held as NumisBook's are.
+    it('shows the Digital Twin’s gallery, each picture a file within the budget for a still', () => {
+      const gallery = digitalTwin!.gallery ?? [];
+      const view = render(digitalTwin!);
+
+      expect(gallery).toHaveLength(2);
+      expect(radios(view)).toHaveLength(2);
+      for (const { media, caption } of gallery) {
+        const bytes = statSync(new URL(`../public${media.file}`, import.meta.url)).size;
+
+        expect(bytes).toBeLessThanOrEqual(150 * 1024);
+        expect('alt' in media && media.alt.length).toBeTruthy();
+        expect(text(view)).toContain(caption);
+      }
+    });
+
+    // DDR-084, as the owner asked on #253: the lead picture is the card's, and a view with a
+    // gallery shows the gallery alone, so a reader who came from the card does not see it twice.
+    it('leaves the lead picture out of a gallery, which shows only the pictures it lists', () => {
+      const lead = numisBook!.media;
+
+      for (const project of projects.projects.filter(({ gallery }) => gallery)) {
+        const view = render(project);
+
+        expect(view).not.toContain(`src="${project.media.file}"`);
+        expect(thumbnails(view).map(({ source }) => source)).toEqual(
+          project.gallery!.map(({ media }) => media.file),
+        );
+      }
+
+      // Unless the gallery lists it, at the place the gallery gives it.
+      const listed = withGallery([picture, { media: lead, caption: numisBook!.caption }, third]);
+
+      expect(thumbnails(listed).map(({ source }) => source)).toEqual([
+        '/gallery-picture.webp',
+        lead.file,
+        '/gallery-collections.webp',
+      ]);
+      expect(listed).toContain(`alt="${'alt' in lead && lead.alt}"`);
+    });
+
+    // A row of one thumbnail would repeat the picture above it, so a gallery of one is drawn as a
+    // lone picture is: in the frame, with its caption under it.
+    it('shows a gallery of one picture alone, with its caption under it and no thumbnails', () => {
+      const markup = withGallery([picture]);
+
+      expect(radios(markup)).toHaveLength(0);
+      expect(thumbnails(markup)).toHaveLength(0);
+      expect(markup).not.toContain(`src="${numisBook!.media.file}"`);
+      expect(markup).toMatch(new RegExp(`<figcaption class="[^"]*caption[^"]*">${picture.caption}</figcaption>`));
+    });
+
     it('draws no "Gallery" heading, and keeps one h1', () => {
       const markup = withGallery([picture, video, third]);
 
@@ -439,14 +513,14 @@ describe('ProjectView', () => {
       expect(markup.match(/<h1/g)).toHaveLength(1);
     });
 
-    // DDR-081: the pictures are one choice among several, the lead first and checked, each named
-    // by its caption, so assistive technology hears the picture's words and its place in the set.
-    it('is a radio group named for the gallery, the lead first and checked, each named by its caption', () => {
+    // DDR-081: the pictures are one choice among several, the first checked, each named by its
+    // caption, so assistive technology hears the picture's words and its place in the set.
+    it('is a radio group named for the gallery, the first picture checked, each named by its caption', () => {
       const markup = withGallery([picture, video]);
       const found = radios(markup);
 
       expect(markup).toContain(`role="radiogroup" aria-label="${projects.view.gallery}"`);
-      expect(found).toHaveLength(3);
+      expect(found).toHaveLength(2);
       expect(found[0]).toContain('checked=""');
       for (const [index, tag] of found.entries()) {
         expect(tag).toContain('type="radio"');
@@ -455,7 +529,7 @@ describe('ProjectView', () => {
         if (index > 0) expect(tag).not.toContain('checked');
       }
 
-      for (const [index, caption] of [numisBook!.caption, picture.caption, video.caption].entries()) {
+      for (const [index, caption] of [picture.caption, video.caption].entries()) {
         expect(bare(markup)).toContain(`<figcaption id="picture-${index}-caption">${caption}</figcaption>`);
       }
     });
@@ -468,7 +542,7 @@ describe('ProjectView', () => {
 
       expect(markup).toMatch(
         new RegExp(
-          `<input [^>]*id="picture-1"[^>]*/><figure><div><img [^>]*alt="${alt}"/><button [\\s\\S]*?</dialog><figcaption id="picture-1-caption">${picture.caption}</figcaption></figure><input [^>]*id="picture-2"`,
+          `<input [^>]*id="picture-0"[^>]*/><figure><div><img [^>]*alt="${alt}"/><button [\\s\\S]*?</dialog><figcaption id="picture-0-caption">${picture.caption}</figcaption></figure><input [^>]*id="picture-1"`,
         ),
       );
       expect(rule('.pick:not(:checked) + .figure')).toContain('display: none');
@@ -477,15 +551,10 @@ describe('ProjectView', () => {
 
     // DDR-081, as the owner asked on #244: every picture's thumbnail is in the row, in the order
     // the content gives, and nothing hides any of them.
-    it('shows every picture’s thumbnail, the lead first, with no count', () => {
+    it('shows every picture’s thumbnail, in the content’s order, with no count', () => {
       const markup = withGallery([picture, video, third]);
 
-      expect(thumbnails(markup).map(({ target }) => target)).toEqual([
-        'picture-0',
-        'picture-1',
-        'picture-2',
-        'picture-3',
-      ]);
+      expect(thumbnails(markup).map(({ target }) => target)).toEqual(['picture-0', 'picture-1', 'picture-2']);
       expect(markup).not.toContain('<details');
     });
 
@@ -495,15 +564,11 @@ describe('ProjectView', () => {
     it('names each thumbnail by its caption, which the frame no longer shows', () => {
       const markup = withGallery([picture, video]);
 
-      expect(thumbnails(markup).map(({ name }) => name)).toEqual([
-        numisBook!.caption.replace(/’/g, '’'),
-        picture.caption,
-        video.caption,
-      ]);
+      expect(thumbnails(markup).map(({ name }) => name)).toEqual([picture.caption, video.caption]);
       expect(rule('.pictureCaption')).toContain('display: none');
       expect(markup).toMatch(/<figcaption id="picture-0-caption" class="[^"]*pictureCaption/);
       // A project without a gallery keeps its caption under its picture.
-      expect(render(digitalTwin!)).toMatch(/<figcaption class="[^"]*caption/);
+      expect(render(careerSite!)).toMatch(/<figcaption class="[^"]*caption/);
     });
 
     // The chosen thumbnail is found by place, one rule for each of twelve, because its radio is
@@ -517,7 +582,7 @@ describe('ProjectView', () => {
       }
       expect(css).not.toContain('.pick:nth-of-type(13)');
       for (const { gallery = [] } of projects.projects) {
-        expect(gallery.length + 1).toBeLessThanOrEqual(12);
+        expect(gallery.length).toBeLessThanOrEqual(12);
       }
     });
 
@@ -538,7 +603,6 @@ describe('ProjectView', () => {
     // by the caption and the picture in the frame carries the alternative text.
     it('shows each picture, or a video’s poster, as its thumbnail, saying nothing twice', () => {
       expect(thumbnails(withGallery([picture, video])).map(({ source }) => source)).toEqual([
-        numisBook!.media.file,
         '/gallery-picture.webp',
         '/gallery-walkthrough.webp',
       ]);
@@ -619,11 +683,12 @@ describe('ProjectView', () => {
         },
       );
 
-    it('opens every view’s lead picture, with its alternative text, its caption and a way to close it', () => {
+    // The picture a view opens on: its gallery's first, per DDR-084, or its lead where it has none.
+    it('opens every view’s first picture, with its alternative text, its caption and a way to close it', () => {
       for (const project of projects.projects) {
         const markup = render(project);
         const [larger] = dialogs(markup);
-        const media = project.media;
+        const { media, caption } = project.gallery?.[0] ?? project;
 
         expect('alt' in media).toBe(true);
         expect(openers(markup)[0]).toEqual({ target: larger!.id, name: projects.view.enlarge });
@@ -633,14 +698,14 @@ describe('ProjectView', () => {
           labelledBy: project.gallery ? `${larger!.captionId} ${larger!.positionId}` : larger!.captionId,
           source: 'alt' in media ? media.file : '',
           alt: 'alt' in media ? media.alt : '',
-          caption: project.caption,
+          caption,
         });
       }
     });
 
     it('opens whichever picture of a gallery is shown, each by its own control, and no video', () => {
       const markup = render({ ...numisBook!, gallery: [...numisBook!.gallery!, video] });
-      const pictures = [{ media: numisBook!.media, caption: numisBook!.caption }, ...numisBook!.gallery!];
+      const pictures = numisBook!.gallery!;
       const ids = dialogs(markup).map(({ id }) => id);
 
       expect(openers(markup).map(({ target }) => target)).toEqual(ids);
@@ -661,7 +726,7 @@ describe('ProjectView', () => {
       const larger = dialogs(html);
       const count = larger.length;
 
-      expect(count).toBe(1 + numisBook!.gallery!.length);
+      expect(count).toBe(numisBook!.gallery!.length);
       larger.forEach(({ id, labelledBy, captionId, positionId, position, steps }, place) => {
         expect(labelledBy).toBe(`${captionId} ${positionId}`);
         expect(position).toBe(projects.view.position(place + 1, count));
@@ -678,7 +743,8 @@ describe('ProjectView', () => {
     });
 
     it('passes over a gallery’s video, which opens nothing larger, and counts only the pictures', () => {
-      const markup = render({ ...numisBook!, gallery: [numisBook!.gallery![0]!, video, numisBook!.gallery![1]!] });
+      const [first, second, third] = numisBook!.gallery!;
+      const markup = render({ ...numisBook!, gallery: [first!, second!, video, third!] });
       const larger = dialogs(markup);
 
       expect(larger.map(({ id }) => id)).toEqual(['picture-0-larger', 'picture-1-larger', 'picture-3-larger']);
@@ -688,8 +754,8 @@ describe('ProjectView', () => {
     });
 
     it('gives a lone picture no controls to step and no place, and a gallery of one picture and a video none either', () => {
-      const lone = dialogs(render(digitalTwin!));
-      const withVideo = dialogs(render({ ...numisBook!, gallery: [video] }));
+      const lone = dialogs(render(careerSite!));
+      const withVideo = dialogs(render({ ...numisBook!, gallery: [numisBook!.gallery![0]!, video] }));
 
       for (const [larger] of [lone, withVideo]) {
         expect(larger!.steps).toEqual([]);
