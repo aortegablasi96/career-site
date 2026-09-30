@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-16
 
+**Amended by DDR-086** in one respect: a gallery's larger picture places its five parts by name
+from the wide breakpoint, so its two step controls stand either side of the picture they follow in
+the markup. It is the one stylesheet that places its content, and the rule stands everywhere else.
+
 **Amended by DDR-077** in one respect: the narrow breakpoint no longer adapts the page title. The
 name is the narrow page title, `--font-size-page-title-narrow`, at every width below the wide
 breakpoint, and the introduction swaps it for the full one from the wide breakpoint and on paper.
@@ -136,6 +140,9 @@ DDR-004's rule, unchanged, and the redesign is built around it rather than again
   screen rather than being moved there.
 * The project media precedes the text in the markup, so it sits above it when the columns collapse.
 * `components/stylesheets.test.ts` checks for the properties that would break this.
+
+**Amended by DDR-086**: a gallery's larger picture is placed by name from the wide breakpoint, where
+its step controls stand either side of the picture. The test admits that stylesheet by name.
 
 ### Targets, hover and overflow
 

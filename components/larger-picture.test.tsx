@@ -158,6 +158,28 @@ describe('LargerPicture', () => {
       expect(block).toMatch(/\.step\s*\{\s*display: none;\s*\}/);
     });
 
+    // DDR-086, on #256: from the wide breakpoint the two controls leave the caption's row and stand
+    // at the window's edges, either side of the picture. The markup is one, so the stylesheet places
+    // them, there and nowhere else, and a lone picture's dialog is not laid out that way.
+    it('stands the controls either side of the picture from the wide breakpoint, and only there', () => {
+      const wide = css.match(/@media \(min-width: 48em\) \{([\s\S]*?)\n\}/)?.[1] ?? '';
+      const stepped = rule(wide, '.stepped[open]');
+
+      expect(stepped).toContain('grid-template-columns: auto minmax(0, 1fr) auto');
+      expect(stepped).toMatch(/grid-template-areas:\s*'close close close'\s*'before picture after'\s*'words words words'/);
+      expect(stepped).toContain('column-gap: var(--space-small)');
+      expect(rule(wide, '.foot')).toContain('display: contents');
+      expect(rule(wide, '.before')).toContain('grid-area: before');
+      expect(rule(wide, '.after')).toContain('grid-area: after');
+      // The picture and the close control are placed only in a gallery's dialog.
+      expect(rule(wide, '.stepped .picture')).toContain('grid-area: picture');
+      expect(rule(wide, '.stepped .close')).toContain('grid-area: close');
+      expect(css.replace(wide, '')).not.toMatch(/grid-area|grid-template-areas|display: contents/);
+
+      expect(stepping).toMatch(/<dialog id="picture-2-larger" class="[^" ]+ [^" ]+"/);
+      expect(html).toMatch(/<dialog id="picture-larger" class="[^" ]+"/);
+    });
+
     it('closes one dialog, chooses the other picture, focuses its opener, opens its dialog, and keeps focus in place', () => {
       const seen: string[] = [];
       const button = (name: string) => ({ focus: () => seen.push(`focus ${name}`) });
