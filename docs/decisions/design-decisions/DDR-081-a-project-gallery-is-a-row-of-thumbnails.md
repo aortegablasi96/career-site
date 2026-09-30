@@ -8,6 +8,14 @@ Date: 2026-09-29
 chose, can be opened larger over the page, which Option A and "What choosing a thumbnail does"
 rejected. Choosing a thumbnail still shows its picture in the frame and opens nothing.
 
+**Amended by DDR-085 (2026-09-30)**: the picture in the frame is shown whole at its own shape,
+where "at the lead's size" below meant the 16:10 box. The thumbnails keep their crop.
+
+**Amended by DDR-084 (2026-09-30)**: the thumbnails are the gallery's pictures alone. The lead
+picture is no longer the first of them, which Option B rejected, and a view with a gallery opens
+on the gallery's first picture. The lead picture is in a gallery only where the gallery lists it.
+The row, the raised thumbnail and the radios stand.
+
 **Amends DDR-053 in its layout, and DDR-050 in its lead picture.** A project's gallery is no longer
 a full-size section below the introduction. It is a row of small thumbnails under the lead picture.
 Choosing one shows that picture in the lead's place, and the chosen thumbnail rises with the
@@ -44,12 +52,14 @@ comes to the front, rises and shows the picture's name above it.**
 
 ### What choosing a thumbnail does
 
-* **It shows that picture in the lead's frame, at the lead's size.** Since DDR-082 the picture in the
+* **It shows that picture in the lead's frame, at the lead's size.** Since DDR-085 that is the
+  lead's width, and the picture's own shape. Since DDR-082 the picture in the
   frame can be opened larger by a control of its own; choosing a thumbnail still opens nothing.
   The frame was the largest a picture was drawn on the view. An enlarged view over the page would be a pattern the
   design does not draw. #155 left it out for that reason.
 * **The lead picture is the first thumbnail**, so a reader who has chosen another can go back to
-  it.
+  it. **Amended by DDR-084**: the lead picture is not among the thumbnails, and the view opens on
+  the gallery's first picture.
 * **The thumbnails are one choice among several**, so they are a radio group, named by the view's
   `gallery` string ("Gallery"). Each option is named by its picture's caption. The keyboard reaches
   the group with Tab and moves between the pictures with the arrow keys, as on the business-case
@@ -86,7 +96,8 @@ comes to the front, rises and shows the picture's name above it.**
 * **The row wraps** where the column runs out of room, with the same overlap on every line. It
   stands `--space-medium` (16px) under the picture. The thumbnails stand on their images' foot, so
   a two-line name takes room above the row rather than pushing its image down.
-* **A gallery holds at most twelve pictures, the lead's included.** ADR-017 records why.
+* **A gallery holds at most twelve pictures, the lead's included.** ADR-017 records why. Since
+  DDR-084 the twelve are all the gallery's.
 
 ### The thumbnails' look
 
@@ -141,6 +152,9 @@ Cons:
   it out for this reason.
 
 ### Option B: the thumbnails are the gallery's items only, without the lead
+
+**Amended by DDR-084**: the owner chose this on #253, with the view opening on the gallery's first
+picture, so there is no lead picture on the view to go back to.
 
 Cons:
 * Once another picture is chosen, nothing leads back to the lead picture without the keyboard.

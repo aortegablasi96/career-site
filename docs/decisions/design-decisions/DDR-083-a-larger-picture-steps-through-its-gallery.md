@@ -11,6 +11,9 @@ without closing it. Everything else DDR-082 decides stands: the control that ope
 veil and the blur, the picture shown whole, the control that closes it, and its movement into and out
 of the frame. ADR-019 records how one picture's dialog hands over to the next.
 
+**Amended by DDR-084 (2026-09-30)** in the order of the steps: the pictures are the gallery's own,
+without the lead, so NumisBook's are six and its first says "1 of 6".
+
 ## Context
 
 NumisBook's gallery has seven pictures, each a screen of the application. Since #246 a reader can
@@ -53,7 +56,7 @@ are a loop. On closing, the frame shows the last picture the reader saw.**
 
 ### The order and its ends
 
-* **The thumbnails' order**, the lead first.
+* **The thumbnails' order**, the lead first. **Amended by DDR-084**: the lead is not among them.
 * **A loop**: the step before the first picture is the last, and the step after the last is the
   first, as the business case's items are (DDR-080). Neither control is ever spent, so neither is
   drawn differently at the ends, and the place under the caption says where the reader is.

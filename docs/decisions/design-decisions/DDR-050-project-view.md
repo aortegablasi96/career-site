@@ -23,6 +23,13 @@ the CV control still open in the same tab.
 DDR-031 to DDR-049's contents bar and DDR-028's footer are unchanged, and a view uses both as they
 are.
 
+**Amended by DDR-085 (2026-09-30)** in the picture's shape: the frame shows its picture whole, at
+the picture's own shape, where "The right column" below crops it to 16:10.
+
+**Amended by DDR-084 (2026-09-30)** in its lead picture: a view whose project has a gallery shows
+the gallery's pictures in the lead's frame, and its lead picture only where the gallery lists it. A
+view with no gallery shows its lead picture, as below.
+
 ## Context
 
 Epic #152 gives each project a view of its own. Issue #153 is its first story: the view's address,
@@ -114,6 +121,9 @@ caption on the right. Below the breakpoint the two are one column in the same or
 
 ### The right column
 
+* **Amended by DDR-084**: where the project has a gallery, the frame shows the gallery's pictures
+  and not the lead.
+* **Amended by DDR-085**: the picture is shown whole at its own shape, not cropped to 16:10.
 * **The lead picture is 16:10 at the large radius**, as wide as its column, and cropped to that from
   the centre with `object-fit: cover`. On each of the four 560 by 420 pictures that takes 35px off
   the top and the bottom, which is at most an application's title bar. It is never stretched.

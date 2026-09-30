@@ -365,14 +365,16 @@ export interface Project {
   /**
    * A few words under the media on the project's view, per DDR-050, naming what the picture shows.
    * The media's own alternative text still describes it in full; this is what a sighted reader is
-   * told, so it adds nothing the alternative text does not already say.
+   * told, so it adds nothing the alternative text does not already say. A view whose project has a
+   * `gallery` shows that instead, per DDR-084, so there it goes unread.
    */
   caption: string;
   /**
    * Further pictures and videos of the project, each with its caption, per DDR-053. Since DDR-081
-   * the view shows them as thumbnails under the lead picture, the lead's first, and choosing one
-   * shows it in the lead's place. Left out where there is nothing more to show, and a view with
-   * none shows the lead picture alone, as before.
+   * the view shows them as a row of thumbnails under its frame, and choosing one shows it in the
+   * frame. Since DDR-084 they are all the view shows: it opens on the first, and the lead picture
+   * above stays on the project's card, unless it is listed here too. Left out where there is
+   * nothing more to show, and a view with none shows the lead picture alone, as before.
    */
   gallery?: readonly GalleryItem[];
   /**

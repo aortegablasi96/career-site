@@ -35,9 +35,10 @@ const liveSite = 'Live site';
  * the two words those links show and what they are called. The order here is the order they follow.
  *
  * Since #155 a view can also show a gallery of further pictures and videos, per DDR-053, and since
- * #244 as thumbnails under the lead picture, per DDR-081. NumisBook has one, from the owner's
- * mockups; each file is the owner's to supply, as on #63, and a project with no `gallery` shows its
- * lead picture alone.
+ * #244 as thumbnails under the lead picture, per DDR-081. NumisBook has one, and since #252 the
+ * Stock Portfolio Viewer and the Digital Twin each have one; each is the owner's pictures of the
+ * application's window, which on #252 replaced NumisBook's mockups. Each file is the owner's to
+ * supply, as on #63, and a project with no `gallery` shows its lead picture alone.
  * Adding one is content alone — a list of media and captions here, and the files in `public/` —
  * with no change to a component.
  *
@@ -70,31 +71,37 @@ export const projects: Projects = {
       slug: 'numisbook',
       media: { file: '/portfolio/numisbook/lead.webp', alt: 'NumisBook on a laptop, showing a coin’s record: the details of a silver tetradrachm of Mark Antony and Cleopatra beside its photograph, with the coin’s invoice below the photograph' },
       caption: 'A coin’s record',
-      // The owner's mockups of the application's other screens, supplied on #244, in the order of
-      // its navigation. Each description says only what its screen shows.
+      // The owner's pictures of the application's window, in the order of its navigation. On #252
+      // they replaced the mockups #244 supplied, and the coin's record is there in both themes. Each
+      // is the window as the owner captured it, about 2.1:1. Each description says only what its
+      // screen shows.
       gallery: [
         {
-          media: { file: '/portfolio/numisbook/gallery-dashboard.webp', alt: 'NumisBook on a laptop, showing its dashboard: the number of collections and coins and the total paid, above the most recent acquisitions, each with both faces of its coin and its price' },
+          media: { file: '/portfolio/numisbook/gallery-dashboard.webp', alt: 'NumisBook’s window, showing its dashboard: the number of collections and coins and the total paid, above links to the collections and the portfolio and the most recent acquisitions, each with both faces of its coin and its price' },
           caption: 'The dashboard',
         },
         {
-          media: { file: '/portfolio/numisbook/gallery-collections.webp', alt: 'NumisBook on a laptop, showing the collections, Spanish Empire and Roman Republic, Imperatorial & Empire, each as a card with a photograph of one of its coins' },
+          media: { file: '/portfolio/numisbook/gallery-collections.webp', alt: 'NumisBook’s window, showing the collections, Spanish Empire and Roman Republic, Imperatorial & Empire, each as a card with a photograph of one of its coins' },
           caption: 'The collections',
         },
         {
-          media: { file: '/portfolio/numisbook/gallery-coin-list.webp', alt: 'NumisBook on a laptop in its dark theme, showing the coins of the Roman Republic, Imperatorial & Empire collection in a table, below a search and filters for metal, category, denomination, mint, grade and year' },
+          media: { file: '/portfolio/numisbook/gallery-coin-list.webp', alt: 'NumisBook’s window in its dark theme, showing the coins of the Roman Republic, Imperatorial & Empire collection in a table, below a search and filters for metal, category, denomination, mint, grade and year' },
           caption: 'A collection’s coins',
         },
         {
-          media: { file: '/portfolio/numisbook/gallery-coin-view.webp', alt: 'NumisBook on a laptop in its dark theme, showing a coin’s record: a silver denarius of Brutus with its details, description, catalogue references and provenance, beside its photograph and its invoice' },
+          media: { file: '/portfolio/numisbook/gallery-coin-view.webp', alt: 'NumisBook’s window in its dark theme, showing a coin’s record: a silver denarius of Brutus with its details, description, catalogue references and provenance, beside its photograph and its invoice' },
           caption: 'A denarius of Brutus',
         },
         {
-          media: { file: '/portfolio/numisbook/gallery-portfolio.webp', alt: 'NumisBook on a laptop in its dark theme, showing the portfolio: the total paid, a chart of the acquisition cost over time, and a bar chart splitting each coin’s cost into hammer price, premium, tax and shipping' },
+          media: { file: '/portfolio/numisbook/gallery-coin-view-light.webp', alt: 'NumisBook’s window in its light theme, showing a coin’s record: a silver tetradrachm of Mark Antony and Cleopatra with its details, description, catalogue references and price, beside its photograph and its invoice' },
+          caption: 'A tetradrachm of Mark Antony and Cleopatra',
+        },
+        {
+          media: { file: '/portfolio/numisbook/gallery-portfolio.webp', alt: 'NumisBook’s window in its dark theme, showing the portfolio: the total paid, a chart of the acquisition cost over time, and a bar chart splitting each coin’s cost into hammer price, premium, tax and shipping' },
           caption: 'The portfolio',
         },
         {
-          media: { file: '/portfolio/numisbook/gallery-settings.webp', alt: 'NumisBook on a laptop, showing the settings: the profile’s display name and email, the language, theme and base currency, and a danger zone for deleting the account' },
+          media: { file: '/portfolio/numisbook/gallery-settings.webp', alt: 'NumisBook’s window, showing the settings: the profile’s display name, with its email blacked out, the language, theme and base currency, and a danger zone for deleting the account' },
           caption: 'The settings',
         },
       ],
@@ -154,6 +161,19 @@ export const projects: Projects = {
       slug: 'digital-twin',
       media: { file: '/portfolio/digital-twin/lead.webp', alt: 'The Digital Twin on a laptop, as Andreu’s AI assistant in a chat, introducing itself and answering a question about Andreu’s AI expertise' },
       caption: 'The chatbot answering a question',
+      // The owner's pictures of the chatbot in the two places it answers, supplied on #252: its own
+      // page first, then Telegram. Each is the window as the owner captured it, within the pale line
+      // the capture drew around it. Each description says only what its screen shows.
+      gallery: [
+        {
+          media: { file: '/portfolio/digital-twin/gallery-chat.webp', alt: 'The Digital Twin’s own page, showing a chat with Andreu Ortega’s AI assistant: it introduces itself, then answers a question about its AI expertise with a list that covers generative AI, agentic AI and AI projects' },
+          caption: 'The chatbot on its own page',
+        },
+        {
+          media: { file: '/portfolio/digital-twin/gallery-telegram.webp', alt: 'The Digital Twin in Telegram, as the bot Andreu’s Career Bot: it introduces itself as the AI career assistant for Andreu Ortega and suggests four questions, then begins to answer which kinds of roles fit his experience' },
+          caption: 'The chatbot in Telegram',
+        },
+      ],
       summary: 'A chatbot to talk about my career.',
       technologies: ['LangGraph', 'OpenAI Agents SDK', 'Chroma', 'Cohere', 'FastAPI', 'Next.js'],
       description:
@@ -226,6 +246,27 @@ export const projects: Projects = {
       slug: 'stock-portfolio-viewer',
       media: { file: '/portfolio/stock-portfolio-viewer/lead.webp', alt: 'The Stock Portfolio Viewer on a laptop, showing its Allocation view: the invested value, the number of positions and the largest holding, above a map of Europe with donut charts for each country' },
       caption: 'The Allocation view',
+      // The owner's pictures of the application's other views, supplied on #252, in the order of
+      // its navigation. Each is the application's window as the owner captured it, wider than the
+      // lead's 3:2. Each description says only what its view shows.
+      gallery: [
+        {
+          media: { file: '/portfolio/stock-portfolio-viewer/gallery-portfolio.webp', alt: 'The Stock Portfolio Viewer’s window, showing its Portfolio view: the net liquidation value, the cash and the holdings’ value, above a table of the holdings with each one’s quantity, price, market value, weight and unrealised profit or loss' },
+          caption: 'The Portfolio view',
+        },
+        {
+          media: { file: '/portfolio/stock-portfolio-viewer/gallery-dividends.webp', alt: 'The Stock Portfolio Viewer’s window, showing its Dividends view: the gross income, the withholding tax and the net income, above the upcoming dividends and a bar chart of the gross income and the withholding tax over time' },
+          caption: 'The Dividends view',
+        },
+        {
+          media: { file: '/portfolio/stock-portfolio-viewer/gallery-trades.webp', alt: 'The Stock Portfolio Viewer’s window, showing its Trades view: the realised profit or loss, short-term and long-term, and the unrealised, above a table of the realised gains by ticker beside the best and the worst of them, and the start of the trade history' },
+          caption: 'The Trades view',
+        },
+        {
+          media: { file: '/portfolio/stock-portfolio-viewer/gallery-assistant.webp', alt: 'The Stock Portfolio Viewer’s window, showing its Assistant view: the investor profile, with the tags of an investing style and targets for currency exposure and sector weight, beside a chat in which the assistant answers whether the portfolio is over-concentrated in any single currency' },
+          caption: 'The Assistant view',
+        },
+      ],
       summary: 'An on-premise AI-enabled portfolio management assistant.',
       technologies: ['Electron', 'React', 'TypeScript', 'SQLite', 'OpenAI'],
       description:

@@ -729,8 +729,9 @@
   --card-lift-back: calc(-1 * var(--card-lift));
 
   /* A project's view, per DDR-050, measured off `career-site-project`. The lead media is the
-     design's 16:10 (node 59:71), which crops 8% off the top and the bottom of a 4:3 picture rather
-     than distorting it; its width is its column's, so it has none here. The rule above the title
+     design's 16:10 (node 59:71) only until its file arrives: since DDR-085 a picture is shown whole
+     at its own shape, and this is the shape its place holds while it loads. Its width is its
+     column's, so it has none here. The rule above the title
      is 40 by 6px, 24px above the name (node 59:21), and the label above the technologies stands
      12px above them (node 59:54). Neither 24px nor 12px is a step of DDR-013's scale, and the view
      is the design's to the pixel at its width, so they are measures of the view's own, as the

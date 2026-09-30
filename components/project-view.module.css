@@ -311,15 +311,15 @@
   margin: 0;
 }
 
-/* A picture or video, as wide as its column, in the design's 16:10 and at the large radius (nodes
-   59:71 and 59:90, which are 560 by 350 and 492 by 307.5). A 4:3 file is cropped to it from the
-   centre rather than distorted. It stretches across the column, so no width is written for it, and
-   a gallery picture shown in the lead's place is drawn as the lead is. */
+/* A picture or video, as wide as its column and at the large radius (nodes 59:71 and 59:90), shown
+   whole at its own shape, per DDR-085, as the owner asked on #254, where the design's 16:10 cropped
+   it. It stretches across the column, so no width is written for it, and its height follows its
+   shape. The design's 16:10 is the shape it holds until its file arrives, so the view moves little
+   when it does. A gallery picture shown in the lead's place is drawn as the lead is. */
 .media {
   align-self: stretch;
-  aspect-ratio: var(--project-view-media-ratio);
+  aspect-ratio: auto var(--project-view-media-ratio);
   border-radius: var(--radius-large);
-  object-fit: cover;
 }
 
 /* A caption, below its picture in the faint ink at 11px, 8px under it and centred (node 59:81). */
@@ -330,7 +330,7 @@
   text-align: center;
 }
 
-/* The lead picture and its gallery, per DDR-081 and ADR-017 (node 405:80): one picture in the
+/* A project's gallery, per DDR-081, DDR-084 and ADR-017 (node 405:80): one of its pictures in the
    frame, and the row of thumbnails under it. A flex column, so the picture's figure stretches
    across the column as the lead's does. */
 .pictures {

@@ -120,9 +120,16 @@ import type { Cv } from './types';
  * It moved again with #250, because a project's view gained the names of the two controls that step
  * between its larger pictures, and the words that say where a picture stands, per DDR-083. None is a
  * fact ADR-005 lists as shared, so none moved the CV.
+ *
+ * It moved again with #252, because the Stock Portfolio Viewer gained its gallery: four pictures,
+ * each with a caption and alternative text. None is a fact ADR-005 lists as shared, so none moved
+ * the CV. It moved with #252 once more, because NumisBook's gallery is now the owner's pictures of
+ * its window, seven where the mockups were six, and their alternative text describes them. And
+ * once more, because the Digital Twin gained its gallery: two pictures, on its own page and in
+ * Telegram, each with a caption and alternative text.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'f299074702a51ca32ed44f504a9e7af18ac1315724a5eb7c1f6cc7bc7c7f46d0',
+  contentDigest: '96ad8b18fdefeca5787418668581958145e90b1073b1099362d0eb9d2dff819d',
 };

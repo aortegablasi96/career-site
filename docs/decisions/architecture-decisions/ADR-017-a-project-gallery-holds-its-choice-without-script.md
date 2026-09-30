@@ -11,6 +11,11 @@ without script. The popover
 alternative below was rejected because DDR-081 decided against an overlay; ADR-018 records why a
 modal dialog, not a popover, is the overlay.
 
+**Read with DDR-084 (2026-09-30)**: the pictures are the gallery's own and the lead is no longer
+the first of them, so the radio checked in the markup is the first gallery picture's, and the twelve
+places are all the gallery's. A gallery of one picture renders as a lone `figure`, with no radio.
+The mechanism below is unchanged.
+
 **Extends ADR-014 to the gallery, and amends nothing.** A project's view gains a second control with
 state, per DDR-081: which picture its lead frame shows, and which thumbnail is raised. It gains
 **no Client Component**. The state is held by native radio buttons and read by the stylesheet. The
