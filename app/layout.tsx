@@ -45,8 +45,10 @@ const lora = localFont({
   fallback: ['Georgia', 'serif'],
 });
 
-// The same title and description serve search results and link previews.
+// The same title and description serve search results and link previews. Each page's canonical
+// link is a path, which metadataBase puts under the site's own address, per ADR-024.
 export const metadata: Metadata = {
+  metadataBase: new URL(site.url),
   title: site.title,
   description: site.description,
   openGraph: {

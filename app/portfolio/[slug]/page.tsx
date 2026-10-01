@@ -42,15 +42,21 @@ function projectAt(slug: string) {
 }
 
 // The browser tab and a link preview name the project, per #153, and describe it in its own words.
+// The canonical link is the view's own address, per ADR-024.
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { name, description } = projectAt((await params).slug).project;
+  const { slug, name, description } = projectAt((await params).slug).project;
   const title = projects.view.title(name);
 
-  return { title, description, openGraph: { title, description } };
+  return {
+    title,
+    description,
+    openGraph: { title, description },
+    alternates: { canonical: `/portfolio/${slug}` },
+  };
 }
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {

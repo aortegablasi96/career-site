@@ -34,6 +34,11 @@ describe('a role’s view', () => {
     },
   );
 
+  // ADR-024: each view names its own address as canonical, which the layout puts under the domain.
+  it.each(roles.map(({ slug }) => slug))('%s names its own address as canonical', async (slug) => {
+    expect((await generateMetadata(params(slug))).alternates?.canonical).toBe(`/experience/${slug}`);
+  });
+
   it.each(roles.map(({ slug }) => slug))('%s has one h1, the job title in full', async (slug) => {
     const html = await render(slug);
     const { title, fullTitle = title } = roles.find((role) => role.slug === slug)!;

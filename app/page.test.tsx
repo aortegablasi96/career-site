@@ -1,6 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import HomePage from '@/app/page';
+import HomePage, { metadata } from '@/app/page';
+import { person } from '@/app/person';
 import { credentials } from '@/content/credentials';
 import { experience } from '@/content/experience';
 import { introduction } from '@/content/introduction';
@@ -16,6 +17,19 @@ describe('HomePage', () => {
     expect(html).toMatch(
       /<main><header class="[^"]*"><span[^>]*><img [^>]*><\/span><div[^>]*><hgroup[^>]*><p class="[^"]*">Hi there, I’m<\/p><h1>Andreu Ortega Blasi<\/h1>/,
     );
+  });
+
+  // ADR-024: the page names the site's root as its one real address.
+  it('declares the site’s root as its canonical address', () => {
+    expect(metadata.alternates?.canonical).toBe('/');
+  });
+
+  // ADR-024: the owner as structured data, which search engines read and nothing shows.
+  it('carries the owner’s structured data as JSON-LD, after the footer', () => {
+    const script = html.match(/<\/footer><script type="application\/ld\+json">([^<]*)<\/script>$/);
+
+    expect(script).not.toBeNull();
+    expect(JSON.parse(script![1]!)).toEqual(person);
   });
 
   it('has exactly one page title', () => {
@@ -79,7 +93,10 @@ describe('HomePage', () => {
   // shown once, as text a visitor can read and copy without following the link.
   it('shows each contact address exactly once, in the footer alone, per DDR-029', () => {
     // Addresses, not the hrefs that carry them: an href is a target rather than something shown.
-    const shown = html.replace(/<a href="[^"]*"/g, '<a');
+    // Nor the structured data, per ADR-024, which search engines read and nothing shows.
+    const shown = html
+      .replace(/<a href="[^"]*"/g, '<a')
+      .replace(/<script type="application\/ld\+json">[^<]*<\/script>/, '');
 
     for (const { text } of introduction.contact) {
       expect(shown.split(text)).toHaveLength(2);

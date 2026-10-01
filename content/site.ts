@@ -6,4 +6,6 @@ export const site: Site = {
   title: `${introduction.name} – ${introduction.positioning}`,
   description:
     'Andreu Ortega Blasi is a product manager for AI and IoT products, with an engineering background, based in Lugano, Switzerland.',
+  // The domain ADR-023 adopted. A new domain changes this line, per ADR-024.
+  url: 'https://andreuortegablasi.com',
 };

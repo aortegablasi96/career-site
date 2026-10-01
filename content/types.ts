@@ -12,6 +12,11 @@
 export interface Site {
   title: string;
   description: string;
+  /**
+   * The site's one real address, per ADR-024: every page's canonical link, the sitemap and the
+   * structured data name pages under it, whichever address a page was reached at.
+   */
+  url: string;
 }
 
 /** A phrase set in bold inside running text, as `strong`, which DDR-023 sets semibold. */
