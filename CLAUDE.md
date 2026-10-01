@@ -9,7 +9,7 @@ capabilities, selected work and perspective. Its goals are clarity, authenticity
 accessibility, strong content, simple navigation and a maintainable implementation. Avoid
 functionality or complexity that does not meaningfully support them.
 
-The live site is **https://career-site-chi.vercel.app/**. The repository is
+The live site is **https://andreuortegablasi.com/**. The repository is
 `aortegablasi96/career-site` (public), default branch `main`.
 
 **What exists**: one career page (introduction, experience, portfolio, skills, education and
@@ -18,8 +18,8 @@ certifications, languages, footer) that is also the printable CV; a view per pro
 `public/home/andreu-ortega-blasi-cv.pdf`. The redesign epics #42 and #70 are complete.
 
 **Still open**, each the owner's to supply or decide: a role's `skills`; a video for the Digital
-Twin and for this site; a PMI logo (only with PMI's written authorization); the CV file catching up with the page's
-job titles (DDR-060); and a custom domain (ADR-023 lists the steps).
+Twin and for this site; a PMI logo (only with PMI's written authorization); and the CV file catching up with the page's
+job titles (DDR-060).
 
 ## Commands
 

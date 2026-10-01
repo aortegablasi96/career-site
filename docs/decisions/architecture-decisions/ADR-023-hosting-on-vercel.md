@@ -65,6 +65,12 @@ redirects to it. Adopting it is a settings change within this decision:
 
 No rebuild is needed: with no base path, the same build serves any address.
 
+**Adopted on 2026-10-01: `andreuortegablasi.com`.** Its DNS is at Cloudflare, with a CNAME for the
+apex (flattened by Cloudflare) and one for `www`, both to the targets Vercel's Domains settings
+give, and both "DNS only": proxied through Cloudflare, Vercel cannot issue the certificate. `www`
+and plain HTTP redirect permanently (308) to `https://andreuortegablasi.com`. The project's own
+address, `https://career-site-chi.vercel.app`, still serves the site.
+
 **The GitHub Pages site is unpublished** once production on Vercel has been checked, from the
 repository's Pages settings. It would otherwise keep serving the last build it received, out of
 step with the site. GitHub Pages cannot redirect (ADR-012), so a link to the `github.io` address
