@@ -51,6 +51,11 @@ describe('a project’s view', () => {
     },
   );
 
+  // ADR-024: each view names its own address as canonical, which the layout puts under the domain.
+  it.each(projects.projects.map(({ slug }) => slug))('%s names its own address as canonical', async (slug) => {
+    expect((await generateMetadata(params(slug))).alternates?.canonical).toBe(`/portfolio/${slug}`);
+  });
+
   it.each(projects.projects.map(({ slug }) => slug))('%s has one h1, the project’s name', async (slug) => {
     const html = await render(slug);
     const { name } = projects.projects.find((project) => project.slug === slug)!;

@@ -137,9 +137,13 @@ import type { Cv } from './types';
  * It moved again with #263, because every project picture and video now records its size in
  * pixels, per ADR-021, so a view can show them all in one box. A picture's size is not a fact
  * ADR-005 lists as shared, so it did not move the CV.
+ *
+ * It moved again with #270, because the site's own address, its domain, is now stated in content,
+ * per ADR-024, for search engines. It is not a fact ADR-005 lists as shared, so it did not move
+ * the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'e95e77fc0adebf9ed4ea5e8413ea2c7760c8808b2a0a86ff188edaa8025e621e',
+  contentDigest: '519f29b175da37df52fd8008447c2265fb3f97c3f2abbc825ecf859a07ee2570',
 };

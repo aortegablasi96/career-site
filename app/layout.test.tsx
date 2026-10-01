@@ -115,6 +115,16 @@ describe('metadata', () => {
     expect(metadata.title).toBe(`${introduction.name} – ${introduction.positioning}`);
   });
 
+  // ADR-024: each page's canonical link is a path, which this puts under the site's own domain.
+  it('resolves every page’s links under the site’s own domain', () => {
+    expect(String(metadata.metadataBase)).toBe('https://andreuortegablasi.com/');
+  });
+
+  // The home page sets its own canonical link; one here would be inherited by every view.
+  it('sets no canonical link that every view would inherit', () => {
+    expect(metadata.alternates).toBeUndefined();
+  });
+
   it('gives link previews the same title and description as search results', () => {
     expect(metadata.openGraph).toMatchObject({
       title: metadata.title,

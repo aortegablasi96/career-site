@@ -9,6 +9,9 @@ a host stands: HTTPS, a merge to `main` deploys with no manual step, every pull 
 validated, and a failing build never replaces the live site. So does its reasoning for one workflow
 that validates.
 
+Amended by ADR-024, where this record says a new domain needs no rebuild: the site now states its
+own address, in `content/site.ts`, for its canonical links, sitemap and structured data.
+
 ## Context
 
 ADR-003 put the site on GitHub Pages and rejected Vercel as a second vendor whose server features a
@@ -61,9 +64,10 @@ redirects to it. Adopting it is a settings change within this decision:
    to the apex.
 3. Create the DNS records the dashboard then shows, or point the domain's nameservers to Vercel.
    Vercel issues the certificate once they resolve.
-4. Replace the URL recorded in `CLAUDE.md`.
+4. Replace the URL recorded in `CLAUDE.md`, and `url` in `content/site.ts` (ADR-024).
 
-No rebuild is needed: with no base path, the same build serves any address.
+No rebuild is needed: with no base path, the same build serves any address. Since ADR-024 that is
+true of serving only: the canonical links name `site.url` until it is changed.
 
 **Adopted on 2026-10-01: `andreuortegablasi.com`.** Its DNS is at Cloudflare, with a CNAME for the
 apex (flattened by Cloudflare) and one for `www`, both to the targets Vercel's Domains settings
