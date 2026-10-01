@@ -9,7 +9,7 @@ capabilities, selected work and perspective. Its goals are clarity, authenticity
 accessibility, strong content, simple navigation and a maintainable implementation. Avoid
 functionality or complexity that does not meaningfully support them.
 
-The live site is **https://aortegablasi96.github.io/career-site/**. The repository is
+The live site is **https://career-site-chi.vercel.app/**. The repository is
 `aortegablasi96/career-site` (public), default branch `main`.
 
 **What exists**: one career page (introduction, experience, portfolio, skills, education and
