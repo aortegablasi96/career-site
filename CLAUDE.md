@@ -19,7 +19,7 @@ certifications, languages, footer) that is also the printable CV; a view per pro
 
 **Still open**, each the owner's to supply or decide: a role's `skills`; a video for the Digital
 Twin and for this site; a PMI logo (only with PMI's written authorization); the CV file catching up with the page's
-job titles (DDR-060); and a custom domain (ADR-003 lists the steps).
+job titles (DDR-060); and a custom domain (ADR-023 lists the steps).
 
 ## Commands
 
@@ -39,14 +39,15 @@ static file server to check built output.
 ## Stack and deployment
 
 Next.js App Router in TypeScript, configured for static export (ADR-001, ADR-002), deployed to
-GitHub Pages (ADR-003).
+Vercel (ADR-023, superseding ADR-003's GitHub Pages).
 
-* `.github/workflows/ci.yml` runs lint, typecheck, test and build on every pull request and every
-  push to `main`; on `main` it then deploys `out/`. A failing step deploys nothing. Running the
-  workflow manually redeploys `main`.
-* Pages serves the site under `/career-site`: the workflow passes it as `PAGES_BASE_PATH`, which
-  `next.config.ts` hands to `basePath`. Locally it is unset. To reproduce production, build with
-  `PAGES_BASE_PATH=/career-site` and serve `out/` under `/career-site/`.
+* Vercel's Git integration deploys `main` to production and every other branch, so every pull
+  request, to a preview. Its build command, in `vercel.json`, runs lint, typecheck, test and build,
+  so a failing step deploys nothing and the last good deployment stays live.
+* `.github/workflows/ci.yml` runs the same four commands on every pull request and every push to
+  `main`, to show the result on GitHub. It deploys nothing.
+* Vercel serves the site from the root, so `PAGES_BASE_PATH` is unset everywhere. `next.config.ts`
+  still hands it to `basePath` and `app/asset.ts` still prefixes it; both are dormant.
 
 ## Structure
 

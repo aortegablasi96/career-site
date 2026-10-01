@@ -6,7 +6,7 @@ import { cv } from './cv';
 // ADR-002 ruled out a second copy of the owner's facts, because two hand-maintained documents drift
 // apart and nobody finds out. Epic #42 adopted the download anyway. This test is what ADR-004 and
 // ADR-005 answer that with: the CV is pinned to the content it was written from, so the facts cannot
-// move without somebody being told. ADR-003 will not deploy a failing build.
+// move without somebody being told. ADR-023 will not deploy a failing build.
 const directory = new URL('./', import.meta.url);
 
 /**

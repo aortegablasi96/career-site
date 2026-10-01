@@ -1,8 +1,10 @@
 /**
  * The one route from a binary asset's path to the address a browser fetches it from, per ADR-004.
  *
- * ADR-003 serves the site from GitHub Pages under `/career-site`, and passes that path to the build
- * as `PAGES_BASE_PATH`, which `next.config.ts` hands to `basePath`. Next.js applies the base path to
+ * ADR-003 served the site from GitHub Pages under `/career-site`, and passed that path to the build
+ * as `PAGES_BASE_PATH`, which `next.config.ts` hands to `basePath`. ADR-023's Vercel serves it from
+ * the root, so the variable is unset everywhere, but the rule stands for any host that serves the
+ * site under a path. Next.js applies the base path to
  * `next/link` hrefs and to the assets it emits itself, but not to a root-relative string written
  * into a plain `src`, `href` or `poster` attribute. Such a string is correct locally, where the
  * variable is unset, and 404s on the live site. That asymmetry is why this helper exists and why

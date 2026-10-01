@@ -2,9 +2,9 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 // ADR-004 gives binary assets one rule: they live in public/, their paths are data in content/, and
-// every reference to one passes through asset() so that it resolves under the path GitHub Pages
-// serves the site from. Writing the path straight into a src, href or poster attribute works
-// locally, where PAGES_BASE_PATH is unset, and 404s on the live site. The mistake is therefore
+// every reference to one passes through asset() so that it resolves under the path the site is
+// served from. Writing the path straight into a src, href or poster attribute works where
+// PAGES_BASE_PATH is unset, and 404s wherever a host sets it, as ADR-003's GitHub Pages did. The mistake is therefore
 // invisible on the machine that makes it, which is why it is checked here rather than remembered,
 // as components/stylesheets.test.ts checks ADR-001's tokens-only rule.
 //

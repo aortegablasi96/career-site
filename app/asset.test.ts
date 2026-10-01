@@ -3,8 +3,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { asset } from './asset';
 
 // ADR-004 routes every reference to a binary asset through asset(), so that it resolves under the
-// path GitHub Pages serves the site from. These tests cover the two builds that exist: the local
-// one, where PAGES_BASE_PATH is unset, and the deployed one, where ADR-003's workflow sets it.
+// path the site is served from. These tests cover both builds: one where PAGES_BASE_PATH is unset, as
+// it is locally and on ADR-023's Vercel, and one where a host sets it, as ADR-003's GitHub Pages did.
 const variable = 'PAGES_BASE_PATH';
 const original = process.env[variable];
 
@@ -43,8 +43,8 @@ describe('asset', () => {
     expect(asset('/media/numisbook.webp')).toBe('/career-site/media/numisbook.webp');
   });
 
-  // The helper and next.config.ts have to agree on which variable they read. They are set in one
-  // place, by ADR-003's workflow, and a rename that reached one and not the other would take the
+  // The helper and next.config.ts have to agree on which variable they read. A host sets it in one
+  // place, and a rename that reached one and not the other would take the
   // whole site's assets down while every test still passed.
   it('reads the same variable that next.config.ts gives to basePath', () => {
     const config = readFileSync(new URL('../next.config.ts', import.meta.url), 'utf8');

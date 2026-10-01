@@ -6,7 +6,7 @@ import type { Cv } from './types';
  * ADR-002 ruled a second copy of the owner's facts out, because two hand-maintained documents drift
  * apart silently. Epic #42 adopted the download anyway, so ADR-004 and ADR-005 owe an answer to
  * that, and `contentDigest` is it: `content/cv.test.ts` recomputes it, so changing any fact on the
- * page fails the test suite, and ADR-003 will not deploy a failing build.
+ * page fails the test suite, and ADR-023 will not deploy a failing build.
  *
  * The digest watches the content, not the file. It catches the facts moving; it cannot catch a CV
  * that was already out of step, which is why ADR-005 also lists what the two documents must share.
@@ -141,5 +141,5 @@ import type { Cv } from './types';
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'd40236915734dcb90bdaa9ae2ccb2d4d2a014c9ba593d44f58a21e2410a87a6d',
+  contentDigest: 'e95e77fc0adebf9ed4ea5e8413ea2c7760c8808b2a0a86ff188edaa8025e621e',
 };

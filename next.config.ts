@@ -3,8 +3,8 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   // ADR-001: every page is built to HTML at build time and served as a static file.
   output: 'export',
-  // ADR-003: the deploy workflow sets this to the path GitHub Pages serves the site under.
-  // It is unset locally, so development and local builds are served from the root.
+  // ADR-003 set this to the path GitHub Pages served the site under. ADR-023's Vercel serves it from
+  // the root, so it is unset everywhere and kept only for a host that serves the site under a path.
   basePath: process.env.PAGES_BASE_PATH,
   // ADR-004: app/asset.ts prefixes the same path. Without the prefix NEXT_PUBLIC_, a variable
   // reaches only the server, so a Client Component that calls asset() lost the path in the browser
