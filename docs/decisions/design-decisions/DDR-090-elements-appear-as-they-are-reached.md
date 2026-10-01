@@ -42,9 +42,10 @@ skills and the neighbours appear. On a project's view, the way back, the text, t
 appear. The introduction, the contents bar and the footer never appear this way: what opens a page is
 there from the start, and the footer is where the CV's addresses are.
 
-**How: a quick fade and rise.** An element fades in from transparent while rising `--appear-rise`
-(8px, twice the card's lift) into place. It takes `--appear-duration` (200ms) with an ease-out, so it
-is there almost as soon as it is reached. It starts the moment any part of it enters the window.
+**How: a fade and rise the reader sees.** An element fades in from transparent while rising
+`--appear-rise` (8px, twice the card's lift) into place. It takes `--appear-duration` (600ms) with an
+ease-out. The owner first chose 200ms, then found the fade barely noticeable and asked for it slower,
+so it is slow enough to be seen while still finishing well within a second. It starts the moment any part of it enters the window.
 Nothing appears in sequence: elements reached together appear together.
 
 **When: every time the reader comes down to it.**
@@ -124,7 +125,7 @@ Benefits:
 
 Tradeoffs:
 * The site has a second piece of expressive motion, and it plays without the reader asking for it.
-* An element reached by find-in-page appears over 200ms after the browser scrolls to it, rather than
+* An element reached by find-in-page appears over 600ms after the browser scrolls to it, rather than
   being there already.
 
 Risks:

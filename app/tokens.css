@@ -344,11 +344,11 @@
   --hover-transition: 150ms;
 
   /* How an element appears as the reader scrolls to it, per DDR-090: it fades in while rising this
-     far into place, over this long, with an ease-out. Quick, so it is there almost as soon as it is
-     reached. The rise is twice the card's lift, in rem for the same reason the lift is, and its own
+     far into place, over this long, with an ease-out. Slow enough that the fade is seen, which at
+     200ms it barely was. The rise is twice the card's lift, in rem for the same reason the lift is, and its own
      token because it is a second distance travelled, not the lift. Neither is read at all when the
      reader prefers reduced motion, or on paper. */
-  --appear-duration: 200ms;
+  --appear-duration: 600ms;
   --appear-rise: 0.5rem;
 
   /* How far below the text a project link's underline is drawn: the design's `underline-offset-2`.

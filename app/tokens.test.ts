@@ -733,11 +733,11 @@ describe('elevation tokens', () => {
     expect(token('hover-transition')).toBe('150ms');
   });
 
-  // DDR-090: an element appears as it is reached, quick enough that it is there almost at once, and
+  // DDR-090: an element appears as it is reached, slowly enough that the fade is seen, and
   // rises twice the card's lift as it does. Both are held by value: changing either is a decision
   // about how the site moves.
-  it('brings an element into view over 200ms while it rises 8px, per DDR-090', () => {
-    expect(token('appear-duration')).toBe('200ms');
+  it('brings an element into view over 600ms while it rises 8px, per DDR-090', () => {
+    expect(token('appear-duration')).toBe('600ms');
     expect(rem(token('appear-rise')!) * 16).toBe(8);
   });
 
