@@ -33,7 +33,7 @@ export interface Link {
 export interface Image {
   /**
    * Where the file sits, as a path from the site's root. It is not a URL: every reference to a
-   * binary asset goes through `asset()` first, per ADR-004, so it resolves under the Pages base
+   * binary asset goes through `asset()` first, per ADR-004, so it resolves under any base
    * path as well as locally.
    */
   file: string;
@@ -670,7 +670,7 @@ export interface Cv {
   label: string;
   /**
    * Where the file sits, as a path from the site's root. It is not a URL: every reference to a
-   * binary asset goes through `asset()` first, per ADR-004, so it resolves under the Pages base
+   * binary asset goes through `asset()` first, per ADR-004, so it resolves under any base
    * path as well as locally.
    */
   file: string;

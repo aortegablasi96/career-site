@@ -1,8 +1,12 @@
 # ADR-003-Hosting and Continuous Deployment
 
-Status: Accepted
+Status: Superseded
 
 Date: 2026-09-10
+
+**Superseded by ADR-023** in its host and its domain steps: the site is served by Vercel, which
+deploys it and runs the checks before it builds, and GitHub Actions only validates. The
+requirements below, and the reasoning for one validating workflow, stand.
 
 ## Context
 
@@ -35,6 +39,9 @@ that the answer does not change the rest of the approach, so this ADR is written
 before and after a domain exists.
 
 ## Decision
+
+> **Superseded by ADR-023.** Vercel hosts the site, from the root, with no base path; the domain
+> steps below are replaced by ADR-023's.
 
 **Hosting: GitHub Pages, published from GitHub Actions.** The repository's Pages source is set to
 "GitHub Actions", not to a branch. The build output is uploaded as a workflow artifact and

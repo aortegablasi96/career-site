@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `023`. The next DDR is `090`.** Update both lines when a record lands.
+**The next ADR is `024`. The next DDR is `090`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -18,7 +18,7 @@ reasoning behind it.
 
 ## ADRs
 
-ADR-001 to ADR-022 are accepted.
+ADR-001, ADR-002 and ADR-004 to ADR-023 are accepted. ADR-003 is superseded.
 
 | Record  | Relationship |
 | ------- | ------------ |
@@ -41,6 +41,7 @@ ADR-001 to ADR-022 are accepted.
 | ADR-020 | Amends ADR-004: a video at its recording's pixel size, with no audio track where it has no sound (DDR-087); the budgets stand |
 | ADR-021 | A project picture's content carries its pixel size; a view hands its box (DDR-088) to its stylesheets in a `style` attribute; amends ADR-006 with `min(100%, 100cqb * var(--token))` on `max-inline-size` |
 | ADR-022 | Amends ADR-018, ADR-019 and ADR-017: a gallery's video opens in `LargerPicture`'s dialog (DDR-089) and pauses as it closes; `controlsList="nodownload"` and a declined `contextmenu` withhold its download; `disablePictureInPicture` its floating window; `Media` goes |
+| ADR-023 | Supersedes ADR-003's host and domain steps: Vercel deploys and runs the checks (`vercel.json`); Actions only validates; no base path |
 
 ## DDRs
 

@@ -387,7 +387,7 @@ export const projects: Projects = {
         },
       ],
       summary: 'A career site that doubles as its own printed CV.',
-      technologies: ['Next.js', 'TypeScript', 'CSS Modules', 'GitHub Pages'],
+      technologies: ['Next.js', 'TypeScript', 'CSS Modules', 'Vercel'],
       description:
         'A career site that is also its own printed CV.',
       howBuilt: [
