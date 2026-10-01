@@ -103,7 +103,7 @@ describe('Timeline', () => {
   // DDR-057: the entries are in time order, so they are an ordered list, and each entry is a list
   // item, which the print styles keep whole on one sheet.
   it('is an ordered list with one item per entry, in one block with the column', () => {
-    expect(roles).toMatch(/^<div><ol[ >]/);
+    expect(roles).toMatch(/^<div data-appear="true"><ol[ >]/);
     expect(roles).toMatch(/<\/ol><ol [^>]*>.*<\/ol><\/div>$/);
     expect(lists(roles).row.match(/<li class=/g)).toHaveLength(2);
     expect(lists(credentials).row.match(/<li class=/g)).toHaveLength(1);

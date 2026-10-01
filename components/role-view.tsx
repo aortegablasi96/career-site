@@ -95,7 +95,7 @@ export function RoleView({
   next?: Role;
 }) {
   return (
-    <article className={styles.view}>
+    <article className={styles.view} data-appear>
       <Link href={backHref} className={styles.back} prefetch={false}>
         <span className={styles.backMark}>
           <Icon name="back" />
@@ -119,7 +119,7 @@ export function RoleView({
         <h1 className={styles.title}>{fullTitle}</h1>
       </header>
       <h2 className={styles.label}>{pointsLabel}</h2>
-      <ol className={styles.points}>
+      <ol className={styles.points} data-appear>
         {points.map((point, index) => (
           <li key={point} className={styles.point}>
             <span className={styles.number} aria-hidden="true">

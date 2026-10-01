@@ -36,6 +36,13 @@ describe('RoleView', () => {
     );
   });
 
+  // DDR-090: the view's parts, and each of its points, appear on their own as the reader scrolls to
+  // them.
+  it('lets its parts and each point appear on their own, per DDR-090', () => {
+    expect(html).toMatch(/^<article [^>]*data-appear="true"/);
+    expect(html).toMatch(/<ol [^>]*data-appear="true"[^>]*><li /);
+  });
+
   it('draws the dot between the dates and the place for the eye alone', () => {
     expect(html).toMatch(/<span class="[^"]*" aria-hidden="true">·<\/span>/);
   });

@@ -16,6 +16,10 @@ import styles from './section.module.css';
  * the heading's own `break-after: avoid` to stay with the first entry, which Edge honours and
  * Firefox does not.
  *
+ * The section and its heading's block both carry `data-appear`, so on screen the heading and each
+ * item appear on their own as the reader scrolls to them, per DDR-090: the block is a wrapper for
+ * paper, not something the reader sees arrive.
+ *
  * The heading carries the decorative rule DDR-010 gives it, which is drawn by the stylesheet as a
  * pseudo-element rather than added here as an element: it carries no information, and a heading
  * that names its section through aria-labelledby should have nothing else in its accessible name.
@@ -41,8 +45,11 @@ export function Section({
   const [first, ...rest] = items;
 
   return (
-    <section id={id} aria-labelledby={titleId} className={styles.section}>
-      <div className={breakable ? `${styles.opening} ${styles.breakable}` : styles.opening}>
+    <section id={id} aria-labelledby={titleId} className={styles.section} data-appear>
+      <div
+        className={breakable ? `${styles.opening} ${styles.breakable}` : styles.opening}
+        data-appear
+      >
         <h2 id={titleId} className={styles.heading}>
           {title}
         </h2>

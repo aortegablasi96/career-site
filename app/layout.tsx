@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import type { ReactNode } from 'react';
+import { ScrollAppear } from '@/components/scroll-appear';
 import { site } from '@/content/site';
 import './tokens.css';
 import './globals.css';
@@ -61,7 +62,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     // The font variables must sit on the root element, where app/tokens.css reads them.
     <html lang="en" className={`${dmSans.variable} ${lora.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        {/* Makes the elements of whichever route is shown appear as the reader scrolls to them,
+            per DDR-090. It renders nothing, and the page is whole without it (ADR-025). */}
+        <ScrollAppear />
+      </body>
     </html>
   );
 }

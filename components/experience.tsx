@@ -36,7 +36,7 @@ export function Experience({
   labelledBy: string;
 }) {
   return (
-    <div>
+    <div data-appear>
       <Hint text={hint} />
       <Timeline
         kind="role"

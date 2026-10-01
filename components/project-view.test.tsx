@@ -120,6 +120,12 @@ describe('ProjectView', () => {
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
   });
 
+  // DDR-090: the view's parts, and its text and its picture, appear on their own as the reader
+  // scrolls to them.
+  it('lets its parts, its text and its picture appear on their own, per DDR-090', () => {
+    expect(html).toMatch(/<article [^>]*data-appear="true"[^>]*><a [^>]*>.*?<\/a><div [^>]*data-appear="true"/);
+  });
+
   it('makes the name its only h1, and labels the technologies with an h2', () => {
     expect(html.match(/<h1/g)).toHaveLength(1);
     expect(html).toMatch(new RegExp(`<h1[^>]*>${numisBook!.name}</h1>`));

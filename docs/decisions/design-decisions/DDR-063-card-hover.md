@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-090**, per #274: the lift is no longer the site's one piece of expressive motion. Elements also appear, fading in and rising 8px over 200ms, as the reader scrolls to them. The lift itself is unchanged.
+
 **Amended by DDR-074**, per #218: in the timeline's column below the wide breakpoint, a role's or a credential's card lifts by the same `--card-lift` as a margin rather than a translation, and draws its focus outline on itself. It looks and answers as before.
 
 **Amended by DDR-069**, per #200: an education card leads off the site, and it rests raised and takes the same hover as a role's card.
@@ -126,7 +128,8 @@ Tradeoffs:
 * `--card-lift`, `--shadow-raised`, `--shadow-card-hover` and `--color-border-accent-hover` each move
   both kinds of card now, so a change to any of them changes both.
 * The site's one piece of expressive motion, which DDR-055 kept to the project cards, now also moves
-  the role cards.
+  the role cards. (Since DDR-090 it is one of two: elements also appear as the reader scrolls to
+  them.)
 * The hover edge is 1.99:1 on a card's white and fails WCAG 1.4.11, like every hover edge on the
   site. Nothing depends on it: the accent on the title and the shadow say the same thing, and on focus
   so does the outline.

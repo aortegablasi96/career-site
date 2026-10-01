@@ -92,7 +92,7 @@ export function Timeline({
   return (
     // One block, so what stands above the timeline, such as its hint, is spaced from whichever of
     // the two lists is displayed.
-    <div>
+    <div data-appear>
       {/* A focusable list is what a reader scrolls from the keyboard, per DDR-057, where no link in
           it is: it names no interaction of its own, so it keeps the list role that says what it
           holds. */}
@@ -116,7 +116,7 @@ export function Timeline({
           comes first, at the left, and the dates and the card beside it, so the markup is the order
           they are laid out in; the spine is hidden from assistive technology, so a reader meets the
           dates and then the card, as in the row. */}
-      <ol className={`${styles.stack} ${styles[kind]}`} aria-labelledby={labelledBy}>
+      <ol className={`${styles.stack} ${styles[kind]}`} aria-labelledby={labelledBy} data-appear>
         {[...entries].reverse().map((entry) => (
           <li key={entry.key} className={styles.entry}>
             <Spine />

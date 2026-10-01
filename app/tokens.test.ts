@@ -733,6 +733,14 @@ describe('elevation tokens', () => {
     expect(token('hover-transition')).toBe('150ms');
   });
 
+  // DDR-090: an element appears as it is reached, quick enough that it is there almost at once, and
+  // rises twice the card's lift as it does. Both are held by value: changing either is a decision
+  // about how the site moves.
+  it('brings an element into view over 200ms while it rises 8px, per DDR-090', () => {
+    expect(token('appear-duration')).toBe('200ms');
+    expect(rem(token('appear-rise')!) * 16).toBe(8);
+  });
+
   // DDR-035: the design's `underline-offset-2`, in px as the focus outline's offset is.
   it('draws a project link’s underline 2px below the text, per DDR-035', () => {
     expect(token('underline-offset')).toBe('2px');

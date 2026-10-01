@@ -87,7 +87,7 @@ describe('Credentials', () => {
   // one link off the site that opens a new tab and says so after its name, so the row takes no tab
   // stop of its own.
   it('stands the hint above the row, in the words the owner chose on #200', () => {
-    expect(html).toMatch(/^<div><p class="[^"]*"><svg[^>]*>.*?<\/svg>Click any credential to learn more<\/p><div><ol /);
+    expect(html).toMatch(/^<div data-appear="true"><p class="[^"]*"><svg[^>]*>.*?<\/svg>Click any credential to learn more<\/p><div data-appear="true"><ol /);
   });
 
   it('makes each credential’s name one link to its address, in a new tab it announces', () => {

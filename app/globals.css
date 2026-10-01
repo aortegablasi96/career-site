@@ -43,6 +43,34 @@
   }
 }
 
+/* Elements appear as the reader scrolls to them, per DDR-090 and ADR-025. `ScrollAppear` marks an
+   element still below the window as waiting, and as appearing the moment any of it is in the
+   window: it fades in while rising into place. Only on a screen and only where motion is welcome,
+   so a reader who has asked for less motion, and paper, show every element where it is whatever
+   the script has marked. The page is served with nothing marked, so without script nothing waits.
+
+   The rise is `translate`, so nothing is laid out again and nothing around the element moves. The
+   appearance is an animation rather than a transition, so it is over once it has played and leaves
+   the element's own `translate`, such as a card's lift, to the element. These are attributes the
+   script writes on elements of every component, so they are here rather than in a module. */
+@media screen and (prefers-reduced-motion: no-preference) {
+  [data-appearing='waiting'] {
+    opacity: 0;
+    translate: 0 var(--appear-rise);
+  }
+
+  [data-appearing='now'] {
+    animation: appear var(--appear-duration) ease-out;
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    translate: 0 var(--appear-rise);
+  }
+}
+
 /* A project view's picture growing out of its frame and shrinking back into it, per DDR-082 and
    ADR-018. `LargerPicture` starts the transition only where the reader has not asked for less
    motion, so nothing here runs for a reader who has. The browser draws the rest of the view fading
