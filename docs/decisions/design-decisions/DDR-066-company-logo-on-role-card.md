@@ -9,7 +9,7 @@ logo, straight on the card's own white and centred above the company's name, whe
 its logo tile. Nothing else about the card, the timeline or the printed CV changes. The education timeline's cards have no logo.
 
 **Amended by DDR-068**, per #197: each degree's card now opens with the UPC's logo, in this record's
-style. The certifications still have none, until PMI authorizes its logo.
+style. The certifications had none until DDR-090 (#272), which gives each its PMI badge.
 
 ## Context
 

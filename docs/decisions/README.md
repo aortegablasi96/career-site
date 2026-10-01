@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `025`. The next DDR is `090`.** Update both lines when a record lands.
+**The next ADR is `025`. The next DDR is `091`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -46,7 +46,7 @@ ADR-001, ADR-002 and ADR-004 to ADR-024 are accepted. ADR-003 is superseded.
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-089. There are
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-090. There are
 two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
@@ -143,6 +143,7 @@ Each record keeps everything not listed against it.
 * **DDR-063, DDR-064**: DDR-074 the column's card lifts by a margin and outlines itself.
 * **DDR-064**: DDR-071 dates glow and the dot darkens.
 * **DDR-066**: DDR-068 degrees carry the UPC's logo.
+* **DDR-068**: DDR-090 certifications carry their PMI badges, at 56px; a degree's `logo` is required.
 * **DDR-070** (timeline card): DDR-080 draws a project's business case as one.
 * **DDR-072**: DDR-076 a line below the question.
 * **DDR-053** (gallery): DDR-081 makes it a row of thumbnails under the lead picture; its content

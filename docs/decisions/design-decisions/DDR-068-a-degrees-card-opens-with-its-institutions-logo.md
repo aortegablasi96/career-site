@@ -10,6 +10,9 @@ Catalunya's logo, in exactly the style a company's logo has. The two certificati
 without a logo for now. And every education card's institution is set in the accent, as a company
 is, where DDR-057 set it in the muted ink.
 
+**Amended by DDR-090**, per #272: PMI has authorized its badges, so each certification's card now
+opens with its own PMI digital badge, in this record's style, drawn at 56px.
+
 ## Context
 
 On #197 the owner asked for the institutions' official logos on the education cards: the
@@ -44,6 +47,8 @@ to ask PMI for authorization and to ship the UPC's logo alone meanwhile.
   cards have no logo to be level with.
 * **The certifications have no logo**, until PMI authorizes one. `logo` is optional on a credential
   for that reason, where it is required on a role.
+  *Amended by DDR-090:* each certification's card opens with its PMI badge, and a degree's `logo`
+  is required.
 * **An institution is set in the accent, bold, as a company is**, where DDR-057 took the design's
   grey, `--color-text-muted`. The owner asked on #197 for the education cards' words to be coloured
   as the experience cards' are. The name below it was already the same ink on both. The accent on
