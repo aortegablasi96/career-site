@@ -690,6 +690,10 @@
      is far smaller than the wordmarks beside it. The design's 28px, the height of its logo tile
      (node 286:87), as the owner chose for ToBeIT's on #193. */
   --timeline-logo-height-tall: 1.75rem;
+  /* The height of a certification's badge, per DDR-090: 56px, twice a tall logo's. A badge is round
+     and carries its lettering inside it, so at 28px it is a coloured dot; at 56px its name can be
+     read, and it weighs about what the UPC's logo does in the cards beside it. */
+  --timeline-logo-height-badge: 3.5rem;
   /* How far a raised tall logo reaches up into its card's padding, per DDR-066: the difference
      between the two heights, as a negative margin, so the logo takes no more of the card's height
      than a shorter one does. Written here because it is arithmetic on tokens, which a component may

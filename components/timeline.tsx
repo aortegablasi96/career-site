@@ -17,6 +17,8 @@ export interface TimelineEntry {
   logoTall?: boolean;
   /** Whether a tall logo rises into the card's padding, so the name below it stays level, per DDR-066. */
   logoRaised?: boolean;
+  /** Whether the logo is a certification's round badge, drawn larger than any logo, per DDR-090. */
+  logoBadge?: boolean;
   /** The job title or the credential's name, which is the entry's heading. */
   title: string;
   /** Where a role was held. A credential has none. */
@@ -58,7 +60,8 @@ export interface TimelineEntry {
  * that has links does not take a tab stop of its own as well.
  *
  * A role's card opens with its company's logo, per DDR-066, on the card itself, above the company's
- * name, and a degree's with its institution's, per DDR-068. The name is written beneath it, so the logo is hidden from assistive technology, and the
+ * name, a degree's with its institution's, per DDR-068, and a certification's with its badge, per
+ * DDR-090. The name is written beneath it, so the logo is hidden from assistive technology, and the
  * card reads as it did without it. Paper does not show it.
  *
  * On paper it is the vertical timeline DDR-010 drew: the dates in a column of their own, the spine,
@@ -146,7 +149,7 @@ function Spine() {
 
 /** An entry's card: the logo, the company or institution, the title and a role's place. */
 function Card({ entry, children }: { entry: TimelineEntry; children?: ReactNode }) {
-  const { subtitle, logo, logoTall, logoRaised, title, place, href, newTab } = entry;
+  const { subtitle, logo, logoTall, logoRaised, logoBadge, title, place, href, newTab } = entry;
 
   return (
     <div className={styles.card}>
@@ -155,7 +158,12 @@ function Card({ entry, children }: { entry: TimelineEntry; children?: ReactNode 
           is not fetched, so each logo is fetched once, for the list that shows it. */}
       {logo && (
         <img
-          className={[styles.logo, logoTall && styles.logoTall, logoRaised && styles.logoRaised]
+          className={[
+            styles.logo,
+            logoTall && styles.logoTall,
+            logoRaised && styles.logoRaised,
+            logoBadge && styles.logoBadge,
+          ]
             .filter(Boolean)
             .join(' ')}
           src={asset(logo)}

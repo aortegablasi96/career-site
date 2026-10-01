@@ -117,8 +117,10 @@ The page itself is the CV, so what it prints is designed.
 * **A role**: `title`, and `fullTitle` only when the heading has a qualifier (DDR-060); `logo` is
   required, at `public/experiences/<slug>/logo.webp`, trimmed, 36px tall (56px for `logoTall`),
   lossless, transparent ground; `skills` are the owner's to supply.
-* **A credential** has `href` and an optional `logo`. No PMI or PMP logo and no Credly badge until
-  the owner confirms PMI's written authorization.
+* **A credential** has `href`. A degree has a `logo`; a certification has a `badge`, PMI's digital
+  badge at `public/education/certifications/<name>.webp`, trimmed, 112px tall, lossless (DDR-090).
+  PMI authorized its badges on these cards only: a PMI mark anywhere else needs the owner to confirm
+  it is covered.
 * **A project**: `summary` is its slogan, `description` and `howBuilt` are from the owner's
   knowledge base, `businessCase` holds the items and a PDF, `gallery` is `GalleryItem`s. Every
   picture and video carries `width` and `height`, its file's size in pixels (a video's, its

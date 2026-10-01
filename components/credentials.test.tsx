@@ -70,14 +70,20 @@ describe('Credentials', () => {
   });
 
   // DDR-068: a degree's card opens with the UPC's logo, above the institution, as a role's card
-  // opens with its company's. It repeats the name beneath it, so it has no alternative text.
-  it('opens each degree’s card with its institution’s logo, and no certification’s', () => {
+  // opens with its company's; DDR-090: a certification's with its badge, in the same place. Each
+  // repeats the name beneath it, so it has no alternative text.
+  it('opens each degree’s card with its institution’s logo, and each certification’s with its badge', () => {
     for (const [index, credential] of credentials.credentials.entries()) {
       if (isCertification(credential)) {
-        expect(entries[index]).not.toContain('<img');
+        expect(entries[index]).toMatch(
+          new RegExp(
+            `<div class="[^"]*"><img class="_logo_\\w+ _logoBadge_\\w+" src="${credential.badge}" alt="" loading="lazy"/><p class="[^"]*">Project Management Institute</p>`,
+          ),
+        );
+        expect(entries[index]!.match(/<img /g)).toHaveLength(1);
       } else {
         expect(entries[index]).toMatch(
-          /<div class="[^"]*"><img class="[^"]*" src="\/education\/upc\/logo\.webp" alt="" loading="lazy"\/><p class="[^"]*">Universitat Politècnica de Catalunya<\/p>/,
+          /<div class="[^"]*"><img class="_logo_\w+ _logoTall_\w+" src="\/education\/upc\/logo\.webp" alt="" loading="lazy"\/><p class="[^"]*">Universitat Politècnica de Catalunya<\/p>/,
         );
       }
     }
@@ -161,27 +167,33 @@ describe('credentials content', () => {
     ]);
   });
 
-  // DDR-068: the UPC's official logo, as a WebP beside the others, per ADR-004. PMI allows its logo
-  // only with its written authorization, which the owner has asked for on #197, so neither
-  // certification carries one yet.
-  it('gives both degrees the UPC’s logo, drawn tall, and neither certification a logo', () => {
+  // DDR-068: the UPC's official logo, as a WebP beside the others, per ADR-004. DDR-090: each
+  // certification's own PMI badge, which PMI has authorized on these cards (#272).
+  it('gives both degrees the UPC’s logo, drawn tall, and each certification its own badge', () => {
     for (const { logo, logoTall } of degrees) {
       expect(logo).toBe('/education/upc/logo.webp');
       expect(logoTall).toBe(true);
       expect(existsSync(new URL(`../public${logo}`, import.meta.url))).toBe(true);
     }
-    expect(certifications.map(({ logo }) => logo)).toEqual([undefined, undefined]);
+    expect(certifications.map(({ badge }) => badge)).toEqual([
+      '/education/certifications/pmp.webp',
+      '/education/certifications/pmi-cpmai.webp',
+    ]);
+    for (const { badge } of certifications) {
+      expect(existsSync(new URL(`../public${badge}`, import.meta.url))).toBe(true);
+    }
   });
 
   // DDR-069: a degree leads to the UPC's site, and a certification to its Credly badge, the
-  // addresses in the owner's knowledge base. The page links to the badge and draws none of it.
+  // addresses in the owner's knowledge base. The page links to the badge's page on Credly and embeds
+  // none of Credly's own widget.
   it('leads each degree to the UPC’s site and each certification to its own badge', () => {
     expect(degrees.map(({ href }) => href)).toEqual(['https://www.upc.edu', 'https://www.upc.edu']);
     expect(certifications.map(({ href }) => href)).toEqual([
       'https://www.credly.com/badges/0453ee02-59fe-441b-9481-48ca4030662d',
       'https://www.credly.com/badges/a8e7a58f-ee8d-4f21-9b7a-136d353ffc6a',
     ]);
-    expect(html).not.toMatch(/<img[^>]*credly/i);
+    expect(html).not.toMatch(/<(img|script|iframe)[^>]*credly/i);
   });
 
   it('lists the credentials oldest first, per DDR-057, so the certifications come last', () => {

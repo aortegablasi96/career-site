@@ -10,8 +10,8 @@ import { Timeline } from './timeline';
  * and the credential's name.
  *
  * A degree shows the months it ran; a certification shows the single month it was granted. Neither
- * has a place or a body. A credential whose institution's logo the content gives opens its card
- * with it, per DDR-068, as a role's card opens with its company's.
+ * has a place or a body. A degree's card opens with its institution's logo, per DDR-068, as a role's
+ * card opens with its company's, and a certification's with its badge, drawn larger, per DDR-090.
  *
  * Each card leads off the site, per DDR-069 — a degree's to its institution's site and a
  * certification's to its badge — and looks, moves and answers as a role's card does. The hint above
@@ -48,8 +48,9 @@ export function Credentials({
               <DateRange start={credential.start} end={credential.end} labels={dateLabels} />
             ),
           subtitle: credential.institution,
-          logo: credential.logo,
-          logoTall: credential.logoTall,
+          ...('granted' in credential
+            ? { logo: credential.badge, logoBadge: true }
+            : { logo: credential.logo, logoTall: credential.logoTall }),
           title: credential.name,
           href: credential.href,
           newTab,

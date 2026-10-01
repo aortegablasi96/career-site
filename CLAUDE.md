@@ -18,8 +18,9 @@ certifications, languages, footer) that is also the printable CV; a view per pro
 `public/home/andreu-ortega-blasi-cv.pdf`. The redesign epics #42 and #70 are complete.
 
 **Still open**, each the owner's to supply or decide: a role's `skills`; a video for the Digital
-Twin and for this site; a PMI logo (only with PMI's written authorization); and the CV file catching up with the page's
-job titles (DDR-060).
+Twin and for this site; and the CV file catching up with the page's job titles (DDR-060). PMI's
+badges appear on the certification cards alone (DDR-090); a PMI mark anywhere else needs the owner
+to confirm PMI's authorization covers it.
 
 ## Commands
 

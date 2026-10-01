@@ -452,6 +452,7 @@ describe('timeline card links', () => {
     expect(logo).not.toMatch(/border|background|box-shadow|padding/);
     expect(rule('.logoTall')).toMatch(/block-size:\s*var\(--timeline-logo-height-tall\);/);
     expect(rule('.logoRaised')).toMatch(/margin-block-start:\s*var\(--timeline-logo-rise\);/);
+    expect(rule('.logoBadge')).toMatch(/block-size:\s*var\(--timeline-logo-height-badge\);/);
   });
 
   it('prints no address after a card’s link, since paper cannot follow it', () => {

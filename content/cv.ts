@@ -141,9 +141,12 @@ import type { Cv } from './types';
  * It moved again with #270, because the site's own address, its domain, is now stated in content,
  * per ADR-024, for search engines. It is not a fact ADR-005 lists as shared, so it did not move
  * the CV.
+ *
+ * It moved again with #272, because each certification gained the path of its PMI badge, per
+ * DDR-090. A badge is not a fact ADR-005 lists as shared, so it did not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '519f29b175da37df52fd8008447c2265fb3f97c3f2abbc825ecf859a07ee2570',
+  contentDigest: '9549bb67a75b2efbcaf625449a2b555d1c2bce73c2a804da632f066091ffe997',
 };

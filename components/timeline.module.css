@@ -269,6 +269,13 @@
   margin-block-start: var(--timeline-logo-rise);
 }
 
+/* A certification's badge is round, with its name lettered inside it, so it is drawn at twice a tall
+   logo's height, per DDR-090, where its name can be read. It is the badge as PMI awards it, whole and
+   in its own colours. */
+.logoBadge {
+  block-size: var(--timeline-logo-height-badge);
+}
+
 /* The company opens a role's card and the institution a credential's, both in the accent and bold,
    per DDR-057 as DDR-068 amends it: the owner asked on #197 for the education cards' words to be
    coloured as the experience cards' are, where the design sets an institution in grey. The design's 12px is not a step of DDR-022's scale, so the nearest,
@@ -580,7 +587,7 @@
     font-size: var(--font-size-xxx-small);
   }
 
-  /* The logo is the screen's alone, per DDR-066 and DDR-068: the printed CV is the one DDR-057
+  /* The logo is the screen's alone, per DDR-066, DDR-068 and DDR-090: the printed CV is the one DDR-057
      draws, and the name beside each entry says what the logo does. */
   .logo {
     display: none;

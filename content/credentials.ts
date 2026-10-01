@@ -21,12 +21,12 @@ const upcSite = 'https://www.upc.edu';
  * knowledge base words it: the brief records the corrections. The degrees' months are the owner's
  * answers on #26. The owner removed each degree's thesis sentence on #173.
  *
- * The degrees carry the UPC's logo, per DDR-068. The certifications carry none: PMI allows its logo
- * only with its written authorization, which the owner has asked for, per #197.
+ * The degrees carry the UPC's logo, per DDR-068, and the certifications their PMI digital badges, per
+ * DDR-090, which PMI has authorized the owner to show on these cards (#272).
  *
  * Each card leads off the site, per DDR-069: a degree's to the UPC's site, and a certification's to
  * its Credly badge, the addresses the owner keeps in their knowledge base. The page links to the
- * badge and draws none of it.
+ * badge's page on Credly and embeds none of Credly's own widget.
  */
 export const credentials: Credentials = {
   title: 'Education and certifications',
@@ -58,12 +58,14 @@ export const credentials: Credentials = {
     {
       name: 'Project Management Professional (PMP)',
       institution: pmi,
+      badge: '/education/certifications/pmp.webp',
       href: 'https://www.credly.com/badges/0453ee02-59fe-441b-9481-48ca4030662d',
       granted: '2024-06',
     },
     {
       name: 'PMI Certified Professional in Managing AI (PMI-CPMAI)',
       institution: pmi,
+      badge: '/education/certifications/pmi-cpmai.webp',
       href: 'https://www.credly.com/badges/a8e7a58f-ee8d-4f21-9b7a-136d353ffc6a',
       granted: '2026-05',
     },

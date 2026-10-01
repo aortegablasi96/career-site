@@ -569,11 +569,9 @@ export interface Degree {
   /**
    * Where the institution's logo sits, as a path from the site's root, which the timeline's card
    * shows above the institution's name, per DDR-068, as a role's card shows its company's. It is the
-   * institution's official file, in its own form and colours. Optional, because PMI allows its logo
-   * only with its written authorization, which the owner has asked for, so the certifications have
-   * none yet.
+   * institution's official file, in its own form and colours.
    */
-  logo?: string;
+  logo: string;
   /**
    * Whether the logo is drawn taller than the others, per DDR-066 and DDR-068: the owner asked for
    * the UPC's logo bigger, since its second and third lines are very small at the shared height.
@@ -595,18 +593,12 @@ export interface Certification {
   /** Who issued it, in the place a degree's institution takes, per DDR-006. */
   institution: string;
   /**
-   * Where the institution's logo sits, as a path from the site's root, which the timeline's card
-   * shows above the institution's name, per DDR-068, as a role's card shows its company's. It is the
-   * institution's official file, in its own form and colours. Optional, because PMI allows its logo
-   * only with its written authorization, which the owner has asked for, so the certifications have
-   * none yet.
+   * Where the certification's digital badge sits, as a path from the site's root, which the
+   * timeline's card shows above the issuer's name, per DDR-090, where a degree's card shows its
+   * institution's logo. It is the badge as its issuer awards it, in its own form and colours, which
+   * PMI has authorized the owner to show on this card (#272).
    */
-  logo?: string;
-  /**
-   * Whether the logo is drawn taller than the others, per DDR-066 and DDR-068: the owner asked for
-   * the UPC's logo bigger, since its second and third lines are very small at the shared height.
-   */
-  logoTall?: boolean;
+  badge: string;
   /**
    * Where the certification's card leads, off the site, per DDR-069: its digital badge, where its
    * issuer verifies it. It opens in a new tab, as a profile pill does, per DDR-043.
