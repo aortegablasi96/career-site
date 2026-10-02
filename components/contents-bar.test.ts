@@ -433,7 +433,7 @@ describe('holdDestination', () => {
 });
 
 // DDR-075: choosing a link in the open menu closes it, so it does not stay open over the section
-// the reader went to; a click on the button or the title does not.
+// the reader went to, and since DDR-091 so does the title's link; a click on the button does not.
 describe('choseLink', () => {
   class StubElement {
     constructor(private readonly inLink: boolean) {}

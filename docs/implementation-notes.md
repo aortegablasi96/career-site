@@ -153,7 +153,8 @@ The page itself is the CV, so what it prints is designed.
   fallback. Don't swap the listener for a timer: Firefox starts the scroll a frame or two late.
   Don't set `scroll-behavior: smooth` on the root either: it animates the back button, fragment
   loads and focus scrolls.
-* **Home is `#top`; no element may have the id `top`** (`app/page.test.tsx`).
+* **Home is `#top`; no element may have the id `top`** (`app/page.test.tsx`). The title's link
+  (DDR-091) leads there too, so it glides, marks Home and closes the menu through the same code.
 * **Without script the bar is the full row at every width**, through `(scripting: none)`, and
   `--contents-bar-title-row` returns to the clearance there.
 * **The clearance is the root's `scroll-padding-block-start`**; sections write no `scroll-margin`.

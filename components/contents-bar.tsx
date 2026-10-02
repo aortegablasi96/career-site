@@ -196,7 +196,8 @@ function choose(event: MouseEvent): void {
 /**
  * Whether a click in the bar was on one of its links, which closes the menu, per DDR-075: the
  * reader has chosen where to go, and the menu would otherwise stay open over the section they
- * went to. A click on the button or the title is not one.
+ * went to. The site's title is one of them since DDR-091, though it is outside the menu. A click on
+ * the button, or beside the title's words, is not one.
  */
 export function choseLink(event: Pick<MouseEvent, 'target'>): boolean {
   return event.target instanceof Element && event.target.closest('a') !== null;
@@ -238,8 +239,11 @@ function currentSectionOnServer(): string | null {
  * only thing that sets it apart is that it has no section to measure.
  *
  * Before the links it shows the site's title, per DDR-049, which the stylesheet sets at the left of
- * the page's column, with the links at its right. It is text, not a link, and nothing about it
- * changes as the page scrolls.
+ * the page's column, with the links at its right. Since DDR-091 its words lead where Home does, so
+ * choosing them glides, holds the mark on Home and closes the menu exactly as choosing Home does:
+ * the code that handles a contents link handles it, because its address is Home's. It is never
+ * marked itself, since Home is the link that names that place, and nothing about it changes as the
+ * page scrolls.
  *
  * That last is why it renders the links itself, per ADR-009, where ADR-007 had `Contents` render
  * them and pass them in as children: a link can only be marked by what renders it. What it is
@@ -252,9 +256,9 @@ function currentSectionOnServer(): string | null {
  * scroll event.
  *
  * On a project's view, per DDR-050, the bar is the same bar, and `page` is the route of the page
- * its sections are on. Each link then leads there — Home to the page's top and a section's link to
- * that section — through `next/link`, which puts the site's base path in front of it, per ADR-010,
- * without prefetching the page and every picture on it.
+ * its sections are on. Each link then leads there — Home and the title to the page's top and a
+ * section's link to that section — through `next/link`, which puts the site's base path in front of
+ * it, per ADR-010, without prefetching the page and every picture on it.
  * Nothing is marked there, because the reader is in none of the page's sections, and nothing
  * glides, because `glide` and `holdDestination` only act on a link to this page's own fragments.
  */
@@ -337,7 +341,17 @@ export function ContentsBar({
       onBlur={blur}
     >
       <div className={styles.bar}>
-        <p className={styles.title}>{title}</p>
+        <p className={styles.title}>
+          {page === undefined ? (
+            <a href={`#${homeId}`} className={styles.home}>
+              {title}
+            </a>
+          ) : (
+            <Link href={page} className={styles.home} prefetch={false}>
+              {title}
+            </Link>
+          )}
+        </p>
         <button
           ref={button}
           type="button"

@@ -47,12 +47,21 @@ describe('HomePage', () => {
   });
 
   // DDR-031: each link shows the design's word, stated beside its section's heading in content/.
-  // DDR-045: Home comes first, before every section's link.
+  // DDR-045: Home comes first, before every section's link. DDR-091: the site's title, before them
+  // all, is a link too.
   it('labels each contents link with its section’s own link word, after Home', () => {
     const nav = html.match(/<nav [\s\S]*?<\/nav>/)?.[0] ?? '';
     const words = [...nav.matchAll(/<a [^>]*>([^<]+)<\/a>/g)].map(([, word]) => word);
 
-    expect(words).toEqual(['Home', 'Experience', 'Portfolio', 'Skills', 'Education', 'Languages']);
+    expect(words).toEqual([
+      'Andreu’s site',
+      'Home',
+      'Experience',
+      'Portfolio',
+      'Skills',
+      'Education',
+      'Languages',
+    ]);
     expect(html).toMatch(/<h2 id="education-title"[^>]*>Education and certifications<\/h2>/);
   });
 
@@ -61,7 +70,8 @@ describe('HomePage', () => {
     const shown = [...html.matchAll(/<section id="([^"]+)"/g)].map(([, id]) => id);
 
     expect(shown).toEqual(['experience', 'portfolio', 'skills', 'education', 'languages']);
-    expect(listed).toEqual(['top', ...shown]);
+    // DDR-091: the title and Home both lead to the top.
+    expect(listed).toEqual(['top', 'top', ...shown]);
   });
 
   // DDR-045: HTML sends `#top` to the top of the document only while no element has that id. One
