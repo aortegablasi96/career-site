@@ -518,6 +518,14 @@
   }
 }
 
+/* The introduction's way to get in touch, per DDR-099, after everything the view says. It stands a
+   section boundary below the content, as the neighbours' hairline stands a boundary below it, so it
+   reads as a part of its own rather than as the last of the text or the pictures. Its question, line and controls
+   are drawn by `ContactControls`, exactly as the introduction draws them. */
+.contact {
+  margin-block-start: var(--space-boundary);
+}
+
 /* The foot of the view, per DDR-052: the projects on either side of this one, below the design's
    hairline (node 59:117). The divider is a border on this block, as a section's is on the section
    it opens, so it is never in the accessibility tree and drops on paper with `--color-border`. The

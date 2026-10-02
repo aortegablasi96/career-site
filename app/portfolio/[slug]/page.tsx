@@ -4,6 +4,7 @@ import { Contents } from '@/components/contents';
 import { Footer } from '@/components/footer';
 import { ProjectView } from '@/components/project-view';
 import { contents } from '@/content/contents';
+import { cv } from '@/content/cv';
 import { introduction } from '@/content/introduction';
 import { projects } from '@/content/projects';
 import { sections } from '@/app/sections';
@@ -85,6 +86,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           project={project}
           strings={projects.view}
           backHref={`${page}#${sections.find(({ title }) => title === projects.title)!.id}`}
+          contact={{ introduction, cv }}
           previous={previous}
           next={next}
         />

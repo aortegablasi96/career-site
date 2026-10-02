@@ -1,0 +1,234 @@
+/*
+ * The way to get in touch, per DDR-072, DDR-076 and DDR-099: the question, the line below it and the
+ * four controls. These were the introduction's own rules until DDR-099 put the same three blocks at
+ * the end of each view; they moved here unchanged, so the introduction draws exactly what it drew.
+ *
+ * The blocks have no box of their own, so the space above the question is the place's to set: the
+ * introduction's `--space-controls` below the summary, and a view's below its content. The space
+ * between the three is set here, so every place keeps it.
+ */
+
+/* The question the controls answer, per DDR-072: set as the introduction's positioning line is, in
+   the accent at the larger step, and a weight heavier, so it is told apart at a glance both from the
+   text above it and from the summary's own semibold phrase, which is in the body's ink. */
+.invitation {
+  color: var(--color-accent);
+  font-size: var(--font-size-large);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* What the controls are for, per DDR-076. It reads with the question as one invitation, so it sits
+   a step closer to it than the flow step, as the name sits under the greeting, and the controls
+   still follow at the flow step. It is the greeting's secondary ink at the body's size and weight,
+   so the question above it stays the one highlighted line and this one reads as directions to the
+   controls. */
+.invitation + .callToAction {
+  margin-block-start: var(--space-x-small);
+}
+
+.callToAction {
+  color: var(--color-text-secondary);
+}
+
+/* The four controls wrap onto as many rows as they need, rather than being cut off or scrolled. They
+   follow the line above them at the flow step, which the introduction's column gives them anyway
+   and a view's block, which is a `div`, does not. */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-small);
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.callToAction + .controls {
+  margin-block-start: var(--space-flow);
+}
+
+/* A pill, at the design's size, per DDR-027: 8px above and below a 13px label and 16px either
+   side, which is about 37px tall rather than the 44 DDR-014 required. Its box is its padding and
+   its text, with no minimum of its own. As a flex container the link is never laid out narrower
+   than its own content, so anything wider than the column would overflow the page rather than wrap
+   with the text around it; `anywhere` is what lets it break instead. Since DDR-029 the widest of
+   the four is "Get my CV" and none of them comes near the column, so nothing here breaks today —
+   it is the footer, which still shows the addresses, that needs the same declaration to keep the
+   GitHub address inside the column at a 320px viewport with text at 200%.
+
+   Both kinds of pill are raised off the page by the one shadow the site has, per DDR-020. It is
+   the thing a control shares with a language card and with nothing else, and it is never what
+   identifies a control: the border or the fill below, and the icon, do that, and a forced-colours
+   mode that removes the shadow removes nothing a reader needs. */
+.contact,
+.cv {
+  display: inline-flex;
+  gap: var(--space-small);
+  align-items: center;
+  padding-block: var(--space-small);
+  padding-inline: var(--space-medium);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-raised);
+  font-size: var(--font-size-x-small);
+  /* Medium, per DDR-030, which adds the four controls to DDR-023's row for it. The design sets all
+     four labels in DM Sans Medium and the CV pill alone had it; a control's label is a label, and
+     the three addresses beside it were the only ones set at the body's weight. */
+  font-weight: var(--font-weight-medium);
+  text-decoration-line: none;
+  overflow-wrap: anywhere;
+}
+
+/* The contact pills are outlined on white, both the design's, per DDR-025. The fill is the card
+   surface, which is the only other place the page uses it, and it is what carries the border's
+   1.49:1 — on the page's own surface the same hairline is 1.39:1, and the record measures it where
+   it sits.
+
+   DDR-012 drew this border in the secondary ink at 7.07:1, on the rule that the edge of a control
+   carries meaning and so must reach 3:1. The design's tint cannot, and DDR-025 accepts that rather
+   than defending the rule: what identifies a contact pill is its icon, its shape and the white it
+   sits on, and the border now reinforces those rather than carrying them. */
+.contact {
+  border: 1px solid var(--color-border-accent);
+  background-color: var(--color-surface-card);
+}
+
+/* The CV pill is filled, which sets it apart from the three addresses. White on the accent is
+   6.29:1, per DDR-025. Its border matches its fill, so both kinds of pill are the same size. */
+.cv {
+  border: 1px solid var(--color-accent);
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* Under the pointer, per DDR-035, a contact pill takes the tag's pale indigo and its border
+   strengthens, and the CV pill darkens, fill and border together so it stays the same size. Keyboard
+   focus draws the same colours as well as the outline, so it is never less visible than hover.
+   Nothing is revealed: the label, the icon and the address the pill leads to are there at rest, per
+   DDR-014.
+
+   The strengthened border is 1.78:1 on the hover fill, which is stronger than the resting 1.49:1 and
+   still below the 3:1 WCAG 1.4.11 asks; DDR-035 records it as failing. The accent on the fill is
+   5.62:1, and white on the darker fill is 7.90:1. */
+.contact:hover,
+.contact:focus-visible {
+  border-color: var(--color-border-accent-hover);
+  background-color: var(--color-surface-hover);
+}
+
+.cv:hover,
+.cv:focus-visible {
+  border-color: var(--color-accent-hover);
+  background-color: var(--color-accent-hover);
+}
+
+/* The LinkedIn and GitHub pills are each service's own button, per DDR-044: filled and bordered in
+   the brand's colour, with the mark and the label in white, which is a colour both brands publish
+   their mark in. Under the pointer and on focus only the fill darkens, as the CV pill's does, so the
+   mark is never recoloured. These follow the `.contact` rules above and match their specificity, so
+   they win by order, in this one file. */
+.linkedin {
+  border-color: var(--color-surface-linkedin);
+  background-color: var(--color-surface-linkedin);
+  color: var(--color-on-brand);
+}
+
+.linkedin:hover,
+.linkedin:focus-visible {
+  border-color: var(--color-surface-linkedin-hover);
+  background-color: var(--color-surface-linkedin-hover);
+}
+
+.github {
+  border-color: var(--color-surface-github);
+  background-color: var(--color-surface-github);
+  color: var(--color-on-brand);
+}
+
+.github:hover,
+.github:focus-visible {
+  border-color: var(--color-surface-github-hover);
+  background-color: var(--color-surface-github-hover);
+}
+
+/* The email pill is Gmail's own button, per DDR-044: Google's light button, white with a grey edge
+   and near-black text, carrying Gmail's M in its own colours. Under the pointer and on focus it
+   takes Google's grey state layer; the mark, whose colours are its own, never changes. */
+.gmail {
+  border-color: var(--color-google-border);
+  color: var(--color-google-ink);
+}
+
+.gmail:hover,
+.gmail:focus-visible {
+  border-color: var(--color-google-border);
+  background-color: var(--color-surface-google-hover);
+}
+
+/* A pill that shows its mark alone, per DDR-073, is exactly as wide as the GitHub pill and as tall as
+   every pill, padded as they are, with the mark centred in it: the owner asked on #215 for it to be
+   the GitHub pill's width. The width is the GitHub pill's content, from `--contact-mark-pill-width`,
+   so the two stay equal as text grows. The mark takes the square a label's line would have taken,
+   so the pill keeps the labelled pills' height, and keeps its own proportions inside that square,
+   in its own colours. */
+.markOnly {
+  justify-content: center;
+  inline-size: var(--contact-mark-pill-width);
+}
+
+.markOnly svg {
+  inline-size: var(--contact-mark-size);
+  block-size: var(--contact-mark-size);
+}
+
+@media print {
+  /* A download control is dead on paper, and the paper is the CV, per DDR-010. */
+  .cvItem {
+    display: none;
+  }
+
+  /* The question is the screen's, per DDR-072: on paper the pills are words rather than links, so
+     it has nothing to lead into. So is the line below it, per DDR-076, which points at those links
+     and at a CV control paper does not print. The controls take back the space above them that the
+     question took on screen, so the introduction's sheet is as it was. */
+  .invitation {
+    display: none;
+  }
+
+  .callToAction {
+    display: none;
+  }
+
+  .callToAction + .controls {
+    margin-block-start: var(--space-controls);
+  }
+
+  /* Nothing is tapped on paper, so a control takes the height of its text and drops the padding
+     that gave it a target, per DDR-010. */
+  .controls {
+    display: block;
+  }
+
+  .contact {
+    display: inline;
+    padding-block: 0;
+    padding-inline: 0;
+    border: none;
+  }
+
+  /* The pill prints its label and nothing after it, per DDR-029. The base styles print a link's
+     address after it, which here would put `mailto:aortegablasi@gmail.com` on the sheet — the
+     prefix DDR-006 removed. The address itself is not lost: the footer prints all three, which is
+     the whole reason this pill may carry a label. The declaration is the one DDR-006 already
+     wrote; what changed is why. */
+  .contact::after {
+    content: none;
+  }
+
+  /* No fill prints, per DDR-015, so a white mark and label would vanish. On paper each takes its
+     brand's own colour instead, which is the brand's mark on white, per DDR-044. */
+  .linkedin {
+    color: var(--color-linkedin);
+  }
+
+  .github {
+    color: var(--color-github);
+  }
+}

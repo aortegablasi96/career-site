@@ -1,8 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { cv } from '@/content/cv';
 import { dateLabels } from '@/content/dates';
 import { experience } from '@/content/experience';
+import { introduction } from '@/content/introduction';
 import type { Role } from '@/content/types';
 import { RoleView } from './role-view';
 
@@ -12,8 +14,18 @@ const ponera = roles.find(({ company }) => company === 'Ponera Group')!;
 
 const render = (role: Role, neighbours: { previous?: Role; next?: Role } = {}) =>
   renderToStaticMarkup(
-    <RoleView role={role} strings={view} dateLabels={dateLabels} backHref="/#experience" {...neighbours} />,
+    <RoleView
+      role={role}
+      strings={view}
+      dateLabels={dateLabels}
+      backHref="/#experience"
+      contact={{ introduction, cv }}
+      {...neighbours}
+    />,
   );
+
+/** A content string as a literal inside a regular expression. */
+const escape = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 /** The markup's text, as a reader meets it. */
 const text = (html: string) => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -126,6 +138,34 @@ describe('RoleView', () => {
     expect(html).not.toMatch(/<img [^>]*loading=/);
   });
 
+  // DDR-099: after the points and the skills, and before the roles on either side, the view ends
+  // with the introduction's question, the line below it and its four controls, drawn by the same
+  // component, so a reader who lands on the view can get in touch or download the CV from it.
+  it('ends with the introduction’s way to get in touch, after the points and before the neighbours', () => {
+    const shown = text(html);
+    const ask = shown.indexOf(introduction.invitation);
+
+    expect(html).toMatch(
+      new RegExp(`</ol><div class="_contact_[^"]*"><p class="[^"]*">${escape(introduction.invitation)}</p><p class="[^"]*">${escape(introduction.callToAction)}</p><ul `),
+    );
+    expect(ask).toBeGreaterThan(shown.indexOf(abb.points.at(-1)!.replace(/&/g, '&amp;')));
+    expect(ask).toBeLessThan(shown.indexOf('Previous role'));
+    expect(html).toContain(`href="${cv.file}"`);
+    for (const { href } of introduction.contact) {
+      expect(html).toContain(`href="${href}"`);
+    }
+  });
+
+  it('ends with the way to get in touch after the skills, where the owner supplies them', () => {
+    const skilled = render({ ...abb, skills: ['SaaS'] });
+
+    expect(skilled).toMatch(/<\/li><\/ul><div class="_contact_/);
+  });
+
+  it('ends with the way to get in touch even where there is no neighbour', () => {
+    expect(render(abb)).toMatch(/<div class="_contact_[^"]*"><p /);
+  });
+
   it('draws a logo the content marks as tall at the tall height, and only that one', () => {
     const tobeit = roles.find(({ company }) => company === 'ToBeIT')!;
 
@@ -159,6 +199,12 @@ describe('role view styles', () => {
   it('sets the job title at a project view’s title size, one role for both views', () => {
     expect(narrow).toMatch(/\.titleRow > \.title\s*\{[^}]*font-size:\s*var\(--font-size-project-title-narrow\);/);
     expect(styles).toMatch(/\.titleRow > \.title\s*\{\s*font-size:\s*var\(--font-size-project-title\);/);
+  });
+
+  // DDR-099: the way to get in touch stands a section boundary below the content, as the
+  // neighbours' hairline stands a boundary below it.
+  it('sets the way to get in touch a section boundary below the content, per DDR-099', () => {
+    expect(styles).toMatch(/\.contact\s*\{\s*margin-block-start:\s*var\(--space-boundary\);\s*\}/);
   });
 
   it('keeps a long company inside its neighbouring card', () => {

@@ -1,6 +1,8 @@
+import type { ComponentProps } from 'react';
 import Link from 'next/link';
 import { asset } from '@/app/asset';
 import type { DateLabels, Role, RoleView as RoleViewStrings } from '@/content/types';
+import { ContactControls } from './contact-controls';
 import { DateRange } from './date-range';
 import { roleHref } from './experience';
 import { Icon } from './icon';
@@ -82,6 +84,7 @@ export function RoleView({
   strings: { back, points: pointsLabel, skills: skillsLabel, previous: previousWords, next: nextWords, neighbour },
   dateLabels,
   backHref,
+  contact,
   previous,
   next,
 }: {
@@ -90,6 +93,8 @@ export function RoleView({
   dateLabels: DateLabels;
   /** The route of the experience section on the page. */
   backHref: string;
+  /** The introduction's question, line and controls, which the view ends with, per DDR-099. */
+  contact: ComponentProps<typeof ContactControls>;
   /** The older role, if this is not the oldest. */
   previous?: Role;
   /** The newer role, if this is not the current one. */
@@ -158,6 +163,12 @@ export function RoleView({
           </ul>
         </>
       )}
+      {/* The introduction's way to get in touch, per DDR-099: its question, the line below it and
+          its four controls, after everything the view says and before the links that lead on, so
+          a reader who has finished reading can act without going back to the page. */}
+      <div className={styles.contact}>
+        <ContactControls {...contact} />
+      </div>
       {/* The roles on either side of this one, below the design's divider (node 177:1317). The
           oldest role has nothing before it and the current one nothing after it, and neither view
           shows a card in that half: the roles are the timeline's order, not a ring. */}

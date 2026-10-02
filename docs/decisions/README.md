@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `028`. The next DDR is `099`.** Update both lines when a record lands.
+**The next ADR is `028`. The next DDR is `100`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -49,7 +49,7 @@ ADR-001, ADR-002 and ADR-004 to ADR-027 are accepted. ADR-003 is superseded.
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-098. There are
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-099. There are
 two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
@@ -136,7 +136,8 @@ Each record keeps everything not listed against it.
   lead's place; DDR-085 the frame shows its picture whole, not cropped to 16:10; DDR-088 every
   picture a view shows stands in one box, at its tallest picture's shape. DDR-093 gives an address the site
   does not have a view's frame and the top of a view. DDR-096 a line above the links inviting the
-  reader to try the project, and links past the live site (the Digital Twin's Telegram).
+  reader to try the project, and links past the live site (the Digital Twin's Telegram). DDR-099 ends
+  the view, before DDR-052's neighbours, with the introduction's question, line and controls.
 * **DDR-051** (project cards): DDR-054 every technology; DDR-055 the lift; DDR-062 the hover
   shadow; DDR-063 the shared card behaviour.
 * **DDR-055, DDR-057, DDR-059, DDR-061**: DDR-063 makes a role card rest raised and lift like a
@@ -146,7 +147,8 @@ Each record keeps everything not listed against it.
   newest first, below the wide breakpoint.
 * **DDR-059** (role view): DDR-060 short and full titles; DDR-067 the hint's place and mark;
   DDR-097 the header carries the company's logo, in a column of its own from the wide
-  breakpoint; DDR-098 stands it at the right, centred on the title.
+  breakpoint; DDR-098 stands it at the right, centred on the title; DDR-099 the introduction's
+  question, line and controls before the foot.
 * **DDR-059** (photo centred) and **DDR-010**: DDR-077 takes the float off the screen.
 * **DDR-061, DDR-062, DDR-063**: DDR-065 a lit card keeps its resting shadow; hover ink 18%.
 * **DDR-063**: DDR-090 elements also appear as they are reached, so the lift is no longer the site's

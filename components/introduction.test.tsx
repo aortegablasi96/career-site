@@ -272,7 +272,8 @@ describe('the CV control', () => {
   it('resolves to the file the site carries, through asset()', () => {
     expect(control.href).toBe(cv.file);
     expect(statSync(new URL(`../public${cv.file}`, import.meta.url)).isFile()).toBe(true);
-    expect(readFileSync(new URL('./introduction.tsx', import.meta.url), 'utf8')).toContain(
+    // The introduction draws the control through `ContactControls`, which holds this.
+    expect(readFileSync(new URL('./contact-controls.tsx', import.meta.url), 'utf8')).toContain(
       'asset(cv.file)',
     );
   });
@@ -405,7 +406,8 @@ describe('introduction styles', () => {
     expect(rule('.summary')).toMatch(/max-inline-size:\s*var\(--measure-summary\);/);
     expect(rule('.location + .summary')).toMatch(/margin-block-start:\s*var\(--space-summary\);/);
     // Since DDR-072 the question stands in that space, and the controls follow it at the flow step.
-    expect(rule('.summary + .invitation')).toMatch(
+    // Since DDR-099 `ContactControls` draws the question, so the rule names the summary's neighbour.
+    expect(rule('.text > .summary + *')).toMatch(
       /margin-block-start:\s*var\(--space-controls\);/,
     );
   });
@@ -431,131 +433,6 @@ describe('introduction styles', () => {
     );
   });
 
-  it('sets the line a step below the question in the secondary ink, per DDR-076', () => {
-    expect(rule('.invitation + .callToAction')).toMatch(
-      /margin-block-start:\s*var\(--space-x-small\);/,
-    );
-    expect(rule('.callToAction')).toMatch(/color:\s*var\(--color-text-secondary\);/);
-    // The body's size and weight, so it writes neither, and the question stays the highlight.
-    expect(rule('.callToAction')).not.toMatch(/font-(size|weight)/);
-  });
-
-  it('highlights the question in the accent at the larger step and semibold, per DDR-072', () => {
-    expect(rule('.invitation')).toMatch(/color:\s*var\(--color-accent\);/);
-    expect(rule('.invitation')).toMatch(/font-size:\s*var\(--font-size-large\);/);
-    expect(rule('.invitation')).toMatch(/font-weight:\s*var\(--font-weight-semibold\);/);
-  });
-
-  // On paper the controls take back the space the question and the line below it took, so the
-  // sheet is as it was.
-  it('hides the question and the line below it on paper and gives the controls their space there, per DDR-072 and DDR-076', () => {
-    expect(rule('.invitation', paper)).toMatch(/display:\s*none;/);
-    expect(rule('.callToAction', paper)).toMatch(/display:\s*none;/);
-    expect(rule('.callToAction + .controls', paper)).toMatch(
-      /margin-block-start:\s*var\(--space-controls\);/,
-    );
-  });
-
-  // DDR-027: a control is the 37px the design draws, which is its padding and its label and no
-  // minimum of its own. A minimum was also measured against the content box, since nothing on the
-  // site sets border-box, so the 44px DDR-014 asked for drew a 62px pill rather than a 44px one.
-  it('gives every control the padding the design draws and no minimum, per DDR-027', () => {
-    const pill = rule('.contact,\n.cv');
-
-    expect(pill).toMatch(/padding-block:\s*var\(--space-small\);/);
-    expect(pill).toMatch(/padding-inline:\s*var\(--space-medium\);/);
-    expect(pill).not.toMatch(/min-block-size|min-inline-size/);
-  });
-
-  it('identifies a control by its border or its fill rather than by an underline, per DDR-010', () => {
-    expect(rule('.contact,\n.cv')).toMatch(/text-decoration-line:\s*none;/);
-    // DDR-025 gives the border the design's indigo tint, which cannot carry meaning at 1.49:1, and
-    // the white the design fills the pill with. What identifies the control is its icon, its shape
-    // and that fill; the border reinforces them.
-    expect(rule('.contact')).toMatch(/border:\s*1px solid var\(--color-border-accent\);/);
-    expect(rule('.contact')).toMatch(/background-color:\s*var\(--color-surface-card\);/);
-    expect(rule('.cv')).toMatch(/background-color:\s*var\(--color-accent\);/);
-    expect(rule('.cv')).toMatch(/color:\s*var\(--color-on-accent\);/);
-  });
-
-  // DDR-035: under the pointer a contact pill takes the tag's pale indigo and a stronger border, and
-  // the CV pill darkens its fill and its border together, so neither changes size. Keyboard focus
-  // draws the same, so it is never less visible than hover.
-  it('answers the pointer and keyboard focus with the design’s colours, per DDR-035', () => {
-    const contact = rule('.contact:hover,\n.contact:focus-visible');
-    const cv = rule('.cv:hover,\n.cv:focus-visible');
-
-    expect(contact).toMatch(/border-color:\s*var\(--color-border-accent-hover\);/);
-    expect(contact).toMatch(/background-color:\s*var\(--color-surface-hover\);/);
-    expect(cv).toMatch(/border-color:\s*var\(--color-accent-hover\);/);
-    expect(cv).toMatch(/background-color:\s*var\(--color-accent-hover\);/);
-    expect(`${contact}${cv}`).not.toMatch(/(?:^|[^-])(?:border|padding|box-shadow):/);
-  });
-
-  // DDR-044: the LinkedIn and GitHub pills are each service's own button — its colour behind a white
-  // mark and label — and under the pointer only the fill darkens, so no mark is ever recoloured.
-  it('makes every contact pill its service’s own button, per DDR-044', () => {
-    for (const brand of ['linkedin', 'github']) {
-      const rest = rule(`.${brand}`);
-      const hover = rule(`.${brand}:hover,\n.${brand}:focus-visible`);
-
-      expect(rest).toContain(`background-color: var(--color-surface-${brand});`);
-      expect(rest).toContain(`border-color: var(--color-surface-${brand});`);
-      expect(rest).toMatch(/(?:^|[^-])color: var\(--color-on-brand\);/);
-      expect(hover).toContain(`background-color: var(--color-surface-${brand}-hover);`);
-      expect(hover).not.toMatch(/(?:^|[^-])color:/);
-    }
-
-    const anchors = [...html.matchAll(/<a [^>]*>/g)].map(([tag]) => tag);
-    const classes = (href: string) =>
-      anchors.find((tag) => tag.includes(`href="${href}"`))!.match(/class="([^"]+)"/)![1];
-
-    for (const { href, markOnly } of introduction.contact) {
-      expect(classes(href).split(' ')).toHaveLength(markOnly ? 3 : 2);
-    }
-
-    // The email pill is Gmail's light button: white, with Google's grey edge and near-black label,
-    // and Google's grey state layer under the pointer.
-    expect(rule('.gmail')).toContain('border-color: var(--color-google-border);');
-    expect(rule('.gmail')).toMatch(/(?:^|[^-])color: var\(--color-google-ink\);/);
-    expect(rule('.gmail:hover,\n.gmail:focus-visible')).toContain(
-      'background-color: var(--color-surface-google-hover);',
-    );
-  });
-
-  // DDR-073: a mark shown alone takes the square a label's line would, so the pill is as tall as
-  // the labelled pills beside it, and it keeps their padding with the GitHub pill's content width,
-  // so it is exactly as wide as the GitHub pill, with the mark centred.
-  it('draws a pill that shows its mark alone as tall as the others and as wide as GitHub’s, per DDR-073', () => {
-    expect(rule('.markOnly')).toMatch(/inline-size:\s*var\(--contact-mark-pill-width\);/);
-    expect(rule('.markOnly')).toMatch(/justify-content:\s*center;/);
-    expect(rule('.markOnly')).not.toMatch(/padding/);
-    expect(rule('.contact,\n.cv')).toMatch(/padding-inline:\s*var\(--space-medium\);/);
-    expect(rule('.markOnly svg')).toMatch(/inline-size:\s*var\(--contact-mark-size\);/);
-    expect(rule('.markOnly svg')).toMatch(/block-size:\s*var\(--contact-mark-size\);/);
-    expect(rule('.contact,\n.cv')).toMatch(/padding-block:\s*var\(--space-small\);/);
-  });
-
-  // DDR-044: Gmail's M is drawn in its own four colours, which are the mark, and nothing on the pill
-  // sets them; the other two marks have one colour each, which their pill decides.
-  it('draws Gmail’s M in its own colours, and the other marks in their pill’s ink, per DDR-044', () => {
-    const gmail = links.find(({ href }) => href.startsWith('mailto:'))!.markup;
-
-    for (const colour of ['#4285f4', '#34a853', '#fbbc04', '#ea4335']) {
-      expect(gmail).toContain(`fill="${colour}"`);
-    }
-    for (const label of ['LinkedIn', 'GitHub']) {
-      expect(links.find(({ text }) => text === label)!.markup).not.toMatch(/fill="#/);
-    }
-  });
-
-  // DDR-044: no fill prints, so on paper each brand's mark and label take the brand's own colour,
-  // which is its mark on white, rather than a white that would vanish.
-  it('prints the LinkedIn and GitHub marks in their own brand colours, per DDR-044', () => {
-    expect(rule('.linkedin', paper)).toMatch(/color:\s*var\(--color-linkedin\);/);
-    expect(rule('.github', paper)).toMatch(/color:\s*var\(--color-github\);/);
-  });
-
   // DDR-025: the design sets the location line in #94a3b8, the one ink on the page fainter than
   // the muted grey `.metadata` carries. It is 2.39:1 and fails WCAG 1.4.3.
   it('sets the location line in the faintest ink, per DDR-025', () => {
@@ -574,22 +451,6 @@ describe('introduction styles', () => {
     expect(rule('.greeting + h1', paper)).toMatch(/margin-block-start:\s*0;/);
   });
 
-  // DDR-020 raises both kinds of pill by the one shadow the site has. It is never what identifies
-  // a control — the border or the fill above, and the icon, do that — so a forced-colours mode
-  // that drops every shadow drops nothing a reader needs.
-  it('raises both kinds of pill off the page, per DDR-020', () => {
-    expect(rule('.contact,\n.cv')).toMatch(/box-shadow:\s*var\(--shadow-raised\);/);
-  });
-
-  // DDR-030 adds the four controls to DDR-023's medium row. The weight sits on the shared rule
-  // rather than on each kind of pill, because it belongs to a control's label and every control has
-  // one; the CV pill, which carried it alone, therefore writes none of its own any more.
-  it('sets all four control labels in medium, per DDR-030', () => {
-    expect(rule('.contact,\n.cv')).toMatch(/font-weight:\s*var\(--font-weight-medium\);/);
-    expect(rule('.cv')).not.toMatch(/font-weight/);
-    expect(rule('.contact')).not.toMatch(/font-weight/);
-  });
-
   // DDR-046, as revised: the introduction is the first band, so the contents bar above it is set
   // apart from the first view. It carries the space above the page, which `main` carried, and the
   // half of the first boundary above the first divider, which was that section's margin. Paper
@@ -598,10 +459,6 @@ describe('introduction styles', () => {
     expect(rule('.introduction')).toMatch(/background-color:\s*var\(--color-surface-band\);/);
     expect(rule('.introduction')).toMatch(/padding-block:\s*var\(--page-padding-block\) var\(--space-boundary\);/);
     expect(rule('.introduction', paper)).toMatch(/padding-block-end:\s*0;/);
-  });
-
-  it('hides the CV control on paper, where a download is dead and the paper is the CV', () => {
-    expect(rule('.cvItem', paper)).toMatch(/display:\s*none;/);
   });
 
   // The introduction is the one section whose paper layout is not the screen's wide one, per
@@ -617,14 +474,6 @@ describe('introduction styles', () => {
     expect(rule('.frame', paper)).toMatch(/margin-inline-end:\s*var\(--space-medium\);/);
     expect(rule('.heading', paper)).toMatch(/margin-block-end:\s*0;/);
     expect(rule('.photo')).toMatch(/inline-size:\s*var\(--photo-width\);/);
-  });
-
-  // The pill prints its label and nothing after it, per DDR-029. The base styles would otherwise
-  // print `(mailto:…)` after "Email me", which is the prefix DDR-006 removed; the address itself is
-  // on the sheet once, from the footer.
-  it('prints the label with no address after it, per DDR-029', () => {
-    expect(rule('.contact::after', paper)).toMatch(/content:\s*none;/);
-    expect(rule('.contact', paper)).toMatch(/border:\s*none;/);
   });
 
   // Every shadow here is put out by its token in print — the pills' by DDR-020 and the photo's two

@@ -246,6 +246,14 @@
   font-weight: var(--font-weight-medium);
 }
 
+/* The introduction's way to get in touch, per DDR-099, after everything the view says. It stands a
+   section boundary below the content, as the neighbours' hairline stands a boundary below it, so it
+   reads as a part of its own rather than as the last of the points or skills. Its question, line and controls
+   are drawn by `ContactControls`, exactly as the introduction draws them. */
+.contact {
+  margin-block-start: var(--space-boundary);
+}
+
 /* The foot of the view: the roles on either side of this one, below the design's hairline (node
    177:1317), which is a border on this block, as a project view's is. The design puts a section
    boundary on each side of the line, 56px and 56px.

@@ -23,6 +23,10 @@ the CV control still open in the same tab.
 DDR-031 to DDR-049's contents bar and DDR-028's footer are unchanged, and a view uses both as they
 are.
 
+**Amended by DDR-099 (2026-10-02)** in how a view ends: after the text and the pictures, and before
+DDR-052's hairline and neighbours, it shows the introduction's question, the line below it and the
+four controls, drawn by the same component. See "Layout and space".
+
 **Amended by DDR-096 (2026-10-02)** in its links: a view may show a line above them inviting the
 reader to try the project, and they may go on past the repository and the live site to any other
 place the project runs. The Digital Twin's view has both.
@@ -148,6 +152,8 @@ caption on the right. Below the breakpoint the two are one column in the same or
   DDR-039's rhythm factor. 40px between the way back and the rule, which is `--space-heading`.
   72px from the view's foot to the footer's hairline, which is the page's own
   `--page-padding-block-end`.
+* **Since DDR-099** the introduction's way to get in touch follows the columns, a section boundary
+  below them, and comes before DDR-052's hairline and neighbours.
 
 ### What the view does not do
 

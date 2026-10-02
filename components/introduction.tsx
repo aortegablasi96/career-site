@@ -1,5 +1,6 @@
 import { asset } from '@/app/asset';
-import type { ContactIcon, Cv, Introduction as IntroductionContent } from '@/content/types';
+import type { Cv, Introduction as IntroductionContent } from '@/content/types';
+import { ContactControls } from './contact-controls';
 import { Icon } from './icon';
 import { MetadataLine } from './metadata-line';
 import styles from './introduction.module.css';
@@ -33,36 +34,9 @@ import styles from './introduction.module.css';
  * be done there because the size is a design value that differs between the breakpoints and on
  * paper, and an attribute cannot follow that.
  *
- * The four controls are the three contact addresses and the CV download. They are the one place on
- * the page a link is not underlined, per DDR-010, so each is identified by its border or fill
- * together with its mark — two cues, neither of them a colour.
- *
- * Each contact pill shows a short label — "Email me", "LinkedIn", "GitHub" — rather than the
- * address it links to, per DDR-029; since DDR-073 the email pill's is its name and not shown. The
- * address is not lost: the footer shows all three, on screen and on paper alike, which is what
- * makes the label possible at all. So the pill prints its label
- * and nothing after it, and the printed CV still carries every address once.
- *
- * The LinkedIn and GitHub pills open a new tab, per DDR-043. Since DDR-044 nothing on the pill
- * shows it: the link's accessible name says so instead, so assistive technology still announces it
- * before the pill is chosen. The email pill opens the mail client and says nothing of a tab.
- *
- * Since DDR-073 the email pill shows Gmail's M and no word: the mark says email, and "Email me" is
- * its accessible name.
- *
- * Each contact pill is its service's own button, per DDR-044: Gmail's white button with its
- * four-colour M, and LinkedIn's and GitHub's filled in the brand's colour with a white mark.
+ * The question, the line below it and the four controls are `ContactControls`, which since DDR-099
+ * each view ends with as well; its own comment says how the controls are drawn and named.
  */
-/**
- * The class that makes each contact pill its service's own button, per DDR-044: Gmail's, since the
- * address is on gmail.com, LinkedIn's and GitHub's.
- */
-const brandButton: Record<ContactIcon, string> = {
-  gmail: styles.gmail,
-  linkedin: styles.linkedin,
-  github: styles.github,
-};
-
 export function Introduction({
   introduction,
   cv,
@@ -70,18 +44,7 @@ export function Introduction({
   introduction: IntroductionContent;
   cv: Cv;
 }) {
-  const {
-    photo,
-    greeting,
-    name,
-    positioning,
-    location,
-    summary,
-    invitation,
-    callToAction,
-    contact,
-    newTab,
-  } = introduction;
+  const { photo, greeting, name, positioning, location, summary } = introduction;
 
   return (
     <header className={styles.introduction}>
@@ -110,51 +73,10 @@ export function Introduction({
             typeof part === 'string' ? part : <strong key={index}>{part.strong}</strong>,
           )}
         </p>
-        {/* The question the controls answer, per DDR-072. A paragraph rather than a heading, so the
-            name is still the page's one heading and the outline gains nothing; it is read after
-            the summary and before the list, which is where it stands. */}
-        <p className={styles.invitation}>{invitation}</p>
-        {/* What the controls below are for, per DDR-076: a quieter paragraph under the question,
-            read after it and before the list. */}
-        <p className={styles.callToAction}>{callToAction}</p>
-        <ul className={styles.controls}>
-          {/* A profile opens in a new tab, so the page stays open behind it, per DDR-043. `noopener`
-              keeps the new tab from reaching back to this one through `window.opener`; browsers
-              imply it for a new tab today, and it is written out so the guarantee does not rest on
-              a default.
-
-              The pill shows no sign of the tab, per DDR-044, so its name carries it: the visible
-              label first, so the name a speech-input user reads off the pill is still the start of
-              the name, per WCAG 2.5.3, and then the words that say a tab opens. */}
-          {/* A pill that shows its mark alone, per DDR-073, takes its label as its name instead, so a
-              screen reader still announces what it does. */}
-          {contact.map(({ label, href, icon, markOnly, newTab: opensNewTab }) => (
-            <li key={href}>
-              <a
-                href={href}
-                className={`${styles.contact} ${brandButton[icon]}${markOnly ? ` ${styles.markOnly}` : ''}`}
-                {...(markOnly && { 'aria-label': label })}
-                {...(opensNewTab && {
-                  target: '_blank',
-                  rel: 'noopener',
-                  'aria-label': `${label}, ${newTab}`,
-                })}
-              >
-                <Icon name={icon} />
-                {!markOnly && label}
-              </a>
-            </li>
-          ))}
-          {/* The CV is a file this site carries, so its path goes through asset(), per ADR-004.
-              The control is hidden in print: a download is dead on paper, and the paper is the
-              CV. */}
-          <li className={styles.cvItem}>
-            <a href={asset(cv.file)} className={styles.cv} download>
-              <Icon name="download" />
-              {cv.label}
-            </a>
-          </li>
-        </ul>
+        {/* The question, the line below it and the four controls, per DDR-072 and DDR-076, which
+            since DDR-099 each view ends with too. They are blocks of this column, read after the
+            summary. */}
+        <ContactControls introduction={introduction} cv={cv} />
       </div>
     </header>
   );

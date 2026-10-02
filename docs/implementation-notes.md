@@ -16,7 +16,7 @@ save the next person from breaking something; don't add story history.
 * **A test that imports the root layout mocks `next/font/local`**, whose loaders throw outside the
   Next.js compiler (see `app/layout.test.tsx`).
 * **Vitest's CSS-module stub returns a class for any key**, so `styles[someKey]` is always truthy in
-  a test. Map keys to classes explicitly, as `brandButton` in `introduction.tsx` does.
+  a test. Map keys to classes explicitly, as `brandButton` in `contact-controls.tsx` does.
 * **`@next/next/no-img-element` is off**, because ADR-004 rules out `next/image`.
 
 ## Fonts (DDR-011, DDR-023)
@@ -199,6 +199,10 @@ The page itself is the CV, so what it prints is designed.
 
 * Below the wide breakpoint the photo and the `hgroup` are one wrapping flex row, centred on each
   other; the text column is `display: contents`. On paper the photo floats.
+* **The question, the line and the four controls are `ContactControls`** (DDR-099), which every
+  view ends with too, so a change to them changes the views as well. It renders three blocks with
+  no box, so they stay items of the introduction's row; the introduction sets the space above the
+  question with `.text > .summary + *`, since the question's class is the other module's.
 * **`min-inline-size: min-content` on the `hgroup`** is what moves the name below the photo, rather
   than breaking it mid-word, when its longest word no longer fits beside it.
 * **After changing the photo, the name, the greeting or the intro copy**, check at 300px to 767px

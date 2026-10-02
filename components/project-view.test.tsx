@@ -2,6 +2,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import type { CSSProperties } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
+import { cv } from '@/content/cv';
 import { introduction } from '@/content/introduction';
 import { projects } from '@/content/projects';
 import type { GalleryItem, Project } from '@/content/types';
@@ -15,6 +16,7 @@ function render(project: Project, neighbours: { previous?: Project; next?: Proje
       project={project}
       strings={projects.view}
       backHref="/#portfolio"
+      contact={{ introduction, cv }}
       previous={neighbours.previous}
       next={neighbours.next}
     />,
@@ -22,6 +24,11 @@ function render(project: Project, neighbours: { previous?: Project; next?: Proje
 }
 
 const [numisBook, digitalTwin, stockPortfolioViewer, careerSite] = projects.projects;
+/**
+ * The view's own markup: everything before the introduction's way to get in touch, which since
+ * DDR-099 every view ends with, and whose links are the introduction's rather than the project's.
+ */
+const own = (markup: string) => markup.slice(0, markup.search(/<div class="_contact_/));
 // Since this site gained its own on #252, every project has a gallery, so a project without one is
 // this site with its gallery taken away.
 const withoutGallery: Project = { ...careerSite!, gallery: undefined };
@@ -82,6 +89,9 @@ function webpSize(file: string): { width: number; height: number } {
 }
 
 const html = render(numisBook!);
+
+/** A content string as a literal inside a regular expression. */
+const escape = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 /** The markup's text, as a reader meets it. */
 const text = (markup: string) => markup.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -347,7 +357,7 @@ describe('ProjectView', () => {
 
       expect(text(markup)).not.toContain(projects.view.downloadBusinessCase);
       expect(markup).not.toContain('overviewOnly');
-      expect(markup).not.toContain('download=""');
+      expect(own(markup)).not.toContain('download=""');
     });
   });
 
@@ -364,7 +374,7 @@ describe('ProjectView', () => {
   // DDR-050 extends DDR-043: the repository and the live site open a new tab, and say so to
   // assistive technology after their own text, as a profile pill does.
   it('opens each link in a new tab it cannot control, and says so after the link’s own text', () => {
-    const links = [...html.matchAll(/<a href="(https:[^"]+)"([^>]*)>/g)];
+    const links = [...own(html).matchAll(/<a href="(https:[^"]+)"([^>]*)>/g)];
 
     expect(links.map(([, href]) => href)).toEqual(numisBook!.links.map(({ href }) => href));
 
@@ -411,7 +421,7 @@ describe('ProjectView', () => {
   describe('the invitation to try the project', () => {
     const view = render(digitalTwin!);
     const chat = 'https://career-conversation-chatbot.vercel.app';
-    const line = view.match(/<p class="[^"]*invitation[^"]*">.*?<\/p>/)?.[0] ?? '';
+    const line = own(view).match(/<p class="[^"]*invitation[^"]*">.*?<\/p>/)?.[0] ?? '';
 
     it('says, in the owner’s words, that a reader can ask the Digital Twin about the owner’s career', () => {
       expect(text(line)).toBe('Have a question? Ask my AI Digital Twin about my career.');
@@ -462,7 +472,7 @@ describe('ProjectView', () => {
       for (const project of [numisBook!, stockPortfolioViewer!, careerSite!]) {
         const markup = render(project);
 
-        expect(markup).not.toMatch(/<p class="[^"]*invitation/);
+        expect(own(markup)).not.toMatch(/<p class="[^"]*invitation/);
         expect(markup).not.toContain('t.me/');
       }
     });
@@ -1034,6 +1044,43 @@ describe('ProjectView', () => {
       expect(source).not.toMatch(/['"]use client['"]/);
       expect(source).not.toMatch(/\bon[A-Z]\w*=/);
       expect(source).toMatch(/import \{ LargerPicture, [^}]*\} from '\.\/larger-picture';/);
+    });
+  });
+
+  // DDR-099: after everything the view shows, and before the projects on either side, the view
+  // ends with the introduction's question, the line below it and its four controls, drawn by the
+  // same component, so a reader who lands on the view can get in touch or download the CV from it.
+  describe('the way to get in touch', () => {
+    const view = render(digitalTwin!, { previous: numisBook!, next: stockPortfolioViewer! });
+
+    it('follows the view’s text and pictures and comes before the projects on either side', () => {
+      const shown = text(view);
+      const ask = shown.indexOf(introduction.invitation);
+
+      expect(view).toMatch(
+        new RegExp(`</div><div class="_contact_[^"]*"><p class="[^"]*">${escape(introduction.invitation)}</p><p class="[^"]*">${escape(introduction.callToAction)}</p><ul `),
+      );
+      expect(ask).toBeGreaterThan(shown.indexOf(digitalTwin!.caption));
+      expect(ask).toBeLessThan(shown.indexOf(projects.view.previous));
+    });
+
+    it('offers the introduction’s three contact pills and the CV, on every view', () => {
+      for (const project of projects.projects) {
+        const markup = render(project).slice(own(render(project)).length);
+
+        expect([...markup.matchAll(/<a href="([^"]+)"/g)].map(([, href]) => href)).toEqual([
+          ...introduction.contact.map(({ href }) => href),
+          cv.file,
+        ]);
+      }
+    });
+
+    it('stays while the business case is shown, since it belongs to neither the overview nor the case', () => {
+      expect(view.slice(own(view).length)).not.toContain('overviewOnly');
+    });
+
+    it('stands a section boundary below the content, per DDR-099', () => {
+      expect(css).toMatch(/\.contact\s*\{\s*margin-block-start:\s*var\(--space-boundary\);\s*\}/);
     });
   });
 

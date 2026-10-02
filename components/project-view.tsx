@@ -1,4 +1,4 @@
-import { Fragment, type CSSProperties } from 'react';
+import { Fragment, type ComponentProps, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { asset } from '@/app/asset';
 import type {
@@ -9,6 +9,7 @@ import type {
   ProjectView as ProjectViewStrings,
 } from '@/content/types';
 import { BusinessCaseSlider } from './business-case-slider';
+import { ContactControls } from './contact-controls';
 import { Icon } from './icon';
 import { LargerPicture, type Steps } from './larger-picture';
 import { projectHref } from './projects';
@@ -359,6 +360,7 @@ export function ProjectView({
     neighbour,
   },
   backHref,
+  contact,
   previous,
   next,
 }: {
@@ -366,6 +368,8 @@ export function ProjectView({
   strings: ProjectViewStrings;
   /** The route of the projects section on the page. */
   backHref: string;
+  /** The introduction's question, line and controls, which the view ends with, per DDR-099. */
+  contact: ComponentProps<typeof ContactControls>;
   /** The project the page shows before this one, if this is not the first. */
   previous?: Project;
   /** The project the page shows after this one, if this is not the last. */
@@ -520,6 +524,12 @@ export function ProjectView({
             <figcaption className={styles.caption}>{only.caption}</figcaption>
           </figure>
         )}
+      </div>
+      {/* The introduction's way to get in touch, per DDR-099: its question, the line below it and
+          its four controls, after everything the view says and before the links that lead on, so
+          a reader who has finished reading can act without going back to the page. */}
+      <div className={styles.contact}>
+        <ContactControls {...contact} />
       </div>
       {/* The projects on either side of this one, below the design's divider (node 59:117). The
           first project has nothing before it and the last nothing after it, and neither view

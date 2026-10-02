@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-099**, per #290: after the points, and the skills where there are any, and before
+the foot's hairline, the view shows the introduction's question, the line below it and the four
+controls, drawn by the same component, a section boundary below the last block. See "The foot".
+
 **Amended by DDR-097 and DDR-098**, per #289: the header carries the company's logo, the one the
 role's card shows, at the panel's right. Below the wide breakpoint it stands after the title. From
 the wide breakpoint it is centred in a 160px column of its own at the title's right, centred on the
@@ -72,6 +76,8 @@ From the top, in one column, as the layer draws it:
 * **"Skills & technologies"**, the same label 40px below the points, then the role's skills as pills
   8px apart: medium in the accent on `--color-surface-tag`, edged in `--color-border-accent` (node
   177:1275). A role without skills draws neither the label nor the row.
+* **Since DDR-099**, before the foot, the introduction's way to get in touch, a section boundary
+  below the points or the skills; the foot's hairline is then a section boundary below that.
 * **The foot**: a hairline a section boundary below the last block, and a section boundary below it
   (node 177:1317), the design's 56px and 56px, then the neighbouring cards. Each is DDR-052's card
   with a third line: the direction, the company semibold at 14px, and the job title at 11px in the

@@ -4,6 +4,7 @@ import { Contents } from '@/components/contents';
 import { Footer } from '@/components/footer';
 import { RoleView } from '@/components/role-view';
 import { contents } from '@/content/contents';
+import { cv } from '@/content/cv';
 import { dateLabels } from '@/content/dates';
 import { experience } from '@/content/experience';
 import { introduction } from '@/content/introduction';
@@ -85,6 +86,7 @@ export default async function RolePage({ params }: { params: Promise<{ slug: str
           strings={experience.view}
           dateLabels={dateLabels}
           backHref={`${page}#${sections.find(({ title }) => title === experience.title)!.id}`}
+          contact={{ introduction, cv }}
           previous={previous}
           next={next}
         />
