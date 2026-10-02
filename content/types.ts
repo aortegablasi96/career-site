@@ -451,8 +451,15 @@ export interface Project {
    */
   businessCase?: BusinessCase;
   /**
-   * The repository first, then a live version where one exists. Each link is labelled rather than
-   * showing its address, which prints after it on paper, per DDR-006.
+   * A line inviting the reader to try the project, which the view shows above its links, per
+   * DDR-096: a run of text in which a part may be a link, which opens a new tab as the links do.
+   * Left out where the owner has written none, and a view without it shows its links alone.
+   */
+  invitation?: readonly (string | Link)[];
+  /**
+   * The repository first, then a live version where one exists, and any other place the project
+   * runs. Each link is labelled rather than showing its address, which prints after it on paper,
+   * per DDR-006.
    */
   links: readonly Link[];
 }

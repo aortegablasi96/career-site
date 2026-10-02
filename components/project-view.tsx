@@ -312,10 +312,12 @@ function Neighbour({
  * built, per DDR-079; everything else on the view stays where it is.
  *
  * The first link is the repository and is filled; a live site, where there is one, follows it
- * outlined, as the design draws the two. Both leave the site for another one the reader means to
- * come back from, so both open a new tab, per DDR-043 as DDR-050 extends it, and say so to
- * assistive technology after their own text. Nothing on the link shows it: the arrow out of a box
- * says the link leaves the site, which it does whichever tab it opens in.
+ * outlined, as the design draws the two, and any other place the project runs follows the same
+ * way. Where the project invites the reader to try it, a line above them says so, per DDR-096. Each
+ * leaves the site for another one the reader means to come back from, so each opens a new tab, per
+ * DDR-043 as DDR-050 extends it, and says so to assistive technology after its own text. Nothing on
+ * the link shows it: the arrow out of a box says the link leaves the site, which it does whichever
+ * tab it opens in.
  *
  * The way back is a route of this site, so it goes through `next/link`, which puts the base path in
  * front of it, per ADR-010. It leads to the projects section rather than the top of the page. It
@@ -323,7 +325,18 @@ function Neighbour({
  * picture on each view, whether or not the reader goes back.
  */
 export function ProjectView({
-  project: { name, media, caption, gallery, technologies, description, howBuilt, businessCase, links },
+  project: {
+    name,
+    media,
+    caption,
+    gallery,
+    technologies,
+    description,
+    howBuilt,
+    businessCase,
+    invitation,
+    links,
+  },
   strings: {
     back,
     howBuilt: howBuiltTitle,
@@ -429,6 +442,26 @@ export function ProjectView({
               </li>
             ))}
           </ul>
+          {/* Where the project invites the reader to try it, a line above the links, per DDR-096,
+              which goes with them while the business case is shown. Its link leaves the site as
+              they do, so it opens a new tab and says so after its own text, as they do. */}
+          {invitation && (
+            <p className={overviewOnly(styles.invitation)}>
+              {invitation.map((part, index) => {
+                if (typeof part === 'string') {
+                  return part;
+                }
+
+                const { text, href } = part;
+
+                return (
+                  <a key={index} href={href} target="_blank" rel="noopener" aria-label={`${text}, ${newTab}`}>
+                    {text}
+                  </a>
+                );
+              })}
+            </p>
+          )}
           <ul className={overviewOnly(styles.links)}>
             {links.map(({ text, href }, index) => (
               <li key={href}>

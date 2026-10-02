@@ -252,9 +252,18 @@ export const projects: Projects = {
         ],
         file: '/portfolio/digital-twin/digital-twin-business-case.pdf',
       },
+      // Since #286 the view invites the reader to ask the chatbot about the owner's career, in the
+      // owner's words on that story, per DDR-096, and leads to it in Telegram too, at the address
+      // the owner's CV file links to and the owner confirmed on #286.
+      invitation: [
+        'Have a question? ',
+        { text: 'Ask my AI Digital Twin', href: 'https://career-conversation-chatbot.vercel.app' },
+        ' about my career.',
+      ],
       links: [
         { text: sourceCode, href: 'https://github.com/aortegablasi96/career_conversation_chatbot' },
         { text: liveSite, href: 'https://career-conversation-chatbot.vercel.app' },
+        { text: 'Telegram', href: 'https://t.me/andreu_career_bot' },
       ],
     },
     {

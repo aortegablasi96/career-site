@@ -237,6 +237,30 @@
   list-style: none;
 }
 
+/* The line inviting the reader to try the project, per DDR-096: running text set as the description
+   is, where the links stood below the tags, and the links follow it at the flow step, as the
+   introduction's controls follow the line above them. */
+.invitation {
+  margin-block-start: var(--space-large);
+  line-height: var(--line-height-prose);
+}
+
+.invitation + .links {
+  margin-block-start: var(--space-flow);
+}
+
+/* Its link is underlined in the indigo DDR-035 gives a project link, and deepens under the pointer
+   and on focus, ink and underline alike. */
+.invitation a {
+  text-decoration-color: var(--color-underline);
+}
+
+.invitation a:hover,
+.invitation a:focus-visible {
+  color: var(--color-accent-hover);
+  text-decoration-color: var(--color-underline-hover);
+}
+
 /* A link is a pill at the introduction's controls' size, per DDR-027, raised by the site's one
    shadow, per DDR-020, and set in medium, per DDR-030. `anywhere` keeps a long label inside the
    column, as the introduction's pills do. */
