@@ -59,8 +59,8 @@ function Neighbour({
  * 177:1206).
  *
  * At the top, a way back to the experience section on the page. Below it, the role's header on a
- * tinted panel: the company's logo, per DDR-097, then the company in a pill, the dates and the
- * place, then the job title in full, which is the view's one `h1`, per DDR-060. Below that, every point the role states as a numbered list, and, where the
+ * tinted panel: the company in a pill, the dates and the place, then the job title in full, which
+ * is the view's one `h1`, per DDR-060, and the company's logo at the panel's right, per DDR-098. Below that, every point the role states as a numbered list, and, where the
  * owner has supplied them, the role's skills as tags. At the foot, below a divider, the roles on
  * either side of this one, in the timeline's order.
  *
@@ -104,33 +104,34 @@ export function RoleView({
         {back}
       </Link>
       <header className={styles.header}>
-        {/* The company's logo, the one its card on the page opens with, per DDR-097: above the
-            company below the wide breakpoint, and in a column of its own beside the rest from it.
-            The company's name is the next thing read, in its pill, so the logo is hidden from
-            assistive technology, as the card's is, and a screen reader names the company once. It
-            is the top of the view, so it is not lazy. */}
-        <span className={styles.logoBox}>
-          <img
-            className={[styles.logo, logoTall && styles.logoTall].filter(Boolean).join(' ')}
-            src={asset(logo)}
-            alt=""
-          />
-        </span>
-        <div className={styles.heading}>
-          {/* The company, the dates and the place, one line above the title (node 177:1214). The
-              spaces between the parts are text, so a screen reader does not run them together; the
-              dot between the dates and the place is only drawn, as the metadata line's is. */}
-          <p className={styles.meta}>
-            <span className={styles.company}>{company}</span>{' '}
-            <span>
-              <DateRange start={start} end={end} labels={dateLabels} />
-            </span>{' '}
-            <span className={styles.separator} aria-hidden="true">
-              ·
-            </span>{' '}
-            <span>{place}</span>
-          </p>
+        {/* The company, the dates and the place, one line above the title (node 177:1214). The
+            spaces between the parts are text, so a screen reader does not run them together; the
+            dot between the dates and the place is only drawn, as the metadata line's is. */}
+        <p className={styles.meta}>
+          <span className={styles.company}>{company}</span>{' '}
+          <span>
+            <DateRange start={start} end={end} labels={dateLabels} />
+          </span>{' '}
+          <span className={styles.separator} aria-hidden="true">
+            ·
+          </span>{' '}
+          <span>{place}</span>
+        </p>
+        {/* The title, then the company's logo, the one its card on the page opens with, per DDR-097
+            as DDR-098 moves it: at the panel's right, below the title below the wide breakpoint,
+            and from it in a column of its own beside the title, centred on it. The company's name
+            is already read in its pill, so the logo is hidden from assistive technology, as the
+            card's is, and a screen reader names the company once. It is the top of the view, so it
+            is not lazy. */}
+        <div className={styles.titleRow}>
           <h1 className={styles.title}>{fullTitle}</h1>
+          <span className={styles.logoBox}>
+            <img
+              className={[styles.logo, logoTall && styles.logoTall].filter(Boolean).join(' ')}
+              src={asset(logo)}
+              alt=""
+            />
+          </span>
         </div>
       </header>
       <h2 className={styles.label}>{pointsLabel}</h2>

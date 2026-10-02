@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `028`. The next DDR is `098`.** Update both lines when a record lands.
+**The next ADR is `028`. The next DDR is `099`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -49,7 +49,7 @@ ADR-001, ADR-002 and ADR-004 to ADR-027 are accepted. ADR-003 is superseded.
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-097. There are
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-098. There are
 two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
@@ -145,14 +145,16 @@ Each record keeps everything not listed against it.
   of dates; DDR-069 education cards link off the site; DDR-070 grained surface; DDR-074 a column,
   newest first, below the wide breakpoint.
 * **DDR-059** (role view): DDR-060 short and full titles; DDR-067 the hint's place and mark;
-  DDR-097 the header opens with the company's logo, in a column of its own from the wide
-  breakpoint.
+  DDR-097 the header carries the company's logo, in a column of its own from the wide
+  breakpoint; DDR-098 stands it at the right, centred on the title.
 * **DDR-059** (photo centred) and **DDR-010**: DDR-077 takes the float off the screen.
 * **DDR-061, DDR-062, DDR-063**: DDR-065 a lit card keeps its resting shadow; hover ink 18%.
 * **DDR-063**: DDR-090 elements also appear as they are reached, so the lift is no longer the site's
   one piece of expressive motion.
 * **DDR-063, DDR-064**: DDR-074 the column's card lifts by a margin and outlines itself.
 * **DDR-064**: DDR-071 dates glow and the dot darkens.
+* **DDR-097** (logo on a role's view): DDR-098 the logo stands at the panel's right, centred on the
+  title from the wide breakpoint and after it below.
 * **DDR-066**: DDR-068 degrees carry the UPC's logo; DDR-097 each logo's file is twice the role
   view's height, 72px (112px tall).
 * **DDR-070** (timeline card): DDR-080 draws a project's business case as one.

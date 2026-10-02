@@ -274,8 +274,8 @@ export interface Role {
   company: string;
   /**
    * Where the company's logo sits, as a path from the site's root, which the timeline's card shows
-   * above the company's name, per DDR-066, and the role's view at the head of its panel, per
-   * DDR-097. It is the owner's file, in the brand's own form and colours. It is not an `Image`,
+   * above the company's name, per DDR-066, and the role's view at its panel's right, per DDR-097
+   * and DDR-098. It is the owner's file, in the brand's own form and colours. It is not an `Image`,
    * because it has no alternative text: the company's name is written beside it in both places, so
    * the logo says nothing a reader would miss, and it is hidden from assistive technology.
    */

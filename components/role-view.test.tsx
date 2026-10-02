@@ -39,7 +39,7 @@ describe('RoleView', () => {
   // DDR-090: the view's parts, and each of its points, appear on their own as the reader scrolls to
   // them.
   it('lets its parts and each point appear on their own, per DDR-090', () => {
-    // React hoists a preload for the eager logo, per DDR-097, which the page puts in the head.
+    // React hoists a preload for the eager logo, per DDR-097 and DDR-098, which the page puts in the head.
     expect(html).toMatch(/^(<link rel="preload" [^>]*\/>)?<article [^>]*data-appear="true"/);
     expect(html).toMatch(/<ol [^>]*data-appear="true"[^>]*><li /);
   });
@@ -115,12 +115,13 @@ describe('RoleView', () => {
     expect(render(abb)).not.toMatch(/Previous role|Next role/);
   });
 
-  // DDR-097: the view opens its header with the logo the role's card shows. The company's pill is
-  // read straight after it, so the logo has no alternative text, and a screen reader names the
-  // company once. It is the top of the view, so it is not lazy.
-  it('opens the header with the company’s logo, hidden from assistive technology', () => {
+  // DDR-097 and DDR-098: the title and the logo the role's card shows share a row, the logo after
+  // the title in the markup, so nothing is reordered. The company's pill is read before them, so
+  // the logo has no alternative text, and a screen reader names the company once. It is the top of
+  // the view, so it is not lazy.
+  it('follows the title with the company’s logo, hidden from assistive technology', () => {
     expect(html).toMatch(
-      /<header [^>]*><span class="[^"]*"><img class="[^"]*logo[^"]*" src="\/experiences\/abb\/logo\.webp" alt=""\/><\/span><div class="[^"]*heading[^"]*"><p /,
+      /<\/p><div class="[^"]*titleRow[^"]*"><h1 [^>]*>Global Product Manager - Digital Solutions<\/h1><span class="[^"]*"><img class="[^"]*logo[^"]*" src="\/experiences\/abb\/logo\.webp" alt=""\/><\/span><\/div><\/header>/,
     );
     expect(html).not.toMatch(/<img [^>]*loading=/);
   });
@@ -141,20 +142,23 @@ describe('role view styles', () => {
     expect(styles).toMatch(/@media \(min-width: 48em\)\s*\{\s*\.header\s*\{[^}]*padding:\s*var\(--role-view-panel-padding\);/);
   });
 
-  // DDR-097: the logo is its card's, twice as tall, and no wider than the column it takes from the
-  // wide breakpoint, where it stands centred beside the company, the dates and the title.
-  it('sizes the logo by its height, no wider than its column, and stands it beside the title from the wide breakpoint', () => {
-    expect(narrow).toMatch(/\.logoBox\s*\{[^}]*max-inline-size:\s*var\(--role-view-logo-column\);/);
+  // DDR-097 and DDR-098: the logo is its card's, twice as tall, no wider than its column, and at
+  // the panel's right: below the title on a phone, and from the wide breakpoint in a column of its
+  // own beside the title, centred on it.
+  it('sizes the logo by its height, no wider than its column, and stands it at the panel’s right', () => {
+    expect(narrow).toMatch(
+      /\.logoBox\s*\{[^}]*justify-content:\s*flex-end;[^}]*max-inline-size:\s*var\(--role-view-logo-column\);[^}]*margin-inline-start:\s*auto;/,
+    );
     expect(narrow).toMatch(/\.logo\s*\{[^}]*block-size:\s*var\(--role-view-logo-height\);/);
     expect(narrow).toMatch(/\.logoTall\s*\{[^}]*block-size:\s*var\(--role-view-logo-height-tall\);/);
     expect(styles).toMatch(
-      /@media \(min-width: 48em\)\s*\{\s*\.header\s*\{[^}]*grid-template-columns:\s*var\(--role-view-logo-column\) minmax\(0, 1fr\);/,
+      /@media \(min-width: 48em\)[^@]*\.titleRow\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\) var\(--role-view-logo-column\);[^}]*align-items:\s*center;/,
     );
   });
 
   it('sets the job title at a project view’s title size, one role for both views', () => {
-    expect(narrow).toMatch(/\.heading > \.title\s*\{[^}]*font-size:\s*var\(--font-size-project-title-narrow\);/);
-    expect(styles).toMatch(/\.heading > \.title\s*\{\s*font-size:\s*var\(--font-size-project-title\);/);
+    expect(narrow).toMatch(/\.titleRow > \.title\s*\{[^}]*font-size:\s*var\(--font-size-project-title-narrow\);/);
+    expect(styles).toMatch(/\.titleRow > \.title\s*\{\s*font-size:\s*var\(--font-size-project-title\);/);
   });
 
   it('keeps a long company inside its neighbouring card', () => {
