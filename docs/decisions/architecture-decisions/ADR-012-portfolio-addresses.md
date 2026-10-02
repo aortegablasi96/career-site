@@ -9,6 +9,9 @@ it was `/projects/<slug>`. The page's section is at `#portfolio`, where it was `
 other rule ADR-010 sets stands: the static route, the slug as content, `next/link` with
 `prefetch={false}`, the site's own contents bar through `page`, and `asset()` for files alone.
 
+**Amended by ADR-027**, in "The old addresses are not kept": on Vercel, `/projects/<slug>` now
+redirects permanently to `/portfolio/<slug>`, and `/projects` to `/#portfolio`.
+
 ## Context
 
 On #202 the owner renamed the page's projects section "Portfolio". A project view's way back already
@@ -64,4 +67,6 @@ Positive:
 Negative:
 * Every `/projects/<slug>` link shared before this change is a 404, and every `#projects` link opens
   the page at its top.
+  ADR-027 amends this: since ADR-023's move to Vercel, `vercel.json` redirects both old view
+  addresses and `/projects`. `#projects` still opens the page at its top.
 * Each picture's address changed, so a browser fetches it afresh once.
