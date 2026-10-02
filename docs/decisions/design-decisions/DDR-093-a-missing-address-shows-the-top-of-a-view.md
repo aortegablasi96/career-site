@@ -38,6 +38,11 @@ footer.**
   It may have moved, or the address may be mistyped." It is set as a project view's description is:
   body size, the running text's leading, a flow step below the heading.
 * **No tinted panel.** A role's panel holds a role's metadata, and this page has none.
+* **The footer stands at the window's foot**, as the owner asked on #283. The bar, the view and the
+  footer stand in a frame at least the window's height, `--page-min-size` (`100dvh`, so a phone's
+  toolbar is counted), and the view takes the room the bar and the footer leave. A window too short
+  for all three lets the frame grow, so nothing overlaps. Every other page is taller than a window,
+  so the token is read here alone.
 * **The browser tab reads "Page not found – Andreu Ortega Blasi"**, as a view's names its project
   or role and then the owner. The page is marked `noindex` and names no canonical address.
 * **It does not print anything of its own**; only the page is the printed CV (DDR-015).
@@ -73,12 +78,12 @@ Cons:
 
 Benefits:
 * A wrong address leads back into the site in one step, by pointer, touch or keyboard.
-* It reuses the views' patterns, so it adds no new interaction or token.
+* It reuses the views' patterns, so it adds no new interaction, and one token.
 
 Tradeoffs:
-* The page is short, so on a tall window the footer sits partway up it, with the page's background
-  below, as it would on any short page. Pinning the footer to the window's foot would need a size
-  ADR-006 does not admit.
+* The page's height is measured from the window, in a token as ADR-006 requires, as the contents
+  menu's limit already is. A gap opens between the line below the heading and the footer on a tall
+  window, which is the page's background.
 
 Risks:
 * The way back and the title are written again in the page's own stylesheet, as a role view writes

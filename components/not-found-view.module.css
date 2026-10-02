@@ -10,6 +10,17 @@
  * Its way back and its title are a role view's, written again here rather than shared, because a
  * module is one component's. It does not print, so nothing here has a print rule.
  */
+
+/* The frame around the bar, the view and the footer, as the owner asked on #283: at least the
+   window's height, so the footer stands at its foot rather than partway up it, with the view's row
+   taking whatever the bar and the footer leave. A window too short for all three makes the frame
+   grow with them, so nothing overlaps. The bar stays sticky inside it, because the frame is as tall
+   as the page. */
+.frame {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-block-size: var(--page-min-size);
+}
 .view {
   display: grid;
   padding-block-start: var(--space-view-top);

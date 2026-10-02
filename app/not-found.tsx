@@ -14,7 +14,8 @@ import { sections } from '@/app/sections';
  *
  * It is a view's frame around the top of a view: the site's own contents bar, whose every link
  * leads back to the page, as DDR-050 has it on a view; the way back, a title and a line; and the
- * site's own footer, per DDR-028.
+ * site's own footer, per DDR-028. The view draws the frame around all three, so the footer stands
+ * at the window's foot.
  */
 
 /** The page every link here leads back to. */
@@ -28,19 +29,20 @@ export const metadata: Metadata = {
 
 export default function NotFoundPage() {
   return (
-    <>
-      <Contents
-        label={contents.label}
-        home={contents.home}
-        title={contents.title}
-        menu={contents.menu}
-        sections={sections}
-        page={page}
-      />
-      <main>
-        <NotFoundView strings={notFound} backHref={page} />
-      </main>
-      <Footer name={introduction.name} contact={introduction.contact} />
-    </>
+    <NotFoundView
+      strings={notFound}
+      backHref={page}
+      bar={
+        <Contents
+          label={contents.label}
+          home={contents.home}
+          title={contents.title}
+          menu={contents.menu}
+          sections={sections}
+          page={page}
+        />
+      }
+      footer={<Footer name={introduction.name} contact={introduction.contact} />}
+    />
   );
 }

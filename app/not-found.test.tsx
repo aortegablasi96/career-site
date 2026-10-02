@@ -39,6 +39,15 @@ describe('the page an address the site does not have shows', () => {
     expect(html.indexOf(notFound.back)).toBeLessThan(html.indexOf('<h1'));
   });
 
+  // As the owner asked on #283: the bar, the page's main and the footer stand in one frame, at least
+  // the window's height, so the footer stands at the window's foot.
+  it('stands the bar, the main and the footer in one frame, so the footer reaches the window’s foot', () => {
+    const frame = html.match(/^<div class="([^"]+)">([\s\S]*)<\/div>$/);
+
+    expect(frame?.[1]).toMatch(/frame/);
+    expect(frame?.[2]).toMatch(/^<nav [\s\S]*<\/nav><main>[\s\S]*<\/main><footer [\s\S]*<\/footer>$/);
+  });
+
   // DDR-028: the site's own footer, where the owner's addresses are written out.
   it('ends with the site’s footer', () => {
     expect(html.indexOf('<footer')).toBeGreaterThan(html.indexOf('</main>'));
