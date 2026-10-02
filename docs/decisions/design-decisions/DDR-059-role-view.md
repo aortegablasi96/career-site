@@ -6,8 +6,9 @@ Date: 2026-09-26
 
 **Reworded per #291**: the hint reads "Open a role to read the full description", where it read "Click any role…", so it names no input device. Its place and look are unchanged.
 
-**Amended by DDR-097 and DDR-098**, per #289: the header carries the company's logo, the one the
-role's card shows, at the panel's right. Below the wide breakpoint it stands after the title. From
+**Amended by DDR-097, DDR-098 and DDR-099**, per #289: the header carries the company's logo, the
+one the role's card shows. Below the wide breakpoint it stands after the title, centred across the
+panel. From
 the wide breakpoint it is centred in a 160px column of its own at the title's right, centred on the
 title. The pill, the dates, the place and the title are drawn as below.
 
@@ -62,7 +63,7 @@ The owner made three choices on #176:
 From the top, in one column, as the layer draws it:
 
 * **The way back**, "Back to experience", a project view's (node 177:1207), to `/#experience`.
-* **The header** (since DDR-097 and DDR-098, with the company's logo at its right), on a panel of `--color-surface-tag` edged in `--color-border-accent` at the large
+* **The header** (since DDR-097 to DDR-099, with the company's logo), on a panel of `--color-surface-tag` edged in `--color-border-accent` at the large
   radius (node 177:1213). Its first line is the company in a pill, bold capitals in the accent on
   `--color-border-accent`, then the dates in medium, a pale middle dot and the place, all 11px in
   the muted ink, 12px apart (node 177:1214). Below it the job title, the view's one `h1`, in Lora.

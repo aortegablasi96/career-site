@@ -142,13 +142,14 @@ describe('role view styles', () => {
     expect(styles).toMatch(/@media \(min-width: 48em\)\s*\{\s*\.header\s*\{[^}]*padding:\s*var\(--role-view-panel-padding\);/);
   });
 
-  // DDR-097 and DDR-098: the logo is its card's, twice as tall, no wider than its column, and at
-  // the panel's right: below the title on a phone, and from the wide breakpoint in a column of its
-  // own beside the title, centred on it.
-  it('sizes the logo by its height, no wider than its column, and stands it at the panel’s right', () => {
+  // DDR-097, DDR-098 and DDR-099: the logo is its card's, twice as tall, no wider than its column:
+  // centred across the panel below the title on a phone, and from the wide breakpoint at the
+  // panel's right, in a column of its own beside the title, centred on it.
+  it('sizes the logo by its height, no wider than its column, centred on a phone and at the right from 48em', () => {
     expect(narrow).toMatch(
-      /\.logoBox\s*\{[^}]*justify-content:\s*flex-end;[^}]*max-inline-size:\s*var\(--role-view-logo-column\);[^}]*margin-inline-start:\s*auto;/,
+      /\.logoBox\s*\{[^}]*justify-content:\s*center;[^}]*max-inline-size:\s*var\(--role-view-logo-column\);[^}]*margin-inline:\s*auto;/,
     );
+    expect(styles).toMatch(/@media \(min-width: 48em\)[^@]*\.logoBox\s*\{[^}]*margin-inline-end:\s*0;/);
     expect(narrow).toMatch(/\.logo\s*\{[^}]*block-size:\s*var\(--role-view-logo-height\);/);
     expect(narrow).toMatch(/\.logoTall\s*\{[^}]*block-size:\s*var\(--role-view-logo-height-tall\);/);
     expect(styles).toMatch(

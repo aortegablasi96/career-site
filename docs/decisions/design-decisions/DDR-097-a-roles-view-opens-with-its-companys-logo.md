@@ -6,7 +6,8 @@ Date: 2026-10-02
 
 **Amended by DDR-098**, at the owner's request the same day: the logo stands at the panel's right.
 From the wide breakpoint its column is at the right of the title and centred on it, with the pill
-line above both; below the wide breakpoint it stands after the title, at the panel's right edge.
+line above both; below the wide breakpoint it stands after the title, at the panel's right edge, which DDR-099
+centres across the panel.
 Its size, files, empty `alt` and column width stand.
 
 **Amends DDR-059 (role view)** in its header. The panel now opens with the company's logo, the one
