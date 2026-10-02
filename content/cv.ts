@@ -142,6 +142,17 @@ import type { Cv } from './types';
  * per ADR-024, for search engines. It is not a fact ADR-005 lists as shared, so it did not move
  * the CV.
  *
+ * It moved again with #282, because the site gained the pictures a shared link previews with, their
+ * size and the card's description, per DDR-095. None is a fact ADR-005 lists as shared, so none
+ * moved the CV.
+ *
+ * It moved again with #283, because the page an address the site does not have shows gained its own
+ * words, in `not-found.ts`, per DDR-093. None is a fact ADR-005 lists as shared, so none moved the
+ * CV.
+ *
+ * It moved again when #282 was reopened, because the share card no longer shows the site's address
+ * and the comment in `site.ts` that describes the card changed with it. No fact moved the CV.
+ *
  * It moved again with #285, because the site's description, which search results and link previews
  * show, now names what the positioning line names. It is not a fact ADR-005 lists as shared, so it
  * did not move the CV.
@@ -149,5 +160,5 @@ import type { Cv } from './types';
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'b218900907fac517f6bff64a80fd74d392ee07af3f8891dfb666970c469a019b',
+  contentDigest: '1244e318d2286f0650382437bd2aed10b6ac6958012183912331915f02375a1b',
 };

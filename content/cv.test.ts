@@ -50,6 +50,7 @@ describe('the downloadable CV', () => {
       'experience.ts',
       'introduction.ts',
       'languages.ts',
+      'not-found.ts',
       'projects.ts',
       'site.ts',
       'skills.ts',

@@ -8,6 +8,7 @@ import { dateLabels } from '@/content/dates';
 import { experience } from '@/content/experience';
 import { introduction } from '@/content/introduction';
 import { sections } from '@/app/sections';
+import { shareCard } from '@/app/share';
 
 /**
  * A role's view of its own, per ADR-011 and DDR-059, at `/experience/<slug>`.
@@ -44,7 +45,8 @@ function roleAt(slug: string) {
 
 // The browser tab and a link preview name the role and the company, per #176, the role by its full
 // title, per DDR-060, and describe it by its first point, which is what the owner did in it in their
-// own words. The canonical link is the view's own address, per ADR-024.
+// own words. The canonical link is the view's own address, per ADR-024. A role has no picture of
+// its own, so its preview shows the page's card, per DDR-095.
 export async function generateMetadata({
   params,
 }: {
@@ -57,7 +59,7 @@ export async function generateMetadata({
   return {
     title: tab,
     description,
-    openGraph: { title: tab, description },
+    openGraph: { title: tab, description, images: [shareCard] },
     alternates: { canonical: `/experience/${slug}` },
   };
 }

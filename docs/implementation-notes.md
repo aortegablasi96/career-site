@@ -137,8 +137,24 @@ The page itself is the CV, so what it prints is designed.
   the browser's value is empty, and the pictures 404 on the live site only (#261). A `next/link`
   href is a route and is exempt. Internal links use `prefetch={false}`, or each view would prefetch every picture on the
   page.
+* **The site's icon is three files in `app/`** (DDR-094): `icon.svg`, the letter as Lora 600's
+  outline; `favicon.ico`, 16, 32 and 48px, each rendered from the SVG at its own size; and
+  `apple-icon.png`, the full square at 180px with no transparency. Next.js links all three from
+  every route. They carry the accent's value, so a change to `--color-accent` means drawing all
+  three again (`app/icon.test.ts` fails until then).
+* **A shared link's preview picture is a committed JPEG** (DDR-095): `public/home/share-card.jpg`
+  and each project's `public/portfolio/<slug>/share.jpg`, 1200 × 630, with their paths in
+  `content/site.ts` and their metadata built in `app/share.ts`. A view that sets its own `openGraph`
+  replaces the layout's whole, so each view names its picture again. The card repeats the name,
+  positioning, location and accent as pixels: a change to any of them means drawing it again.
 * **Views are static routes** (`app/portfolio/[slug]`, `app/experience/[slug]`) with
   `generateStaticParams` and `dynamicParams = false`.
+* **An address the site does not have is `app/not-found.tsx`** (DDR-093), which the export writes to
+  `out/404.html`. Vercel serves that with a 404 for any path it has no file for; a plain static
+  server does not, so check it with one that falls back to `404.html`. `next dev` shows it for a
+  wrong top-level address, but answers a wrong slug under `/portfolio/` or `/experience/` with a 500
+  ("missing param … required with output: export"), which the built site never does. Its way back
+  and title copy a view's styles: change a view's way back and change it there too.
 
 ## Components
 

@@ -2,6 +2,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { introduction } from '@/content/introduction';
 import { projects } from '@/content/projects';
+import { sharePicture } from '@/app/share';
 import ProjectPage, { dynamicParams, generateMetadata, generateStaticParams } from './page';
 
 const params = (slug: string) => ({ params: Promise.resolve({ slug }) });
@@ -48,6 +49,14 @@ describe('a project’s view', () => {
       expect(metadata.description).toBe(description);
       expect(metadata.openGraph?.description).toBe(description);
       expect(description).not.toContain(projects.view.howBuilt);
+    },
+  );
+
+  // DDR-095: the preview shows the project's lead, cut to the preview's shape, described as the lead is.
+  it.each(projects.projects.map(({ slug, media }) => [slug, 'poster' in media ? media.description : media.alt]))(
+    'previews %s with its lead picture',
+    async (slug, alt) => {
+      expect((await generateMetadata(params(slug))).openGraph?.images).toEqual([sharePicture(slug, alt)]);
     },
   );
 
