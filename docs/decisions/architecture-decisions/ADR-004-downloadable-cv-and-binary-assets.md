@@ -16,6 +16,10 @@ full resolution of the owner's original, not at the size it is shown (§3). The 
 the size it is shown, and a recording without sound is served with no audio track (§3). §5's
 budgets stand.
 
+**Amended by ADR-026** for a video opened larger. Once a reader opens it, the page asks for its
+metadata, its size and length, so that the browser's controls work before play (§3). Until then
+nothing of its file is fetched, and the markup keeps `preload="none"`. §5's budgets stand.
+
 Supersedes the part of ADR-002 that rules out a separate CV file. The rest of ADR-002 stands: content
 is still authored as typed TypeScript modules in `content/`, the page is still the CV, and the print
 stylesheet is still what produces it.
@@ -176,6 +180,10 @@ owns. Next.js copies it into `out/` unchanged, and GitHub Pages serves it.
   > without sound has no audio track. It is still one MP4 file, prepared by hand.
 * **The video carries a poster still and `preload="none"`**, so it costs nothing until someone presses
   play. The poster is a separate committed still, and it is what prints, per DDR-010.
+
+  > **Amended by ADR-026.** Once a reader opens the video larger, script sets `preload` to
+  > `metadata`, and the browser fetches the start of the file: about a tenth in Chrome and Edge,
+  > and up to all of it in Firefox. Nothing is fetched before then.
 * **Replacing an asset replaces the file.** Variants and sizes do not accumulate beside it.
 
 ### 4. Every reference goes through one helper

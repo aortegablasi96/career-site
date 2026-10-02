@@ -280,7 +280,13 @@ The page itself is the CV, so what it prints is designed.
   the `<video>` in the dialog, and its dialog's `close` pauses it, however it closes, stepping
   included. Without script nothing pauses it; that is decided, and only for a video without sound.
   The arrow keys are the video's while it has focus (`stepKey`), so they move through it rather
-  than step. `disablePictureInPicture` takes away the floating window. `controlsList="nodownload"`
+  than step. `disablePictureInPicture` takes away the floating window. **Chrome's and Edge's controls
+  are inert until the video's metadata is in** (DDR-092, ADR-026): with `preload="none"` a click
+  does nothing, a double click does nothing and the full screen control is greyed out, though
+  Firefox does all three. So the dialog's `toggle` sets `preload` to `metadata` as it opens; keep
+  `preload="none"` in the markup, or every visit to a view fetches its video. Playwright's
+  `keyboard.press('Escape')` at full screen closes the dialog too, where a real key only leaves
+  full screen: check Escape with an OS key event, not a synthetic one. `controlsList="nodownload"`
   only reaches Chrome and Edge; the declined `contextmenu` needs script, and Firefox opens its menu
   anyway with Shift held. To check one locally, serve
   `out/` from a server that answers byte ranges with 206, or the video plays but cannot be moved

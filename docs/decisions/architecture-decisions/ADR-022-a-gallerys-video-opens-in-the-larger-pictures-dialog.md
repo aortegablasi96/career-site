@@ -4,6 +4,11 @@ Status: Accepted
 
 Date: 2026-09-30
 
+**Amended by ADR-026 (2026-10-02)**: the dialog also readies the video as it opens, setting its
+`preload` to `metadata` on the dialog's `toggle`, so the browser's controls work before play
+(DDR-092). The markup keeps `preload="none"`. Opening the video larger now fetches its start, so
+"opening the dialog fetches nothing new" below no longer holds for a video.
+
 **Amends ADR-018**: `LargerPicture` now carries a video as well as a picture, per DDR-089. The frame
 shows the video's still, and the dialog shows the video with the browser's controls. It stays the
 site's third Client Component, now with two more reasons: pausing the video when its dialog closes,
@@ -44,6 +49,9 @@ key that comes from the video to the video.**
   (DDR-015).
 * **No new Client Component.** The two new listeners belong to the dialog and the video that
   `LargerPicture` already owns.
+
+> **Amended by ADR-026.** A fourth listener, on the dialog's `toggle`, sets the video's `preload`
+> to `metadata` as the dialog opens. Opening the dialog then fetches the start of the video's file.
 
 ### The view
 

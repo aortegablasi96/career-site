@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import { glide, LargerPicture, moves, movingName, stepKey, swap, swapCommand, withhold } from './larger-picture';
+import { glide, LargerPicture, moves, movingName, ready, stepKey, swap, swapCommand, withhold } from './larger-picture';
 
 // DDR-082 and ADR-018, on #246: the picture in a project view's lead frame opens larger in a native
 // modal dialog, opened and closed by its buttons' commands without script, and where the reader
@@ -284,7 +284,7 @@ describe('LargerPicture', () => {
       );
     });
 
-    it('shows the video larger, with its controls, no download and no floating window, fetching nothing until it is played', () => {
+    it('shows the video larger, with its controls, no download and no floating window, fetching nothing before it opens', () => {
       expect(video).toMatch(
         /<\/button><div class="[^"]*"><video class="[^"]*" src="\/portfolio\/example\/gallery-walkthrough\.mp4" poster="\/portfolio\/example\/gallery-walkthrough\.webp" width="1920" height="1080" preload="none" controls="" controlsList="nodownload" disablePictureInPicture="" aria-label="A silent walkthrough of the application">A silent walkthrough of the application<\/video><\/div><p id="picture-6-larger-caption" class="[^"]*">Video walkthrough<\/p><\/dialog>$/,
       );
@@ -297,6 +297,23 @@ describe('LargerPicture', () => {
 
       withhold({ preventDefault: () => (declined = true) });
       expect(declined).toBe(true);
+    });
+
+    // DDR-092 and ADR-026, on #278: Chrome's and Edge's controls do nothing until they know the
+    // video's size and length, so opening the dialog asks for them, and no more.
+    it('readies the video’s controls as its dialog opens, fetching its size and length only', () => {
+      const video = { preload: 'none' };
+
+      ready(video);
+      expect(video.preload).toBe('metadata');
+
+      const source = readFileSync(new URL('./larger-picture.tsx', import.meta.url), 'utf8');
+
+      expect(source).toMatch(
+        /function onToggle\(event: Event\) \{\s*if \(\(event as ToggleEvent\)\.newState === 'open' && large instanceof HTMLVideoElement\) \{\s*ready\(large\);/,
+      );
+      expect(source).toContain("box.addEventListener('toggle', onToggle);");
+      expect(source).toContain("box.removeEventListener('toggle', onToggle);");
     });
 
     // The pause is the dialog's `close` listener, which a static render cannot reach; the source
