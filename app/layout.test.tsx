@@ -125,6 +125,14 @@ describe('metadata', () => {
     expect(metadata.alternates).toBeUndefined();
   });
 
+  // #285: the description was written before #210 changed the positioning, and said something
+  // different under the very title that names it. It now carries the positioning's words.
+  it('describes the owner in the words of the positioning line', () => {
+    expect(String(metadata.description).toLowerCase()).toContain(
+      introduction.positioning.toLowerCase(),
+    );
+  });
+
   it('gives link previews the same title and description as search results', () => {
     expect(metadata.openGraph).toMatchObject({
       title: metadata.title,
