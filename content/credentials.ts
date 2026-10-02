@@ -33,7 +33,7 @@ export const credentials: Credentials = {
   // The design's shorter word for the contents bar, per DDR-031. The heading keeps its full name.
   link: 'Education',
   // The line above the timeline, per DDR-069, in the words the owner chose on #200.
-  hint: 'Click any credential to learn more',
+  hint: 'Open a credential to learn more',
   // The same words a profile pill says, from the one place they are stated.
   newTab: introduction.newTab,
   credentials: [

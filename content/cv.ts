@@ -161,9 +161,13 @@ import type { Cv } from './types';
  * ask it about the owner's career, and a link to it in Telegram, per DDR-096. Neither is a fact
  * ADR-005 lists as shared, and the CV file already links to the bot in Telegram, so neither moved
  * the CV.
+ *
+ * It moved again with #291, because the three hints above the cards say "Open a…" where they said
+ * "Click any…", so they name no input device. A hint is not a fact ADR-005 lists as shared, and
+ * paper does not show one, so it did not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'e5e02a358a6e91f017fadfd1fabbbb61ef680d4fa19cd11f9ad12b7445801e63',
+  contentDigest: '0eedd8172cfba2ed28bd5db6072e4d0ca8c55af651db668fa79a4bb9750b76de',
 };

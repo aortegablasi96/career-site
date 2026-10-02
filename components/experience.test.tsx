@@ -134,7 +134,7 @@ describe('Experience', () => {
   });
 
   it('says above the timeline that a role’s card leads to its description, beside a hidden mark', () => {
-    expect(html).toMatch(/^<div data-appear="true"><p class="[^"]*"><svg [^>]*aria-hidden="true"[^>]*>.*<\/svg>Click any role to read the full description<\/p><div data-appear="true"><ol /);
+    expect(html).toMatch(/^<div data-appear="true"><p class="[^"]*"><svg [^>]*aria-hidden="true"[^>]*>.*<\/svg>Open a role to read the full description<\/p><div data-appear="true"><ol /);
   });
 
   // The spine draws the path from one role to the next and says nothing the text does not, so a
