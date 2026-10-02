@@ -733,12 +733,14 @@ describe('elevation tokens', () => {
     expect(token('hover-transition')).toBe('150ms');
   });
 
-  // DDR-090: an element appears as it is reached, slowly enough that the fade is seen, and
-  // rises twice the card's lift as it does. Both are held by value: changing either is a decision
-  // about how the site moves.
-  it('brings an element into view over 600ms while it rises 8px, per DDR-090', () => {
+  // DDR-090: an element appears as it is reached, slowly enough that the fade is seen, rising 16px on
+  // a curve that moves fast and settles slowly, and elements reached together follow one another.
+  // All are held by value: changing any is a decision about how the site moves.
+  it('brings an element into view over 600ms while it rises 16px, 80ms after the one before, per DDR-090', () => {
     expect(token('appear-duration')).toBe('600ms');
-    expect(rem(token('appear-rise')!) * 16).toBe(8);
+    expect(token('appear-easing')).toBe('cubic-bezier(0.16, 1, 0.3, 1)');
+    expect(token('appear-stagger')).toBe('80ms');
+    expect(rem(token('appear-rise')!) * 16).toBe(16);
   });
 
   // DDR-035: the design's `underline-offset-2`, in px as the focus outline's offset is.

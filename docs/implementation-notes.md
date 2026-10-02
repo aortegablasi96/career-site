@@ -310,6 +310,12 @@ The page itself is the CV, so what it prints is designed.
   only opacity keeps a waiting element in the accessibility tree and in find-in-page.
 * An element that is not displayed (the timeline's row or column) reports a top of 0 and is left
   alone, which is why only the one displayed appears.
+* **Whether an element waits is decided on its first sighting**, against the whole window, though the
+  observer's root stops a tenth short of the window's foot. Judged against the root, an element in
+  that last tenth would be hidden in plain view.
+* **The cascade's place is `--appear-order`, set inline by the script** and read as a delay with
+  `backwards` fill, so the element stays hidden while it waits. It is removed with the state.
+* To watch it, set `--appear-duration` on the root to a few seconds before a screenshot.
 
 ### Footer (DDR-028, DDR-029)
 

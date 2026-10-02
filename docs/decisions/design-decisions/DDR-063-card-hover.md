@@ -4,7 +4,7 @@ Status: Accepted
 
 Date: 2026-09-26
 
-**Amended by DDR-090**, per #274: the lift is no longer the site's one piece of expressive motion. Elements also appear, fading in and rising 8px over 600ms, as the reader scrolls to them. The lift itself is unchanged.
+**Amended by DDR-090**, per #274: the lift is no longer the site's one piece of expressive motion. Elements also appear, fading in and rising 16px over 600ms, as the reader scrolls to them. The lift itself is unchanged.
 
 **Amended by DDR-074**, per #218: in the timeline's column below the wide breakpoint, a role's or a credential's card lifts by the same `--card-lift` as a margin rather than a translation, and draws its focus outline on itself. It looks and answers as before.
 

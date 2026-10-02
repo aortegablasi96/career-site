@@ -44,8 +44,10 @@
 }
 
 /* Elements appear as the reader scrolls to them, per DDR-090 and ADR-025. `ScrollAppear` marks an
-   element still below the window as waiting, and as appearing the moment any of it is in the
-   window: it fades in while rising into place. Only on a screen and only where motion is welcome,
+   element still below the window as waiting, and as appearing once it has risen a tenth of the way
+   up the window: it fades in while rising into place. Elements that start together follow one
+   another: the script gives each its place in the cascade, and it waits that many staggers,
+   hidden, before it moves. Only on a screen and only where motion is welcome,
    so a reader who has asked for less motion, and paper, show every element where it is whatever
    the script has marked. The page is served with nothing marked, so without script nothing waits.
 
@@ -60,7 +62,8 @@
   }
 
   [data-appearing='now'] {
-    animation: appear var(--appear-duration) ease-out;
+    animation: appear var(--appear-duration) var(--appear-easing)
+      calc(var(--appear-order, 0) * var(--appear-stagger)) backwards;
   }
 }
 

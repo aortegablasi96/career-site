@@ -23,49 +23,87 @@ export const targetSelector = '[data-appear] > :not([data-appear], :has([data-ap
  */
 export type Appearing = 'waiting' | 'now' | undefined;
 
-/** What the observer reports of an element: whether any of it is in the window, and where it is. */
+/**
+ * Where an element starts to appear, per DDR-090: once it has risen a tenth of the way up the
+ * window, rather than at its first pixel, so the reader sees it happen rather than at the window's
+ * foot, where nobody is looking.
+ */
+export const appearLine = '0px 0px -10% 0px';
+
+/** How many elements reached together follow one another, per DDR-090; the rest start with the last. */
+export const cascadeSteps = 4;
+
+/** What the observer reports of an element: whether it has crossed the line, and where it is. */
 export interface Sighting {
+  /** Whether any of it is above the line it appears at. */
   isIntersecting: boolean;
   /** The element's top edge, from the top of the window. */
   top: number;
-  /** The window's height, where the element's top would have to be to have left through the bottom. */
+  /** The window's height, which the element's top is at or below while it is below the window. */
   bottom: number;
 }
 
 /**
- * The state an element moves to on a sighting, per DDR-090.
+ * The state an element moves to on a sighting, per DDR-090. It appears once per visit.
  *
- * An element that was waiting appears the moment any of it is in the window. One that leaves
- * through the bottom of the window waits again, so it appears each time the reader comes back down
- * to it. One that leaves through the top, or is in the window when the page opens, keeps its
- * state: nothing the reader has already been shown is hidden, and nothing they arrive at by a
- * contents link, a fragment, the back button or a reload waits for a scroll to show it.
+ * On its first sighting, an element waits only if it is wholly below the window. One in the window
+ * when the page opens, or above it, is simply shown: nothing the reader can see is hidden, and
+ * nothing they arrive at by a contents link, a fragment, the back button or a reload waits for a
+ * scroll to show it. That includes one in the window's lowest tenth, below the line.
  *
- * An element that is not displayed reports a top of zero and is never in the window, so it keeps
- * its state too; that is how the timeline's row and column, only one of which is ever displayed,
- * leave the other alone.
+ * A waiting element appears once it crosses the line, and is then shown for the rest of the visit.
+ * One that a single scroll carries from below the window to above it never crosses the line, so the
+ * observer never reports it; `watch` shows it on the scroll instead.
+ * An element that is not displayed reports a top of zero, so it is never held back; that is how the
+ * timeline's row and column, only one of which is ever displayed, leave the other alone.
  */
-export function next(state: Appearing, { isIntersecting, top, bottom }: Sighting): Appearing {
-  if (isIntersecting) return state === 'waiting' ? 'now' : state;
+export function next(
+  state: Appearing,
+  { isIntersecting, top, bottom }: Sighting,
+  first: boolean,
+): Appearing {
+  if (first) return !isIntersecting && top >= bottom ? 'waiting' : undefined;
 
-  return top >= bottom ? 'waiting' : state;
+  return state === 'waiting' && isIntersecting ? 'now' : state;
+}
+
+/**
+ * Each element's place in a cascade, per DDR-090: elements that start together follow one another
+ * in reading order, one stagger apart, and from the last step on start together, so none waits
+ * more than three staggers.
+ */
+export function cascade(count: number): number[] {
+  return Array.from({ length: count }, (_, index) => Math.min(index, cascadeSteps - 1));
+}
+
+/**
+ * Whether the page is scrolled to its end, where an element below the line can rise no further and
+ * would never appear: there it appears as soon as any of it is in the window.
+ */
+export function atEnd(scrollY: number, innerHeight: number, scrollHeight: number): boolean {
+  return scrollY + innerHeight >= scrollHeight - 1;
 }
 
 /** The part of an element this component reads and writes. */
 interface Target {
   dataset: { appearing?: string };
+  style: { removeProperty(name: string): unknown };
 }
 
-/** Sets an element's state, removing the attribute once it is simply shown. */
+/** Sets an element's state, removing the attribute and its place in a cascade once it is shown. */
 function set(target: Target, state: Appearing): void {
-  if (state) target.dataset.appearing = state;
-  else delete target.dataset.appearing;
+  if (state) {
+    target.dataset.appearing = state;
+  } else {
+    delete target.dataset.appearing;
+    target.style.removeProperty('--appear-order');
+  }
 }
 
 /**
  * Shows the element that holds a focused one at once, with no movement, so keyboard focus never
- * rests on an element that is hidden or still appearing: the browser scrolls a focused element into
- * the window, and the observer would only then start it.
+ * rests on an element that is hidden, still appearing or waiting its turn in a cascade: the browser
+ * scrolls a focused element into the window, and the observer would only then start it.
  */
 export function showHolder(target: EventTarget | null): void {
   const closest = (target as Partial<Element> | null)?.closest;
@@ -80,19 +118,71 @@ export function showHolder(target: EventTarget | null): void {
  */
 export function watch(document: Document): () => void {
   const targets = [...document.querySelectorAll<HTMLElement>(targetSelector)];
-  const observer = new IntersectionObserver((entries) => {
-    for (const { target, isIntersecting, boundingClientRect, rootBounds } of entries) {
-      const element = target as HTMLElement;
-      const sighting = {
-        isIntersecting,
-        top: boundingClientRect.top,
-        bottom: rootBounds?.bottom ?? window.innerHeight,
-      };
+  const seen = new Set<Element>();
 
-      set(element, next(element.dataset.appearing as Appearing, sighting));
+  // Starts elements together, in reading order, each at its place in the cascade. Once started, an
+  // element is shown for the rest of the visit, so it is no longer watched.
+  const start = (elements: HTMLElement[]) => {
+    const order = cascade(elements.length);
+
+    elements
+      .sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1))
+      .forEach((element, index) => {
+        element.style.setProperty('--appear-order', String(order[index]));
+        set(element, 'now');
+        observer.unobserve(element);
+      });
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const starting: HTMLElement[] = [];
+
+      for (const { target, isIntersecting, boundingClientRect } of entries) {
+        const element = target as HTMLElement;
+        const state = element.dataset.appearing as Appearing;
+        const sighting = { isIntersecting, top: boundingClientRect.top, bottom: window.innerHeight };
+        const after = next(state, sighting, !seen.has(element));
+
+        seen.add(element);
+
+        if (after === 'now') {
+          starting.push(element);
+        } else {
+          set(element, after);
+          if (!after) observer.unobserve(element);
+        }
+      }
+
+      start(starting);
+    },
+    { rootMargin: appearLine },
+  );
+
+  // The observer reports only a change of crossing, so two cases are found here. One scroll that
+  // carries a waiting element from below the window to wholly above it, such as a jump to a far
+  // section, never crosses it: it has been passed, so it is shown at once, with no movement. And at
+  // the page's end, whatever is waiting in the window appears, since it cannot rise to the line.
+  const onScroll = () => {
+    const end = atEnd(window.scrollY, window.innerHeight, document.documentElement.scrollHeight);
+    const starting: HTMLElement[] = [];
+
+    for (const target of targets) {
+      if (target.dataset.appearing !== 'waiting') continue;
+
+      const { top, bottom } = target.getBoundingClientRect();
+
+      if (bottom <= 0) {
+        set(target, undefined);
+        observer.unobserve(target);
+      } else if (end && top < window.innerHeight) {
+        starting.push(target);
+      }
     }
-  });
-  const onEvent = (event: Event) => showHolder(event.target);
+
+    start(starting);
+  };
+  const onFocus = (event: Event) => showHolder(event.target);
   // At the end of its appearance the attribute goes, so the movement cannot replay on its own, as
   // it would if anything later set its animation again. Only the appearance's own end: a
   // descendant's animation ending bubbles here too.
@@ -103,13 +193,15 @@ export function watch(document: Document): () => void {
   };
 
   for (const target of targets) observer.observe(target);
-  document.addEventListener('focusin', onEvent);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  document.addEventListener('focusin', onFocus);
   document.addEventListener('animationend', finished);
   document.addEventListener('animationcancel', finished);
 
   return () => {
     observer.disconnect();
-    document.removeEventListener('focusin', onEvent);
+    window.removeEventListener('scroll', onScroll);
+    document.removeEventListener('focusin', onFocus);
     document.removeEventListener('animationend', finished);
     document.removeEventListener('animationcancel', finished);
     for (const target of targets) set(target, undefined);

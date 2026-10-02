@@ -14,8 +14,8 @@ three Client Components are:
 ## Context
 
 #274 asks for each heading and item to appear as the reader scrolls to it. The appearance is timed,
-not tied to how far the reader has scrolled, and it plays again each time the reader comes back down
-(DDR-090). The issue asked the Architect whether this needs script and, if so, to record why.
+not tied to how far the reader has scrolled. It starts a tenth of the way up the window, elements
+reached together cascade in reading order, and each appears once per visit (DDR-090). The issue asked the Architect whether this needs script and, if so, to record why.
 
 Telling when an element reaches the window takes either script or CSS's scroll-linked animations.
 Measured on 2026-10-01:
@@ -47,6 +47,13 @@ changes, since the layout stays while a link moves between the page and a view.
 **The script writes one state, `data-appearing`, and the stylesheet decides what it means.**
 * The state is `waiting` below the window and `now` while the element appears. It is removed once
   the element has appeared, when it takes focus, and when the route changes.
+* The observer's root is the window less its lowest tenth, so an element starts once it crosses
+  that line. Whether an element waits is decided on its first sighting alone, against the whole
+  window, so nothing the reader can see is hidden. Once an element is shown it is no longer watched.
+* Elements that start in one sighting are sorted into reading order, and each carries its place in
+  the cascade as `--appear-order`, which the stylesheet turns into a delay.
+* A passive scroll listener starts whatever is waiting in the window once the page is scrolled to
+  its end, where nothing can rise to the line.
 * `app/globals.css` hides and lowers a waiting element, and animates one appearing. It does this
   only under `@media screen and (prefers-reduced-motion: no-preference)`, so reduced motion and print
   are decided in the stylesheet, as DDR-041's glide is.
@@ -104,8 +111,8 @@ Benefits:
 * Which elements appear is decided in the markup, by Server Components, and checked by their tests.
 
 Tradeoffs:
-* A fourth Client Component and a little more script on every route. It is one `IntersectionObserver`
-  and three document listeners.
+* A fourth Client Component and a little more script on every route. It is one `IntersectionObserver`,
+  a passive scroll listener and three document listeners.
 * Every element that appears carries its state as an attribute while it waits.
 
 Risks:

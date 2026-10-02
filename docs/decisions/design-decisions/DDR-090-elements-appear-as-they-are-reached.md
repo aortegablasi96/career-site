@@ -22,6 +22,13 @@ The story left four choices to the owner, and the owner made them on 2026-10-01:
 * whether to build it with script, which works in every browser, or with CSS alone, which only
   Chromium runs.
 
+The owner then tried the effect and found it barely noticeable at 200ms. They asked for it slower,
+then had the Content Strategist and the UI Designer review it. The Content Strategist asked that the
+motion lead the eye through the evidence in reading order and never move content already read
+again. The UI Designer found why the effect was hard to see: it played at the window's very foot,
+where nobody looks, and everything reached together moved as one. The owner accepted every
+refinement below.
+
 It also set limits that no choice may break. Content is never lost to the effect: a reader who
 prefers less motion, has no script, prints, uses a screen reader or the keyboard, or lands part-way
 down a page sees every element.
@@ -42,19 +49,23 @@ skills and the neighbours appear. On a project's view, the way back, the text, t
 appear. The introduction, the contents bar and the footer never appear this way: what opens a page is
 there from the start, and the footer is where the CV's addresses are.
 
-**How: a fade and rise the reader sees.** An element fades in from transparent while rising
-`--appear-rise` (8px, twice the card's lift) into place. It takes `--appear-duration` (600ms) with an
-ease-out. The owner first chose 200ms, then found the fade barely noticeable and asked for it slower,
-so it is slow enough to be seen while still finishing well within a second. It starts the moment any part of it enters the window.
-Nothing appears in sequence: elements reached together appear together.
+**How: a fade and rise the reader sees.**
+* An element fades in from transparent while rising `--appear-rise` (16px) into place.
+* It takes `--appear-duration` (600ms) on `--appear-easing`, a curve that moves fast and settles
+  slowly. So it is seen, and still finishes well within a second.
+* It starts once it has risen a tenth of the way up the window, not at its first pixel, so it plays
+  where the reader is looking. An element that cannot rise that far, at the page's end, starts as
+  soon as the page is scrolled to its end.
 
-**When: every time the reader comes down to it.**
-* An element waits while it is below the window.
-* It appears when the reader reaches it.
-* It waits again once it leaves through the bottom of the window, so it appears again when the reader
-  scrolls back down to it.
-* An element that leaves through the top stays shown, so scrolling back up meets the page as it was
-  read.
+**In reading order: a cascade.** Elements that start together follow one another in reading order,
+`--appear-stagger` (80ms) apart. A heading comes before its item, and the second card after the
+first. The cascade has four steps at most, so no element waits more than 240ms for its turn. It
+stays hidden while it waits.
+
+**When: once per visit.**
+* An element waits while it is wholly below the window, and appears when the reader reaches it.
+* Once it has appeared it stays shown, so a reader scrolling back to compare two roles meets them
+  still.
 
 **What is never hidden:**
 * Whatever is in the window when a page opens, or when the reader arrives part-way down it, is shown
@@ -89,22 +100,33 @@ Cons:
 * Headings would be the only parts of the page that did not appear, so the effect would not read as
   one effect across the site.
 
-### A fade alone over 150ms, or a scale and fade
+### A fade alone over 150ms, or a scale and fade, or a blur
 
 Pros:
 * The fade alone is the quietest. The scale is the most sudden.
 
 Cons:
-* The fade alone barely registers on a fast scroll. The scale is more playful than the site's
-  restraint suits. The owner chose the fade and rise.
+* The fade alone barely registers on a fast scroll. The scale and the blur are more showy than the
+  site's restraint suits. The owner chose the fade and rise.
 
-### Appear once per visit
+### Appear every time the reader comes back down
 
 Pros:
-* Less motion overall. Scrolling back down meets the page as it was left.
+* The page moves on every pass.
 
 Cons:
-* The owner chose to see elements appear every time they are reached from above.
+* Content already read moves again each time a reader scrolls back and forth, which recruiters
+  comparing roles do. The owner first chose this, then chose once per visit on the Content
+  Strategist's advice.
+
+### Start at an element's first pixel, with no cascade
+
+Pros:
+* Simpler. Nothing waits for its turn.
+
+Cons:
+* The fade plays at the window's foot, where nobody looks, and elements reached together move as
+  one. That is why the owner found it barely noticeable.
 
 ### CSS alone, with scroll-triggered animations
 
@@ -125,20 +147,21 @@ Benefits:
 
 Tradeoffs:
 * The site has a second piece of expressive motion, and it plays without the reader asking for it.
+* The last element of a cascade is fully in place about 840ms after it is reached.
 * An element reached by find-in-page appears over 600ms after the browser scrolls to it, rather than
   being there already.
 
 Risks:
-* An element that is taller than the window and whose top is already below it appears when its top
-  enters, not when the reader reaches its middle. Every element on the site is reached top first, so
-  this only matters if one becomes taller than the window.
+* An element whose top is below the line appears when its top crosses the line, however tall it is.
+  Every element on the site is reached top first, so this only matters if one becomes taller than the
+  window.
 * A new direct child of a container appears on its own. A new wrapper that holds a container appears
   only through its children, and its other children do not appear at all unless it is made a
   container too (ADR-025).
 
 ## Related Documents
 
-* #274, under Epic #216
+* #274, under Epic #216, with the Content Brief and UI Review that refined it
 * ADR-025: the Client Component that does it
 * DDR-055 and DDR-063: the card lift, until now the site's one piece of expressive motion
 * DDR-014: reduced motion and no horizontal scroll
