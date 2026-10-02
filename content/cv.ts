@@ -152,9 +152,13 @@ import type { Cv } from './types';
  *
  * It moved again when #282 was reopened, because the share card no longer shows the site's address
  * and the comment in `site.ts` that describes the card changed with it. No fact moved the CV.
+ *
+ * It moved again with #285, because the site's description, which search results and link previews
+ * show, now names what the positioning line names. It is not a fact ADR-005 lists as shared, so it
+ * did not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '62ca391a8a1785ee8ec167e248aee2e69cfb29308b9d011dfadbb9426261e8a6',
+  contentDigest: '1244e318d2286f0650382437bd2aed10b6ac6958012183912331915f02375a1b',
 };
