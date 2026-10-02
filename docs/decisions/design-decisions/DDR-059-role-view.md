@@ -4,6 +4,11 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Amended by DDR-097**, per #289: the header opens with the company's logo, the one the role's card
+shows. Below the wide breakpoint it stands above the company's pill. From the wide breakpoint it is
+centred in a 160px column of its own, with the pill line and the title beside it. The pill, the
+dates, the place and the title are drawn as below.
+
 **Amended by DDR-069**, per #200: an education card is a link too, off the site, and the education row has a hint of its own and no tab stop.
 
 **Amended by DDR-067**, per #195: the hint stands 8px above the row, where it stood 24px, and opens with an information mark, a circled "i", where it had the clock. The projects section has the same hint.
@@ -55,7 +60,7 @@ The owner made three choices on #176:
 From the top, in one column, as the layer draws it:
 
 * **The way back**, "Back to experience", a project view's (node 177:1207), to `/#experience`.
-* **The header**, on a panel of `--color-surface-tag` edged in `--color-border-accent` at the large
+* **The header** (since DDR-097, opened by the company's logo), on a panel of `--color-surface-tag` edged in `--color-border-accent` at the large
   radius (node 177:1213). Its first line is the company in a pill, bold capitals in the accent on
   `--color-border-accent`, then the dates in medium, a pale middle dot and the place, all 11px in
   the muted ink, 12px apart (node 177:1214). Below it the job title, the view's one `h1`, in Lora.

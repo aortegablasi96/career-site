@@ -8,6 +8,10 @@ Date: 2026-09-27
 logo, straight on the card's own white and centred above the company's name, where the design puts
 its logo tile. Nothing else about the card, the timeline or the printed CV changes. The education timeline's cards have no logo.
 
+**Amended by DDR-097**, per #289: a role's view shows the same logo, twice as tall, so each file is
+now twice the view's height, 72px, or 112px for a tall logo, from the owner's original and never
+enlarged. The card draws it at the same size as before.
+
 **Amended by DDR-068**, per #197: each degree's card now opens with the UPC's logo, in this record's
 style. The certifications still have none, until PMI authorizes its logo.
 
@@ -61,7 +65,9 @@ is a wordmark or a mark beside a wordmark, from 1.4:1 (ToBeIT) to 4.8:1 (Randsta
   beside each entry, and the logo takes no box on paper, so no sheet moves.
 * **Each logo is one WebP**, per ADR-004, at `public/experiences/<slug>/logo.webp`, beside the
   owner's PNG original, which `.gitignore` keeps out of the repository. Each file is the original
-  trimmed to its mark, at twice the displayed height, 36px, and lossless. Ponera Group's original
+  trimmed to its mark, at twice the displayed height, 36px, and lossless. **Since DDR-097** it is
+  twice the role view's height instead, 72px (112px for a tall logo), or the original's own height
+  where that is less. Ponera Group's original
   had a white ground. The owner asked for it to be taken out, so it was converted to transparency
   by colour-to-alpha, which draws the same on white. Every file's ground is transparent, so each
   logo is drawn on the card's own white.

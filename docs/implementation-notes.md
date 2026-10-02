@@ -115,8 +115,10 @@ The page itself is the CV, so what it prints is designed.
 * **Rich text** (the summary, `howBuilt`) is a list of parts, each a string or a `Strong`.
 * **A `slug` is an address someone may have been sent**; don't rename one lightly.
 * **A role**: `title`, and `fullTitle` only when the heading has a qualifier (DDR-060); `logo` is
-  required, at `public/experiences/<slug>/logo.webp`, trimmed, 36px tall (56px for `logoTall`),
-  lossless, transparent ground; `skills` are the owner's to supply.
+  required, at `public/experiences/<slug>/logo.webp`, trimmed, lossless, transparent ground, and
+  72px tall (112px for `logoTall`), twice its height on the role's view (DDR-097), or the
+  original's own height where that is less: never enlarged. The card draws the same file at a
+  quarter of that. `skills` are the owner's to supply.
 * **A credential** has `href` and an optional `logo`. No PMI or PMP logo and no Credly badge until
   the owner confirms PMI's written authorization.
 * **A project**: `summary` is its slogan, `description` and `howBuilt` are from the owner's

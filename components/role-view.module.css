@@ -58,8 +58,36 @@
   background-color: var(--color-surface-tag);
 }
 
-.header > * {
+.header > *,
+.heading > * {
   margin-block: 0;
+}
+
+/* The company's logo, per DDR-097: the one its card on the page opens with, twice its height there,
+   so 36px, and 56px for a logo the content marks as tall. Below the wide breakpoint it stands first
+   in the panel, at the start, a flow step above the company's pill, as the title stands a flow step
+   below it. It stands straight on the panel's tint, with no tile of its own, as DDR-066 puts the
+   card's on the card's white.
+
+   The logo is the owner's file in the brand's own form and colours, so nothing here recolours it.
+   It is scaled to its height and, where it is wider than the column it takes from the wide
+   breakpoint, to that column, so a long wordmark such as Randstad's stands at the same size on a
+   phone as beside the title, and never outweighs a short one. Where the panel is narrower still,
+   it is scaled to the panel. It is never distorted or cropped. */
+.logoBox {
+  display: flex;
+  max-inline-size: var(--role-view-logo-column);
+  margin-block-end: var(--space-medium);
+}
+
+.logo {
+  max-inline-size: 100%;
+  block-size: var(--role-view-logo-height);
+  object-fit: contain;
+}
+
+.logoTall {
+  block-size: var(--role-view-logo-height-tall);
 }
 
 /* The company, the dates and the place, 12px apart, in the muted ink at 11px (node 177:1214). It
@@ -112,7 +140,7 @@
 /* The job title is the view's h1, in the serif the base styles give it, at a project view's title
    size, per DDR-050 as DDR-059 extends it to a role: the design's 38.4px is not a step, and the two
    views' titles are one role. The design's 16px above it is the flow step. */
-.header > .title {
+.heading > .title {
   margin-block-start: var(--space-medium);
   font-size: var(--font-size-project-title-narrow);
 }
@@ -305,11 +333,26 @@
    neighbouring roles stand side by side. This is the one width a component may write, per
    DDR-014. */
 @media (min-width: 48em) {
+  /* The logo takes a column of its own at the panel's start, and the company, the dates and the
+     title stand beside it, so the panel's width holds the role rather than standing empty beside a
+     short title, per DDR-097. The logo is centred in its column, so a short wordmark and a long one
+     stand at one optical centre, and centred on the block beside it, however many lines the title
+     takes. The column is the large step from the words, which keeps the longest job title on one
+     line at the page's widest. */
   .header {
+    display: grid;
+    grid-template-columns: var(--role-view-logo-column) minmax(0, 1fr);
+    column-gap: var(--space-large);
+    align-items: center;
     padding: var(--role-view-panel-padding);
   }
 
-  .header > .title {
+  .logoBox {
+    justify-content: center;
+    margin-block-end: 0;
+  }
+
+  .heading > .title {
     font-size: var(--font-size-project-title);
   }
 
