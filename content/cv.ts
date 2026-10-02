@@ -156,9 +156,14 @@ import type { Cv } from './types';
  * It moved again with #285, because the site's description, which search results and link previews
  * show, now names what the positioning line names. It is not a fact ADR-005 lists as shared, so it
  * did not move the CV.
+ *
+ * It moved again with #286, because the Digital Twin's view gained a line inviting the reader to
+ * ask it about the owner's career, and a link to it in Telegram, per DDR-096. Neither is a fact
+ * ADR-005 lists as shared, and the CV file already links to the bot in Telegram, so neither moved
+ * the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '1244e318d2286f0650382437bd2aed10b6ac6958012183912331915f02375a1b',
+  contentDigest: 'e5e02a358a6e91f017fadfd1fabbbb61ef680d4fa19cd11f9ad12b7445801e63',
 };

@@ -23,6 +23,10 @@ the CV control still open in the same tab.
 DDR-031 to DDR-049's contents bar and DDR-028's footer are unchanged, and a view uses both as they
 are.
 
+**Amended by DDR-096 (2026-10-02)** in its links: a view may show a line above them inviting the
+reader to try the project, and they may go on past the repository and the live site to any other
+place the project runs. The Digital Twin's view has both.
+
 **Amended by DDR-085 (2026-09-30)** in the picture's shape: the frame shows its picture whole, at
 the picture's own shape, where "The right column" below crops it to 16:10.
 
@@ -110,6 +114,8 @@ caption on the right. Below the breakpoint the two are one column in the same or
   in the faint ink, 32px below the description and 12px above the tags.
 * **Every technology is a tag**, the page's tag at the next step up: 12.8px medium on the tag's tint,
   8px apart each way.
+* **Amended by DDR-096**: where the project invites the reader to try it, that line stands 32px
+  below the tags and the links 16px below it.
 * **The links are pills**, 32px below the tags: the repository filled in the accent, as the CV
   control is, and a live site outlined on white in the accent's tint, as the contact pills were
   before DDR-044. Each carries the design's arrow out of a box before its label, drawn in

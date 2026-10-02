@@ -406,6 +406,68 @@ describe('ProjectView', () => {
     }
   });
 
+  // #286 and DDR-096: the Digital Twin's view invites the reader to ask it about the owner's career,
+  // in a line above its links, and leads to it in Telegram as well as on the web.
+  describe('the invitation to try the project', () => {
+    const view = render(digitalTwin!);
+    const chat = 'https://career-conversation-chatbot.vercel.app';
+    const line = view.match(/<p class="[^"]*invitation[^"]*">.*?<\/p>/)?.[0] ?? '';
+
+    it('says, in the owner’s words, that a reader can ask the Digital Twin about the owner’s career', () => {
+      expect(text(line)).toBe('Have a question? Ask my AI Digital Twin about my career.');
+    });
+
+    it('leads to the chatbot in a new tab, and says so after the link’s own text', () => {
+      const links = [...line.matchAll(/<a href="([^"]+)"([^>]*)>([^<]*)<\/a>/g)];
+
+      expect(links.map(([, href, , label]) => [href, label])).toEqual([[chat, 'Ask my AI Digital Twin']]);
+      expect(links[0]![2]).toContain('target="_blank"');
+      expect(links[0]![2]).toContain('rel="noopener"');
+      expect(links[0]![2]).toContain(`aria-label="Ask my AI Digital Twin, ${introduction.newTab}"`);
+    });
+
+    it('stands after the technologies and before the links, and goes with them while the business case is shown', () => {
+      const shown = text(view);
+
+      expect(shown.indexOf('Have a question?')).toBeGreaterThan(shown.indexOf(digitalTwin!.technologies.at(-1)!));
+      expect(shown.indexOf('Have a question?')).toBeLessThan(shown.indexOf('Source code'));
+      expect(line).toMatch(/^<p class="[^"]*overviewOnly[^"]*">/);
+      expect(render({ ...digitalTwin!, businessCase: undefined })).not.toContain('overviewOnly');
+    });
+
+    it('sets the links at the flow step below it, and its link underlined as a project link is', () => {
+      expect(css).toMatch(/\.invitation \+ \.links \{\s*margin-block-start: var\(--space-flow\);/);
+      expect(css).toMatch(/\.invitation a \{\s*text-decoration-color: var\(--color-underline\);/);
+      expect(css).toMatch(
+        /\.invitation a:hover,\s*\.invitation a:focus-visible \{\s*color: var\(--color-accent-hover\);\s*text-decoration-color: var\(--color-underline-hover\);/,
+      );
+    });
+
+    it('leads to the chatbot in Telegram, after the live site, outlined and in a new tab', () => {
+      const overview = view.match(/<ul class="[^"]*links[^"]*overviewOnly[^"]*">.*?<\/ul>/)?.[0] ?? '';
+      const links = [...overview.matchAll(/<a href="([^"]+)" class="([^"]+)"([^>]*)>/g)];
+
+      expect(links.map(([, href]) => href)).toEqual([
+        'https://github.com/aortegablasi96/career_conversation_chatbot',
+        chat,
+        'https://t.me/andreu_career_bot',
+      ]);
+      expect(links[2]![2]).toContain('secondary');
+      expect(links[2]![3]).toContain('target="_blank"');
+      expect(links[2]![3]).toContain('rel="noopener"');
+      expect(view).toContain(`aria-label="Telegram, ${introduction.newTab}"`);
+    });
+
+    it('is on no other view, whose links stand below the tags as they did', () => {
+      for (const project of [numisBook!, stockPortfolioViewer!, careerSite!]) {
+        const markup = render(project);
+
+        expect(markup).not.toMatch(/<p class="[^"]*invitation/);
+        expect(markup).not.toContain('t.me/');
+      }
+    });
+  });
+
   // A project without a gallery, since DDR-084: one with a gallery shows that in the lead's place.
   it('shows the lead picture with its alternative text and its caption below it', () => {
     const media = withoutGallery.media;

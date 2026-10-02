@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `028`. The next DDR is `096`.** Update both lines when a record lands.
+**The next ADR is `028`. The next DDR is `097`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -49,7 +49,7 @@ ADR-001, ADR-002 and ADR-004 to ADR-027 are accepted. ADR-003 is superseded.
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-095. There are
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-096. There are
 two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
@@ -135,7 +135,8 @@ Each record keeps everything not listed against it.
   the picture in the lead's frame opens larger; DDR-084 a view with a gallery shows that in the
   lead's place; DDR-085 the frame shows its picture whole, not cropped to 16:10; DDR-088 every
   picture a view shows stands in one box, at its tallest picture's shape. DDR-093 gives an address the site
-  does not have a view's frame and the top of a view.
+  does not have a view's frame and the top of a view. DDR-096 a line above the links inviting the
+  reader to try the project, and links past the live site (the Digital Twin's Telegram).
 * **DDR-051** (project cards): DDR-054 every technology; DDR-055 the lift; DDR-062 the hover
   shadow; DDR-063 the shared card behaviour.
 * **DDR-055, DDR-057, DDR-059, DDR-061**: DDR-063 makes a role card rest raised and lift like a
