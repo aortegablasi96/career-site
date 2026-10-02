@@ -1,0 +1,63 @@
+/*
+ * The page an address the site does not have shows, per DDR-093: the top of a role's view, with
+ * nothing below it.
+ *
+ * The view is one child of `main`, so the base styles inset it to the page's column, as they inset
+ * a project's or a role's view. It sets its own space above and below, as they do, because it is
+ * the whole of `main`: the views' space under the contents bar, and the page's own above the
+ * footer's hairline.
+ *
+ * Its way back and its title are a role view's, written again here rather than shared, because a
+ * module is one component's. It does not print, so nothing here has a print rule.
+ */
+.view {
+  display: grid;
+  padding-block-start: var(--space-view-top);
+  padding-block-end: var(--page-padding-block-end);
+}
+
+/* The way back, as a view's is: the muted ink and medium weight at the label step, with no
+   underline, set apart as a link by its chevron and its place above everything else, and taking
+   the accent under the pointer, per DDR-035. */
+.back {
+  display: inline-flex;
+  justify-self: start;
+  gap: var(--space-small);
+  align-items: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-x-small);
+  font-weight: var(--font-weight-medium);
+  text-decoration-line: none;
+}
+
+.back:hover,
+.back:focus-visible {
+  color: var(--color-accent);
+}
+
+.backMark {
+  display: inline-flex;
+  font-size: var(--font-size-large);
+}
+
+/* The page's one h1, in the serif the base styles give it, at a view's title size (DDR-050), and as
+   far below the way back as a role view's panel stands (DDR-059). */
+.title {
+  margin-block: var(--space-heading) 0;
+  font-size: var(--font-size-project-title-narrow);
+}
+
+/* The line below it, at body size and in the running text's leading, as a project view's
+   description is set, a flow step below the title. */
+.text {
+  margin-block: var(--space-medium) 0;
+  line-height: var(--line-height-prose);
+}
+
+/* From here the title takes a view's wide size. This is the one width a component may write, per
+   DDR-014. */
+@media (min-width: 48em) {
+  .title {
+    font-size: var(--font-size-project-title);
+  }
+}

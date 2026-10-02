@@ -141,9 +141,13 @@ import type { Cv } from './types';
  * It moved again with #270, because the site's own address, its domain, is now stated in content,
  * per ADR-024, for search engines. It is not a fact ADR-005 lists as shared, so it did not move
  * the CV.
+ *
+ * It moved again with #283, because the page an address the site does not have shows gained its own
+ * words, in `not-found.ts`, per DDR-093. None is a fact ADR-005 lists as shared, so none moved the
+ * CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '519f29b175da37df52fd8008447c2265fb3f97c3f2abbc825ecf859a07ee2570',
+  contentDigest: '06a40ac6dabfbc36d78552fcad2a0293c0b1d93c96a1b1fadf8d708144403f09',
 };

@@ -139,6 +139,10 @@ The page itself is the CV, so what it prints is designed.
   page.
 * **Views are static routes** (`app/portfolio/[slug]`, `app/experience/[slug]`) with
   `generateStaticParams` and `dynamicParams = false`.
+* **An address the site does not have is `app/not-found.tsx`** (DDR-093), which the export writes to
+  `out/404.html`. Vercel serves that with a 404 for any path it has no file for; a plain static
+  server does not, so check it with one that falls back to `404.html`. Its way back and title copy a
+  view's styles: change a view's way back and change it there too.
 
 ## Components
 
