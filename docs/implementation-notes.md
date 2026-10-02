@@ -155,6 +155,9 @@ The page itself is the CV, so what it prints is designed.
   wrong top-level address, but answers a wrong slug under `/portfolio/` or `/experience/` with a 500
   ("missing param … required with output: export"), which the built site never does. Its way back
   and title copy a view's styles: change a view's way back and change it there too.
+* **The old `/projects/…` addresses redirect on Vercel alone** (ADR-027): the rules are in
+  `vercel.json`, since a static export cannot carry Next.js's `redirects()`. A local static server
+  answers them 404, so check them on a pull request's preview.
 
 ## Components
 

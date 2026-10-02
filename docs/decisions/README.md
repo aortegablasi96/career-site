@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `027`. The next DDR is `096`.** Update both lines when a record lands.
+**The next ADR is `028`. The next DDR is `096`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -18,7 +18,7 @@ reasoning behind it.
 
 ## ADRs
 
-ADR-001, ADR-002 and ADR-004 to ADR-026 are accepted. ADR-003 is superseded.
+ADR-001, ADR-002 and ADR-004 to ADR-027 are accepted. ADR-003 is superseded.
 
 | Record  | Relationship |
 | ------- | ------------ |
@@ -45,6 +45,7 @@ ADR-001, ADR-002 and ADR-004 to ADR-026 are accepted. ADR-003 is superseded.
 | ADR-024 | Amends ADR-023: the site states its address (`site.url`) for canonical links, `robots.txt`, `sitemap.xml` and a schema.org `Person`; a new domain changes it |
 | ADR-025 | Amends ADR-007: fourth Client Component, `ScrollAppear`, makes the children of each `data-appear` container appear as they are reached (DDR-090); the page is served whole |
 | ADR-026 | Amends ADR-004 and ADR-022: a video's dialog sets its `preload` to `metadata` as it opens, on `toggle`, so its controls work before play (DDR-092); the markup keeps `preload="none"`; the video carries `autofocus` so Space plays it |
+| ADR-027 | Amends ADR-012's "old addresses are not kept": `vercel.json` redirects `/projects/<slug>` to `/portfolio/<slug>` and `/projects` to `/#portfolio`, permanently |
 
 ## DDRs
 
