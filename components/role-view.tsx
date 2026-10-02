@@ -118,8 +118,9 @@ export function RoleView({
           <span>{place}</span>
         </p>
         {/* The title, then the company's logo, the one its card on the page opens with, per DDR-097
-            as DDR-098 moves it: at the panel's right, below the title below the wide breakpoint,
-            and from it in a column of its own beside the title, centred on it. The company's name
+            as DDR-098 and DDR-099 move it: below the title and centred across the panel below the
+            wide breakpoint, and from it at the panel's right, in a column of its own beside the
+            title, centred on it. The company's name
             is already read in its pill, so the logo is hidden from assistive technology, as the
             card's is, and a screen reader names the company once. It is the top of the view, so it
             is not lazy. */}

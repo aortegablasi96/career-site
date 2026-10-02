@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-10-02
 
+**Amended by DDR-099**, at the owner's request: below the wide breakpoint the logo is centred
+across the panel, still after the title. From the wide breakpoint nothing changes.
+
 **Amends DDR-097** in where the logo stands. Its size, its files, its empty `alt`, its 160px column
 and the company's pill all stand.
 
@@ -11,7 +14,7 @@ and the company's pill all stand.
   at its left. The logo is centred in its column and centred on the title, not on the pill and the
   title together. The company, the dates and the place stand above both, across the panel.
 * **Below the wide breakpoint** the logo stands after the title, at the panel's right edge, a flow
-  step below it. Under DDR-097 it stood first, at the start, above the pill.
+  step below it (centred across the panel since DDR-099). Under DDR-097 it stood first, at the start, above the pill.
 
 ## Context
 

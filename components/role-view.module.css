@@ -69,11 +69,11 @@
   margin-block-start: var(--space-medium);
 }
 
-/* The company's logo, per DDR-097 as DDR-098 moves it: the one its card on the page opens with,
-   twice its height there, so 36px, and 56px for a logo the content marks as tall. Below the wide
-   breakpoint it stands last in the panel, at its right edge, a flow step below the title, as the
-   title stands a flow step below the pill. It stands straight on the panel's tint, with no tile of
-   its own, as DDR-066 puts the card's on the card's white.
+/* The company's logo, per DDR-097 as DDR-098 and DDR-099 move it: the one its card on the page
+   opens with, twice its height there, so 36px, and 56px for a logo the content marks as tall. Below
+   the wide breakpoint it stands last in the panel, centred across it, a flow step below the title,
+   as the title stands a flow step below the pill. It stands straight on the panel's tint, with no
+   tile of its own, as DDR-066 puts the card's on the card's white.
 
    The logo is the owner's file in the brand's own form and colours, so nothing here recolours it.
    It is scaled to its height and, where it is wider than the column it takes from the wide
@@ -82,10 +82,10 @@
    it is scaled to the panel. It is never distorted or cropped. */
 .logoBox {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   max-inline-size: var(--role-view-logo-column);
   margin-block-start: var(--space-medium);
-  margin-inline-start: auto;
+  margin-inline: auto;
 }
 
 .logo {
@@ -358,9 +358,11 @@
     align-items: center;
   }
 
+  /* The logo keeps the place DDR-098 shipped it in from here, at its column's right edge, which
+     DDR-099 leaves as it is. */
   .logoBox {
-    justify-content: center;
     margin-block-start: 0;
+    margin-inline-end: 0;
   }
 
   .titleRow > .title {
