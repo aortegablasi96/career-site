@@ -4,6 +4,12 @@ Status: Accepted
 
 Date: 2026-09-30
 
+**Amended by DDR-092 (2026-10-02)**: "Their full screen control makes it larger still" was only true
+once the video had started. Chrome and Edge grey that control out until they know the video's size
+and length. Now the larger view readies the controls as it opens. A click plays and pauses the video,
+a double click shows it at full screen, and the full screen control works, all before play.
+Everything else here stands.
+
 **Amends DDR-082 ("Only pictures")**: a video in the frame now opens larger, as a picture does.
 DDR-082 left it out because "a video's own controls offer full screen", but they only offer it once
 the video is playing. **Amends DDR-083**: the larger picture's steps now reach the video rather than
@@ -51,6 +57,10 @@ the browser's own controls. Nothing the video offers downloads it.**
   move through it. Their full screen control makes it larger still. It does not play by itself,
   as DDR-010 decided, so opening it fetches nothing more than the still the frame already shows
   (ADR-004).
+  > **Amended by DDR-092.** The full screen control only worked once the video had started. The
+  > larger view now readies the controls as it opens, so it works before play, and a click and a
+  > double click on the video play it and show it at full screen. Opening fetches the video's
+  > start (ADR-026).
 * **Closing it pauses it.** Closing with the control, with the ground or with Escape, or stepping to
   another item, pauses the video. Opening it again resumes it where it stopped. Without script
   nothing can pause it, so it plays on out of sight. It is silent (DDR-087), so no one hears it.
