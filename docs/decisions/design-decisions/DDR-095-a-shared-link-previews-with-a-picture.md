@@ -22,10 +22,12 @@ WhatsApp and X draw a large preview at, and asks X for its large card.**
 
 * **The page, every role's view and the page an address the site does not have preview with the
   share card**: the introduction's photo in its pill frame on the left; on the right a short rule,
-  the owner's name in Lora SemiBold, the positioning line in DM Sans Medium, the location, and the
-  site's address at the foot. White and pale indigo type on the accent (`--color-accent`), the
-  colour of the tab icon (DDR-094). The owner chose it over the same card on the page's own surface,
-  because it stands out in a white feed.
+  the owner's name in Lora SemiBold, the positioning line in DM Sans Medium and the location. White
+  and pale indigo type on the accent (`--color-accent`), the colour of the tab icon (DDR-094).
+  The owner chose it over the same card on the page's own surface, because it stands out in a
+  white feed.
+* **The card does not show the site's address.** The first card had it at its foot; the owner
+  removed it when #282 was reopened.
 * **A role's view takes the card** because a role has no picture of its own, and a company's logo
   would be a third party's mark.
 * **A project's view previews with its lead picture**: the application on a laptop, scaled to 1200

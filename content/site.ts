@@ -10,9 +10,9 @@ export const site: Site = {
   url: 'https://andreuortegablasi.com',
   // The pictures a shared link previews with, per #282 and DDR-095, at the 1.91:1 that LinkedIn,
   // Slack, WhatsApp and X draw a large preview at. The card is the owner's photo, name, positioning
-  // line, location and address on the accent, which the owner chose on #282, so its description is
-  // what it says. A project's is its lead picture cut to that shape from the middle, as a JPEG,
-  // because not every platform draws a WebP; it takes the lead's description.
+  // line and location on the accent, which the owner chose on #282, so its description is what it
+  // says. A project's is its lead picture cut to that shape from the middle, as a JPEG, because not
+  // every platform draws a WebP; it takes the lead's description.
   share: {
     width: 1200,
     height: 630,
