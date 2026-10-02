@@ -274,15 +274,16 @@ export interface Role {
   company: string;
   /**
    * Where the company's logo sits, as a path from the site's root, which the timeline's card shows
-   * above the company's name, per DDR-066. It is the owner's file, in the brand's own form and
-   * colours. It is not an `Image`, because it has no alternative text: the company's name is
-   * written beneath it, so the logo says nothing a reader would miss, and it is hidden from
-   * assistive technology.
+   * above the company's name, per DDR-066, and the role's view at the head of its panel, per
+   * DDR-097. It is the owner's file, in the brand's own form and colours. It is not an `Image`,
+   * because it has no alternative text: the company's name is written beside it in both places, so
+   * the logo says nothing a reader would miss, and it is hidden from assistive technology.
    */
   logo: string;
   /**
-   * Whether the logo is drawn taller than the others, per DDR-066: set where a logo is nearly
-   * square, or carries small text, so at the shared height it is far smaller than its neighbours.
+   * Whether the logo is drawn taller than the others, per DDR-066, on the card and on the view: set
+   * where a logo is nearly square, or carries small text, so at the shared height it is far smaller
+   * than its neighbours.
    * The owner chose it for ToBeIT's and EDP's on #193. A flag rather than a size, as `newTab` is on a contact: the size is the
    * stylesheet's.
    */

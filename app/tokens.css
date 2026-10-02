@@ -822,6 +822,15 @@
      (node 177:1231), in rem so the measure follows the reader's text, as the summary's does. */
   --role-view-label-gap: 1.5rem;
   --role-view-measure: 50rem;
+  /* The company's logo on a role's view, per DDR-097: twice its height on the role's card, 36px,
+     and 56px for a logo the content marks as tall, so a view's logo is its card's, larger, and the
+     tall ones keep their place beside the wordmarks. From the wide breakpoint it stands centred in
+     a column of its own, 160px, beside the company, the dates and the title: as wide as a
+     wordmark needs and no wider, so the longest job title still takes one line beside it at the
+     page's widest. In rem, so all three grow with the reader's text. */
+  --role-view-logo-height: 2.25rem;
+  --role-view-logo-height-tall: 3.5rem;
+  --role-view-logo-column: 10rem;
 
   /* How many language cards stand side by side below the wide breakpoint, per DDR-010: one at the
      narrowest, two from the narrow breakpoint. It is a count rather than a length, so it has no

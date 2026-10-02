@@ -39,7 +39,8 @@ describe('RoleView', () => {
   // DDR-090: the view's parts, and each of its points, appear on their own as the reader scrolls to
   // them.
   it('lets its parts and each point appear on their own, per DDR-090', () => {
-    expect(html).toMatch(/^<article [^>]*data-appear="true"/);
+    // React hoists a preload for the eager logo, per DDR-097, which the page puts in the head.
+    expect(html).toMatch(/^(<link rel="preload" [^>]*\/>)?<article [^>]*data-appear="true"/);
     expect(html).toMatch(/<ol [^>]*data-appear="true"[^>]*><li /);
   });
 
@@ -113,6 +114,23 @@ describe('RoleView', () => {
   it('shows no foot at all for a role with no neighbours', () => {
     expect(render(abb)).not.toMatch(/Previous role|Next role/);
   });
+
+  // DDR-097: the view opens its header with the logo the role's card shows. The company's pill is
+  // read straight after it, so the logo has no alternative text, and a screen reader names the
+  // company once. It is the top of the view, so it is not lazy.
+  it('opens the header with the company’s logo, hidden from assistive technology', () => {
+    expect(html).toMatch(
+      /<header [^>]*><span class="[^"]*"><img class="[^"]*logo[^"]*" src="\/experiences\/abb\/logo\.webp" alt=""\/><\/span><div class="[^"]*heading[^"]*"><p /,
+    );
+    expect(html).not.toMatch(/<img [^>]*loading=/);
+  });
+
+  it('draws a logo the content marks as tall at the tall height, and only that one', () => {
+    const tobeit = roles.find(({ company }) => company === 'ToBeIT')!;
+
+    expect(render(tobeit)).toMatch(/<img class="[^"]*logoTall[^"]*" src="\/experiences\/tobeit\/logo\.webp"/);
+    expect(html).not.toContain('logoTall');
+  });
 });
 
 describe('role view styles', () => {
@@ -120,12 +138,23 @@ describe('role view styles', () => {
   // below the wide breakpoint it takes the flow step, per DDR-059.
   it('pads the header by the flow step below the wide breakpoint and the design’s 48px from it', () => {
     expect(narrow).toMatch(/\.header\s*\{[^}]*padding:\s*var\(--space-medium\);/);
-    expect(styles).toMatch(/@media \(min-width: 48em\)\s*\{\s*\.header\s*\{\s*padding:\s*var\(--role-view-panel-padding\);/);
+    expect(styles).toMatch(/@media \(min-width: 48em\)\s*\{\s*\.header\s*\{[^}]*padding:\s*var\(--role-view-panel-padding\);/);
+  });
+
+  // DDR-097: the logo is its card's, twice as tall, and no wider than the column it takes from the
+  // wide breakpoint, where it stands centred beside the company, the dates and the title.
+  it('sizes the logo by its height, no wider than its column, and stands it beside the title from the wide breakpoint', () => {
+    expect(narrow).toMatch(/\.logoBox\s*\{[^}]*max-inline-size:\s*var\(--role-view-logo-column\);/);
+    expect(narrow).toMatch(/\.logo\s*\{[^}]*block-size:\s*var\(--role-view-logo-height\);/);
+    expect(narrow).toMatch(/\.logoTall\s*\{[^}]*block-size:\s*var\(--role-view-logo-height-tall\);/);
+    expect(styles).toMatch(
+      /@media \(min-width: 48em\)\s*\{\s*\.header\s*\{[^}]*grid-template-columns:\s*var\(--role-view-logo-column\) minmax\(0, 1fr\);/,
+    );
   });
 
   it('sets the job title at a project view’s title size, one role for both views', () => {
-    expect(narrow).toMatch(/\.header > \.title\s*\{[^}]*font-size:\s*var\(--font-size-project-title-narrow\);/);
-    expect(styles).toMatch(/\.header > \.title\s*\{\s*font-size:\s*var\(--font-size-project-title\);/);
+    expect(narrow).toMatch(/\.heading > \.title\s*\{[^}]*font-size:\s*var\(--font-size-project-title-narrow\);/);
+    expect(styles).toMatch(/\.heading > \.title\s*\{\s*font-size:\s*var\(--font-size-project-title\);/);
   });
 
   it('keeps a long company inside its neighbouring card', () => {
