@@ -22,15 +22,15 @@ import { ContentsBar } from './contents-bar';
  * word is in `content/` beside the bar's accessible name, since it names no section.
  *
  * At the left of the bar's column is the site's title, per DDR-049, before the links in the
- * markup as it is before them on screen. It is a string in `content/` too, and plain text: Home
- * already returns to the top, so the title is not a second link there.
+ * markup as it is before them on screen. It is a string in `content/` too, and since DDR-091 it
+ * leads where Home does, as a site's name does on any site, and on a phone without opening the menu.
  *
  * Below the wide breakpoint the links are behind a menu, per DDR-075, which supersedes DDR-010's
  * refusal to collapse them behind a toggle: the bar shows the title and a button, and the button
  * opens the links in a panel over the page. `menu` is the button's accessible name, from `content/`.
  *
  * On a project's view, per DDR-050, it is handed `page`, the route of the page the sections are on,
- * and every link leads back there rather than to a fragment of the view.
+ * and every link, the title's too, leads back there rather than to a fragment of the view.
  *
  * With no sections there is nothing to list, so nothing renders — not even Home, since a page of
  * nothing but its introduction has nowhere else to return from.

@@ -11,6 +11,9 @@ those words there too. Everything else both records say about the contents stand
 section, a `nav` with an accessible name, the bar pinned to the top of the window, and nothing
 printed.
 
+**Amended by DDR-091**: the site's title is now a link to where Home leads, and choosing it closes
+the menu too, though it is outside the menu.
+
 **Amends DDR-049 in two respects**: below the wide breakpoint the links no longer wrap onto the
 rows below the title, because they are behind the menu; and the scroll clearance no longer counts a
 row for the title there, because the title shares its row with the menu's button. Both come back
@@ -74,7 +77,7 @@ links are in a panel the button opens.**
 * **The menu closes** when a link in it is chosen, which then glides to its section as before, per
   DDR-041; on Escape, which returns focus to the button; when the pointer goes down outside the bar;
   and when focus moves out of the bar. So an open menu never covers what the reader has moved on
-  to.
+  to. *Since DDR-091 it also closes when the title, which leads home, is chosen.*
 * **Nothing moves or animates** when the menu opens or closes. A reader who prefers reduced motion
   sees exactly what anyone else does, less the button's colour change.
 * **From the wide breakpoint up, the bar is unchanged.** There is no button, and the links are in

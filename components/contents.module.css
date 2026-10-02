@@ -217,7 +217,7 @@
 /* The site's title, per DDR-049, in bold and in the heading ink, at the step a section's title
    takes from the wide breakpoint, so it reads as the bar's name rather than as one more label. Its
    line is 31.2px, which the bar's 48px holds. It is a paragraph, not a heading, because the page's
-   one `h1` is the owner's name, and not a link, because Home already returns to the top.
+   one `h1` is the owner's name. Its words are a link to where Home leads, per DDR-091, below.
 
    Below the wide breakpoint it takes the room the menu's button leaves it, per DDR-075, and is
    measured from nothing rather than from its whole line, so where the two do not fit on one row the
@@ -232,6 +232,27 @@
   color: var(--color-text-heading);
   font-size: var(--font-size-x-large);
   font-weight: var(--font-weight-bold);
+}
+
+/* The title's words lead where Home does, per DDR-091, which amends DDR-049's "not a link". At rest
+   they look as the title always has: the heading ink, not the accent the base styles give a link,
+   and no underline, because in this bar an underline marks the section the reader is in, per
+   DDR-042, and the title is never marked. Under the pointer and on keyboard focus they take the
+   accent, as a contents link and the menu's button do, per DDR-035; the base styles' outline and
+   colour transition stay.
+
+   The link stays inline, so it is the words and nothing more: it adds no box, so the bar cannot
+   change height, and the room the paragraph takes beside the menu's button is not a target. Its
+   box is the words' own, at least 133 by 27px at the default text size and both lines where the
+   title wraps at 200%, so it is a 24 by 24 target outright, per DDR-027. */
+.home {
+  color: var(--color-text-heading);
+  text-decoration-line: none;
+}
+
+.home:hover,
+.home:focus-visible {
+  color: var(--color-accent);
 }
 
 /* From the wide breakpoint, the gap between two links, and between the title and the links where

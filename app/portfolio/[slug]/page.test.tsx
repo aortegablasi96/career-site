@@ -65,6 +65,7 @@ describe('a project’s view', () => {
   });
 
   // DDR-050: the site's own contents bar, every link leading back to the page, and nothing marked.
+  // DDR-091: the title leads to the page's top, as Home does.
   it('opens with the site’s contents bar, whose links lead back to the page', async () => {
     const html = await render('numisbook');
     const nav = html.match(/<nav [\s\S]*?<\/nav>/)?.[0] ?? '';
@@ -73,8 +74,8 @@ describe('a project’s view', () => {
     );
 
     expect(html.indexOf('<nav')).toBeLessThan(html.indexOf('<main>'));
-    expect(nav).toContain('Andreu’s site');
     expect(links).toEqual([
+      { href: '/', word: 'Andreu’s site' },
       { href: '/', word: 'Home' },
       { href: '/#experience', word: 'Experience' },
       { href: '/#portfolio', word: 'Portfolio' },

@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `026`. The next DDR is `091`.** Update both lines when a record lands.
+**The next ADR is `026`. The next DDR is `092`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -47,7 +47,7 @@ ADR-001, ADR-002 and ADR-004 to ADR-025 are accepted. ADR-003 is superseded.
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-090. There are
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-091. There are
 two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
@@ -125,7 +125,9 @@ Each record keeps everything not listed against it.
 * **DDR-043** (new tab): DDR-044 removes the arrow; DDR-050 adds a project view's links; DDR-069 adds
   the education cards.
 * **DDR-044** (service pills): DDR-047 the GitHub hover fill; DDR-073 the email pill's M alone.
-* **DDR-049** (bar title): DDR-075 the menu below the wide breakpoint.
+* **DDR-049** (bar title): DDR-075 the menu below the wide breakpoint; DDR-091 the title leads
+  where Home does, which it ruled out.
+* **DDR-075** (menu): DDR-091 the title's link closes it too, though it is outside the menu.
 * **DDR-050** (project view): DDR-052 neighbours; DDR-053 gallery; DDR-078 "How I built it";
   DDR-079 the business-case switch; DDR-081 the gallery's thumbnails in the lead's column; DDR-082
   the picture in the lead's frame opens larger; DDR-084 a view with a gallery shows that in the

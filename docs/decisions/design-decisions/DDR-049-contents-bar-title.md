@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-19
 
+**Amended by DDR-091**: the title's words are now a link to where Home leads, which "A paragraph,
+not a heading and not a link" below ruled out. Its look at rest, its place and the paragraph stand.
+
 **Amended by DDR-075 below the wide breakpoint**: the links are behind a menu there, so they no
 longer wrap below the title, and the clearance counts the title's row only for a reader without
 script, whose bar is still this record's at every width.
@@ -73,7 +76,8 @@ scroll clearance makes room for the title's row.**
 * **"Andreu’s site"**, as `title` in `content/contents.ts`, beside the bar's accessible name and
   Home's word, per ADR-002. It moves the CV digest, and is not a fact ADR-005 lists as shared.
 * **A paragraph, not a heading and not a link.** The page's one `h1` is the owner's name, and Home
-  already returns to the top, which the story excludes a title link for.
+  already returns to the top, which the story excludes a title link for. *DDR-091 amends this: the
+  paragraph's words are now a link to where Home leads.*
 * **`--font-size-x-large`, 20.8px, bold, in the heading ink.** That is the step a section title
   takes from the wide breakpoint, so the title reads as the bar's name rather than as one more
   label. Its line is 31.2px, which the bar's 48px holds, so the bar needs no more height where the
