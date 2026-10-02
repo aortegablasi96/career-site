@@ -137,6 +137,11 @@ The page itself is the CV, so what it prints is designed.
   the browser's value is empty, and the pictures 404 on the live site only (#261). A `next/link`
   href is a route and is exempt. Internal links use `prefetch={false}`, or each view would prefetch every picture on the
   page.
+* **The site's icon is three files in `app/`** (DDR-094): `icon.svg`, the letter as Lora 600's
+  outline; `favicon.ico`, 16, 32 and 48px, each rendered from the SVG at its own size; and
+  `apple-icon.png`, the full square at 180px with no transparency. Next.js links all three from
+  every route. They carry the accent's value, so a change to `--color-accent` means drawing all
+  three again (`app/icon.test.ts` fails until then).
 * **Views are static routes** (`app/portfolio/[slug]`, `app/experience/[slug]`) with
   `generateStaticParams` and `dynamicParams = false`.
 
