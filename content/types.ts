@@ -17,6 +17,21 @@ export interface Site {
    * structured data name pages under it, whichever address a page was reached at.
    */
   url: string;
+  /** The pictures a link preview shows, per #282 and DDR-095. */
+  share: Share;
+}
+
+/** The pictures a shared link previews with, per DDR-095, all drawn at one size. */
+export interface Share {
+  /** The size each is drawn at, in pixels. */
+  width: number;
+  height: number;
+  /** The card the page and every role's view preview with, as a path from the site's root. */
+  card: string;
+  /** What the card shows, for a reader who cannot see it. */
+  cardAlt: string;
+  /** Where a project's preview picture is, from its slug. It shows what the lead does. */
+  project: (slug: string) => string;
 }
 
 /** The page an address the site does not have shows, per #283 and DDR-093. */

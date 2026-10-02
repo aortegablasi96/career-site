@@ -7,6 +7,7 @@ import { contents } from '@/content/contents';
 import { introduction } from '@/content/introduction';
 import { projects } from '@/content/projects';
 import { sections } from '@/app/sections';
+import { sharePicture } from '@/app/share';
 
 /**
  * A project's view of its own, per ADR-010 and DDR-050, at `/portfolio/<slug>`, per ADR-012.
@@ -42,19 +43,24 @@ function projectAt(slug: string) {
 }
 
 // The browser tab and a link preview name the project, per #153, and describe it in its own words.
-// The canonical link is the view's own address, per ADR-024.
+// The canonical link is the view's own address, per ADR-024. The preview shows the project's lead
+// picture, cut to the preview's shape, with the lead's description, per DDR-095.
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { slug, name, description } = projectAt((await params).slug).project;
+  const { slug, name, description, media } = projectAt((await params).slug).project;
   const title = projects.view.title(name);
 
   return {
     title,
     description,
-    openGraph: { title, description },
+    openGraph: {
+      title,
+      description,
+      images: [sharePicture(slug, 'poster' in media ? media.description : media.alt)],
+    },
     alternates: { canonical: `/portfolio/${slug}` },
   };
 }

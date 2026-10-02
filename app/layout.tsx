@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import type { ReactNode } from 'react';
 import { ScrollAppear } from '@/components/scroll-appear';
 import { site } from '@/content/site';
+import { shareCard } from './share';
 import './tokens.css';
 import './globals.css';
 
@@ -47,7 +48,9 @@ const lora = localFont({
 });
 
 // The same title and description serve search results and link previews. Each page's canonical
-// link is a path, which metadataBase puts under the site's own address, per ADR-024.
+// link is a path, which metadataBase puts under the site's own address, per ADR-024. A preview
+// shows the share card, per DDR-095, large rather than as a thumbnail; a view that sets its own
+// `openGraph` replaces this one whole, so each view names its picture again.
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: site.title,
@@ -55,7 +58,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: site.title,
     description: site.description,
+    images: [shareCard],
   },
+  twitter: { card: 'summary_large_image' },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

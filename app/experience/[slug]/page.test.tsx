@@ -2,6 +2,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { experience } from '@/content/experience';
 import { introduction } from '@/content/introduction';
+import { shareCard } from '@/app/share';
 import RolePage, { dynamicParams, generateMetadata, generateStaticParams } from './page';
 
 const params = (slug: string) => ({ params: Promise.resolve({ slug }) });
@@ -33,6 +34,12 @@ describe('a role’s view', () => {
       expect(metadata.description).toBe(roles.find((role) => role.slug === slug)!.points[0]);
     },
   );
+
+  // DDR-095: a role has no picture of its own, so its preview shows the page's card. A view's own
+  // openGraph replaces the layout's whole, so the card is named here again.
+  it.each(roles.map(({ slug }) => slug))('previews %s with the page’s card', async (slug) => {
+    expect((await generateMetadata(params(slug))).openGraph?.images).toEqual([shareCard]);
+  });
 
   // ADR-024: each view names its own address as canonical, which the layout puts under the domain.
   it.each(roles.map(({ slug }) => slug))('%s names its own address as canonical', async (slug) => {
