@@ -71,7 +71,7 @@ describe('Experience', () => {
     const entries = row!.match(/<li class=/g) ?? [];
     const titles = [...row!.matchAll(/<h3[^>]*><a [^>]*>([^<]+)<\/a><\/h3>/g)].map(([, title]) => title);
 
-    expect(html).toMatch(/<\/p><div><ol /);
+    expect(html).toMatch(/<\/p><div data-appear="true"><ol /);
     expect(entries).toHaveLength(roles.length);
     expect(titles).toEqual(roles.map(({ title }) => title));
   });
@@ -134,7 +134,7 @@ describe('Experience', () => {
   });
 
   it('says above the timeline that a role’s card leads to its description, beside a hidden mark', () => {
-    expect(html).toMatch(/^<div><p class="[^"]*"><svg [^>]*aria-hidden="true"[^>]*>.*<\/svg>Click any role to read the full description<\/p><div><ol /);
+    expect(html).toMatch(/^<div data-appear="true"><p class="[^"]*"><svg [^>]*aria-hidden="true"[^>]*>.*<\/svg>Click any role to read the full description<\/p><div data-appear="true"><ol /);
   });
 
   // The spine draws the path from one role to the next and says nothing the text does not, so a

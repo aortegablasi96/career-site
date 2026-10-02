@@ -65,6 +65,19 @@ describe('base styles', () => {
     );
     expect(declarations.match(/scroll-behavior:/g)).toHaveLength(1);
   });
+
+  // DDR-090: an element still below the window waits, hidden and lowered, and appears as it is
+  // reached. Only on a screen and only when motion is welcome, so a reader who asked for less motion,
+  // and paper, show every element whatever the script has marked.
+  it('hides and moves an element waiting to appear only on a screen and only when motion is welcome, per DDR-090', () => {
+    expect(declarations).toMatch(
+      /@media screen and \(prefers-reduced-motion: no-preference\)\s*\{\s*\[data-appearing='waiting'\]\s*\{\s*opacity:\s*0;\s*translate:\s*0 var\(--appear-rise\);\s*\}\s*\[data-appearing='now'\]\s*\{\s*animation:\s*appear var\(--appear-duration\) var\(--appear-easing\)\s+calc\(var\(--appear-order, 0\) \* var\(--appear-stagger\)\) backwards;\s*\}\s*\}/,
+    );
+    expect(declarations.match(/data-appearing/g)).toHaveLength(2);
+    expect(declarations).toMatch(
+      /@keyframes appear\s*\{\s*from\s*\{\s*opacity:\s*0;\s*translate:\s*0 var\(--appear-rise\);\s*\}\s*\}/,
+    );
+  });
 });
 
 // DDR-011 switches off every font feature that would substitute a glyph no character maps to,

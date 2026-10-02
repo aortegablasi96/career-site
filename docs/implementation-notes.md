@@ -144,8 +144,8 @@ The page itself is the CV, so what it prints is designed.
 
 ### Contents bar (ADR-007, ADR-008, ADR-009, ADR-013)
 
-* **`components/contents-bar.tsx` is a Client Component**, one of three (the others are the
-  business case slider, ADR-015, and a view's larger picture, ADR-018). It marks the current section with
+* **`components/contents-bar.tsx` is a Client Component**, one of four (the others are the
+  business case slider, ADR-015, a view's larger picture, ADR-018, and `ScrollAppear`, ADR-025). It marks the current section with
   `aria-current="location"`, glides on its own links' clicks, and holds the menu's open state below
   the wide breakpoint. `Contents` stays a Server Component and hands it `{ id, link }` per section,
   never the sections' rendered items.
@@ -295,6 +295,27 @@ The page itself is the CV, so what it prints is designed.
   holds the card at its tallest item's height. `components/stylesheets.test.ts` admits `grid-area`
   in that stylesheet alone. Without script, `(scripting: none)` shows every item and hides the
   controls. A new, longer item makes every item's card taller: sweep again.
+
+### Elements appearing (DDR-090, ADR-025)
+
+* **What appears is decided by `data-appear` containers**: each child of one appears on its own,
+  unless it is a container or holds one. A wrapper added between a container and its children
+  changes what appears; if it holds a container, make it a container too, or its other children
+  never appear. The containers are listed in ADR-025.
+* **The state is `data-appearing`, written by `ScrollAppear` and styled in `app/globals.css`**, under
+  `@media screen and (prefers-reduced-motion: no-preference)`: `screen`, or a sheet printed from a
+  scrolled page loses whatever is still below the window. The HTML carries no state.
+* **The appearance is an animation, not a transition**, and the attribute goes at its end, so a
+  card's own `translate` (the lift) is the card's again. Don't hide by `visibility` or `display`:
+  only opacity keeps a waiting element in the accessibility tree and in find-in-page.
+* An element that is not displayed (the timeline's row or column) reports a top of 0 and is left
+  alone, which is why only the one displayed appears.
+* **Whether an element waits is decided on its first sighting**, against the whole window, though the
+  observer's root stops a tenth short of the window's foot. Judged against the root, an element in
+  that last tenth would be hidden in plain view.
+* **The cascade's place is `--appear-order`, set inline by the script** and read as a delay with
+  `backwards` fill, so the element stays hidden while it waits. It is removed with the state.
+* To watch it, set `--appear-duration` on the root to a few seconds before a screenshot.
 
 ### Footer (DDR-028, DDR-029)
 

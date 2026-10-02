@@ -34,7 +34,7 @@ export function Credentials({
   labelledBy: string;
 }) {
   return (
-    <div>
+    <div data-appear>
       <Hint text={hint} />
       <Timeline
         kind="credential"

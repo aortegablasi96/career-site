@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-18
 
+**Amended by ADR-025**: a fourth Client Component, `ScrollAppear`, makes the page's elements appear as
+the reader scrolls to them, per DDR-090. It renders nothing, and the page is served whole without it.
+
 **Amended by ADR-018**: a third Client Component, `LargerPicture`, moves a project view's picture
 between its frame and the window as it opens and closes, per DDR-082. The dialog it moves opens
 and closes without script; the movement is its only reason.

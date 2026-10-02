@@ -388,14 +388,14 @@ export function ProjectView({
   );
 
   return (
-    <article className={styles.view}>
+    <article className={styles.view} data-appear>
       <Link href={backHref} className={styles.back} prefetch={false}>
         <span className={styles.backMark}>
           <Icon name="back" />
         </span>
         {back}
       </Link>
-      <div className={styles.columns}>
+      <div className={styles.columns} data-appear>
         <div className={styles.text}>
           <h1 className={styles.name}>{name}</h1>
           {businessCase ? (

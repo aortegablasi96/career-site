@@ -31,6 +31,12 @@ describe('Section', () => {
     expect(html).toMatch(/<div[^>]*><h2 [^>]*>Experience<\/h2><p>First<\/p><\/div><p>Second<\/p><p>Third<\/p><\/section>$/);
   });
 
+  // DDR-090: the heading and each item appear on their own as the reader scrolls to them, so both
+  // the section and the heading's block hand their children to ScrollAppear.
+  it('lets its heading and each item appear on their own, per DDR-090', () => {
+    expect(html).toMatch(/^<section [^>]*data-appear="true"[^>]*><div [^>]*data-appear="true"[^>]*><h2 /);
+  });
+
   it('holds a single item in the block with its heading', () => {
     expect(render(['Only'])).toMatch(/<\/h2><p>Only<\/p><\/div><\/section>$/);
   });

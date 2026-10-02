@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `025`. The next DDR is `090`.** Update both lines when a record lands.
+**The next ADR is `026`. The next DDR is `091`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -18,7 +18,7 @@ reasoning behind it.
 
 ## ADRs
 
-ADR-001, ADR-002 and ADR-004 to ADR-024 are accepted. ADR-003 is superseded.
+ADR-001, ADR-002 and ADR-004 to ADR-025 are accepted. ADR-003 is superseded.
 
 | Record  | Relationship |
 | ------- | ------------ |
@@ -43,10 +43,11 @@ ADR-001, ADR-002 and ADR-004 to ADR-024 are accepted. ADR-003 is superseded.
 | ADR-022 | Amends ADR-018, ADR-019 and ADR-017: a gallery's video opens in `LargerPicture`'s dialog (DDR-089) and pauses as it closes; `controlsList="nodownload"` and a declined `contextmenu` withhold its download; `disablePictureInPicture` its floating window; `Media` goes |
 | ADR-023 | Supersedes ADR-003's host and domain steps: Vercel deploys and runs the checks (`vercel.json`); Actions only validates; no base path |
 | ADR-024 | Amends ADR-023: the site states its address (`site.url`) for canonical links, `robots.txt`, `sitemap.xml` and a schema.org `Person`; a new domain changes it |
+| ADR-025 | Amends ADR-007: fourth Client Component, `ScrollAppear`, makes the children of each `data-appear` container appear as they are reached (DDR-090); the page is served whole |
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-089. There are
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-090. There are
 two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
@@ -140,6 +141,8 @@ Each record keeps everything not listed against it.
 * **DDR-059** (role view): DDR-060 short and full titles; DDR-067 the hint's place and mark.
 * **DDR-059** (photo centred) and **DDR-010**: DDR-077 takes the float off the screen.
 * **DDR-061, DDR-062, DDR-063**: DDR-065 a lit card keeps its resting shadow; hover ink 18%.
+* **DDR-063**: DDR-090 elements also appear as they are reached, so the lift is no longer the site's
+  one piece of expressive motion.
 * **DDR-063, DDR-064**: DDR-074 the column's card lifts by a margin and outlines itself.
 * **DDR-064**: DDR-071 dates glow and the dot darkens.
 * **DDR-066**: DDR-068 degrees carry the UPC's logo.
