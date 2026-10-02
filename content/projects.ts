@@ -447,7 +447,7 @@ export const projects: Projects = {
     },
   ],
   // The line above the cards, per DDR-067, in the experience hint's words.
-  hint: 'Click any project to read the full description',
+  hint: 'Open a project to read the full description',
   view: {
     back: 'Back to portfolio',
     // The heading above how a project was built, per #229 and DDR-078, in the owner's words.

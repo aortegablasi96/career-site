@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-27
 
+**Reworded per #291**: the hint reads "Open a credential to learn more", where it read "Click any credential…", so it names no input device. Its place and look are unchanged.
+
 **Amends DDR-057, DDR-059, DDR-063, DDR-064 and DDR-043.** Each card in the education timeline is
 now a link, and it looks, moves and answers exactly as a role's card does. The two degrees lead to
 the Universitat Politècnica de Catalunya's site. The two certifications lead to each one's Credly

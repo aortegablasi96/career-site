@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-27
 
+**Reworded per #291**: the hints read "Open a role…" and "Open a project to read the full description", where they read "Click any…", so they name no input device. Their place and look are unchanged.
+
 **Amends DDR-059, DDR-057 and DDR-051.** The hint above the experience timeline now sits 8px above
 the dates, where the reader saw about 73px, and it opens with an information mark instead of the
 design's clock. The projects section gets the same hint above its cards. Both timelines' date bands

@@ -95,7 +95,7 @@ export const experience: Experience = {
     },
   ],
   // The line above the timeline, per DDR-059, which is the design's own (node 170:71).
-  hint: 'Click any role to read the full description',
+  hint: 'Open a role to read the full description',
   view: {
     back: 'Back to experience',
     points: 'Responsibilities & achievements',

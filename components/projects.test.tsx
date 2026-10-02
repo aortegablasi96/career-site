@@ -133,7 +133,7 @@ describe('the hint above the cards', () => {
 
   it('stands before the first row, in the same element, and says a card leads to its view', () => {
     expect(withHint).toMatch(
-      /<div><p class="[^"]*"><svg [^>]*aria-hidden="true"[^>]*>.*<\/svg>Click any project to read the full description<\/p><div class="[^"]*row[^"]*">/,
+      /<div><p class="[^"]*"><svg [^>]*aria-hidden="true"[^>]*>.*<\/svg>Open a project to read the full description<\/p><div class="[^"]*row[^"]*">/,
     );
   });
 

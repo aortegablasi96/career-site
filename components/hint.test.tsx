@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { Hint } from './hint';
 
-const html = renderToStaticMarkup(<Hint text="Click any card" />);
+const html = renderToStaticMarkup(<Hint text="Open a card" />);
 
 /** The stylesheet without its comments, so a rule is not matched against its explanation. */
 const styles = readFileSync(new URL('./hint.module.css', import.meta.url), 'utf8')
@@ -20,7 +20,7 @@ function rule(selector: string): string {
 describe('Hint', () => {
   // DDR-067: an information mark, which says nothing the words do not, so a reader hears the words.
   it('is its words after a hidden information mark', () => {
-    expect(html).toMatch(/^<p class="[^"]*"><svg [^>]*aria-hidden="true"[^>]*>.*<\/svg>Click any card<\/p>$/);
+    expect(html).toMatch(/^<p class="[^"]*"><svg [^>]*aria-hidden="true"[^>]*>.*<\/svg>Open a card<\/p>$/);
     expect(html).toContain('<circle cx="12" cy="12" r="10.5"></circle><path d="M12 11v5.5"></path>');
   });
 

@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-26
 
+**Reworded per #291**: the hint reads "Open a role to read the full description", where it read "Click any role…", so it names no input device. Its place and look are unchanged.
+
 **Amended by DDR-097 and DDR-098**, per #289: the header carries the company's logo, the one the
 role's card shows, at the panel's right. Below the wide breakpoint it stands after the title. From
 the wide breakpoint it is centred in a 160px column of its own at the title's right, centred on the
