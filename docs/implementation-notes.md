@@ -142,6 +142,11 @@ The page itself is the CV, so what it prints is designed.
   `apple-icon.png`, the full square at 180px with no transparency. Next.js links all three from
   every route. They carry the accent's value, so a change to `--color-accent` means drawing all
   three again (`app/icon.test.ts` fails until then).
+* **A shared link's preview picture is a committed JPEG** (DDR-095): `public/home/share-card.jpg`
+  and each project's `public/portfolio/<slug>/share.jpg`, 1200 × 630, with their paths in
+  `content/site.ts` and their metadata built in `app/share.ts`. A view that sets its own `openGraph`
+  replaces the layout's whole, so each view names its picture again. The card repeats the name,
+  positioning, location and accent as pixels: a change to any of them means drawing it again.
 * **Views are static routes** (`app/portfolio/[slug]`, `app/experience/[slug]`) with
   `generateStaticParams` and `dynamicParams = false`.
 

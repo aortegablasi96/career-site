@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 import RootLayout, { metadata } from '@/app/layout';
 import { introduction } from '@/content/introduction';
+import { shareCard } from './share';
 
 type FontOptions = {
   variable: string;
@@ -123,6 +124,12 @@ describe('metadata', () => {
   // The home page sets its own canonical link; one here would be inherited by every view.
   it('sets no canonical link that every view would inherit', () => {
     expect(metadata.alternates).toBeUndefined();
+  });
+
+  // #282 and DDR-095: a shared link previews with the card, drawn large rather than as a thumbnail.
+  it('previews a shared link with the card, at its full size', () => {
+    expect(metadata.openGraph).toMatchObject({ images: [shareCard] });
+    expect(metadata.twitter).toEqual({ card: 'summary_large_image' });
   });
 
   it('gives link previews the same title and description as search results', () => {
