@@ -34,6 +34,16 @@ export interface Share {
   project: (slug: string) => string;
 }
 
+/** The page an address the site does not have shows, per #283 and DDR-093. */
+export interface NotFound {
+  /** The link at the top, which returns the reader to the page, as a view's way back does. */
+  back: string;
+  /** The page's one heading, which the browser tab names too. */
+  title: string;
+  /** The line below the heading, which says why the reader may have arrived here. */
+  text: string;
+}
+
 /** A phrase set in bold inside running text, as `strong`, which DDR-023 sets semibold. */
 export interface Strong {
   strong: string;

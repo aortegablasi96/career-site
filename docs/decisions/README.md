@@ -133,7 +133,8 @@ Each record keeps everything not listed against it.
   DDR-079 the business-case switch; DDR-081 the gallery's thumbnails in the lead's column; DDR-082
   the picture in the lead's frame opens larger; DDR-084 a view with a gallery shows that in the
   lead's place; DDR-085 the frame shows its picture whole, not cropped to 16:10; DDR-088 every
-  picture a view shows stands in one box, at its tallest picture's shape.
+  picture a view shows stands in one box, at its tallest picture's shape. DDR-093 gives an address the site
+  does not have a view's frame and the top of a view.
 * **DDR-051** (project cards): DDR-054 every technology; DDR-055 the lift; DDR-062 the hover
   shadow; DDR-063 the shared card behaviour.
 * **DDR-055, DDR-057, DDR-059, DDR-061**: DDR-063 makes a role card rest raised and lift like a

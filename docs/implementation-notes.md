@@ -149,6 +149,12 @@ The page itself is the CV, so what it prints is designed.
   positioning, location and accent as pixels: a change to any of them means drawing it again.
 * **Views are static routes** (`app/portfolio/[slug]`, `app/experience/[slug]`) with
   `generateStaticParams` and `dynamicParams = false`.
+* **An address the site does not have is `app/not-found.tsx`** (DDR-093), which the export writes to
+  `out/404.html`. Vercel serves that with a 404 for any path it has no file for; a plain static
+  server does not, so check it with one that falls back to `404.html`. `next dev` shows it for a
+  wrong top-level address, but answers a wrong slug under `/portfolio/` or `/experience/` with a 500
+  ("missing param … required with output: export"), which the built site never does. Its way back
+  and title copy a view's styles: change a view's way back and change it there too.
 
 ## Components
 

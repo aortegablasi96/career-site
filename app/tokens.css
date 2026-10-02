@@ -887,6 +887,12 @@
   --contents-bar-clearance: calc(
     var(--contents-bar-height) + var(--contents-bar-title-row) + var(--space-flow)
   );
+
+  /* The least a short page is tall, so its footer stands at the window's foot rather than partway
+     up it, per DDR-093: the whole window. In `dvh`, as the menu's limit above is, so that a phone's
+     toolbar is counted and the footer is not hidden behind it. Only the page an address the site
+     does not have reads it; every other page is taller than any window. */
+  --page-min-size: 100dvh;
 }
 
 /*

@@ -145,9 +145,13 @@ import type { Cv } from './types';
  * It moved again with #282, because the site gained the pictures a shared link previews with, their
  * size and the card's description, per DDR-095. None is a fact ADR-005 lists as shared, so none
  * moved the CV.
+ *
+ * It moved again with #283, because the page an address the site does not have shows gained its own
+ * words, in `not-found.ts`, per DDR-093. None is a fact ADR-005 lists as shared, so none moved the
+ * CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'a5deecc4d398ab33c3cd315540f991b6a88415f7c217f349861a94674ada62df',
+  contentDigest: '90a0b59b92839e68b370e6c4f3339c2407bc6395c0ece328e525e005aabbca16',
 };
