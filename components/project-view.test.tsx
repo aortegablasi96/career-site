@@ -633,7 +633,7 @@ describe('ProjectView', () => {
         expect(media.description.length).toBeTruthy();
         expect(thumbnails(view).at(-1)).toMatchObject({ name: caption, source: media.poster });
         expect(bare(view)).toContain(
-          `<video src="${media.file}" poster="${media.poster}" width="${media.width}" height="${media.height}" preload="none" controls="" controlsList="nodownload" disablePictureInPicture="" aria-label="${media.description}">`,
+          `<video src="${media.file}" poster="${media.poster}" width="${media.width}" height="${media.height}" preload="none" autofocus="" controls="" controlsList="nodownload" disablePictureInPicture="" aria-label="${media.description}">`,
         );
       }
     });

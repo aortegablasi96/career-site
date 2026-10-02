@@ -44,7 +44,7 @@ ADR-001, ADR-002 and ADR-004 to ADR-026 are accepted. ADR-003 is superseded.
 | ADR-023 | Supersedes ADR-003's host and domain steps: Vercel deploys and runs the checks (`vercel.json`); Actions only validates; no base path |
 | ADR-024 | Amends ADR-023: the site states its address (`site.url`) for canonical links, `robots.txt`, `sitemap.xml` and a schema.org `Person`; a new domain changes it |
 | ADR-025 | Amends ADR-007: fourth Client Component, `ScrollAppear`, makes the children of each `data-appear` container appear as they are reached (DDR-090); the page is served whole |
-| ADR-026 | Amends ADR-004 and ADR-022: a video's dialog sets its `preload` to `metadata` as it opens, on `toggle`, so its controls work before play (DDR-092); the markup keeps `preload="none"` |
+| ADR-026 | Amends ADR-004 and ADR-022: a video's dialog sets its `preload` to `metadata` as it opens, on `toggle`, so its controls work before play (DDR-092); the markup keeps `preload="none"`; the video carries `autofocus` so Space plays it |
 
 ## DDRs
 
@@ -170,7 +170,8 @@ Each record keeps everything not listed against it.
   window's left and right edges from the wide breakpoint, which its Option B rejected. DDR-089 lets
   the steps reach a video, and the place count every item.
 * **DDR-089** (video larger): DDR-092 readies the browser's controls as the video opens, so a click
-  plays it, a double click and the full screen control show it at full screen, before play.
+  plays it, a double click and the full screen control show it at full screen, before play; focus
+  starts on the video, so Space plays it.
 * **DDR-087** (first videos): DDR-089 stops the video playing in the frame; closing its larger view
   pauses it.
 * **DDR-079** (business-case switch): DDR-080 shows the business case one item at a time, in a card.

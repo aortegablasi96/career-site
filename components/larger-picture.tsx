@@ -82,8 +82,10 @@ export const swapCommand = '--show-in-place';
  * dialog closes, the other picture's radio is checked, so the frame shows it and its thumbnail is
  * the chosen one, and its dialog opens. Its opening control is focused before it opens, so closing
  * it returns focus there, to the control on the picture the frame now shows, as the browser returns
- * it when that control opens the dialog itself. Last, focus goes to the control in the new dialog
- * that stands where focus was in this one, so a reader who pressed "Next" can press it again.
+ * it when that control opens the dialog itself. Last, focus goes to the step control in the new
+ * dialog that stands where focus was in this one, so a reader who pressed "Next" can press it again.
+ * Focus on the close control, the first, is left where the new dialog puts it: on its close control
+ * for a picture, and on a video, which takes focus so Space plays it, per DDR-092.
  */
 export function swap(
   from: { close: () => void; querySelectorAll: (selector: 'button') => ArrayLike<unknown> },
@@ -98,7 +100,7 @@ export function swap(
   choice.checked = true;
   opener.focus({ preventScroll: true });
   to.showModal();
-  if (place >= 0) {
+  if (place > 0) {
     to.querySelectorAll('button')[place]?.focus();
   }
 }
@@ -200,9 +202,11 @@ export interface Steps {
  * play it. Opening it fetches the video's size and length, per DDR-092 and ADR-026, so the browser's
  * controls play it on a click and show it at full screen on a double click or from their own
  * control, before it has ever played; the rest of its file waits for play, per ADR-004. Closing the
- * dialog pauses it. Its controls offer no download in Chrome and Edge, nor a floating
- * picture-in-picture window, and the browser's menu on it, which offers to save it, is declined.
- * Without script the menu is offered, closing does not pause it, and nothing is fetched until play.
+ * dialog pauses it. Focus starts on the video rather than on the close control, per DDR-092, so
+ * Space plays and pauses it at once, and the arrow keys move through it. Its controls offer no
+ * download in Chrome and Edge, nor a floating picture-in-picture window, and the browser's menu on
+ * it, which offers to save it, is declined. Without script the menu is offered, closing does not
+ * pause it, and nothing is fetched until play.
  *
  * Both pictures stand in the view's box, per DDR-088: the frame is the box, with the class the view
  * gives it, and the picture is as wide as it and centred in it; larger, the box is as large as the
@@ -393,6 +397,7 @@ export function LargerPicture({
               width={media.width}
               height={media.height}
               preload="none"
+              autoFocus
               controls
               controlsList="nodownload"
               disablePictureInPicture

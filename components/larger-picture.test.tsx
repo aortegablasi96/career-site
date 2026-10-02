@@ -261,6 +261,22 @@ describe('LargerPicture', () => {
       expect(seen).toEqual(['close', 'checked true', 'focus opener true', 'showModal', 'focus next']);
     });
 
+    // DDR-092: the dialog puts focus on its close control, or on its video, which Space plays.
+    it('leaves focus where the browser puts it when the close control had it', () => {
+      const seen: string[] = [];
+      const button = (name: string) => ({ focus: () => seen.push(`focus ${name}`) });
+
+      swap(
+        { close: () => {}, querySelectorAll: () => ['close', {}, {}] },
+        { checked: false },
+        { focus: () => {} },
+        { showModal: () => seen.push('showModal'), querySelectorAll: () => [button('close'), button('previous'), button('next')] },
+        'close',
+      );
+
+      expect(seen).toEqual(['showModal']);
+    });
+
     it('leaves focus where the browser puts it when none of the dialog’s controls had it', () => {
       const seen: string[] = [];
 
@@ -284,9 +300,11 @@ describe('LargerPicture', () => {
       );
     });
 
-    it('shows the video larger, with its controls, no download and no floating window, fetching nothing before it opens', () => {
+    // DDR-092: focus starts on the video, so Space plays it, rather than on the close control,
+    // where Space closed the view.
+    it('shows the video larger, focused, with its controls, no download and no floating window, fetching nothing before it opens', () => {
       expect(video).toMatch(
-        /<\/button><div class="[^"]*"><video class="[^"]*" src="\/portfolio\/example\/gallery-walkthrough\.mp4" poster="\/portfolio\/example\/gallery-walkthrough\.webp" width="1920" height="1080" preload="none" controls="" controlsList="nodownload" disablePictureInPicture="" aria-label="A silent walkthrough of the application">A silent walkthrough of the application<\/video><\/div><p id="picture-6-larger-caption" class="[^"]*">Video walkthrough<\/p><\/dialog>$/,
+        /<\/button><div class="[^"]*"><video class="[^"]*" src="\/portfolio\/example\/gallery-walkthrough\.mp4" poster="\/portfolio\/example\/gallery-walkthrough\.webp" width="1920" height="1080" preload="none" autofocus="" controls="" controlsList="nodownload" disablePictureInPicture="" aria-label="A silent walkthrough of the application">A silent walkthrough of the application<\/video><\/div><p id="picture-6-larger-caption" class="[^"]*">Video walkthrough<\/p><\/dialog>$/,
       );
       expect(video).not.toMatch(/\bautoplay\b|\bloop\b/);
       expect(video.match(/<video/g)).toHaveLength(1);

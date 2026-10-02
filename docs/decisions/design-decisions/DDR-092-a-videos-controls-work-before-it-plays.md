@@ -21,6 +21,9 @@ before the video has ever played:
 * click once on it to play it, and once more to pause or resume it;
 * click twice on it to show it at full screen.
 
+The owner then asked, on PR #279, for **the space bar to start the video**. Opening the larger view
+put keyboard focus on its close control, as it does for a picture, so Space closed the view.
+
 Each browser's own controls already do the second and the third once they know the video's size and
 length. Measured on 2026-10-02:
 
@@ -53,9 +56,18 @@ opens.**
 
 ### With the keyboard
 
-* From the close control, Tab reaches the video's controls: play, the timeline, then full screen,
-  in Chrome and Edge. Enter on it shows the video at full screen, before play too. The controls'
-  focus and names are the browser's.
+* **Focus starts on the video**, not on the close control, however the larger view opens: from its
+  frame, by pointer or keyboard, and when the arrow keys step onto it. So **Space plays the video**
+  at once, and pressed again pauses it, in every browser, as the browser's controls do for a
+  focused video. A picture's larger view still opens with focus on its close control.
+* **A step control keeps focus.** A reader who presses "Next picture" onto the video lands on
+  "Next picture" again, as DDR-083 decides, so they can keep stepping. Space there steps on.
+* **The arrow keys move through the video** while it has focus, as DDR-089 decided. To step from it,
+  the reader tabs to the step controls first.
+* **Shift+Tab reaches the close control**, and Escape closes the view from the video, as before.
+* From the video, Tab reaches its controls: play, the timeline, then full screen, in Chrome and
+  Edge. Enter on full screen shows the video at full screen, before play too. The controls' focus
+  and names are the browser's.
 
 ### At full screen
 
@@ -77,6 +89,7 @@ opens.**
 
 ### Without script
 
+* Focus still starts on the video, which is the page's markup, not its script.
 * Nothing is readied. Firefox behaves as above. In Chrome and Edge the video behaves as it did
   before #278: the reader presses play first, and full screen follows.
 
@@ -114,7 +127,17 @@ Cons:
 Rejected. It goes against DDR-010, and it means rebuilding the timeline, keyboard access and full
 screen that the browser gives for free.
 
-### Option D: the page takes the tap and the double tap on touch
+### Option D: Space plays the video wherever focus is in the larger view
+
+Pros:
+* Space plays the video even with focus on the close control or a step control.
+
+Cons:
+* Space on a focused button presses it, everywhere else on the web. Taking it away from the close
+  and step controls would surprise keyboard readers and break DDR-083's repeated "Next picture".
+* It needs script, where focus on the video does not.
+
+### Option E: the page takes the tap and the double tap on touch
 
 Rejected. It would take from Chrome the tap that shows the controls and the double tap that moves
 through the video, and it would make the video behave differently from every other video on the
@@ -132,6 +155,8 @@ Tradeoffs:
   this, amending ADR-004.
 * At full screen the reader sees no caption and no steps. They leave full screen to step.
 * On touch in Chrome, a tap does not play the video. The play control does.
+* Opened from its frame, the video takes the arrow keys, so a keyboard reader tabs to the steps
+  before stepping on, where a picture steps at once.
 
 Risks:
 * **The browsers' controls change.** The behaviour above is each browser's, measured on 2026-10-02,
@@ -140,7 +165,7 @@ Risks:
 
 ## Related Documents
 
-* Issue #278, Epic #152
+* Issue #278, PR #279, Epic #152
 * DDR-089, which this amends; DDR-082, whose same assumption DDR-089 corrected; DDR-010, the
   browser's controls
 * ADR-026, how the view readies the controls; ADR-004, which it amends; ADR-022

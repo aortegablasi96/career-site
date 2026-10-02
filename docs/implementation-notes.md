@@ -286,7 +286,9 @@ The page itself is the CV, so what it prints is designed.
   Firefox does all three. So the dialog's `toggle` sets `preload` to `metadata` as it opens; keep
   `preload="none"` in the markup, or every visit to a view fetches its video. Playwright's
   `keyboard.press('Escape')` at full screen closes the dialog too, where a real key only leaves
-  full screen: check Escape with an OS key event, not a synthetic one. `controlsList="nodownload"`
+  full screen: check Escape with an OS key event, not a synthetic one. The video carries `autofocus`
+  so Space plays it; without it the dialog focuses its close control and Space closes the view.
+  `swap` therefore leaves focus that was on the close control to the new dialog (`place > 0`). `controlsList="nodownload"`
   only reaches Chrome and Edge; the declined `contextmenu` needs script, and Firefox opens its menu
   anyway with Shift held. To check one locally, serve
   `out/` from a server that answers byte ranges with 206, or the video plays but cannot be moved

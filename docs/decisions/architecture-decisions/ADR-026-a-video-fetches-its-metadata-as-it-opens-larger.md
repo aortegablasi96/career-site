@@ -56,6 +56,16 @@ Measured on 2026-10-02 against the live site, with the cache off:
   too.
 * **Once fetched, it stays fetched.** Closing and reopening the dialog asks for nothing more.
 
+### Focus on the video
+
+* **The `<video>` carries `autofocus`**, so the browser's own dialog focusing puts focus on it as
+  the dialog opens, and Space plays it (DDR-092). It is markup, so it works without script, and
+  React renders it as the attribute without calling `focus()` itself.
+* **`swap` hands focus over only from a step control.** It used to move focus to the control that
+  stands where focus was, the close control included. Now it leaves focus on the close control to
+  the new dialog, which puts it there for a picture and on the video for a video. A picture's
+  larger view behaves exactly as before.
+
 ### Full screen before the file
 
 Full screen is the browser's own full screen of the `<video>`. Once the metadata is in, its
@@ -110,7 +120,7 @@ Positive:
 * Three of the reader's requests are met with one property, set by one listener the component
   already had room for.
 * Every way of opening the dialog readies the video, because they all fire the dialog's `toggle`.
-* Without script, nothing changes from before.
+* Without script, nothing is fetched early, and focus still starts on the video.
 
 Negative:
 * Opening the video larger costs up to its whole file in Firefox, and around a tenth of it in Chrome
