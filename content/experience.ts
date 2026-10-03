@@ -19,6 +19,10 @@ import type { Experience } from './types';
  * owner can state. A count the entry writes as "4+" reads "more than four", as ABB's "20+" already
  * did, and the owner confirmed each is above its number. Ponera Group's automation point is left
  * out, as the brief on #25 left it, so no role has more than four points.
+ *
+ * Each role's skills are the owner's list in its knowledge-base file, in their order, per #288. They
+ * are set in sentence case, as the skills section's are, so a skill both name reads the same in
+ * each, and products and standards keep their own spelling: LabVIEW, PySpark, IEC 62443.
  */
 export const experience: Experience = {
   title: 'Experience',
@@ -37,6 +41,7 @@ export const experience: Experience = {
         'Designed PCBs for high-voltage control systems in Altium, contributing to the development and validation of industrial electrical-control hardware.',
         'Developed software to monitor and control electrical substations, based on the IEC 61850 standard, integrating it with industrial electrical infrastructure and control systems.',
       ],
+      skills: ['High-voltage control systems', 'IEC 61850', 'PCB routing design', 'Back-end development'],
     },
     {
       title: 'Software Engineer',
@@ -53,6 +58,7 @@ export const experience: Experience = {
         'Designed and implemented more than three databases and data pipelines for internal applications and reporting.',
         'Translated business requirements into software solutions used by more than 10 internal users, working with functional stakeholders through development and deployment.',
       ],
+      skills: ['Agile product delivery', 'Requirements analysis', 'Back-end development', 'SQL', 'RPA'],
     },
     {
       title: 'Project Manager',
@@ -69,6 +75,13 @@ export const experience: Experience = {
         'Led the delivery of data-driven solutions that improved operational efficiency and decision-making, increasing the team’s output by 20%.',
         'Established KPI, risk, and delivery governance frameworks that improved project visibility and reduced delivery risks or delays by 50% across the portfolio.',
       ],
+      skills: [
+        'Agile project management',
+        'Stakeholder management',
+        'Data analytics (PySpark)',
+        'Azure IoT Hub',
+        'LabVIEW',
+      ],
     },
     {
       title: 'Product Manager',
@@ -84,6 +97,7 @@ export const experience: Experience = {
         'Managed vendor selection and RFP/RFQ processes for software and hardware partners, weighing technical capabilities, commercial proposals, and total cost of ownership to support supplier and investment decisions.',
         'Applied data analytics and ML-based modelling to IoT data, finding ways to optimise service operations, improve asset monitoring, and support customers’ data-driven decisions.',
       ],
+      skills: ['0 to 1 product delivery', 'Product ownership', 'Vendor management', 'SaaS', 'LTE'],
     },
     {
       title: 'Global Product Manager',
@@ -99,6 +113,7 @@ export const experience: Experience = {
         'Identify and structure AI-enabled opportunities, such as predictive maintenance, anomaly detection, and failure pattern recognition, to strengthen the value proposition of the monitoring solutions.',
         'Contribute to internal GenAI enablement, including Copilot-driven documentation workflows that make knowledge easier to find.',
       ],
+      skills: ['Product discovery', 'Market development', 'Stakeholder management', 'SaaS', 'SNMP', 'IEC 62443'],
     },
   ],
   // The line above the timeline, per DDR-059, which is the design's own (node 170:71).

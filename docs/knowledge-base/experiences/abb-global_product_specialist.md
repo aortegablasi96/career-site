@@ -13,3 +13,12 @@ engagement.
 detection, failure pattern recognition) to strengthen the value proposition of monitoring solutions.
 - Contributed to internal GenAI enablement initiatives, including Copilot-driven
 documentation workflows to improve knowledge accessibility and operational efficiency.
+
+**Skills & Technology**
+
+- Product Discovery
+- Market Development
+- Stakeholder Management
+- SaaS
+- SNMP
+- IEC 62443

@@ -171,9 +171,13 @@ import type { Cv } from './types';
  * assets, databases and users, and Randstad's 20% and 50%. A role's points are not a fact ADR-005
  * lists as shared, so the CV file need not change; it may now state those results too, since a
  * metric may appear in the CV only once it is on the site.
+ *
+ * It moved again with #288, because each role gained the skills and technologies the owner lists
+ * for it, which only its view shows. They do not print and are not a fact ADR-005 lists as shared,
+ * so they did not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'cde94fe1cce19e61f6e2103366591f50c0bc76168f98de43d4c15b79819a9ae2',
+  contentDigest: '01fad282118a17674b389adbe063a9e6880a04f4d4e34d21237249521fcb6d43',
 };

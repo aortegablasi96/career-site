@@ -17,8 +17,7 @@ certifications, languages, footer) that is also the printable CV; a view per pro
 `/portfolio/<slug>` and per role at `/experience/<slug>`; and a separately designed CV file,
 `public/home/andreu-ortega-blasi-cv.pdf`. The redesign epics #42 and #70 are complete.
 
-**Still open**, each the owner's to supply or decide: a role's `skills`; a video for the Digital
-Twin and for this site; a PMI logo (only with PMI's written authorization); and the CV file catching up with the page's
+**Still open**, each the owner's to supply or decide: a video for the Digital Twin and for this site; a PMI logo (only with PMI's written authorization); and the CV file catching up with the page's
 job titles (DDR-060).
 
 ## Commands
