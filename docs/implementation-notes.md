@@ -359,6 +359,10 @@ The page itself is the CV, so what it prints is designed.
 * **The panel is a `dialog`**: `show()` from the wide breakpoint (non-modal, `position: fixed` at
   the corner) and `showModal()` below it (full window). The choice is made as it opens, so resizing
   an open panel keeps its modality. Escape is handled on `keydown` for both.
+* **It warms the API again after 10 minutes without hearing from it** (ADR-029), on the field's
+  focus or a question, never on a timer. Only the API's own responses, routed through `hear`,
+  count as hearing from it. To try it in a browser, install Playwright's `page.clock` before the
+  page loads and `fastForward` past the 10 minutes.
 * **Clearing forgets the conversation's id** (`user.current`), and `send` drops what `deliver`
   dispatches once the id it sent has changed, so a late answer can't land in the cleared chat.
 * **The corner panel has a fixed `block-size`**, which the contents bar's height caps: the bar

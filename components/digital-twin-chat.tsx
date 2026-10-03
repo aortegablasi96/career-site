@@ -179,6 +179,25 @@ export const warmingLimit = 120_000;
 /** How long a question waits for its answer before it is given up (ADR-028). */
 export const answerLimit = 60_000;
 
+/**
+ * How long the chat goes without hearing from the API before it treats the service as possibly
+ * asleep, per ADR-029: 10 minutes, under the 15 idle minutes after which Render's free plan sleeps.
+ */
+export const quietLimit = 600_000;
+
+/** Whether the API may have gone to sleep since the chat last heard from it, at `now` (ADR-029). */
+export function asleep(warm: boolean, heard: number, now: number): boolean {
+  return warm && now - heard >= quietLimit;
+}
+
+/**
+ * Whether an event is the API's own response, an answer, a 503 or a 429, which shows the service is
+ * awake (ADR-029). A failure, a refused origin or a time-out isn't.
+ */
+export function heardFrom(event: ChatEvent): boolean {
+  return event.type === 'warmed' || event.type === 'answered' || event.type === 'warming' || event.type === 'rate-limited';
+}
+
 /** How long warming waits before its next try: 3 seconds, then twice as long each time (ADR-028). */
 export function retryDelay(attempt: number): number {
   return 3000 * 2 ** attempt;
@@ -453,8 +472,9 @@ const subscribe = () => () => {};
  * Escape and its close control close it, and focus goes back to whatever opened it: the launcher,
  * or the invitation on the Digital Twin's view, which opens it by a command of the page's own.
  *
- * As soon as it has mounted it warms the API, once for the conversation, so a sleeping instance has
- * the most time to wake before the reader asks (ADR-028). The conversation lives here alone: its id
+ * As soon as it has mounted it warms the API, so a sleeping instance has the most time to wake
+ * before the reader asks (ADR-028). After 10 minutes without hearing from the API it warms it
+ * again, the next time the field takes focus or a question is sent (ADR-029). The conversation lives here alone: its id
  * is made when the first question is sent and nothing is stored, so it lasts until the page is
  * reloaded or left, or until the reader clears it, after which the next question starts another.
  *
@@ -477,23 +497,51 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
   const opener = useRef<HTMLElement | null>(null);
   const user = useRef<string | null>(null);
   const warmth = useRef<Promise<boolean> | null>(null);
+  // Whether warming is under way, and when the API last answered anything (ADR-029).
+  const warming = useRef(false);
+  const heard = useRef(0);
   const headingId = useId();
   const fieldId = useId();
   const countId = useId();
 
+  /** Says what came of a request to the API, noting when the API itself answered (ADR-029). */
+  function hear(event: ChatEvent) {
+    if (heardFrom(event)) {
+      heard.current = Date.now();
+    }
+
+    dispatch(event);
+  }
+
   /** Warms the API, and forgets that it did if it gave up, so the next question warms it again. */
   function warm(): Promise<boolean> {
-    const warming = warmUp(chat.api, dispatch).then((ready) => {
-      if (!ready) {
+    warming.current = true;
+
+    const ready = warmUp(chat.api, hear).then((answered) => {
+      warming.current = false;
+
+      if (!answered) {
         warmth.current = null;
       }
 
-      return ready;
+      return answered;
     });
 
-    warmth.current = warming;
+    warmth.current = ready;
 
-    return warming;
+    return ready;
+  }
+
+  /**
+   * Warms the API again if it may have gone to sleep since the chat last heard from it, per
+   * ADR-029, so that a question sent meanwhile is held until it's ready, as on a first load. A
+   * question already on its way has just been sent to a service heard from, so it's left alone.
+   */
+  function wake() {
+    if (!state.waiting && !warming.current && asleep(state.warm, heard.current, Date.now())) {
+      dispatch({ type: 'warming' });
+      void warm();
+    }
   }
 
   const warmOnce = useEffectEvent(() => {
@@ -518,7 +566,7 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
         return;
       }
 
-      dispatch(event);
+      hear(event);
 
       if (event.type === 'rate-limited') {
         setDraft((current) => current || question);
@@ -531,12 +579,14 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
       return;
     }
 
+    wake();
     dispatch({ type: 'ask', question });
     setDraft('');
     send(question);
   }
 
   function retry() {
+    wake();
     dispatch({ type: 'retry' });
 
     if (state.question === null) {
@@ -733,6 +783,7 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
               placeholder={chat.placeholder}
               value={draft}
               onChange={change}
+              onFocus={wake}
               onKeyDown={keyDown}
               aria-describedby={shown === null ? undefined : countId}
             />

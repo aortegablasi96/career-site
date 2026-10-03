@@ -6,14 +6,17 @@ import { projects } from '@/content/projects';
 import {
   answer,
   answerLimit,
+  asleep,
   type ChatEvent,
   type ChatState,
   Conversation,
   count,
   deliver,
   DigitalTwinChat,
+  heardFrom,
   initial,
   next,
+  quietLimit,
   retryAfter,
   retryDelay,
   spoken,
@@ -174,6 +177,56 @@ describe('the API’s answers', () => {
   it('gives warming two minutes and an answer one', () => {
     expect(warmingLimit).toBe(120_000);
     expect(answerLimit).toBe(60_000);
+  });
+});
+
+// ADR-029: after a long silence from the API, the chat treats the service as possibly asleep.
+describe('a long silence from the API', () => {
+  it('is 10 minutes, under the 15 idle minutes after which Render’s free plan sleeps', () => {
+    expect(quietLimit).toBe(600_000);
+  });
+
+  it('may have put the service to sleep once 10 minutes have passed since the API was heard from', () => {
+    const heard = 1_000_000;
+
+    expect(asleep(true, heard, heard + quietLimit - 1)).toBe(false);
+    expect(asleep(true, heard, heard + quietLimit)).toBe(true);
+  });
+
+  it('leaves a service that isn’t warm to the warming already under way, or to come', () => {
+    expect(asleep(false, 0, quietLimit * 10)).toBe(false);
+  });
+
+  it('counts only the API’s own responses as hearing from it', () => {
+    const heard: ChatEvent[] = [
+      { type: 'warmed' },
+      { type: 'answered', reply: 'Hi.' },
+      { type: 'warming' },
+      { type: 'rate-limited' },
+    ];
+    const notHeard: ChatEvent[] = [
+      { type: 'failed' },
+      { type: 'gave-up' },
+      { type: 'ask', question: 'Hello?' },
+      { type: 'retry' },
+      { type: 'clear' },
+    ];
+
+    expect(heard.every(heardFrom)).toBe(true);
+    expect(notHeard.some(heardFrom)).toBe(false);
+  });
+
+  it('holds a question asked after it until the API is warm again, then writes its answer once', () => {
+    const quiet = after({ type: 'warmed' }, { type: 'ask', question: 'Hello?' }, { type: 'answered', reply: 'Hi.' });
+    const held = [{ type: 'warming' }, { type: 'ask', question: 'And now?' }].reduce<ChatState>(
+      (state, event) => next(state, event as ChatEvent),
+      quiet,
+    );
+
+    expect(held).toMatchObject({ service: 'warming', warm: false, waiting: 'held', question: 'And now?' });
+    expect(held.said?.what).toBe('held');
+    expect(next(held, { type: 'warmed' })).toMatchObject({ service: 'ready', waiting: 'writing' });
+    expect(held.messages.filter(({ from }) => from === 'reader')).toHaveLength(2);
   });
 });
 
