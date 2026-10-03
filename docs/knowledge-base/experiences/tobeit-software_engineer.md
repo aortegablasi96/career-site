@@ -4,9 +4,7 @@
 **Duration:** From September 2020 to July 2021
 
 **Summary:**
-- Developed automation solutions using Python and RPA technologies to streamline
-internal operational processes.
-- Designed and implemented databases and data pipelines supporting internal
+- Developed automation solutions using Python and RPA technologies for our customers, to streamline and improve the efficiency of their internal processes.
+- Designed and implemented 3+ databases and data pipelines supporting internal
 applications and reporting needs.
-- Collaborated with functional teams to translate business requirements into scalable
-software solutions.
+- Translated business requirements into scalable software solutions used by 10+ internal users, collaborating with functional stakeholders throughout development and deployment.

@@ -4,14 +4,8 @@
 **Duration:** From June 2023 to October 2024
 
 **Summary:**
-- Led end-to-end development of 4 IoT-enabled SaaS products as Product Owner,
-coordinating external software providers and ensuring delivery against scope, timeline,
-and quality targets.
-- Defined product requirements, functional specifications, and technical roadmaps,
-aligning business priorities with engineering execution.
-- Managed vendor selection and RFP/RFQ processes for software and hardware partners,
-supporting commercial and technical decision-making.
-- Applied data analytics and ML-based modelling on collected IoT data to support service
-optimization and data-driven decision processes.
-- Worked with internal stakeholders to identify automation opportunities and integrate
-intelligent features into digital workflows.
+- Led the development and commercialization of four IoT-enabled SaaS products, integrating industrial sensors, connectivity hardware and cloud software to remotely monitor 100+ connected assets across multiple customer environments.
+- Owned the product lifecycle from discovery and requirements definition through development and deployment, translating customer and business needs into product requirements, functional specifications and technical roadmaps.
+- Managed software and hardware vendor selection and RFP/RFQ processes, evaluating technical capabilities, commercial proposals and total cost of ownership to support supplier and product investment decisions.
+- Applied data analytics and ML-based modelling to IoT data, identifying opportunities to optimize service operations, improve asset monitoring and support data-driven customer decisions.
+- Identified and delivered automation opportunities across digital workflows, reducing manual activities and improving the scalability of operational processes.
