@@ -18,7 +18,9 @@
      puts it, and as the introduction is. Paper drops the band at the token layer. */
   border-block-start: 1px solid var(--color-border);
   background-color: var(--color-surface-band);
-  padding-block: var(--space-large);
+  /* Below its line, room for the chat's launcher on screen, per DDR-100; on paper the same step as
+     above it. */
+  padding-block: var(--space-large) var(--footer-padding-block-end);
   /* The faintest ink on the page, at 2.39:1, which fails WCAG 1.4.3. It is the design's, per
      DDR-025, which already names the footer among this token's users. Set here rather than on each
      part, because the design sets the whole footer in it — the name and the three addresses

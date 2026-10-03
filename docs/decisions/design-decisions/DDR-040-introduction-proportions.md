@@ -4,10 +4,6 @@ Status: Accepted
 
 Date: 2026-09-18
 
-**Amended by DDR-100 at the page's end, on screen only**: the last section pads its end by the chat
-launcher's size and inset beyond the padding set here, so the launcher never covers the page's last
-line. Paper keeps the padding set here.
-
 **Amended by DDR-072 in one respect**: since #214 `--space-controls` stands above the question that
 introduces the controls, and the controls follow the question at the flow step. Everything else
 here stands.

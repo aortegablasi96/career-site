@@ -107,7 +107,8 @@ describe('RootLayout', () => {
       </RootLayout>,
     );
 
-    expect(html).toContain('<body><main></main></body>');
+    expect(html).toContain('<body><main></main>');
+    expect(html).toMatch(/<\/dialog><\/div><\/body>/);
   });
 });
 

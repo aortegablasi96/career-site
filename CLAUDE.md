@@ -17,6 +17,9 @@ certifications, languages, footer) that is also the printable CV; a view per pro
 `/portfolio/<slug>` and per role at `/experience/<slug>`; and a separately designed CV file,
 `public/home/andreu-ortega-blasi-cv.pdf`. The redesign epics #42 and #70 are complete.
 
+Every page also carries a chat with the owner's Digital Twin (Epic #304, DDR-100), which calls the
+chatbot's API from the reader's browser (ADR-028).
+
 **Still open**, each the owner's to supply or decide: a video for the Digital Twin and for this site; a PMI logo (only with PMI's written authorization); and the CV file catching up with the page's
 job titles (DDR-060).
 
@@ -128,9 +131,10 @@ determine whether an existing pattern can solve the problem. Significant archite
 reviewed by the Architect and recorded as an ADR. Do not make architectural decisions inside
 implementation work when they have not been approved.
 
-The site has four Client Components, each with its reason recorded in an ADR:
+The site has five Client Components, each with its reason recorded in an ADR:
 `components/contents-bar.tsx` (ADR-007), `components/business-case-slider.tsx` (ADR-015),
-`components/larger-picture.tsx` (ADR-018) and `components/scroll-appear.tsx` (ADR-025). A fifth one
+`components/larger-picture.tsx` (ADR-018), `components/scroll-appear.tsx` (ADR-025) and
+`components/digital-twin-chat.tsx` (ADR-028), the one component that calls a service. A sixth one
 needs a reason of its own.
 
 ## UI and Design

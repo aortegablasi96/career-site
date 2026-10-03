@@ -4,10 +4,6 @@ Status: Accepted
 
 Date: 2026-09-19
 
-**Amended by DDR-100 at the page's end, on screen only**: `--page-padding-block-end` grows by the
-chat launcher's size and inset, so the launcher never covers the page's last line. Paper keeps the
-padding set here.
-
 **Revised on 2026-09-19, at the owner's request after #142 merged: the alternation starts with the
 band on the introduction.** As first accepted, the introduction and the footer were on the
 off-white and the band began with experience. The contents bar is the off-white at 96%, so over an

@@ -44,6 +44,7 @@ describe('the downloadable CV', () => {
     // Guards the digest itself: were the filter to stop matching, the test below would pass over
     // nothing and keep passing while the content changed underneath it.
     expect(proseModules).toEqual([
+      'chat.ts',
       'contents.ts',
       'credentials.ts',
       'dates.ts',

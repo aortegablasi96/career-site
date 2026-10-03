@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-17
 
+**Amended by DDR-100 at its foot, on screen only**: below its line the footer pads by the chat
+launcher's size and the widest of its insets, beyond the step set here, so the launcher never
+covers the page's last line. Paper keeps the step.
+
 Supersedes **the one sentence of DDR-010** that says "There is no footer", and answers the three
 grounds that record rejected it on. Everything else in DDR-010 stands: its outline is unchanged,
 because the footer adds no heading, and its contact-address rule was unchanged here, because the

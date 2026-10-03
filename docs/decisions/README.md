@@ -114,7 +114,7 @@ Each record keeps everything not listed against it.
 * **DDR-026** (divider): DDR-039 corrects its spacing claim; DDR-046 runs the line across the window.
 * **DDR-027** (targets): DDR-028 extends its target table with the footer's addresses.
 * **DDR-028** (footer): DDR-029 makes it the one place an address is written out; DDR-040 closes
-  the space above its hairline.
+  the space above its hairline; DDR-100 pads its foot on screen for the chat's launcher.
 * **DDR-029** (pill labels): DDR-073 takes the email pill's visible label.
 * **DDR-031** (sticky bar): DDR-033 its underline; DDR-034 the scrolled edge; DDR-042 current
   section; DDR-045 Home link and 8px narrow gap; DDR-049 title at the left.
@@ -123,14 +123,12 @@ Each record keeps everything not listed against it.
 * **DDR-036** (dot): DDR-046 takes its fill; DDR-057 sizes it 16px/10px on screen, 12px on paper.
 * **DDR-039** (rhythm): DDR-057 leaves `--space-role` and `--space-credential` to paper and the
   phone's column.
-* **DDR-040** (introduction): DDR-072 puts the question in `--space-controls`; DDR-100 pads the
-  page's end for the chat's launcher, on screen only.
+* **DDR-040** (introduction): DDR-072 puts the question in `--space-controls`.
 * **DDR-042**: DDR-045 marks Home in the introduction.
 * **DDR-043** (new tab): DDR-044 removes the arrow; DDR-050 adds a project view's links; DDR-069 adds
   the education cards; DDR-100 adds the chat's launcher without script, its
   "Ask it on its own page" and a reply's links.
 * **DDR-044** (service pills): DDR-047 the GitHub hover fill; DDR-073 the email pill's M alone.
-* **DDR-046** (bands): DDR-100 grows `--page-padding-block-end` on screen for the chat's launcher.
 * **DDR-049** (bar title): DDR-075 the menu below the wide breakpoint; DDR-091 the title leads
   where Home does, which it ruled out.
 * **DDR-075** (menu): DDR-091 the title's link closes it too, though it is outside the menu.

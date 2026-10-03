@@ -454,15 +454,24 @@ export interface Project {
   /**
    * A line inviting the reader to try the project, which the view shows above its links, per
    * DDR-096: a run of text in which a part may be a link, which opens a new tab as the links do.
+   * Since DDR-100 a part may open the chat with the Digital Twin instead, where script runs.
    * Left out where the owner has written none, and a view without it shows its links alone.
    */
-  invitation?: readonly (string | Link)[];
+  invitation?: readonly (string | Link | ChatLink)[];
   /**
    * The repository first, then a live version where one exists, and any other place the project
    * runs. Each link is labelled rather than showing its address, which prints after it on paper,
    * per DDR-006.
    */
   links: readonly Link[];
+}
+
+/**
+ * Words in an invitation that open the chat with the Digital Twin, per DDR-100. Without script
+ * they are a link to `href`, the chatbot's own page, which opens a new tab as DDR-096 decided.
+ */
+export interface ChatLink extends Link {
+  chat: true;
 }
 
 /** The projects section. */
@@ -718,4 +727,66 @@ export interface Cv {
    * the CV has been brought back into step and this value replaced.
    */
   contentDigest: string;
+}
+
+/**
+ * The chat with the owner's Digital Twin, on every page, per DDR-100 and ADR-028: the API it
+ * calls, and every word it shows in each of its states. The owner approved the words on #306.
+ */
+export interface Chat {
+  /** The panel's id, which a control that opens the chat names as its `commandfor`. */
+  id: string;
+  /** The chatbot API's origin, per ADR-028. The same everywhere: there is one API. */
+  api: string;
+  /** The most characters a question may have, which the API accepts. */
+  maxLength: number;
+  /** How many characters a question has before the count below the field shows. */
+  countFrom: number;
+  /** The chatbot's own page, which the chat leads to without script and when it can't answer. */
+  page: string;
+  /** The launcher's words, which it shows from the wide breakpoint and is named by everywhere. */
+  launcher: string;
+  /** What a link that opens a new tab says about it, after its own text. */
+  newTab: string;
+  /** The panel's heading. */
+  heading: string;
+  /** The line under the heading, which says how the service is. */
+  status: { warming: string; ready: string; unavailable: string };
+  /** The accessible name of the control that closes the panel. */
+  close: string;
+  /** The control that clears the conversation and starts a new one, shown once there is a message. */
+  clear: string;
+  /** What the live region says once the conversation is cleared. */
+  cleared: string;
+  /** The accessible name of the conversation's scrolling region. */
+  conversation: string;
+  /** What each message starts with, said only to assistive technology. */
+  sender: { reader: string; twin: string };
+  /** The Digital Twin's first message, which is never sent to the API. */
+  welcome: string;
+  /** The label above the suggestions. */
+  tryAsking: string;
+  /** The questions the chat suggests before the first one is sent. Choosing one sends it. */
+  suggestions: readonly string[];
+  /** Where the reader's messages go, which they meet before the field, per ADR-028. */
+  note: string;
+  /** The field's accessible name. */
+  field: string;
+  placeholder: string;
+  /** The send control's accessible name. */
+  send: string;
+  /** What follows the count once a question has reached `maxLength`. */
+  limit: string;
+  /** Shown, in the answer's place, while a question waits for the service to start. */
+  held: string;
+  /** Shown, in the answer's place, while an answer is written. */
+  writing: string;
+  /** Shown, in the answer's place, when the API answers 429. */
+  rateLimited: string;
+  /** Shown, in the answer's place, when the API can't answer. */
+  unavailable: string;
+  /** The control that sends the kept question again. */
+  tryAgain: string;
+  /** The link to the chatbot's own page, beside it. */
+  ownPage: string;
 }

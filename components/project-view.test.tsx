@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { introduction } from '@/content/introduction';
 import { projects } from '@/content/projects';
 import type { GalleryItem, Project } from '@/content/types';
+import { openChatCommand } from './open-chat';
 import { box, ProjectView } from './project-view';
 
 // Rendered with the real content, since what a view says is the project's own record, per #153,
@@ -439,8 +440,43 @@ describe('ProjectView', () => {
       expect(css).toMatch(/\.invitation \+ \.links \{\s*margin-block-start: var\(--space-flow\);/);
       expect(css).toMatch(/\.invitation a \{\s*text-decoration-color: var\(--color-underline\);/);
       expect(css).toMatch(
-        /\.invitation a:hover,\s*\.invitation a:focus-visible \{\s*color: var\(--color-accent-hover\);\s*text-decoration-color: var\(--color-underline-hover\);/,
+        /\.invitation a:hover,\s*\.invitation a:focus-visible,\s*\.invitation button:hover,\s*\.invitation button:focus-visible \{\s*color: var\(--color-accent-hover\);\s*text-decoration-color: var\(--color-underline-hover\);/,
       );
+    });
+
+    // DDR-100: where the view knows the chat's panel, the words open the chat where script runs, by
+    // the page's own command, and stay the link to the chatbot's page where it doesn't.
+    describe('where the chat is on the page', () => {
+      const withChat = renderToStaticMarkup(
+        <ProjectView project={digitalTwin!} strings={projects.view} backHref="/#portfolio" chat="the-chat" />,
+      );
+      const chatLine = withChat.match(/<p class="[^"]*invitation[^"]*">.*?<\/p>/)?.[0] ?? '';
+
+      it('opens the chat by a button that names its panel, shown where script runs', () => {
+        const button = chatLine.match(/<button([^>]*)>([^<]*)<\/button>/);
+
+        expect(button?.[2]).toBe('Ask my AI Digital Twin');
+        expect(button?.[1]).toContain('type="button"');
+        expect(button?.[1]).toContain('commandfor="the-chat"');
+        expect(button?.[1]).toContain(`command="${openChatCommand}"`);
+        expect(button?.[1]).toMatch(/class="[^"]*withScript/);
+      });
+
+      it('keeps the link to the chatbot’s own page for a reader without script', () => {
+        expect(chatLine).toMatch(/<a href="https:\/\/career-conversation-chatbot\.vercel\.app" class="[^"]*withoutScript[^"]*" target="_blank" rel="noopener"/);
+        expect(css).toMatch(/\.withoutScript \{\s*display: none;\s*\}/);
+        expect(css).toMatch(/@media \(scripting: none\) \{\s*\.withoutScript \{\s*display: inline;\s*\}\s*\.withScript \{\s*display: none;/);
+      });
+
+      it('draws the button as the link it replaces', () => {
+        expect(css).toMatch(/\.invitation button \{[^}]*text-decoration-line: underline;\s*text-decoration-color: var\(--color-underline\);/);
+      });
+
+      it('leaves a view whose invitation opens no chat as it was', () => {
+        expect(renderToStaticMarkup(
+          <ProjectView project={numisBook!} strings={projects.view} backHref="/#portfolio" chat="the-chat" />,
+        )).not.toContain('commandfor="the-chat"');
+      });
     });
 
     it('leads to the chatbot in Telegram, after the live site, outlined and in a new tab', () => {

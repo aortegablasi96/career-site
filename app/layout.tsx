@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import type { ReactNode } from 'react';
+import { DigitalTwinChat } from '@/components/digital-twin-chat';
 import { ScrollAppear } from '@/components/scroll-appear';
+import { chat } from '@/content/chat';
 import { site } from '@/content/site';
 import { shareCard } from './share';
 import './tokens.css';
@@ -69,6 +71,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" className={`${dmSans.variable} ${lora.variable}`}>
       <body>
         {children}
+        {/* The chat with the Digital Twin, on every page, per DDR-100 and ADR-028: a launcher at the
+            window's corner and the panel it opens. In the layout, so the conversation carries over
+            as the reader moves between the site's pages. */}
+        <DigitalTwinChat chat={chat} />
         {/* Makes the elements of whichever route is shown appear as the reader scrolls to them,
             per DDR-090. It renders nothing, and the page is whole without it (ADR-025). */}
         <ScrollAppear />

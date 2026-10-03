@@ -104,6 +104,21 @@ function rules(css: string): readonly { selector: string; body: string }[] {
   }));
 }
 
+/**
+ * The chat's stylesheet without its rule for text said only to assistive technology, per DDR-100.
+ *
+ * That rule draws nothing: it shrinks the text to a pixel, clips even that away and takes it out of
+ * the flow, so that a screen reader still reads it. Its pixel is the least box a reader of every
+ * screen reader is sure to find, not a size of the design's, so there is no token for it to read.
+ * It is admitted once, in that stylesheet, and the test below holds it to exactly this rule.
+ */
+const hiddenText =
+  /\.hidden \{\s*position: absolute;\s*inline-size: 1px;\s*block-size: 1px;\s*overflow: hidden;\s*clip-path: inset\(50%\);\s*white-space: nowrap;\s*\}/;
+
+function withoutHiddenText(name: string, css: string): string {
+  return name === 'digital-twin-chat.module.css' ? css.replace(hiddenText, '') : css;
+}
+
 describe('component stylesheets', () => {
   it('exist', () => {
     expect(stylesheets).not.toHaveLength(0);
@@ -115,7 +130,7 @@ describe('component stylesheets', () => {
     });
 
     it('sets sizes, space, tracking and elevation from tokens only, per ADR-006', () => {
-      for (const { property, value } of declarations(css)) {
+      for (const { property, value } of declarations(withoutHiddenText(name, css))) {
         if (property === 'max-inline-size' && roomAtShape.test(value)) {
           continue;
         } else if (maximum.test(property)) {
@@ -222,6 +237,13 @@ describe('component stylesheets', () => {
             continue;
           }
 
+          // DDR-100 admits the chat's launcher and its panel, which stand at the window's corner
+          // over the page, and its text said only to assistive technology, which draws nothing.
+          // The panel is last in the page's markup, after the launcher, as the reader meets them.
+          if (name === 'digital-twin-chat.module.css' && ['.launcher', '.panel', '.hidden'].includes(selector)) {
+            continue;
+          }
+
           expect(selector, selector).toMatch(/::[\w-]+$/);
         }
       }
@@ -239,5 +261,14 @@ describe('component stylesheets', () => {
 
       expect(pinned).toEqual(name === 'contents.module.css' ? ['.contents'] : []);
     });
+  });
+
+  // DDR-100: the chat's one rule for text said only to assistive technology is exactly the one the
+  // size test above leaves out, so nothing else can shelter under it.
+  it('hides text from sight in the chat by one rule alone', () => {
+    const chat = stylesheets.find(({ name }) => name === 'digital-twin-chat.module.css')!;
+
+    expect(chat.css).toMatch(hiddenText);
+    expect(chat.css.match(/\b1px;/g)).toHaveLength(2);
   });
 });
