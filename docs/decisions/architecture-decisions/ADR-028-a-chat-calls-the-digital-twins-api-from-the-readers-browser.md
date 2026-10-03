@@ -18,6 +18,10 @@ the page has loaded. There is still no application logic layer.
 **Amended by DDR-101**: the reader is no longer told, before their first message, where it goes.
 See *What the reader is told*.
 
+**Amended by ADR-029**: after 10 minutes without hearing from the API, the chat warms it again the
+next time the reader engages, rather than only once per conversation. See *How the chat handles the
+API's states*.
+
 ## Context
 
 Epic #304 lets a reader talk to the owner's Digital Twin on the site itself, rather than through
@@ -135,6 +139,9 @@ The chat moves between these states, and #306 designs each one:
 **It warms the API as soon as a page that holds the chat has loaded,** once the component has
 mounted. The owner chose this on #305, so that a sleeping instance has the most time to wake before
 the reader asks. It does this once per conversation.
+* **Amended by ADR-029**: it warms the API again after 10 minutes without hearing from it, the next
+  time the question field takes focus or a question is sent, since Render's free plan sleeps after
+  15 idle minutes.
 * Every visit to such a page wakes the service, including visits from readers who never use the
   chat, and from crawlers that run script. That's accepted. Render's free plan gives a workspace
   750 instance hours a month, and one service awake all month uses about 744. The hours are shared
