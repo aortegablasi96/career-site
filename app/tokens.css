@@ -950,6 +950,8 @@
   --chat-bubble-padding-block: 0.625rem;
   --chat-bubble-padding-inline: 0.875rem;
   --chat-status-gap: 0.375rem;
+  /* On a phone the status stands under the heading's words: the avatar and the gap after it in. */
+  --chat-status-indent: calc(var(--chat-avatar-size) + var(--chat-gap));
   --chat-nudge: 0.125rem;
   /* The header's avatar, the Digital Twin's mark beside a turn, the robot mark itself, the cross and
      the paper plane, the send control, and the status dot. */
