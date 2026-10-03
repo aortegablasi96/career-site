@@ -8,6 +8,8 @@ Date: 2026-10-03
 "What the reader is told"**: the reader is no longer told, before their first message, where it
 goes. Everything else those records decide stands.
 
+**Amended by DDR-102**: the welcome's words change. Still nothing follows it but the suggestions.
+
 ## Context
 
 DDR-100 ended the chat's welcome with a note on where the reader's messages go, which ADR-028 asked

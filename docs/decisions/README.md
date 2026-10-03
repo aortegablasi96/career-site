@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `030`. The next DDR is `102`.** Update both lines when a record lands.
+**The next ADR is `030`. The next DDR is `103`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -51,7 +51,7 @@ ADR-001, ADR-002 and ADR-004 to ADR-029 are accepted. ADR-003 is superseded.
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-101. There are
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-102. There are
 two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
@@ -142,7 +142,10 @@ Each record keeps everything not listed against it.
   reader to try the project, and links past the live site (the Digital Twin's Telegram).
 * **DDR-096** (invitation): DDR-100 makes its words open the chat with script; without script they
   stay the link to the chatbot's page.
-* **DDR-100** (chat): DDR-101 removes the note on where messages go.
+* **DDR-100** (chat): DDR-101 removes the note on where messages go; DDR-102 gives the chat the look
+  and words the owner drew in `career-site-design`, keeps the launcher in view as its close control on
+  a wide window, and keeps the full window on a phone.
+* **DDR-101** (no note): DDR-102 changes the welcome's words.
 * **DDR-051** (project cards): DDR-054 every technology; DDR-055 the lift; DDR-062 the hover
   shadow; DDR-063 the shared card behaviour.
 * **DDR-055, DDR-057, DDR-059, DDR-061**: DDR-063 makes a role card rest raised and lift like a
