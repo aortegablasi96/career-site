@@ -325,9 +325,9 @@ export async function deliver(
 }
 
 /**
- * What the conversation shows for a given state, per DDR-100: the welcome, the suggestions until a
- * question is sent, the note on where messages go, the messages, and the line or the notice in the
- * answer's place. It holds nothing of its own, so each state can be rendered as it stands.
+ * What the conversation shows for a given state, per DDR-100 and DDR-101: the welcome, the
+ * suggestions until a question is sent, the messages, and the line or the notice in the answer's
+ * place. It holds nothing of its own, so each state can be rendered as it stands.
  */
 export function Conversation({
   chat,
@@ -372,7 +372,6 @@ export function Conversation({
           </ul>
         </div>
       )}
-      <p className={styles.note}>{chat.note}</p>
       {messages.length > 0 && (
         <ol className={styles.messages}>
           {messages.map(({ from, text }, index) => (
@@ -716,8 +715,7 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
           </div>
         </div>
         {/* The conversation scrolls inside the panel, so it takes focus, for a keyboard to scroll
-            it. It opens with the welcome, the suggestions until a question is sent, and the note
-            on where messages go, which the reader meets before the field. */}
+            it. It opens with the welcome and the suggestions until a question is sent. */}
         <div ref={log} className={styles.log} role="region" aria-label={chat.conversation} tabIndex={0}>
           <Conversation chat={chat} state={state} mounted={mounted} ask={ask} retry={retry} />
         </div>

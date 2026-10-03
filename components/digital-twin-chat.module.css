@@ -336,13 +336,6 @@
   background-color: var(--color-surface-hover);
 }
 
-.note {
-  max-inline-size: none;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-x-small);
-  line-height: var(--line-height-body);
-}
-
 /* The field and its send control, at the panel's foot above a hairline. */
 .form {
   flex: none;

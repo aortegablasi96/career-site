@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `029`. The next DDR is `101`.** Update both lines when a record lands.
+**The next ADR is `029`. The next DDR is `102`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -46,11 +46,11 @@ ADR-001, ADR-002 and ADR-004 to ADR-028 are accepted. ADR-003 is superseded.
 | ADR-025 | Amends ADR-007: fourth Client Component, `ScrollAppear`, makes the children of each `data-appear` container appear as they are reached (DDR-090); the page is served whole |
 | ADR-026 | Amends ADR-004 and ADR-022: a video's dialog sets its `preload` to `metadata` as it opens, on `toggle`, so its controls work before play (DDR-092); the markup keeps `preload="none"`; the video carries `autofocus` so Space plays it |
 | ADR-027 | Amends ADR-012's "old addresses are not kept": `vercel.json` redirects `/projects/<slug>` to `/portfolio/<slug>` and `/projects` to `/#portfolio`, permanently |
-| ADR-028 | Amends ADR-001's rule that components don't fetch, and ADR-007: a fifth Client Component, `DigitalTwinChat`, calls the Digital Twin's API from the reader's browser, with no server of the site's own; the API's address is in `content/`; previews are allowed by an origin pattern in the chatbot's repository |
+| ADR-028 | Amends ADR-001's rule that components don't fetch, and ADR-007: a fifth Client Component, `DigitalTwinChat`, calls the Digital Twin's API from the reader's browser, with no server of the site's own; the API's address is in `content/`; previews are allowed by an origin pattern in the chatbot's repository. DDR-101 amends its "What the reader is told": the reader is no longer told where messages go |
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-100. There are
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-101. There are
 two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
@@ -141,6 +141,7 @@ Each record keeps everything not listed against it.
   reader to try the project, and links past the live site (the Digital Twin's Telegram).
 * **DDR-096** (invitation): DDR-100 makes its words open the chat with script; without script they
   stay the link to the chatbot's page.
+* **DDR-100** (chat): DDR-101 removes the note on where messages go.
 * **DDR-051** (project cards): DDR-054 every technology; DDR-055 the lift; DDR-062 the hover
   shadow; DDR-063 the shared card behaviour.
 * **DDR-055, DDR-057, DDR-059, DDR-061**: DDR-063 makes a role card rest raised and lift like a

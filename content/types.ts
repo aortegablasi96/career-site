@@ -768,8 +768,6 @@ export interface Chat {
   tryAsking: string;
   /** The questions the chat suggests before the first one is sent. Choosing one sends it. */
   suggestions: readonly string[];
-  /** Where the reader's messages go, which they meet before the field, per ADR-028. */
-  note: string;
   /** The field's accessible name. */
   field: string;
   placeholder: string;
