@@ -12,6 +12,11 @@ launcher. Paper keeps the padding it set. Everything else those records decide s
 **Amended by DDR-101**: the note on where messages go is removed. The chat opens with the welcome
 and the suggestions alone.
 
+**Amended by DDR-102**: the launcher, the panel, its header, the messages, the suggestions, the
+field and the words take the look the owner drew in `career-site-design`. On a wide window the
+launcher stays in view as the panel's close control. Where the chat sits, its states, clearing,
+the length limit and what a screen reader hears stand.
+
 **Revised on 2026-10-03 by #307, which built it.**
 * As first accepted, this record put the room for the launcher in the last section's padding,
   amending DDR-040 and DDR-046. On every page the footer comes after the last section, so the room
