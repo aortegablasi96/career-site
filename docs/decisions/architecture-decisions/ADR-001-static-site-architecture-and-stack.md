@@ -4,6 +4,11 @@ Status: Accepted
 
 Date: 2026-09-09
 
+**Amended by ADR-028**: one Client Component, the chat with the Digital Twin, calls that
+chatbot's API from the reader's browser, so boundary rule 2 no longer holds for every component.
+The site stays a static export, nothing is fetched when a page is built or served, and rule 3
+stands.
+
 ## Context
 
 The repository contains no application code. Before any content, design, or feature work can
@@ -72,7 +77,8 @@ durable part of this decision and later work is expected to respect them:
    This rule is what makes ADR-002 implementable, and it is the one most likely to be
    violated under time pressure.
 2. **Components are presentational.** They render what they are given. They do not fetch,
-   derive, or decide what content exists.
+   derive, or decide what content exists. *(Amended by ADR-028: the chat with the Digital Twin
+   calls its API from the reader's browser, once the page has loaded. It is the one exception.)*
 3. **There is no application logic layer, and none should be created.** Shared code is
    limited to pure helpers such as date formatting. If something appears to need a service,
    store, or state management layer, that is a signal to revisit this ADR rather than to add
