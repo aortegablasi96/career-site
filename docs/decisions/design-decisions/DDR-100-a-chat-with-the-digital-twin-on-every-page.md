@@ -6,9 +6,17 @@ Date: 2026-10-03
 
 **Amends DDR-096**: with script, the invitation's link on the Digital Twin's view opens the chat.
 It no longer opens the chatbot's own page. Without script it is the link DDR-096 decided. **Amends
-DDR-040 and DDR-046 at the page's end, on screen only**: the last section of every page leaves
-room below its content for the chat's launcher. Paper keeps the padding they set. Everything else
-those records decide stands.
+DDR-028 at the page's end, on screen only**: the footer leaves room below its line for the chat's
+launcher. Paper keeps the padding it set. Everything else those records decide stands.
+
+**Revised on 2026-10-03 by #307, which built it.**
+* As first accepted, this record put the room for the launcher in the last section's padding,
+  amending DDR-040 and DDR-046. On every page the footer comes after the last section, so the room
+  is the footer's, and the record amends DDR-028 instead.
+* The panel's height and the field's five lines were measured with two more tokens, listed under
+  *New values*.
+* A reply's numbered list keeps its numbering when the chatbot spaces its items with blank lines
+  or writes points under them. Those points join their item as new lines (ADR-028's one level).
 
 ## Context
 
@@ -44,8 +52,8 @@ conversation.
   between the site's pages. It ends when the page is reloaded or left, per ADR-028.
 * **On screen only.** Neither the launcher nor the panel prints, so the printed CV (DDR-015) is
   unchanged.
-* **The page's end leaves room for the launcher.** On screen, the last section of each page pads its
-  end by the launcher's size and its inset, beyond what DDR-040 and DDR-046 set. The launcher then
+* **The page's end leaves room for the launcher.** On screen, the footer pads its foot by the
+  launcher's size and the widest of its insets, beyond the step DDR-028 set. The launcher then
   never covers the page's last line once the reader has scrolled to the end.
 
 ### The launcher
@@ -175,9 +183,17 @@ DDR-096 draws them, but they are a control that opens the panel, not a link that
 
 ### New values
 
-`--chat-launcher-size` (3.25rem), `--chat-panel-width` (27.5rem) and `--chat-panel-height`
-(40rem) are new tokens in `app/tokens.css`. The two marks, a speech bubble and a paper plane,
-join `components/icon.tsx`. Every other value is a token the site already has.
+These tokens are new in `app/tokens.css`:
+* `--chat-launcher-size`, 3.25rem;
+* `--chat-panel-width`, 27.5rem;
+* `--chat-panel-height`, 40rem, and never more than the window less its insets;
+* `--chat-field-height`, the field's five lines and its padding;
+* `--footer-padding-block-end`, the footer's foot, which is DDR-028's step on paper.
+
+The two marks, a speech bubble and a paper plane, join `components/icon.tsx`. A sender's name and the
+live region are hidden from sight by one rule, the only one in a component stylesheet that writes a
+pixel, held to that by `components/stylesheets.test.ts`. Every other value is a token the site
+already has.
 
 ## Alternatives Considered
 
@@ -246,6 +262,6 @@ Risks:
 * GitHub issue #306, its Content Brief and UI Review, under Epic #304. #307 builds it.
 * ADR-028: the chat's states, rules and calls
 * DDR-096, which this amends, and DDR-050, DDR-043, DDR-035
-* DDR-040 and DDR-046: the page's end, which this amends on screen
+* DDR-028: the footer, whose foot this amends on screen
 * DDR-015: the printed CV, unchanged. DDR-075 and DDR-082: the layers above the launcher
 * DDR-090: reduced motion, as the site's appearing elements respect it

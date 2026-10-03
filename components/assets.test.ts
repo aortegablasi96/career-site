@@ -134,6 +134,9 @@ describe('asset references', () => {
       for (const { value, literal } of links) {
         if (literal || value === 'href') continue;
         if (/^`#/.test(value)) continue;
+        // The chat's addresses are other sites', per DDR-100 and ADR-028: the chatbot's own page,
+        // and a link the Digital Twin writes in a reply.
+        if (value === 'chat.page' || value === 'run.href') continue;
 
         expect(value).toContain('asset(');
       }

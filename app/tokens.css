@@ -897,6 +897,20 @@
     var(--contents-bar-height) + var(--contents-bar-title-row) + var(--space-flow)
   );
 
+  /* The chat with the Digital Twin, per DDR-100. The launcher is NumisBook's 52px, the owner's
+     model for it, a circle below the wide breakpoint and the height of the pill from it. The panel
+     at the window's corner is 440px wide and at most 640px tall, and never taller than the window
+     less its insets above and below. The field grows to five of its lines and its padding, then
+     scrolls; `lh` is the field's own line, so the limit follows its size and leading. */
+  --chat-launcher-size: 3.25rem;
+  --chat-panel-width: 27.5rem;
+  --chat-panel-height: min(40rem, 100dvh - 2 * var(--space-large));
+  --chat-field-height: calc(5lh + 2 * var(--space-small) + 2px);
+  /* The footer's padding below its line, which on screen leaves room for the launcher under it, so
+     the launcher never covers the page's last line once the reader has scrolled to the end, per
+     DDR-100: its own step, the launcher and the widest of its insets. Paper keeps the step alone. */
+  --footer-padding-block-end: calc(2 * var(--space-large) + var(--chat-launcher-size));
+
   /* The least a short page is tall, so its footer stands at the window's foot rather than partway
      up it, per DDR-093: the whole window. In `dvh`, as the menu's limit above is, so that a phone's
      toolbar is counted and the footer is not hidden behind it. Only the page an address the site
@@ -1088,6 +1102,8 @@
     --page-gutter: 0;
     --page-inset: 0;
     --page-padding-block: 0;
+    /* The launcher does not print, so the footer needs no room for it on paper, per DDR-100. */
+    --footer-padding-block-end: var(--space-large);
 
     /* The photo prints beside the name at 28mm, the measure the UI Review on #43 gives it. It is
        the narrow token because the introduction is the one section whose paper layout is the narrow

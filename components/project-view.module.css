@@ -256,9 +256,45 @@
 }
 
 .invitation a:hover,
-.invitation a:focus-visible {
+.invitation a:focus-visible,
+.invitation button:hover,
+.invitation button:focus-visible {
   color: var(--color-accent-hover);
   text-decoration-color: var(--color-underline-hover);
+}
+
+/* Since DDR-100 the words open the chat where script runs: a button drawn as the link it replaces,
+   which stays the link without script, per ADR-028. */
+.invitation button {
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  color: var(--color-accent);
+  font: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: var(--color-underline);
+  cursor: pointer;
+}
+
+.withoutScript {
+  display: none;
+}
+
+@media (scripting: none) {
+  .withoutScript {
+    display: inline;
+  }
+
+  .withScript {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .invitation button {
+    transition-property: color, text-decoration-color;
+    transition-duration: var(--hover-transition);
+  }
 }
 
 /* A link is a pill at the introduction's controls' size, per DDR-027, raised by the site's one

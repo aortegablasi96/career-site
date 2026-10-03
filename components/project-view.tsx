@@ -11,6 +11,7 @@ import type {
 import { BusinessCaseSlider } from './business-case-slider';
 import { Icon } from './icon';
 import { LargerPicture, type Steps } from './larger-picture';
+import { openChatCommand } from './open-chat';
 import { projectHref } from './projects';
 import styles from './project-view.module.css';
 
@@ -315,7 +316,8 @@ function Neighbour({
  * outlined, as the design draws the two, and any other place the project runs follows the same
  * way. Where the project invites the reader to try it, a line above them says so, per DDR-096. Each
  * leaves the site for another one the reader means to come back from, so each opens a new tab, per
- * DDR-043 as DDR-050 extends it, and says so to assistive technology after its own text. Nothing on
+ * DDR-043 as DDR-050 extends it, and says so to assistive technology after its own text. Since
+ * DDR-100 the invitation's words open the chat with the Digital Twin instead, where script runs. Nothing on
  * the link shows it: the arrow out of a box says the link leaves the site, which it does whichever
  * tab it opens in.
  *
@@ -361,6 +363,7 @@ export function ProjectView({
   backHref,
   previous,
   next,
+  chat,
 }: {
   project: Project;
   strings: ProjectViewStrings;
@@ -370,6 +373,8 @@ export function ProjectView({
   previous?: Project;
   /** The project the page shows after this one, if this is not the last. */
   next?: Project;
+  /** The id of the chat's panel, which words in the invitation may open, per DDR-100. */
+  chat?: string;
 }) {
   /** A class for a part of the overview, which the business case hides where the project has one. */
   const overviewOnly = (className: string) =>
@@ -453,11 +458,37 @@ export function ProjectView({
                 }
 
                 const { text, href } = part;
-
-                return (
-                  <a key={index} href={href} target="_blank" rel="noopener" aria-label={`${text}, ${newTab}`}>
+                const link = (
+                  <a
+                    key={index}
+                    href={href}
+                    className={'chat' in part && chat ? styles.withoutScript : undefined}
+                    target="_blank"
+                    rel="noopener"
+                    aria-label={`${text}, ${newTab}`}
+                  >
                     {text}
                   </a>
+                );
+
+                // Since DDR-100 words that open the chat do so where script runs, by the chat's own
+                // command, and stay the link to the chatbot's page where it doesn't.
+                if (!('chat' in part) || !chat) {
+                  return link;
+                }
+
+                return (
+                  <Fragment key={index}>
+                    {link}
+                    <button
+                      type="button"
+                      className={styles.withScript}
+                      commandfor={chat}
+                      command={openChatCommand}
+                    >
+                      {text}
+                    </button>
+                  </Fragment>
                 );
               })}
             </p>

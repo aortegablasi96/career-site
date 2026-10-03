@@ -257,7 +257,9 @@ export const projects: Projects = {
       // the owner's CV file links to and the owner confirmed on #286.
       invitation: [
         'Have a question? ',
-        { text: 'Ask my AI Digital Twin', href: 'https://career-conversation-chatbot.vercel.app' },
+        // Since #307 these words open the chat on the page where script runs, per DDR-100, and lead
+        // to the chatbot's own page where it doesn't.
+        { text: 'Ask my AI Digital Twin', href: 'https://career-conversation-chatbot.vercel.app', chat: true },
         ' about my career.',
       ],
       links: [

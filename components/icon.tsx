@@ -10,7 +10,8 @@ import type { ContactIcon } from '@/content/types';
  * "i", beside that hint and the projects' alike. DDR-075 adds the contents bar's menu button on a
  * phone: three lines while the menu is closed and a cross while it is open. DDR-082 adds two arrows
  * pointing out of a project view's picture, on the control that opens it larger, and the cross
- * again, on the control that closes it.
+ * again, on the control that closes it. DDR-100 adds a speech bubble, on the launcher of the chat
+ * with the Digital Twin, and a paper plane, on its send control.
  */
 export type IconName =
   | ContactIcon
@@ -22,7 +23,9 @@ export type IconName =
   | 'info'
   | 'menu'
   | 'close'
-  | 'enlarge';
+  | 'enlarge'
+  | 'chat'
+  | 'send';
 
 /** The marks drawn as lines rather than filled, all on the 24 unit grid. */
 const lineDrawings: readonly IconName[] = [
@@ -35,6 +38,8 @@ const lineDrawings: readonly IconName[] = [
   'menu',
   'close',
   'enlarge',
+  'chat',
+  'send',
 ];
 
 /**
@@ -161,4 +166,13 @@ const paths: Record<IconName, React.ReactNode> = {
   // Two arrows pointing out to opposite corners, on the control that opens a view's picture
   // larger, per DDR-082.
   enlarge: <path d="M15 3h6v6M21 3l-7 7M9 21H3v-6M3 21l7-7" />,
+  // A speech bubble, on the launcher that opens the chat with the Digital Twin, per DDR-100.
+  chat: <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />,
+  // A paper plane, on the chat's send control, per DDR-100.
+  send: (
+    <>
+      <path d="M14.5 21.7a.5.5 0 0 0 .9 0L22 2.6a.5.5 0 0 0-.6-.6L2.3 8.6a.5.5 0 0 0 0 .9l8 3.2a2 2 0 0 1 1.1 1.1Z" />
+      <path d="m21.9 2.1-10.9 10.9" />
+    </>
+  ),
 };

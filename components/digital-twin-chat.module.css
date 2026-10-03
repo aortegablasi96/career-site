@@ -1,0 +1,416 @@
+/* The chat with the Digital Twin, per DDR-100: a launcher at the window's bottom-right corner on
+   every page, and the panel it opens. Neither prints: the printed CV is the page alone, per
+   DDR-015. */
+@media print {
+  .chat {
+    display: none;
+  }
+}
+
+/* The launcher stands at the window's corner, inset from its edges, over the page: the site's one
+   floating control, admitted by DDR-100 as the contents bar's menu was by DDR-075. It is filled in
+   the accent, as a view's first link is (DDR-050), and lit by the shadow a card takes under the
+   pointer. Below the wide breakpoint it is a circle with its mark alone; its words are its
+   accessible name at every width. */
+.launcher {
+  position: fixed;
+  inset-block-end: var(--space-medium);
+  inset-inline-end: var(--space-medium);
+  display: inline-flex;
+  gap: var(--space-small);
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  inline-size: var(--chat-launcher-size);
+  block-size: var(--chat-launcher-size);
+  padding: 0;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-accent);
+  box-shadow: var(--shadow-card-hover);
+  color: var(--color-on-accent);
+  font: inherit;
+  font-size: var(--font-size-x-small);
+  font-weight: var(--font-weight-medium);
+  text-decoration-line: none;
+  cursor: pointer;
+}
+
+.launcher svg {
+  font-size: var(--font-size-x-large);
+}
+
+.launcher:hover,
+.launcher:focus-visible {
+  border-color: var(--color-accent-hover);
+  background-color: var(--color-accent-hover);
+}
+
+.launcherText {
+  display: none;
+}
+
+/* While the panel is open, its own close control takes the launcher's place. */
+.launcher[aria-expanded='true'] {
+  display: none;
+}
+
+/* Without script the launcher is a link to the chatbot's own page, per ADR-028, and the button that
+   opens the panel is not shown. */
+.withoutScript {
+  display: none;
+}
+
+@media (scripting: none) {
+  .withoutScript {
+    display: inline-flex;
+  }
+
+  .withScript {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .launcher {
+    transition-property: background-color, border-color;
+    transition-duration: var(--hover-transition);
+  }
+}
+
+/* The panel is a native dialog. Below the wide breakpoint it is modal and takes the whole window,
+   with no corners, border or shadow, so the browser's own margins and limits are undone. It lays out
+   its header, the conversation and the field as a column, the conversation taking what is left. */
+.panel {
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
+  inline-size: auto;
+  block-size: auto;
+  max-inline-size: none;
+  max-block-size: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: var(--color-surface-card);
+  color: var(--color-text);
+  flex-direction: column;
+}
+
+.panel[open] {
+  display: flex;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    translate: 0 var(--appear-rise);
+  }
+}
+
+/* It opens with a short fade and a rise, and at once for a reader who has asked for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .panel[open] {
+    animation: appear var(--hover-transition) var(--appear-easing);
+  }
+}
+
+/* The heading and the service's status, with the close control at the right, above a hairline. */
+.header {
+  display: flex;
+  flex: none;
+  gap: var(--space-medium);
+  align-items: start;
+  justify-content: space-between;
+  padding: var(--space-medium);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.heading {
+  font-size: var(--font-size-large);
+  line-height: var(--line-height-heading);
+}
+
+.status {
+  margin-block-start: var(--space-x-small);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-x-small);
+}
+
+.close {
+  display: inline-flex;
+  flex: none;
+  padding: var(--space-small);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-x-large);
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus-visible {
+  background-color: var(--color-surface-hover);
+  color: var(--color-accent-hover);
+}
+
+/* The conversation scrolls inside the panel, and its scroll stays its own. */
+.log {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--space-small);
+  min-block-size: 0;
+  padding: var(--space-medium);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-small);
+  margin-block-start: 0;
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+/* A message: the Digital Twin's at the left on the page's surface, the reader's at the right on the
+   tag's, each stopping a step short of the other side. */
+.message {
+  max-inline-size: none;
+  margin-block-start: 0;
+  padding-block: var(--space-small);
+  padding-inline: var(--space-medium);
+  border-radius: var(--radius-large);
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-prose-small);
+  overflow-wrap: anywhere;
+}
+
+.message > * + * {
+  margin-block-start: var(--space-small);
+}
+
+.message > .hidden + * {
+  margin-block-start: 0;
+}
+
+.message ul,
+.message ol {
+  padding-inline-start: var(--space-large);
+}
+
+.message li + li {
+  margin-block-start: var(--space-x-small);
+}
+
+.message a {
+  text-decoration-color: var(--color-underline);
+}
+
+.message a:hover,
+.message a:focus-visible {
+  color: var(--color-accent-hover);
+  text-decoration-color: var(--color-underline-hover);
+}
+
+.twin {
+  align-self: start;
+  margin-inline-end: var(--space-large);
+  background-color: var(--color-surface);
+}
+
+/* The reader's words exactly as they typed them, line breaks included. */
+.reader {
+  align-self: end;
+  margin-inline-start: var(--space-large);
+  background-color: var(--color-surface-tag);
+  white-space: pre-wrap;
+}
+
+/* The line shown while an answer is on its way, and a notice in its place. */
+.pending {
+  color: var(--color-text-secondary);
+}
+
+.label {
+  color: var(--color-text-faint);
+  font-size: var(--font-size-xxxx-small);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-body);
+  letter-spacing: var(--letter-spacing-x-loose);
+  text-transform: uppercase;
+}
+
+.suggestionList,
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-small);
+  margin-block-start: var(--space-small);
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+/* A suggestion, outlined as a view's second link is (DDR-050), and a notice's two controls. */
+.suggestion,
+.primary,
+.secondary {
+  display: inline-flex;
+  gap: var(--space-small);
+  align-items: center;
+  padding-block: var(--space-small);
+  padding-inline: var(--space-medium);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-raised);
+  font: inherit;
+  font-size: var(--font-size-x-small);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-body);
+  text-align: start;
+  text-decoration-line: none;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.primary {
+  border: 1px solid var(--color-accent);
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.suggestion,
+.secondary {
+  border: 1px solid var(--color-border-accent);
+  background-color: var(--color-surface-card);
+  color: var(--color-accent);
+}
+
+.primary:hover,
+.primary:focus-visible {
+  border-color: var(--color-accent-hover);
+  background-color: var(--color-accent-hover);
+}
+
+.suggestion:hover,
+.suggestion:focus-visible,
+.secondary:hover,
+.secondary:focus-visible {
+  border-color: var(--color-border-accent-hover);
+  background-color: var(--color-surface-hover);
+}
+
+.note {
+  max-inline-size: none;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-x-small);
+  line-height: var(--line-height-body);
+}
+
+/* The field and its send control, at the panel's foot above a hairline. */
+.form {
+  flex: none;
+  padding: var(--space-medium);
+  border-block-start: 1px solid var(--color-border);
+}
+
+.row {
+  display: flex;
+  gap: var(--space-small);
+  align-items: end;
+}
+
+/* The field takes the row's width, whatever its placeholder's, and grows with the question to five
+   lines, then scrolls. It is set at the browser's own size, so a phone does not zoom in as it takes
+   focus. */
+.field {
+  flex: 1 1 0;
+  box-sizing: border-box;
+  min-inline-size: 0;
+  max-block-size: var(--chat-field-height);
+  padding-block: var(--space-small);
+  padding-inline: var(--space-medium);
+  border: 1px solid var(--color-border-accent);
+  border-radius: var(--radius-large);
+  background-color: var(--color-surface-card);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--font-size-large);
+  line-height: var(--line-height-body);
+  resize: none;
+  field-sizing: content;
+}
+
+.field::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
+}
+
+.send {
+  display: inline-flex;
+  flex: none;
+  padding: var(--space-small);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: var(--font-size-x-large);
+  cursor: pointer;
+}
+
+.send:hover,
+.send:focus-visible {
+  border-color: var(--color-accent-hover);
+  background-color: var(--color-accent-hover);
+}
+
+/* While nothing can be sent, the control stays where focus can reach it, drawn in the tag's tint. */
+.send[aria-disabled='true'] {
+  border-color: var(--color-border-accent);
+  background-color: var(--color-surface-tag);
+  color: var(--color-text-tag);
+  cursor: default;
+}
+
+.count {
+  margin-block-start: var(--space-x-small);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-x-small);
+}
+
+/* Said only to assistive technology: a message's sender, the field's name and the live region. */
+.hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* From the wide breakpoint the launcher is a pill with its words, the height of the circle, and the
+   panel a card at the window's corner where the launcher stood, beside the page, which stays in
+   use. */
+@media (min-width: 48em) {
+  .launcher {
+    inset-block-end: var(--space-large);
+    inset-inline-end: var(--space-large);
+    inline-size: auto;
+    padding-inline: var(--space-medium);
+  }
+
+  .launcherText {
+    display: inline;
+  }
+
+  .panel {
+    inset: auto var(--space-large) var(--space-large) auto;
+    inline-size: var(--chat-panel-width);
+    max-block-size: var(--chat-panel-height);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-bar);
+  }
+}

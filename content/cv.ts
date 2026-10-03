@@ -175,9 +175,13 @@ import type { Cv } from './types';
  * It moved again with #288, because each role gained the skills and technologies the owner lists
  * for it, which only its view shows. They do not print and are not a fact ADR-005 lists as shared,
  * so they did not move the CV.
+ *
+ * It moved again with #307, which added the chat with the Digital Twin (`chat.ts`) and made the
+ * Digital Twin's invitation open it. Neither prints, and neither is a fact ADR-005 lists as shared,
+ * so the CV file need not change.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '01fad282118a17674b389adbe063a9e6880a04f4d4e34d21237249521fcb6d43',
+  contentDigest: '9dc4c20b8e5ede89d7167cd75b75a9b9cb0e3a37f3ddd4431953dc829a36874e',
 };

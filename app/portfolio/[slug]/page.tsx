@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Contents } from '@/components/contents';
 import { Footer } from '@/components/footer';
 import { ProjectView } from '@/components/project-view';
+import { chat } from '@/content/chat';
 import { contents } from '@/content/contents';
 import { introduction } from '@/content/introduction';
 import { projects } from '@/content/projects';
@@ -87,6 +88,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           backHref={`${page}#${sections.find(({ title }) => title === projects.title)!.id}`}
           previous={previous}
           next={next}
+          chat={chat.id}
         />
       </main>
       {/* The site's own footer, as the page has it, per DDR-028. */}

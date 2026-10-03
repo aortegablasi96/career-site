@@ -1251,11 +1251,13 @@ const forPaper = [
   { name: 'page-gutter', value: '0' },
   { name: 'page-inset', value: '0' },
   { name: 'page-padding-block', value: '0' },
+  // DDR-100: the footer leaves room for the chat's launcher on screen alone, since it does not print.
+  { name: 'footer-padding-block-end', value: 'var(--space-large)' },
   { name: 'photo-width', value: '28mm' },
 ];
 
 describe('print tokens', () => {
-  it('redefines only the base size, the running-text leading, the rhythm, every surface, every hairline, the shadows, the column and its edges, and the photo', () => {
+  it('redefines only the base size, the running-text leading, the rhythm, every surface, every hairline, the shadows, the column and its edges, the footer’s foot, and the photo', () => {
     expect([...inPrint.keys()]).toEqual(forPaper.map(({ name }) => name));
   });
 

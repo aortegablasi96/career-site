@@ -165,8 +165,9 @@ The page itself is the CV, so what it prints is designed.
 
 ### Contents bar (ADR-007, ADR-008, ADR-009, ADR-013)
 
-* **`components/contents-bar.tsx` is a Client Component**, one of four (the others are the
-  business case slider, ADR-015, a view's larger picture, ADR-018, and `ScrollAppear`, ADR-025). It marks the current section with
+* **`components/contents-bar.tsx` is a Client Component**, one of five (the others are the
+  business case slider, ADR-015, a view's larger picture, ADR-018, `ScrollAppear`, ADR-025, and the
+  chat, ADR-028). It marks the current section with
   `aria-current="location"`, glides on its own links' clicks, and holds the menu's open state below
   the wide breakpoint. `Contents` stays a Server Component and hands it `{ id, link }` per section,
   never the sections' rendered items.
@@ -346,6 +347,32 @@ The page itself is the CV, so what it prints is designed.
 * **The cascade's place is `--appear-order`, set inline by the script** and read as a delay with
   `backwards` fill, so the element stays hidden while it waits. It is removed with the state.
 * To watch it, set `--appear-duration` on the root to a few seconds before a screenshot.
+
+### Chat with the Digital Twin (ADR-028, DDR-100)
+
+* **It is in `app/layout.tsx`, so it is on every route** and its conversation survives `next/link`
+  navigation; a reload ends it. Its words and the API's origin are `content/chat.ts`.
+* **The rules are pure and tested in Node**: `next` (the states), `answer`, `warmUp` and `deliver`
+  in `digital-twin-chat.tsx`, and the Markdown in `reply.tsx`. Tests stub `fetch` and use fake
+  timers; `post` times out by its own `setTimeout`, not `AbortSignal.timeout`, so fake timers reach
+  it. `Conversation` renders any state with `react-dom/server`.
+* **The panel is a `dialog`**: `show()` from the wide breakpoint (non-modal, `position: fixed` at
+  the corner) and `showModal()` below it (full window). The choice is made as it opens, so resizing
+  an open panel keeps its modality. Escape is handled on `keydown` for both.
+* **A view has other dialogs before it**, the larger pictures', so look the chat up by its id,
+  `digital-twin-chat`, never as the page's first `dialog`.
+* **The live region is inside the panel**: outside it, a modal panel makes it inert and nothing is
+  heard.
+* **The invitation opens it by Invoker Commands**, `commandfor` the panel and `command="--open-chat"`
+  (`components/open-chat.ts`, a plain module so a Server Component can name it).
+* **`components/stylesheets.test.ts` admits its launcher and panel out of the flow**, and one rule
+  of hidden text with a 1px box; a second of either is a decision.
+* **The footer's foot is `--footer-padding-block-end`**, room for the launcher on screen and
+  DDR-028's step on paper.
+* **Check it against the live API from `localhost:3000`**, an origin the API allows. A preview
+  can't reach it until the chatbot's repository allows the preview origins
+  (aortegablasi96/career_conversation_chatbot#1). Stub `**/chat` with Playwright's `page.route` to
+  reach the 429 and unavailable states.
 
 ### Footer (DDR-028, DDR-029)
 
