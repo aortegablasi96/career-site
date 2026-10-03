@@ -67,8 +67,12 @@ describe('RoleView', () => {
 
   // #176: the owner supplies each role's skills; a role without them shows no label and no row.
   it('shows no skills row for a role the owner has supplied none for', () => {
-    expect(abb.skills).toBeUndefined();
-    expect(html).not.toContain(view.skills.replace('&', '&amp;'));
+    const { skills, ...unskilled } = abb;
+    const bare = render(unskilled);
+
+    expect(skills).toBeDefined();
+    expect(bare).not.toContain(view.skills.replace('&', '&amp;'));
+    expect(bare).not.toMatch(/<ul/);
   });
 
   it('shows every skill the owner supplies, in their order, under its label', () => {

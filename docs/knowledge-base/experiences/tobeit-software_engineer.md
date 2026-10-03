@@ -8,3 +8,11 @@
 - Designed and implemented 3+ databases and data pipelines supporting internal
 applications and reporting needs.
 - Translated business requirements into scalable software solutions used by 10+ internal users, collaborating with functional stakeholders throughout development and deployment.
+
+**Skills & Technology**
+
+- Agile product delivery
+- Requirements analysis
+- Back-end development
+- SQL
+- RPA

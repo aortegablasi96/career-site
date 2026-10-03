@@ -9,3 +9,11 @@
 - Managed software and hardware vendor selection and RFP/RFQ processes, evaluating technical capabilities, commercial proposals and total cost of ownership to support supplier and product investment decisions.
 - Applied data analytics and ML-based modelling to IoT data, identifying opportunities to optimize service operations, improve asset monitoring and support data-driven customer decisions.
 - Identified and delivered automation opportunities across digital workflows, reducing manual activities and improving the scalability of operational processes.
+
+**Skills & Technology**
+
+- 0 to 1 Product Delivery
+- Product Ownership
+- Vendor Management
+- SaaS
+- LTE
