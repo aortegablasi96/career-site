@@ -403,7 +403,8 @@ describe('DigitalTwinChat', () => {
 
     expect(dialog?.[1]).toBe(chat.id);
     expect(html).toContain(`<h2 id="${dialog?.[2]}"`);
-    expect(text(html)).toContain(`${chat.heading}${chat.status.warming}`);
+    expect(text(html)).toContain(`${chat.heading}${chat.subtitle}${chat.status.warming}`);
+    expect(html).toContain('data-service="warming"');
     expect(html).toMatch(/<button type="button" class="[^"]*close[^"]*" aria-label="Close the chat">/);
   });
 
@@ -434,7 +435,22 @@ describe('DigitalTwinChat', () => {
 
   it('stands at the window’s corner as a circle, and as a pill and a card from the wide breakpoint', () => {
     expect(css).toMatch(/\.launcher \{[^}]*position: fixed;[^}]*inline-size: var\(--chat-launcher-size\);/);
-    expect(css).toMatch(/@media \(min-width: 48em\) \{[\s\S]*\.panel \{\s*inset: auto var\(--space-large\) var\(--space-large\) auto;\s*inline-size: var\(--chat-panel-width\);\s*block-size: var\(--chat-panel-height\);/);
+    expect(css).toMatch(/@media \(min-width: 48em\) \{[\s\S]*\.panel \{\s*inset: auto var\(--chat-inset\) var\(--chat-panel-offset\) auto;\s*inline-size: var\(--chat-panel-width\);\s*block-size: var\(--chat-panel-height\);/);
+  });
+
+  // DDR-102: from the wide breakpoint the open launcher stays in view as the panel's close control,
+  // after the panel in the markup as it is below it on screen; below it the header's cross closes
+  // the full-window panel, and the launcher is hidden under it.
+  it('keeps the launcher in view as the close control from the wide breakpoint, after the panel', () => {
+    expect(html.indexOf('</dialog>')).toBeLessThan(html.indexOf('withScript'));
+    expect(css).toMatch(/^\.launcher\[aria-expanded='true'\] \{\s*display: none;/m);
+    expect(css).toMatch(/@media \(min-width: 48em\) \{[\s\S]*\.launcher\[aria-expanded='true'\] \{\s*display: inline-flex;/);
+    expect(css).toMatch(/@media \(min-width: 48em\) \{[\s\S]*\.close \{\s*display: none;/);
+  });
+
+  it('sets the field at the browser’s own size on a phone, and the design’s from the wide breakpoint', () => {
+    expect(css).toMatch(/^\.field \{[^}]*font-size: var\(--font-size-large\);/m);
+    expect(css).toMatch(/@media \(min-width: 48em\) \{[\s\S]*\.field \{\s*font-size: var\(--font-size-x-small\);/);
   });
 
   it('moves only where the reader has not asked for less motion', () => {
@@ -448,7 +464,7 @@ describe('Conversation', () => {
     const shown = text(conversation(initial));
 
     expect(shown).toContain(chat.welcome);
-    expect(shown).toContain(chat.tryAsking);
+    expect(conversation(initial)).toContain(`<ul aria-label="${chat.suggested}"`);
     for (const suggestion of chat.suggestions) expect(shown).toContain(suggestion);
     expect(shown.endsWith(chat.suggestions.at(-1)!)).toBe(true);
   });
@@ -460,10 +476,17 @@ describe('Conversation', () => {
     expect(html).toMatch(/<span class="[^"]*hidden[^"]*">Digital Twin: <\/span><p>Hi\.<\/p>/);
   });
 
+  // DDR-102: each of the Digital Twin's turns stands beside its mark, and the reader's has none.
+  it('stands the Digital Twin’s mark beside each of its turns, and none beside the reader’s', () => {
+    const html = conversation(after({ type: 'warmed' }, { type: 'ask', question: 'Hello?' }, { type: 'answered', reply: 'Hi.' }));
+
+    expect(html.match(/class="[^"]*mark[^"]*"/g)).toHaveLength(2);
+  });
+
   it('drops the suggestions once a question is sent, and keeps the welcome', () => {
     const shown = text(conversation(after({ type: 'ask', question: 'Hello?' })));
 
-    expect(shown).not.toContain(chat.tryAsking);
+    expect(conversation(after({ type: 'ask', question: 'Hello?' }))).not.toContain(chat.suggested);
     expect(shown).toContain(chat.welcome);
   });
 
@@ -545,7 +568,7 @@ describe('the chat’s content', () => {
     expect(chat.countFrom).toBeLessThan(chat.maxLength);
   });
 
-  it('suggests the bot’s own four questions', () => {
+  it('suggests the design’s four questions (DDR-102)', () => {
     expect(chat.suggestions).toHaveLength(4);
   });
 });

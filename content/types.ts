@@ -750,9 +750,11 @@ export interface Chat {
   newTab: string;
   /** The panel's heading. */
   heading: string;
-  /** The line under the heading, which says how the service is. */
+  /** The line under the heading, which says what the Digital Twin is, per DDR-102. */
+  subtitle: string;
+  /** The status at the header's right, which says how the service is. */
   status: { warming: string; ready: string; unavailable: string };
-  /** The accessible name of the control that closes the panel. */
+  /** The accessible name of the controls that close the panel: the open launcher, and the header's cross on a phone. */
   close: string;
   /** The control that clears the conversation and starts a new one, shown once there is a message. */
   clear: string;
@@ -764,8 +766,8 @@ export interface Chat {
   sender: { reader: string; twin: string };
   /** The Digital Twin's first message, which is never sent to the API. */
   welcome: string;
-  /** The label above the suggestions. */
-  tryAsking: string;
+  /** The suggestions' name, said only to assistive technology, per DDR-102. */
+  suggested: string;
   /** The questions the chat suggests before the first one is sent. Choosing one sends it. */
   suggestions: readonly string[];
   /** The field's accessible name. */

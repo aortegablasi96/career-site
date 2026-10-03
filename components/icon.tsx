@@ -10,8 +10,9 @@ import type { ContactIcon } from '@/content/types';
  * "i", beside that hint and the projects' alike. DDR-075 adds the contents bar's menu button on a
  * phone: three lines while the menu is closed and a cross while it is open. DDR-082 adds two arrows
  * pointing out of a project view's picture, on the control that opens it larger, and the cross
- * again, on the control that closes it. DDR-100 adds a speech bubble, on the launcher of the chat
- * with the Digital Twin, and a paper plane, on its send control.
+ * again, on the control that closes it. DDR-100 adds a paper plane, on the send control of the chat
+ * with the Digital Twin, and DDR-102 a robot, on its launcher, its avatar and beside the Digital
+ * Twin's turns, where DDR-100's speech bubble was.
  */
 export type IconName =
   | ContactIcon
@@ -24,7 +25,7 @@ export type IconName =
   | 'menu'
   | 'close'
   | 'enlarge'
-  | 'chat'
+  | 'bot'
   | 'send';
 
 /** The marks drawn as lines rather than filled, all on the 24 unit grid. */
@@ -38,7 +39,7 @@ const lineDrawings: readonly IconName[] = [
   'menu',
   'close',
   'enlarge',
-  'chat',
+  'bot',
   'send',
 ];
 
@@ -166,13 +167,17 @@ const paths: Record<IconName, React.ReactNode> = {
   // Two arrows pointing out to opposite corners, on the control that opens a view's picture
   // larger, per DDR-082.
   enlarge: <path d="M15 3h6v6M21 3l-7 7M9 21H3v-6M3 21l7-7" />,
-  // A speech bubble, on the launcher that opens the chat with the Digital Twin, per DDR-100.
-  chat: <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />,
-  // A paper plane, on the chat's send control, per DDR-100.
-  send: (
-    <>
-      <path d="M14.5 21.7a.5.5 0 0 0 .9 0L22 2.6a.5.5 0 0 0-.6-.6L2.3 8.6a.5.5 0 0 0 0 .9l8 3.2a2 2 0 0 1 1.1 1.1Z" />
-      <path d="m21.9 2.1-10.9 10.9" />
-    </>
+  // A robot's head, on the chat's launcher, its avatar and beside the Digital Twin's turns, as the
+  // design draws it (DDR-102), scaled from its 18 unit grid to ours at its own stroke. Its eyes are
+  // filled.
+  bot: (
+    <g strokeWidth="1.6">
+      <rect x="3" y="8" width="18" height="13" rx="3" />
+      <path d="M12 3v5M9 3h6M9 18h6" />
+      <circle cx="9" cy="14" r="1.5" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="14" r="1.5" fill="currentColor" stroke="none" />
+    </g>
   ),
+  // A paper plane, on the chat's send control, as the design draws it (DDR-102).
+  send: <path d="M20.4 3.6 3.6 11.4l6.6 2.4 3 6.6Z" />,
 };

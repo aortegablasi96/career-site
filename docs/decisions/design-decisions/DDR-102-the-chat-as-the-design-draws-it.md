@@ -68,7 +68,7 @@ the design's.
   and the launcher below it. Its right edge is the launcher's, and it stands `--space-medium` above
   the open launcher, at `--chat-panel-offset` from the window's foot. It is not modal, as before.
   * Its surface is `--color-chat-surface` (#f8f7ff), with a 1px `--color-chat-edge` (the
-    design's violet, #a78bfa, at 35%), `--chat-radius` corners (1rem, 16px) and
+    design's violet, #a78bfa, at 35%, drawn opaque as #e0d6fd), `--chat-radius` corners (1rem, 16px) and
     `--shadow-chat-panel`.
 * **Below the wide breakpoint** it takes the whole window and is modal, as DDR-100 decided. It is
   drawn on the same surface, with no edge, corners or shadow.
@@ -77,7 +77,7 @@ the design's.
 The panel holds three parts, top to bottom.
 
 1. **The header**: white (`--color-surface-card`), above a 1px `--color-chat-hairline` (the
-   violet at 20%). It has `--chat-bubble-padding-inline` (14px) above and below and `--space-medium`
+   violet at 20%, drawn opaque as #ede8fe). It has `--chat-bubble-padding-inline` (14px) above and below and `--space-medium`
    at the sides, with `--chat-gap` (12px) between its parts.
    * **An avatar**: a `--chat-avatar-size` (32px) circle in the 135deg gradient, with the robot
      mark in white.
@@ -95,11 +95,14 @@ The panel holds three parts, top to bottom.
    * **"Clear chat"**, after the status, once the conversation has a message: a quiet word at
      `--font-size-xxx-small` in `--color-text-secondary`, lit as DDR-100's was. It clears as
      DDR-100 decided.
-   * **Below the wide breakpoint, the site's cross** comes last, named "Close the chat", because
-     the launcher is behind the full-window panel there. From the wide breakpoint the header draws
-     no cross, as the design draws none: the launcher closes the panel.
-   * Where the status and the controls don't fit beside the heading, as at 320px or at 200% text,
-     they take a line of their own, still at the right.
+   * **Below the wide breakpoint, the site's cross**, named "Close the chat", stands at the
+     heading's right, because the launcher is behind the full-window panel there. The status and
+     "Clear chat" take a line of their own below, at the right. From the wide breakpoint the header
+     draws no cross, as the design draws none: the launcher closes the panel.
+   * From the wide breakpoint, where the status and "Clear chat" don't fit beside the heading,
+     they take a line of their own, still at the right. "Unavailable" with "Clear chat" doesn't
+     fit, so the header is two lines then.
+   * The heading and its subtitle wrap beside the avatar, between words, never below it.
 2. **The conversation**, DDR-100's region named "Conversation", on the panel's surface, with
    `--space-medium` padding and `--chat-gap` between turns. It scrolls inside the panel and takes
    focus, as before.
@@ -116,7 +119,7 @@ The panel holds three parts, top to bottom.
    * **The send control**: a `--chat-send-size` (32px) square with `--chat-send-radius` (8px)
      corners, in the 135deg gradient, with the design's paper plane (1rem) in white. While nothing
      can be sent it is drawn at 40% opacity, as the design draws it at rest, and focus can still
-     reach it.
+     reach it (`--chat-inert-opacity`).
    * **The length count** stands below the box, at `--font-size-x-small` in
      `--color-text-secondary`. It counts and says the limit as DDR-100 decided.
 
@@ -129,12 +132,13 @@ The panel holds three parts, top to bottom.
     bottom-left one, which is `--radius-small` (4px).
   * Its padding is `--chat-bubble-padding-block` (10px) by `--chat-bubble-padding-inline` (14px).
   * Its text is `--font-size-x-small` in `--color-text-chat`, on `--line-height-prose-small`.
-  * The turn stops `--space-large` short of the right edge.
+  * The turn stops `--space-large` short of the right edge from the wide breakpoint, and
+    `--space-medium` short below it, where enlarged text leaves little room.
   * This holds for the welcome, every answer, the line while a question waits, and both notices.
   * A reply's formatting and links are as DDR-100 decided.
 * **The reader's turns** (the design draws none) stand at the right, with no mark. Each is a bubble
   in the 135deg gradient with white text, its bottom-right corner `--radius-small`, starting
-  `--space-large` in from the left. The words show exactly as typed. White on the gradient measures
+  `--space-large` in from the left (`--space-medium` below the wide breakpoint). The words show exactly as typed. White on the gradient measures
   6.29:1 at its start and 5.70:1 at its end.
 * **The line while a question waits** ("Starting up…" or "Writing an answer…") and **the two
   notices** are the Digital Twin's bubble with their text in `--color-text-secondary`. Nothing
@@ -187,6 +191,9 @@ Each question is one the chatbot can answer from the owner's documents.
 * **Hairlines are 1px**, where Figma draws 0.8px. The site draws every hairline at 1px.
 * **One violet edge, `--color-chat-edge` at 35%**, where the drawing uses 25% on the bubble, 30% on
   the field and 35% on the panel and the suggestions. The difference doesn't show on white.
+* **The edge and the hairline are opaque**, the violet as it shows at 35% and 20% on white, because
+  the palette holds no translucent ink (DDR-031 and DDR-082 admit two translucent surfaces only).
+  On the foot's grey and the page's off-white the difference doesn't show either.
 * **The site's type scale and leadings**, where the drawing writes values the site doesn't have
   (DDR-038 holds the site to four leadings):
   * the suggestions at `--font-size-xx-small` (12.8px), where 12px is drawn;
@@ -198,7 +205,9 @@ Each question is one the chatbot can answer from the owner's documents.
 * **The field at 16px below the wide breakpoint**, where 13px is drawn, so a phone doesn't zoom in
   on focus (the owner's choice).
 * **The cross in the header below the wide breakpoint**, because the full-window panel covers the
-  launcher there (the owner's choice).
+  launcher there (the owner's choice). The status and "Clear chat" stand on a line below it.
+* **A smaller step beside the turns below the wide breakpoint**, `--space-medium` where the design
+  draws `--space-large`, so that a bubble keeps room for its words on a phone with enlarged text.
 
 ### New values
 
@@ -214,7 +223,8 @@ These are new in `app/tokens.css`:
   `--chat-bubble-padding-block`, `--chat-bubble-padding-inline`, `--chat-status-gap`,
   `--chat-nudge`, `--chat-avatar-size`, `--chat-twin-mark-size`, `--chat-mark-size`,
   `--chat-small-mark-size`, `--chat-send-size`, `--chat-dot-size`, `--chat-radius`,
-  `--chat-send-radius`, `--chat-gradient-angle` and `--chat-launcher-gradient-angle`.
+  `--chat-send-radius`, `--chat-gradient-angle`, `--chat-launcher-gradient-angle` and
+  `--chat-inert-opacity`.
 
 These change:
 * `--chat-launcher-size` becomes 2.75rem;
@@ -292,8 +302,10 @@ Tradeoffs:
 * **The placeholder fails 1.4.3**, as the site's other faint text does.
 
 Risks:
-* **The header holds more at once once there is a message**: status, "Clear chat" and, on a phone,
-  the cross. It wraps to a second line at 320px and at 200% text.
+* **The header holds more once there is a message**: the status, "Clear chat" and, on a phone, the
+  cross. On a phone it is two lines. At 320px with 200% text it wraps to about 440px of a 640px
+  window, and the conversation shows little above the field, though it still scrolls and nothing
+  scrolls sideways.
 * **The launcher still stands below the contents bar's menu** (DDR-075) and the larger picture's
   dialog (DDR-082), which stand above everything while open.
 

@@ -19,7 +19,7 @@ import { openChatCommand } from './open-chat';
 import { plain, Reply } from './reply';
 import styles from './digital-twin-chat.module.css';
 
-/** How the chatbot's service is, which the status line under the panel's heading says. */
+/** How the chatbot's service is, which the status at the header's right says. */
 export type Service = 'warming' | 'ready' | 'unavailable';
 
 /** One message of the conversation: the reader's, or the Digital Twin's answer. */
@@ -344,9 +344,22 @@ export async function deliver(
 }
 
 /**
- * What the conversation shows for a given state, per DDR-100 and DDR-101: the welcome, the
+ * The Digital Twin's mark, which stands before each of its turns, per DDR-102. It repeats who wrote
+ * the turn, which its hidden sender already says, so assistive technology doesn't hear it.
+ */
+function TwinMark() {
+  return (
+    <span className={styles.mark}>
+      <Icon name="bot" />
+    </span>
+  );
+}
+
+/**
+ * What the conversation shows for a given state, per DDR-100, DDR-101 and DDR-102: the welcome, the
  * suggestions until a question is sent, the messages, and the line or the notice in the answer's
- * place. It holds nothing of its own, so each state can be rendered as it stands.
+ * place. Each of the Digital Twin's turns has its mark beside its bubble. It holds nothing of its
+ * own, so each state can be rendered as it stands.
  */
 export function Conversation({
   chat,
@@ -362,80 +375,94 @@ export function Conversation({
   ask: (question: string) => void;
   retry: () => void;
 }) {
-  const tryId = useId();
-
   return (
     <>
-      <p className={`${styles.message} ${styles.twin}`}>
-        <span className={styles.hidden}>{chat.sender.twin} </span>
-        {chat.welcome}
-      </p>
+      <div className={styles.turn}>
+        <TwinMark />
+        <p className={`${styles.message} ${styles.twin}`}>
+          <span className={styles.hidden}>{chat.sender.twin} </span>
+          {chat.welcome}
+        </p>
+      </div>
       {messages.length === 0 && (
-        <div className={styles.suggestions}>
-          <p id={tryId} className={styles.label}>
-            {chat.tryAsking}
-          </p>
-          <ul aria-labelledby={tryId} className={styles.suggestionList}>
-            {chat.suggestions.map((suggestion) => (
-              <li key={suggestion}>
-                <button
-                  type="button"
-                  className={styles.suggestion}
-                  disabled={!mounted}
-                  onClick={() => ask(suggestion)}
-                >
-                  {suggestion}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul aria-label={chat.suggested} className={styles.suggestions}>
+          {chat.suggestions.map((suggestion) => (
+            <li key={suggestion}>
+              <button
+                type="button"
+                className={styles.suggestion}
+                disabled={!mounted}
+                onClick={() => ask(suggestion)}
+              >
+                {suggestion}
+              </button>
+            </li>
+          ))}
+        </ul>
       )}
       {messages.length > 0 && (
         <ol className={styles.messages}>
           {messages.map(({ from, text }, index) => (
             <li
               key={index}
-              className={`${styles.message} ${from === 'reader' ? styles.reader : styles.twin}`}
+              className={from === 'reader' ? `${styles.message} ${styles.reader}` : styles.turn}
               data-last={index === messages.length - 1 ? '' : undefined}
             >
-              <span className={styles.hidden}>{from === 'reader' ? chat.sender.reader : chat.sender.twin} </span>
-              {from === 'reader' ? <p>{text}</p> : <Reply text={text} newTab={chat.newTab} />}
+              {from === 'reader' ? (
+                <>
+                  <span className={styles.hidden}>{chat.sender.reader} </span>
+                  <p>{text}</p>
+                </>
+              ) : (
+                <>
+                  <TwinMark />
+                  <div className={`${styles.message} ${styles.twin}`}>
+                    <span className={styles.hidden}>{chat.sender.twin} </span>
+                    <Reply text={text} newTab={chat.newTab} />
+                  </div>
+                </>
+              )}
             </li>
           ))}
         </ol>
       )}
       {waiting && (
-        <p className={`${styles.message} ${styles.twin} ${styles.pending}`}>
-          <span className={styles.hidden}>{chat.sender.twin} </span>
-          {waiting === 'held' ? chat.held : chat.writing}
-        </p>
+        <div className={styles.turn}>
+          <TwinMark />
+          <p className={`${styles.message} ${styles.twin} ${styles.pending}`}>
+            <span className={styles.hidden}>{chat.sender.twin} </span>
+            {waiting === 'held' ? chat.held : chat.writing}
+          </p>
+        </div>
       )}
       {notice && (
-        <div className={`${styles.message} ${styles.twin} ${styles.pending}`}>
-          <span className={styles.hidden}>{chat.sender.twin} </span>
-          <p>{notice === 'rate-limited' ? chat.rateLimited : chat.unavailable}</p>
-          {notice === 'unavailable' && (
-            <ul className={styles.actions}>
-              <li>
-                <button type="button" className={styles.primary} onClick={retry}>
-                  {chat.tryAgain}
-                </button>
-              </li>
-              <li>
-                <a
-                  href={chat.page}
-                  className={styles.secondary}
-                  target="_blank"
-                  rel="noopener"
-                  aria-label={`${chat.ownPage}, ${chat.newTab}`}
-                >
-                  <Icon name="external" />
-                  {chat.ownPage}
-                </a>
-              </li>
-            </ul>
-          )}
+        <div className={styles.turn}>
+          <TwinMark />
+          <div className={`${styles.message} ${styles.twin} ${styles.pending}`}>
+            <span className={styles.hidden}>{chat.sender.twin} </span>
+            <p>{notice === 'rate-limited' ? chat.rateLimited : chat.unavailable}</p>
+            {notice === 'unavailable' && (
+              <ul className={styles.actions}>
+                <li>
+                  <button type="button" className={styles.primary} onClick={retry}>
+                    {chat.tryAgain}
+                  </button>
+                </li>
+                <li>
+                  <a
+                    href={chat.page}
+                    className={styles.secondary}
+                    target="_blank"
+                    rel="noopener"
+                    aria-label={`${chat.ownPage}, ${chat.newTab}`}
+                  >
+                    <Icon name="external" />
+                    {chat.ownPage}
+                  </a>
+                </li>
+              </ul>
+            )}
+          </div>
         </div>
       )}
     </>
@@ -464,13 +491,15 @@ export function spoken(state: ChatState, chat: Chat): string | null {
 const subscribe = () => () => {};
 
 /**
- * The chat with the owner's Digital Twin, on every page, per DDR-100 and ADR-028: a launcher at
- * the window's bottom-right corner, and the panel it opens.
+ * The chat with the owner's Digital Twin, on every page, per DDR-100, DDR-102 and ADR-028: a
+ * launcher at the window's bottom-right corner, and the panel it opens.
  *
- * The panel is a native `dialog`. From the wide breakpoint it opens beside the page, which stays in
- * use, and below it over the whole window, modal, so focus cannot wander behind it. Either way
- * Escape and its close control close it, and focus goes back to whatever opened it: the launcher,
- * or the invitation on the Digital Twin's view, which opens it by a command of the page's own.
+ * The panel is a native `dialog`. From the wide breakpoint it opens above the launcher, beside the
+ * page, which stays in use, and the launcher stays in view as its close control, after it in the
+ * markup as it is below it on screen. Below the breakpoint it opens over the whole window, modal,
+ * so focus cannot wander behind it, and a cross in its header closes it. Either way Escape closes
+ * it, and focus goes back to whatever opened it: the launcher, or the invitation on the Digital
+ * Twin's view, which opens it by a command of the page's own.
  *
  * As soon as it has mounted it warms the API, so a sleeping instance has the most time to wake
  * before the reader asks (ADR-028). After 10 minutes without hearing from the API it warms it
@@ -626,7 +655,7 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
     field.current?.focus();
   }
 
-  // However the panel closes, the launcher comes back and focus returns to what opened it.
+  // However the panel closes, the launcher takes back its words and focus returns to what opened it.
   function closed() {
     flushSync(() => setOpen(false));
     opener.current?.focus();
@@ -697,10 +726,19 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
     }
   }
 
-  function escape(event: KeyboardEvent<HTMLDialogElement>) {
-    if (event.key === 'Escape') {
+  function escape(event: KeyboardEvent<HTMLElement>) {
+    if (event.key === 'Escape' && panel.current?.open) {
       event.preventDefault();
-      panel.current?.close();
+      panel.current.close();
+    }
+  }
+
+  // The launcher opens the panel, and while the panel is open it closes it (DDR-102).
+  function toggle(from: HTMLElement) {
+    if (panel.current?.open) {
+      panel.current.close();
+    } else {
+      show(from);
     }
   }
 
@@ -711,28 +749,6 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
 
   return (
     <div className={styles.chat}>
-      <a
-        href={chat.page}
-        className={`${styles.launcher} ${styles.withoutScript}`}
-        target="_blank"
-        rel="noopener"
-        aria-label={`${chat.launcher}, ${chat.newTab}`}
-      >
-        <Icon name="chat" />
-        <span className={styles.launcherText}>{chat.launcher}</span>
-      </a>
-      <button
-        type="button"
-        className={`${styles.launcher} ${styles.withScript}`}
-        aria-label={chat.launcher}
-        aria-expanded={open}
-        aria-controls={chat.id}
-        disabled={!mounted}
-        onClick={(event) => show(event.currentTarget)}
-      >
-        <Icon name="chat" />
-        <span className={styles.launcherText}>{chat.launcher}</span>
-      </button>
       <dialog
         ref={panel}
         id={chat.id}
@@ -742,26 +758,35 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
         onKeyDown={escape}
       >
         <div className={styles.header}>
-          <div>
-            <h2 id={headingId} className={styles.heading}>
-              {chat.heading}
-            </h2>
-            <p className={styles.status}>{status}</p>
+          <div className={styles.who}>
+            <span className={styles.avatar}>
+              <Icon name="bot" />
+            </span>
+            <div className={styles.title}>
+              <h2 id={headingId} className={styles.heading}>
+                {chat.heading}
+              </h2>
+              <p className={styles.subtitle}>{chat.subtitle}</p>
+            </div>
           </div>
+          <button
+            type="button"
+            className={styles.close}
+            aria-label={chat.close}
+            onClick={() => panel.current?.close()}
+          >
+            <Icon name="close" />
+          </button>
           <div className={styles.tools}>
+            <p className={styles.status} data-service={state.service}>
+              <span className={styles.dot} />
+              {status}
+            </p>
             {state.messages.length > 0 && (
               <button type="button" className={styles.clear} onClick={clear}>
                 {chat.clear}
               </button>
             )}
-            <button
-              type="button"
-              className={styles.close}
-              aria-label={chat.close}
-              onClick={() => panel.current?.close()}
-            >
-              <Icon name="close" />
-            </button>
           </div>
         </div>
         {/* The conversation scrolls inside the panel, so it takes focus, for a keyboard to scroll
@@ -811,6 +836,35 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
           {limitSaid > 0 && <p key={`limit-${limitSaid}`}>{chat.limit}</p>}
         </div>
       </dialog>
+      <a
+        href={chat.page}
+        className={`${styles.launcher} ${styles.withoutScript}`}
+        target="_blank"
+        rel="noopener"
+        aria-label={`${chat.launcher}, ${chat.newTab}`}
+      >
+        <Icon name="bot" />
+        <span className={styles.launcherText}>{chat.launcher}</span>
+      </a>
+      <button
+        type="button"
+        className={`${styles.launcher} ${styles.withScript}`}
+        aria-label={open ? chat.close : chat.launcher}
+        aria-expanded={open}
+        aria-controls={chat.id}
+        disabled={!mounted}
+        onClick={(event) => toggle(event.currentTarget)}
+        onKeyDown={escape}
+      >
+        {open ? (
+          <Icon name="close" />
+        ) : (
+          <>
+            <Icon name="bot" />
+            <span className={styles.launcherText}>{chat.launcher}</span>
+          </>
+        )}
+      </button>
     </div>
   );
 }

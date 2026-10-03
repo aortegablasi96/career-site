@@ -179,10 +179,11 @@ import type { Cv } from './types';
  * It moved again with #307, which added the chat with the Digital Twin (`chat.ts`) and made the
  * Digital Twin's invitation open it. Neither prints, and neither is a fact ADR-005 lists as shared,
  * so the CV file need not change. The chat's control that clears it moved it once more, for the same
- * reason, and so did removing the chat's note on where messages go (DDR-101).
+ * reason, and so did removing the chat's note on where messages go (DDR-101), and giving the chat
+ * the design's words (DDR-102).
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: 'b0854a4f85a6ae3fb15ab59a7db7bb738cbc0e9b3ab75053d1ad920d453b39d8',
+  contentDigest: 'c6d7dbdc0e500474347781da9c4d5e817620823356e8b5d415dd4e2bce6eb87f',
 };
