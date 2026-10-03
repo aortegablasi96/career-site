@@ -96,9 +96,12 @@ The panel holds three parts, top to bottom.
      `--font-size-xxx-small` in `--color-text-secondary`, lit as DDR-100's was. It clears as
      DDR-100 decided.
    * **Below the wide breakpoint, the site's cross**, named "Close the chat", stands at the
-     heading's right, because the launcher is behind the full-window panel there. The status and
-     "Clear chat" take a line of their own below, at the right. From the wide breakpoint the header
-     draws no cross, as the design draws none: the launcher closes the panel.
+     heading's right, because the launcher is behind the full-window panel there. The status takes
+     the line just below the heading, `--space-x-small` under it, at the left under its words
+     (`--chat-status-indent`, past the avatar), and "Clear chat" stands at that line's right. The
+     owner asked for the status there on 2026-10-04, where it first stood at the right. From the
+     wide breakpoint the header draws no cross, as the design draws none: the launcher closes the
+     panel.
    * From the wide breakpoint, where the status and "Clear chat" don't fit beside the heading,
      they take a line of their own, still at the right. "Unavailable" with "Clear chat" doesn't
      fit, so the header is two lines then.
@@ -205,7 +208,8 @@ Each question is one the chatbot can answer from the owner's documents.
 * **The field at 16px below the wide breakpoint**, where 13px is drawn, so a phone doesn't zoom in
   on focus (the owner's choice).
 * **The cross in the header below the wide breakpoint**, because the full-window panel covers the
-  launcher there (the owner's choice). The status and "Clear chat" stand on a line below it.
+  launcher there (the owner's choice). The status stands below the heading at the left, and
+  "Clear chat" at that line's right (the owner's choice).
 * **A smaller step beside the turns below the wide breakpoint**, `--space-medium` where the design
   draws `--space-large`, so that a bubble keeps room for its words on a phone with enlarged text.
 
@@ -220,7 +224,7 @@ These are new in `app/tokens.css`:
   `--shadow-chat-online`;
 * the sizes, spaces, radii and angles `--chat-inset`, `--chat-close-inline-size`,
   `--chat-close-block-size`, `--chat-panel-offset`, `--chat-launcher-gap`, `--chat-gap`,
-  `--chat-bubble-padding-block`, `--chat-bubble-padding-inline`, `--chat-status-gap`,
+  `--chat-bubble-padding-block`, `--chat-bubble-padding-inline`, `--chat-status-gap`, `--chat-status-indent`,
   `--chat-nudge`, `--chat-avatar-size`, `--chat-twin-mark-size`, `--chat-mark-size`,
   `--chat-small-mark-size`, `--chat-send-size`, `--chat-dot-size`, `--chat-radius`,
   `--chat-send-radius`, `--chat-gradient-angle`, `--chat-launcher-gradient-angle` and

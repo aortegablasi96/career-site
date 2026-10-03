@@ -115,14 +115,14 @@
 
 /* The header, white above a violet hairline: the avatar, the heading and what the Digital Twin is,
    and at the right the service's status and clearing the chat. On a phone the cross stands at the
-   heading's right and the status and clearing take a line of their own below, at the right. From
-   the wide breakpoint they stand beside the heading, and take a line of their own only where they
-   don't fit. */
+   heading's right, and the status takes the line just below the heading, under its words at the
+   left, with clearing at the right. From the wide breakpoint they stand beside the heading, and
+   take a line of their own only where they don't fit. */
 .header {
   display: flex;
   flex: none;
   flex-wrap: wrap;
-  gap: var(--chat-gap);
+  gap: var(--space-x-small) var(--chat-gap);
   align-items: center;
   padding-block: var(--chat-bubble-padding-inline);
   padding-inline: var(--space-medium);
@@ -172,15 +172,17 @@
   line-height: var(--line-height-body);
 }
 
-/* The status, and clearing the chat once there is something to clear. */
+/* The status, and clearing the chat once there is something to clear. On a phone the status
+   stands under the heading's words, past the avatar, and clearing at the line's right. */
 .tools {
   display: flex;
   flex-basis: 100%;
   flex-wrap: wrap;
   margin-inline-start: auto;
+  padding-inline-start: var(--chat-status-indent);
   gap: var(--space-small);
   align-items: center;
-  justify-content: end;
+  justify-content: space-between;
 }
 
 /* The word says how the service is, and the dot before it repeats it: amber while it starts, green
@@ -608,8 +610,14 @@
     flex: 0 1 auto;
   }
 
+  .header {
+    gap: var(--chat-gap);
+  }
+
   .tools {
     flex-basis: auto;
+    padding-inline-start: 0;
+    justify-content: end;
   }
 
   .turn {
