@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-18
 
+**Amended by ADR-028**: a fifth Client Component, `DigitalTwinChat`, holds a conversation with the
+Digital Twin and calls its API from the reader's browser. Its reason is the reader's question and
+the answer, which exist only in the browser after the page is served.
+
 **Amended by ADR-025**: a fourth Client Component, `ScrollAppear`, makes the page's elements appear as
 the reader scrolls to them, per DDR-090. It renders nothing, and the page is served whole without it.
 
