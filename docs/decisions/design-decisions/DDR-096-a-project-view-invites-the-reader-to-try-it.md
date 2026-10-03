@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-10-02
 
+**Amended by DDR-100 in one respect**: with script, the invitation's words open the chat with the
+Digital Twin, which stands on every page since #306, rather than linking to the chatbot's own page
+in a new tab. Without script they are the link decided here. Everything else here stands.
+
 **Amends DDR-050 in two respects**: a project's view may show a line above its links that invites
 the reader to try the project, and its links may go on past the repository and the live site to
 any other place the project runs. Everything else DDR-050 and its amendments decide stands.
@@ -42,7 +46,8 @@ the sentence. Only the Digital Twin has one.**
 * **The link opens a new tab, with `rel="noopener"`, and says so after its own text**: "Ask my AI
   Digital Twin, opens in a new tab". It leaves the site as the view's pills do, so it follows
   DDR-043 as DDR-050 extends it. It carries no arrow: it is a link inside a sentence, not a control,
-  and the underline is what marks it.
+  and the underline is what marks it. *Since DDR-100 this holds without script only: with script
+  the words open the chat on the page, and don't say they open a new tab.*
 * **It goes with the links while the business case is shown** (DDR-079), as "Built with" and the
   technologies do: it invites the reader to the product, which the overview describes.
 * **It is on screen only**, since a view does not print (DDR-050).

@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `029`. The next DDR is `100`.** Update both lines when a record lands.
+**The next ADR is `029`. The next DDR is `101`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -50,7 +50,7 @@ ADR-001, ADR-002 and ADR-004 to ADR-028 are accepted. ADR-003 is superseded.
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-099. There are
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-100. There are
 two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
@@ -123,11 +123,14 @@ Each record keeps everything not listed against it.
 * **DDR-036** (dot): DDR-046 takes its fill; DDR-057 sizes it 16px/10px on screen, 12px on paper.
 * **DDR-039** (rhythm): DDR-057 leaves `--space-role` and `--space-credential` to paper and the
   phone's column.
-* **DDR-040** (introduction): DDR-072 puts the question in `--space-controls`.
+* **DDR-040** (introduction): DDR-072 puts the question in `--space-controls`; DDR-100 pads the
+  page's end for the chat's launcher, on screen only.
 * **DDR-042**: DDR-045 marks Home in the introduction.
 * **DDR-043** (new tab): DDR-044 removes the arrow; DDR-050 adds a project view's links; DDR-069 adds
-  the education cards.
+  the education cards; DDR-100 adds the chat's launcher without script, its
+  "Ask it on its own page" and a reply's links.
 * **DDR-044** (service pills): DDR-047 the GitHub hover fill; DDR-073 the email pill's M alone.
+* **DDR-046** (bands): DDR-100 grows `--page-padding-block-end` on screen for the chat's launcher.
 * **DDR-049** (bar title): DDR-075 the menu below the wide breakpoint; DDR-091 the title leads
   where Home does, which it ruled out.
 * **DDR-075** (menu): DDR-091 the title's link closes it too, though it is outside the menu.
@@ -138,6 +141,8 @@ Each record keeps everything not listed against it.
   picture a view shows stands in one box, at its tallest picture's shape. DDR-093 gives an address the site
   does not have a view's frame and the top of a view. DDR-096 a line above the links inviting the
   reader to try the project, and links past the live site (the Digital Twin's Telegram).
+* **DDR-096** (invitation): DDR-100 makes its words open the chat with script; without script they
+  stay the link to the chatbot's page.
 * **DDR-051** (project cards): DDR-054 every technology; DDR-055 the lift; DDR-062 the hover
   shadow; DDR-063 the shared card behaviour.
 * **DDR-055, DDR-057, DDR-059, DDR-061**: DDR-063 makes a role card rest raised and lift like a
