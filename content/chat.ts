@@ -36,6 +36,8 @@ export const chat: Chat = {
     unavailable: 'Can’t answer right now',
   },
   close: 'Close the chat',
+  clear: 'Clear chat',
+  cleared: 'The chat is cleared.',
   conversation: 'Conversation',
   sender: { reader: 'You:', twin: 'Digital Twin:' },
   welcome:

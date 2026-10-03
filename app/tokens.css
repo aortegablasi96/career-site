@@ -899,12 +899,13 @@
 
   /* The chat with the Digital Twin, per DDR-100. The launcher is NumisBook's 52px, the owner's
      model for it, a circle below the wide breakpoint and the height of the pill from it. The panel
-     at the window's corner is 440px wide and at most 640px tall, and never taller than the window
-     less its insets above and below. The field grows to five of its lines and its padding, then
+     at the window's corner is 440px wide and 640px tall, a size that holds as the conversation
+     grows, and never taller than the window less the contents bar, which stands above it, and its
+     insets above and below. The field grows to five of its lines and its padding, then
      scrolls; `lh` is the field's own line, so the limit follows its size and leading. */
   --chat-launcher-size: 3.25rem;
   --chat-panel-width: 27.5rem;
-  --chat-panel-height: min(40rem, 100dvh - 2 * var(--space-large));
+  --chat-panel-height: min(40rem, 100dvh - var(--contents-bar-height) - 2 * var(--space-large));
   --chat-field-height: calc(5lh + 2 * var(--space-small) + 2px);
   /* The footer's padding below its line, which on screen leaves room for the launcher under it, so
      the launcher never covers the page's last line once the reader has scrolled to the end, per

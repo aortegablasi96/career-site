@@ -30,7 +30,7 @@ export interface Message {
 
 /** What the live region says, per DDR-100, and a count that changes each time it says it. */
 export interface Said {
-  what: 'answer' | 'held' | 'rate-limited' | 'unavailable';
+  what: 'answer' | 'held' | 'rate-limited' | 'unavailable' | 'cleared';
   serial: number;
 }
 
@@ -58,7 +58,8 @@ export type ChatEvent =
   | { type: 'gave-up' }
   | { type: 'answered'; reply: string }
   | { type: 'rate-limited' }
-  | { type: 'failed' };
+  | { type: 'failed' }
+  | { type: 'clear' };
 
 /** Before anything is sent: the page has loaded, and the chat warms the API at once (ADR-028). */
 export const initial: ChatState = {
@@ -80,9 +81,10 @@ function say(state: ChatState, what: Said['what']): Said {
  *
  * A question sent before the API is warm is held and counts as sent, so the reader never sends it
  * twice. A 503 holds the question in flight again. A 429 keeps the question, which the field takes
- * back. A failure keeps it too, so "Try again" can send it. The live region says each answer, the
- * line a held question shows, and each notice, once each: only the event that changes them says
- * them.
+ * back. A failure keeps it too, so "Try again" can send it. Clearing empties the conversation, and
+ * drops any question on its way, so the chat is as it was before the first one, with the service as
+ * it stands. The live region says each answer, the line a held question shows, each notice and the
+ * clearing, once each: only the event that changes them says them.
  */
 export function next(state: ChatState, event: ChatEvent): ChatState {
   switch (event.type) {
@@ -158,6 +160,15 @@ export function next(state: ChatState, event: ChatEvent): ChatState {
         waiting: null,
         notice: 'unavailable',
         said: say(state, 'unavailable'),
+      };
+    case 'clear':
+      return {
+        ...state,
+        messages: [],
+        waiting: null,
+        notice: null,
+        question: null,
+        said: say(state, 'cleared'),
       };
   }
 }
@@ -423,7 +434,12 @@ export function spoken(state: ChatState, chat: Chat): string | null {
     return answer ? plain(answer.text) : null;
   }
 
-  return { held: chat.held, 'rate-limited': chat.rateLimited, unavailable: chat.unavailable }[state.said.what];
+  return {
+    held: chat.held,
+    'rate-limited': chat.rateLimited,
+    unavailable: chat.unavailable,
+    cleared: chat.cleared,
+  }[state.said.what];
 }
 
 /** Nothing changes once script runs, so there is nothing to subscribe to. */
@@ -441,7 +457,7 @@ const subscribe = () => () => {};
  * As soon as it has mounted it warms the API, once for the conversation, so a sleeping instance has
  * the most time to wake before the reader asks (ADR-028). The conversation lives here alone: its id
  * is made when the first question is sent and nothing is stored, so it lasts until the page is
- * reloaded or left.
+ * reloaded or left, or until the reader clears it, after which the next question starts another.
  *
  * Without script the launcher is a link to the chatbot's own page, and before the component has
  * mounted its controls are disabled, so nothing sends a question or reloads the page.
@@ -491,10 +507,18 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
     warmOnce();
   }, []);
 
-  /** Sends a question, and puts it back in the field if the API asks the reader to wait (429). */
+  /**
+   * Sends a question, and puts it back in the field if the API asks the reader to wait (429). What
+   * comes of it once the reader has cleared its conversation is dropped.
+   */
   function send(question: string) {
-    user.current ??= crypto.randomUUID();
-    void deliver(chat.api, user.current, question, warmth.current ?? warm(), (event) => {
+    const conversation = (user.current ??= crypto.randomUUID());
+
+    void deliver(chat.api, conversation, question, warmth.current ?? warm(), (event) => {
+      if (user.current !== conversation) {
+        return;
+      }
+
       dispatch(event);
 
       if (event.type === 'rate-limited') {
@@ -521,6 +545,15 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
     } else {
       send(state.question);
     }
+  }
+
+  // Clearing forgets the conversation's id, so the API keeps none of it for the next question, and
+  // takes the reader back to the welcome with focus in the field.
+  function clear() {
+    user.current = null;
+    dispatch({ type: 'clear' });
+    log.current?.scrollTo({ top: 0 });
+    field.current?.focus();
   }
 
   function show(from: HTMLElement | null) {
@@ -666,14 +699,21 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
             </h2>
             <p className={styles.status}>{status}</p>
           </div>
-          <button
-            type="button"
-            className={styles.close}
-            aria-label={chat.close}
-            onClick={() => panel.current?.close()}
-          >
-            <Icon name="close" />
-          </button>
+          <div className={styles.tools}>
+            {state.messages.length > 0 && (
+              <button type="button" className={styles.clear} onClick={clear}>
+                {chat.clear}
+              </button>
+            )}
+            <button
+              type="button"
+              className={styles.close}
+              aria-label={chat.close}
+              onClick={() => panel.current?.close()}
+            >
+              <Icon name="close" />
+            </button>
+          </div>
         </div>
         {/* The conversation scrolls inside the panel, so it takes focus, for a keyboard to scroll
             it. It opens with the welcome, the suggestions until a question is sent, and the note

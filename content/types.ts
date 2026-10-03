@@ -754,6 +754,10 @@ export interface Chat {
   status: { warming: string; ready: string; unavailable: string };
   /** The accessible name of the control that closes the panel. */
   close: string;
+  /** The control that clears the conversation and starts a new one, shown once there is a message. */
+  clear: string;
+  /** What the live region says once the conversation is cleared. */
+  cleared: string;
   /** The accessible name of the conversation's scrolling region. */
   conversation: string;
   /** What each message starts with, said only to assistive technology. */

@@ -359,6 +359,10 @@ The page itself is the CV, so what it prints is designed.
 * **The panel is a `dialog`**: `show()` from the wide breakpoint (non-modal, `position: fixed` at
   the corner) and `showModal()` below it (full window). The choice is made as it opens, so resizing
   an open panel keeps its modality. Escape is handled on `keydown` for both.
+* **Clearing forgets the conversation's id** (`user.current`), and `send` drops what `deliver`
+  dispatches once the id it sent has changed, so a late answer can't land in the cleared chat.
+* **The corner panel has a fixed `block-size`**, which the contents bar's height caps: the bar
+  stands above a non-modal panel, so a panel as tall as the window less its insets slid under it.
 * **A view has other dialogs before it**, the larger pictures', so look the chat up by its id,
   `digital-twin-chat`, never as the page's first `dialog`.
 * **The live region is inside the panel**: outside it, a modal panel makes it inert and nothing is

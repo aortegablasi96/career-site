@@ -115,10 +115,13 @@
   }
 }
 
-/* The heading and the service's status, with the close control at the right, above a hairline. */
+/* The heading and the service's status, with the controls at the right, above a hairline. Where the
+   three don't fit on one line, as on a narrow window with enlarged text, the controls take a line of
+   their own below, still at the right. */
 .header {
   display: flex;
   flex: none;
+  flex-wrap: wrap;
   gap: var(--space-medium);
   align-items: start;
   justify-content: space-between;
@@ -135,6 +138,37 @@
   margin-block-start: var(--space-x-small);
   color: var(--color-text-muted);
   font-size: var(--font-size-x-small);
+}
+
+/* The header's controls: clearing the chat, once there is something to clear, and closing it. */
+.tools {
+  display: flex;
+  flex: none;
+  margin-inline-start: auto;
+  gap: var(--space-x-small);
+  align-items: center;
+}
+
+/* Clearing the chat is a quiet word beside the cross, in the cross's ink, as it is lit. */
+.clear {
+  padding-block: var(--space-x-small);
+  padding-inline: var(--space-small);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  font: inherit;
+  font-size: var(--font-size-x-small);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-body);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.clear:hover,
+.clear:focus-visible {
+  background-color: var(--color-surface-hover);
+  color: var(--color-accent-hover);
 }
 
 .close {
@@ -392,7 +426,7 @@
 
 /* From the wide breakpoint the launcher is a pill with its words, the height of the circle, and the
    panel a card at the window's corner where the launcher stood, beside the page, which stays in
-   use. */
+   use. The card keeps its height as the conversation grows, and stops short of the contents bar. */
 @media (min-width: 48em) {
   .launcher {
     inset-block-end: var(--space-large);
@@ -408,7 +442,7 @@
   .panel {
     inset: auto var(--space-large) var(--space-large) auto;
     inline-size: var(--chat-panel-width);
-    max-block-size: var(--chat-panel-height);
+    block-size: var(--chat-panel-height);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-large);
     box-shadow: var(--shadow-bar);

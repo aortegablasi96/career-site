@@ -17,6 +17,11 @@ launcher. Paper keeps the padding it set. Everything else those records decide s
   *New values*.
 * A reply's numbered list keeps its numbering when the chatbot spaces its items with blank lines
   or writes points under them. Those points join their item as new lines (ADR-028's one level).
+* The owner asked for two changes while reviewing it:
+  * **The panel at the corner keeps one height**, rather than growing with the conversation. It
+    stops short of the contents bar, which stands above it, where it had reached up under the bar
+    on a short window.
+  * **A control clears the chat**, under *The panel* and in *The words, and each state*.
 
 ## Context
 
@@ -79,7 +84,8 @@ conversation.
 
 * **From the wide breakpoint**, the panel stands where the launcher was, at the window's
   bottom-right corner inset `--space-large`. It is `--chat-panel-width` wide (27.5rem) and at
-  most `--chat-panel-height` tall (40rem). It never exceeds the window less its insets.
+  `--chat-panel-height` tall (40rem), whatever the conversation holds. It is never taller than the
+  window less the contents bar and its insets, so it never reaches under the bar.
   * It is not modal: the page behind it can still be read, scrolled and used.
   * Escape closes it while focus is inside it.
 * **Below the wide breakpoint it takes the whole window**, over the contents bar.
@@ -101,7 +107,9 @@ The panel holds three parts, top to bottom:
    * "Can't answer right now" once warming has given up or the last question failed.
 
    At the header's right is the close control: the cross the site already draws, named "Close the
-   chat". The header is separated from the conversation by a hairline in `--color-border`.
+   chat". Once the conversation has a message, "Clear chat" stands before the cross, a word at
+   `--font-size-x-small` in the cross's ink, lit as it is. Where the heading and the two controls
+   don't fit on one line, the controls take a line of their own, still at the right. The header is separated from the conversation by a hairline in `--color-border`.
 2. **The conversation**, a region named "Conversation" that scrolls inside the panel.
    * It can take focus, so a keyboard can scroll it.
    * It is a list of messages, and each one starts with its sender, said only to assistive
@@ -145,6 +153,7 @@ them on #306.
 | Sending | The reader's question appears at once, and below it, in the same ink: "Writing an answer…". Nothing animates. The send control is inert until the answer arrives. |
 | Answered | The answer replaces the line above. The field is empty, and focus stays there for a follow-up. |
 | Rate-limited | In the answer's place: "You've sent a lot of questions in a short time. Wait a minute, then send yours again." The question goes back into the field. |
+| Cleared | "Clear chat" empties the conversation: the welcome, the suggestions and the note again, as at rest. It drops any question on its way or kept after a notice, and an answer that arrives for it isn't shown. The next question starts a new conversation with a new id, so the API keeps nothing of the old one. Focus moves to the field, the status line stays as it was, and nothing asks to confirm. |
 | Unavailable | In the answer's place: "The Digital Twin can't answer right now." Below it are two pills: "Try again", filled, and "Ask it on its own page", outlined, which opens the chatbot's page in a new tab and says so. "Try again" sends the kept question again, or starts warming again if there is none. The status line says "Can't answer right now". |
 
 * **The note on where messages go** is the last part of the welcome. The reader meets it before the
@@ -166,7 +175,8 @@ them on #306.
 * the line shown while a question waits for the service to start;
 * the rate-limited notice;
 * the unavailable notice;
-* reaching the length limit.
+* reaching the length limit;
+* clearing the chat: "The chat is cleared."
 
 The status line and the conversation aren't live regions themselves, so nothing is announced
 twice. The reader's own question isn't announced.
@@ -186,7 +196,8 @@ DDR-096 draws them, but they are a control that opens the panel, not a link that
 These tokens are new in `app/tokens.css`:
 * `--chat-launcher-size`, 3.25rem;
 * `--chat-panel-width`, 27.5rem;
-* `--chat-panel-height`, 40rem, and never more than the window less its insets;
+* `--chat-panel-height`, 40rem, and never more than the window less the contents bar and its
+  insets;
 * `--chat-field-height`, the field's five lines and its padding;
 * `--footer-padding-block-end`, the footer's foot, which is DDR-028's step on paper.
 
@@ -251,7 +262,8 @@ Tradeoffs:
 Risks:
 * **On a narrow window at 200% text**, the full-window panel holds little conversation above the
   field and the on-screen keyboard. The field's five-line cap and the scrolling conversation keep
-  it usable. #307 checks it at 320px.
+  it usable. #307 checks it at 320px. Once there is a message, "Clear chat" and the cross take a
+  line of their own there, about 67px more of the window.
 * **The launcher must stay below the contents bar's menu** (DDR-075) and the larger picture's dialog
   (DDR-082), which stand above everything while open.
 * **The note names OpenAI and Cohere.** If the chatbot changes providers, the note must change with

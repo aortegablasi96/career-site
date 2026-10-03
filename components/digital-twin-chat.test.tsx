@@ -122,6 +122,30 @@ describe('the chat’s states', () => {
 
     expect(state.said).toEqual({ what: 'unavailable', serial: 2 });
   });
+
+  it('clears the conversation back to the welcome, keeping the service as it stands, and says so', () => {
+    const state = after(
+      { type: 'warmed' },
+      { type: 'ask', question: 'Hello?' },
+      { type: 'answered', reply: 'Hi.' },
+      { type: 'clear' },
+    );
+
+    expect(state).toMatchObject({ service: 'ready', warm: true, messages: [], waiting: null, notice: null, question: null });
+    expect(state.said?.what).toBe('cleared');
+  });
+
+  it('drops a question on its way, or kept after a notice, when the conversation is cleared', () => {
+    expect(after({ type: 'ask', question: 'Hello?' }, { type: 'clear' })).toMatchObject({
+      service: 'warming',
+      messages: [],
+      waiting: null,
+      question: null,
+    });
+    expect(
+      after({ type: 'warmed' }, { type: 'ask', question: 'Hello?' }, { type: 'failed' }, { type: 'clear' }),
+    ).toMatchObject({ notice: null, question: null });
+  });
 });
 
 describe('the API’s answers', () => {
@@ -330,6 +354,10 @@ describe('DigitalTwinChat', () => {
     expect(html).toMatch(/<button type="button" class="[^"]*close[^"]*" aria-label="Close the chat">/);
   });
 
+  it('offers no way to clear the chat until there is a message to clear', () => {
+    expect(text(html)).not.toContain(chat.clear);
+  });
+
   it('scrolls the conversation in a named region a keyboard can reach', () => {
     expect(html).toMatch(/<div class="[^"]*log[^"]*" role="region" aria-label="Conversation" tabindex="0">/);
   });
@@ -353,7 +381,7 @@ describe('DigitalTwinChat', () => {
 
   it('stands at the window’s corner as a circle, and as a pill and a card from the wide breakpoint', () => {
     expect(css).toMatch(/\.launcher \{[^}]*position: fixed;[^}]*inline-size: var\(--chat-launcher-size\);/);
-    expect(css).toMatch(/@media \(min-width: 48em\) \{[\s\S]*\.panel \{\s*inset: auto var\(--space-large\) var\(--space-large\) auto;\s*inline-size: var\(--chat-panel-width\);\s*max-block-size: var\(--chat-panel-height\);/);
+    expect(css).toMatch(/@media \(min-width: 48em\) \{[\s\S]*\.panel \{\s*inset: auto var\(--space-large\) var\(--space-large\) auto;\s*inline-size: var\(--chat-panel-width\);\s*block-size: var\(--chat-panel-height\);/);
   });
 
   it('moves only where the reader has not asked for less motion', () => {
@@ -445,6 +473,10 @@ describe('what the live region says', () => {
     expect(spoken(after({ type: 'ask', question: 'Hello?' }), chat)).toBe(chat.held);
     expect(spoken(after({ type: 'rate-limited' }), chat)).toBe(chat.rateLimited);
     expect(spoken(after({ type: 'failed' }), chat)).toBe(chat.unavailable);
+  });
+
+  it('says the chat is cleared', () => {
+    expect(spoken(after({ type: 'clear' }), chat)).toBe(chat.cleared);
   });
 });
 
