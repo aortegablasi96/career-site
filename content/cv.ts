@@ -165,9 +165,15 @@ import type { Cv } from './types';
  * It moved again with #291, because the three hints above the cards say "Open a…" where they said
  * "Click any…", so they name no input device. A hint is not a fact ADR-005 lists as shared, and
  * paper does not show one, so it did not move the CV.
+ *
+ * It moved again with #287, because every role but ABB's follows the owner's rewritten entry, and
+ * Randstad's, Ponera Group's and ToBeIT's now state results: the number of projects, clients,
+ * assets, databases and users, and Randstad's 20% and 50%. A role's points are not a fact ADR-005
+ * lists as shared, so the CV file need not change; it may now state those results too, since a
+ * metric may appear in the CV only once it is on the site.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '0eedd8172cfba2ed28bd5db6072e4d0ca8c55af651db668fa79a4bb9750b76de',
+  contentDigest: 'cde94fe1cce19e61f6e2103366591f50c0bc76168f98de43d4c15b79819a9ae2',
 };

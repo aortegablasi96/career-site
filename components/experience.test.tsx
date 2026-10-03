@@ -253,7 +253,29 @@ describe('experience content', () => {
 
   it('leads the ABB and Ponera entries with product ownership', () => {
     expect(role('ABB').points[0]).toMatch(/^Manage a global portfolio .* more than 20 countries/);
-    expect(role('Ponera Group').points[0]).toMatch(/four IoT-enabled SaaS products as Product Owner/);
+    expect(role('Ponera Group').points[0]).toMatch(/^Led the development and commercialisation of four IoT-enabled SaaS products/);
+  });
+
+  // #287: the results the owner stated in their knowledge base, each as written there, so none is
+  // estimated or rounded up on the way. A count written "4+" reads "more than four", as ABB's did.
+  it('states the results the owner gave for each role, per #287', () => {
+    const results: Record<string, readonly string[]> = {
+      ToBeIT: ['more than three databases', 'used by more than 10 internal users'],
+      Randstad: [
+        'more than four technology projects for two clients',
+        'more than three concurrent projects',
+        'teams of more than five',
+        'increasing the team’s output by 20%',
+        'reduced delivery risks or delays by 50%',
+      ],
+      'Ponera Group': ['more than 100 connected assets'],
+    };
+
+    for (const [company, phrases] of Object.entries(results)) {
+      for (const phrase of phrases) {
+        expect(role(company).points.join(' ')).toContain(phrase);
+      }
+    }
   });
 
   it('keeps the two engineering roles shorter than the three most recent', () => {
