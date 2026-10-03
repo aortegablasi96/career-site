@@ -897,16 +897,73 @@
     var(--contents-bar-height) + var(--contents-bar-title-row) + var(--space-flow)
   );
 
-  /* The chat with the Digital Twin, per DDR-100. The launcher is NumisBook's 52px, the owner's
-     model for it, a circle below the wide breakpoint and the height of the pill from it. The panel
-     at the window's corner is 440px wide and 640px tall, a size that holds as the conversation
-     grows, and never taller than the window less the contents bar, which stands above it, and its
-     insets above and below. The field grows to five of its lines and its padding, then
-     scrolls; `lh` is the field's own line, so the limit follows its size and leading. */
-  --chat-launcher-size: 3.25rem;
-  --chat-panel-width: 27.5rem;
-  --chat-panel-height: min(40rem, 100dvh - var(--contents-bar-height) - 2 * var(--space-large));
-  --chat-field-height: calc(5lh + 2 * var(--space-small) + 2px);
+  /* The chat with the Digital Twin, per DDR-100 as DDR-102 draws it: the nodes 502:627, 502:1900
+     and 502:1897 of `career-site-design`. The chat never prints, so its surfaces and hairlines are
+     named for it rather than as the page's, which paper drops (DDR-015).
+
+     Its palette: the accent's gradient into the design's violet, and the violet's two darker
+     stops under the pointer, which the subtitle also wears; the design's deep indigo ink; the
+     panel's pale violet surface and the foot's grey; the design's violet edge, #a78bfa at 35%, and
+     its hairline at 20%, each drawn opaque as it shows on white, since the palette holds no
+     translucent ink; and the status dot, green when online and amber while it starts. */
+  --color-accent-violet: #7c3aed;
+  --color-accent-violet-deep: #6d28d9;
+  --color-text-chat: #1e1b4b;
+  --color-chat-surface: #f8f7ff;
+  --color-chat-foot: #f3f4f6;
+  --color-chat-edge: #e0d6fd;
+  --color-chat-hairline: #ede8fe;
+  --color-chat-online: #00d492;
+  --color-chat-starting: #f59e0b;
+  /* The launcher's lift, the panel's violet glow, the field's faint one, and the online dot's. */
+  --shadow-chat-launcher: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-chat-panel: 0 24px 64px rgba(79, 70, 229, 0.18), 0 4px 16px rgba(79, 70, 229, 0.1);
+  --shadow-chat-field: 0 1px 2px rgba(79, 70, 229, 0.06);
+  --shadow-chat-online: 0 0 6px rgba(52, 211, 153, 0.8);
+  /* The gradient runs corner to corner: at 135deg on a circle or a square, and at the closed
+     pill's own 167deg along its length. */
+  --chat-gradient-angle: 135deg;
+  --chat-launcher-gradient-angle: 167deg;
+  /* The launcher is 44px: a circle below the wide breakpoint and the pill's height from it, inset
+     24px from the window's corner there. Open, it is a 48 by 40px pill holding the cross, and the
+     panel stands 16px above it. The panel is 360 by 483px, a size that holds as the conversation
+     grows, and never taller than the window less the contents bar, the launcher and the insets.
+     The field grows to five of its lines and its padding, then scrolls; `lh` is the field's own
+     line, so the limit follows its size and leading. */
+  --chat-launcher-size: 2.75rem;
+  --chat-inset: 1.5rem;
+  --chat-close-inline-size: 3rem;
+  --chat-close-block-size: 2.5rem;
+  --chat-panel-offset: calc(var(--chat-inset) + var(--chat-close-block-size) + var(--space-medium));
+  --chat-panel-width: 22.5rem;
+  --chat-panel-height: min(
+    30.1875rem,
+    100dvh - var(--contents-bar-height) - var(--chat-inset) - var(--chat-panel-offset)
+  );
+  --chat-field-height: calc(5lh + 2 * var(--chat-nudge));
+  /* The design's spaces between the scale's steps: 10px between the launcher's mark and words and
+     inside a bubble or a suggestion, 12px between the header's parts, between turns and around the
+     field, 14px inside a bubble's sides and above and below the header, 6px between the status dot
+     and its word, and the 2px that sets the Digital Twin's mark and the field's text on their line. */
+  --chat-launcher-gap: 0.625rem;
+  --chat-gap: 0.75rem;
+  --chat-bubble-padding-block: 0.625rem;
+  --chat-bubble-padding-inline: 0.875rem;
+  --chat-status-gap: 0.375rem;
+  --chat-nudge: 0.125rem;
+  /* The header's avatar, the Digital Twin's mark beside a turn, the robot mark itself, the cross and
+     the paper plane, the send control, and the status dot. */
+  --chat-avatar-size: 2rem;
+  --chat-twin-mark-size: 1.5rem;
+  --chat-mark-size: 1.125rem;
+  --chat-small-mark-size: 1rem;
+  --chat-send-size: 2rem;
+  --chat-dot-size: 0.5rem;
+  /* The panel's and a bubble's 16px corners, and the send control's 8px. */
+  --chat-radius: 1rem;
+  --chat-send-radius: 0.5rem;
+  /* The send control while nothing can be sent, faded as the design draws it at rest. */
+  --chat-inert-opacity: 0.4;
   /* The footer's padding below its line, which on screen leaves room for the launcher under it, so
      the launcher never covers the page's last line once the reader has scrolled to the end, per
      DDR-100: its own step, the launcher and the widest of its insets. Paper keeps the step alone. */

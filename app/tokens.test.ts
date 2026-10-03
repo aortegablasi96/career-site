@@ -342,6 +342,15 @@ describe('colour tokens', () => {
       'focus',
       'surface-enlarged',
       'on-enlarged',
+      'accent-violet',
+      'accent-violet-deep',
+      'text-chat',
+      'chat-surface',
+      'chat-foot',
+      'chat-edge',
+      'chat-hairline',
+      'chat-online',
+      'chat-starting',
     ]);
   });
 
@@ -472,6 +481,23 @@ describe('colour tokens', () => {
     { foreground: 'border', background: 'surface-card', asked: 0, recorded: 1.23, meets: true },
     { foreground: 'border-accent', background: 'surface', asked: 0, recorded: 1.39, meets: true },
     { foreground: 'border-timeline-card', background: 'surface-timeline-card-middle', asked: 0, recorded: 1.29, meets: true },
+    // The chat, per DDR-102: its ink on a bubble and on its surface, the subtitle, the status, a
+    // suggestion at rest and lit, white on the gradient's end and on its deeper end, the line while
+    // an answer waits, and the count on the foot. The placeholder is the design's faint ink, and
+    // fails as the site's other faint text does. The violet edge and hairline carry nothing.
+    { foreground: 'text-chat', background: 'surface-card', asked: 4.5, recorded: 15.99, meets: true },
+    { foreground: 'text-chat', background: 'chat-surface', asked: 4.5, recorded: 15.03, meets: true },
+    { foreground: 'accent-violet-deep', background: 'surface-card', asked: 4.5, recorded: 7.1, meets: true },
+    { foreground: 'text-muted', background: 'surface-card', asked: 4.5, recorded: 4.76, meets: true },
+    { foreground: 'text-tag', background: 'surface-card', asked: 4.5, recorded: 7.9, meets: true },
+    { foreground: 'text-tag', background: 'surface-hover', asked: 4.5, recorded: 7.07, meets: true },
+    { foreground: 'on-accent', background: 'accent-violet', asked: 4.5, recorded: 5.7, meets: true },
+    { foreground: 'on-accent', background: 'accent-violet-deep', asked: 4.5, recorded: 7.1, meets: true },
+    { foreground: 'text-secondary', background: 'surface-card', asked: 4.5, recorded: 7.58, meets: true },
+    { foreground: 'text-secondary', background: 'chat-foot', asked: 4.5, recorded: 6.89, meets: true },
+    { foreground: 'text-faint', background: 'surface-card', asked: 4.5, recorded: 2.56, meets: false },
+    { foreground: 'chat-edge', background: 'surface-card', asked: 0, recorded: 1.38, meets: true },
+    { foreground: 'chat-hairline', background: 'surface-card', asked: 0, recorded: 1.19, meets: true },
   ] as const;
 
   it.each(pairings)(
@@ -545,7 +571,7 @@ describe('colour tokens', () => {
   // can be quietly improved without its record being revised with it. The first four are DDR-025's,
   // the next two DDR-035's, and the last two DDR-059's: the muted ink on a role view's panel, and
   // the accent on its pills.
-  it('fails exactly the eleven pairings DDR-025, DDR-035, DDR-059, DDR-070 and DDR-080 record as failures, and no others', () => {
+  it('fails exactly the twelve pairings DDR-025, DDR-035, DDR-059, DDR-070, DDR-080 and DDR-102 record as failures, and no others', () => {
     for (const { foreground, background, asked, recorded, meets } of pairings) {
       expect(recorded >= asked, `${foreground} on ${background}`).toBe(meets);
     }
@@ -562,6 +588,7 @@ describe('colour tokens', () => {
       'text-faint',
       'text-muted',
       'border-accent',
+      'text-faint',
     ]);
   });
 
@@ -638,7 +665,7 @@ describe('elevation tokens', () => {
   // for the one element that may read them rather than putting them on a scale above `raised`: the
   // photo is not raised off the page the way a control or a card is, it is lit.
   it('names every shadow for what it does, so a third is a decision rather than a number', () => {
-    expect(shadows).toEqual(['raised', 'photo-glow', 'photo-inner', 'bar', 'card-hover', 'card-highlight', 'dates-hover', 'thumbnail']);
+    expect(shadows).toEqual(['raised', 'photo-glow', 'photo-inner', 'bar', 'card-hover', 'card-highlight', 'dates-hover', 'thumbnail', 'chat-launcher', 'chat-panel', 'chat-field', 'chat-online']);
   });
 
   // The photo's two lights are the design's own, ink and geometry both, per DDR-021. They are two
@@ -791,9 +818,14 @@ describe('elevation tokens', () => {
     expect(token('shadow-card-highlight')!.match(/rgba\(/g)).toHaveLength(1);
     expect(token('shadow-dates-hover')!.match(/rgba\(/g)).toHaveLength(1);
     expect(token('shadow-thumbnail')!.match(/rgba\(/g)).toHaveLength(2);
-    // Every translucency at the root belongs to a shadow, ten of them, or is the bar's surface or
-    // the larger picture's veil.
-    expect(root.match(/rgba\(/g)).toHaveLength(12);
+    // DDR-102: the chat's launcher, panel, field and online dot, as the design draws them.
+    expect(token('shadow-chat-launcher')!.match(/rgba\(/g)).toHaveLength(2);
+    expect(token('shadow-chat-panel')!.match(/rgba\(/g)).toHaveLength(2);
+    expect(token('shadow-chat-field')!.match(/rgba\(/g)).toHaveLength(1);
+    expect(token('shadow-chat-online')!.match(/rgba\(/g)).toHaveLength(1);
+    // Every translucency at the root belongs to a shadow, sixteen of them, or is the bar's surface
+    // or the larger picture's veil.
+    expect(root.match(/rgba\(/g)).toHaveLength(18);
   });
 });
 

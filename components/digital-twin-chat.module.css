@@ -1,6 +1,6 @@
-/* The chat with the Digital Twin, per DDR-100: a launcher at the window's bottom-right corner on
-   every page, and the panel it opens. Neither prints: the printed CV is the page alone, per
-   DDR-015. */
+/* The chat with the Digital Twin, per DDR-100 as DDR-102 draws it: a launcher at the window's
+   bottom-right corner on every page, and the panel it opens. Neither prints: the printed CV is the
+   page alone, per DDR-015. */
 @media print {
   .chat {
     display: none;
@@ -8,49 +8,54 @@
 }
 
 /* The launcher stands at the window's corner, inset from its edges, over the page: the site's one
-   floating control, admitted by DDR-100 as the contents bar's menu was by DDR-075. It is filled in
-   the accent, as a view's first link is (DDR-050), and lit by the shadow a card takes under the
-   pointer. Below the wide breakpoint it is a circle with its mark alone; its words are its
-   accessible name at every width. */
+   floating control, admitted by DDR-100 as the contents bar's menu was by DDR-075. It is filled with
+   the design's gradient, from the accent into its violet, which deepens under the pointer. Below the
+   wide breakpoint it is a circle with the robot mark alone; its words are its accessible name at
+   every width. */
 .launcher {
   position: fixed;
   inset-block-end: var(--space-medium);
   inset-inline-end: var(--space-medium);
   display: inline-flex;
-  gap: var(--space-small);
+  gap: var(--chat-launcher-gap);
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
   inline-size: var(--chat-launcher-size);
   block-size: var(--chat-launcher-size);
   padding: 0;
-  border: 1px solid var(--color-accent);
+  border: 0;
   border-radius: var(--radius-pill);
-  background-color: var(--color-accent);
-  box-shadow: var(--shadow-card-hover);
+  background-image: linear-gradient(var(--chat-gradient-angle), var(--color-accent), var(--color-accent-violet));
+  box-shadow: var(--shadow-chat-launcher);
   color: var(--color-on-accent);
   font: inherit;
   font-size: var(--font-size-x-small);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-body);
   text-decoration-line: none;
   cursor: pointer;
 }
 
 .launcher svg {
-  font-size: var(--font-size-x-large);
+  font-size: var(--chat-mark-size);
 }
 
 .launcher:hover,
 .launcher:focus-visible {
-  border-color: var(--color-accent-hover);
-  background-color: var(--color-accent-hover);
+  background-image: linear-gradient(
+    var(--chat-gradient-angle),
+    var(--color-accent-hover),
+    var(--color-accent-violet-deep)
+  );
 }
 
 .launcherText {
   display: none;
 }
 
-/* While the panel is open, its own close control takes the launcher's place. */
+/* Below the wide breakpoint the open panel covers the window, launcher and all, and its own cross
+   closes it. */
 .launcher[aria-expanded='true'] {
   display: none;
 }
@@ -71,15 +76,8 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .launcher {
-    transition-property: background-color, border-color;
-    transition-duration: var(--hover-transition);
-  }
-}
-
 /* The panel is a native dialog. Below the wide breakpoint it is modal and takes the whole window,
-   with no corners, border or shadow, so the browser's own margins and limits are undone. It lays out
+   with no corners, edge or shadow, so the browser's own margins and limits are undone. It lays out
    its header, the conversation and the field as a column, the conversation taking what is left. */
 .panel {
   position: fixed;
@@ -92,8 +90,8 @@
   margin: 0;
   padding: 0;
   border: 0;
-  background-color: var(--color-surface-card);
-  color: var(--color-text);
+  background-color: var(--color-chat-surface);
+  color: var(--color-text-chat);
   flex-direction: column;
 }
 
@@ -115,41 +113,106 @@
   }
 }
 
-/* The heading and the service's status, with the controls at the right, above a hairline. Where the
-   three don't fit on one line, as on a narrow window with enlarged text, the controls take a line of
-   their own below, still at the right. */
+/* The header, white above a violet hairline: the avatar, the heading and what the Digital Twin is,
+   and at the right the service's status and clearing the chat. On a phone the cross stands at the
+   heading's right and the status and clearing take a line of their own below, at the right. From
+   the wide breakpoint they stand beside the heading, and take a line of their own only where they
+   don't fit. */
 .header {
   display: flex;
   flex: none;
   flex-wrap: wrap;
-  gap: var(--space-medium);
-  align-items: start;
-  justify-content: space-between;
-  padding: var(--space-medium);
-  border-block-end: 1px solid var(--color-border);
+  gap: var(--chat-gap);
+  align-items: center;
+  padding-block: var(--chat-bubble-padding-inline);
+  padding-inline: var(--space-medium);
+  border-block-end: 1px solid var(--color-chat-hairline);
+  background-color: var(--color-surface-card);
 }
 
-.heading {
-  font-size: var(--font-size-large);
-  line-height: var(--line-height-heading);
-}
-
-.status {
-  margin-block-start: var(--space-x-small);
-  color: var(--color-text-muted);
-  font-size: var(--font-size-x-small);
-}
-
-/* The header's controls: clearing the chat, once there is something to clear, and closing it. */
-.tools {
-  display: flex;
+.avatar {
+  display: inline-flex;
   flex: none;
-  margin-inline-start: auto;
-  gap: var(--space-x-small);
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--chat-avatar-size);
+  block-size: var(--chat-avatar-size);
+  border-radius: var(--radius-pill);
+  background-image: linear-gradient(var(--chat-gradient-angle), var(--color-accent), var(--color-accent-violet));
+  color: var(--color-on-accent);
+  font-size: var(--chat-mark-size);
+}
+
+/* The avatar and the heading stay side by side; where they don't fit, the heading wraps beside the
+   avatar rather than below it. */
+.who {
+  display: flex;
+  flex: 1 1 0;
+  gap: var(--chat-gap);
   align-items: center;
 }
 
-/* Clearing the chat is a quiet word beside the cross, in the cross's ink, as it is lit. */
+/* The heading wraps between words, never inside one. */
+.title {
+  min-inline-size: min-content;
+}
+
+.heading {
+  color: var(--color-text-chat);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-x-small);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-heading);
+}
+
+.subtitle {
+  margin-block-start: var(--chat-nudge);
+  color: var(--color-accent-violet-deep);
+  font-size: var(--font-size-xxx-small);
+  line-height: var(--line-height-body);
+}
+
+/* The status, and clearing the chat once there is something to clear. */
+.tools {
+  display: flex;
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  margin-inline-start: auto;
+  gap: var(--space-small);
+  align-items: center;
+  justify-content: end;
+}
+
+/* The word says how the service is, and the dot before it repeats it: amber while it starts, green
+   and glowing once it answers, and faint once it can't. */
+.status {
+  display: inline-flex;
+  gap: var(--chat-status-gap);
+  align-items: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xxx-small);
+  line-height: var(--line-height-body);
+  white-space: nowrap;
+}
+
+.dot {
+  flex: none;
+  inline-size: var(--chat-dot-size);
+  block-size: var(--chat-dot-size);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-chat-starting);
+}
+
+.status[data-service='ready'] .dot {
+  background-color: var(--color-chat-online);
+  box-shadow: var(--shadow-chat-online);
+}
+
+.status[data-service='unavailable'] .dot {
+  background-color: var(--color-text-faint);
+}
+
+/* Clearing the chat is a quiet word after the status, lit as the cross is. */
 .clear {
   padding-block: var(--space-x-small);
   padding-inline: var(--space-small);
@@ -158,7 +221,7 @@
   background-color: transparent;
   color: var(--color-text-secondary);
   font: inherit;
-  font-size: var(--font-size-x-small);
+  font-size: var(--font-size-xxx-small);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-body);
   white-space: nowrap;
@@ -174,6 +237,7 @@
 .close {
   display: inline-flex;
   flex: none;
+  margin-inline-start: auto;
   padding: var(--space-small);
   border: 0;
   border-radius: var(--radius-pill);
@@ -189,12 +253,13 @@
   color: var(--color-accent-hover);
 }
 
-/* The conversation scrolls inside the panel, and its scroll stays its own. */
+/* The conversation, on the panel's pale violet, scrolls inside the panel, and its scroll stays its
+   own. */
 .log {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
-  gap: var(--space-small);
+  gap: var(--chat-gap);
   min-block-size: 0;
   padding: var(--space-medium);
   overflow-y: auto;
@@ -204,21 +269,45 @@
 .messages {
   display: flex;
   flex-direction: column;
-  gap: var(--space-small);
+  gap: var(--chat-gap);
   margin-block-start: 0;
   padding-inline-start: 0;
   list-style: none;
 }
 
-/* A message: the Digital Twin's at the left on the page's surface, the reader's at the right on the
-   tag's, each stopping a step short of the other side. */
+/* A turn of the Digital Twin's: its mark, then its bubble, stopping short of the right: by the
+   design's step from the wide breakpoint, and by a smaller one on a phone, where the room is the
+   window's and enlarged text leaves little of it. */
+.turn {
+  display: flex;
+  gap: var(--space-small);
+  align-items: start;
+  margin-inline-end: var(--space-medium);
+}
+
+.mark {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  margin-block-start: var(--chat-nudge);
+  inline-size: var(--chat-twin-mark-size);
+  block-size: var(--chat-twin-mark-size);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: var(--chat-mark-size);
+}
+
+/* A message's bubble, its corner nearest its sender drawn tight. */
 .message {
+  min-inline-size: 0;
   max-inline-size: none;
   margin-block-start: 0;
-  padding-block: var(--space-small);
-  padding-inline: var(--space-medium);
-  border-radius: var(--radius-large);
-  font-size: var(--font-size-small);
+  padding-block: var(--chat-bubble-padding-block);
+  padding-inline: var(--chat-bubble-padding-inline);
+  border-radius: var(--chat-radius);
+  font-size: var(--font-size-x-small);
   line-height: var(--line-height-prose-small);
   overflow-wrap: anywhere;
 }
@@ -251,16 +340,20 @@
 }
 
 .twin {
-  align-self: start;
-  margin-inline-end: var(--space-large);
-  background-color: var(--color-surface);
+  border: 1px solid var(--color-chat-edge);
+  border-end-start-radius: var(--radius-small);
+  background-color: var(--color-surface-card);
+  color: var(--color-text-chat);
 }
 
-/* The reader's words exactly as they typed them, line breaks included. */
+/* The reader's words exactly as they typed them, line breaks included, at the right in the
+   gradient. */
 .reader {
   align-self: end;
-  margin-inline-start: var(--space-large);
-  background-color: var(--color-surface-tag);
+  margin-inline-start: var(--space-medium);
+  border-end-end-radius: var(--radius-small);
+  background-image: linear-gradient(var(--chat-gradient-angle), var(--color-accent), var(--color-accent-violet));
+  color: var(--color-on-accent);
   white-space: pre-wrap;
 }
 
@@ -269,38 +362,46 @@
   color: var(--color-text-secondary);
 }
 
-.label {
-  color: var(--color-text-faint);
-  font-size: var(--font-size-xxxx-small);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-body);
-  letter-spacing: var(--letter-spacing-x-loose);
-  text-transform: uppercase;
-}
-
-.suggestionList,
-.actions {
+/* The suggestions, stacked at the conversation's full width. */
+.suggestions {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: var(--space-small);
-  margin-block-start: var(--space-small);
+  margin-block-start: 0;
   padding-inline-start: 0;
   list-style: none;
 }
 
-/* A suggestion, outlined as a view's second link is (DDR-050), and a notice's two controls. */
+.suggestions li {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Not indented as a reply's list is: the notice's controls line up with its words. */
+.message .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-small);
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+/* A suggestion, outlined in the violet on white, and a notice's two controls drawn as it is, the
+   first filled with the gradient. */
 .suggestion,
 .primary,
 .secondary {
   display: inline-flex;
   gap: var(--space-small);
   align-items: center;
-  padding-block: var(--space-small);
-  padding-inline: var(--space-medium);
-  border-radius: var(--radius-pill);
-  box-shadow: var(--shadow-raised);
+  padding-block: var(--chat-bubble-padding-block);
+  padding-inline: var(--chat-bubble-padding-inline);
+  border: 1px solid var(--color-chat-edge);
+  border-radius: var(--radius-large);
+  background-color: var(--color-surface-card);
+  color: var(--color-text-tag);
   font: inherit;
-  font-size: var(--font-size-x-small);
+  font-size: var(--font-size-xx-small);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-body);
   text-align: start;
@@ -310,22 +411,9 @@
 }
 
 .primary {
-  border: 1px solid var(--color-accent);
-  background-color: var(--color-accent);
+  border-color: transparent;
+  background-image: linear-gradient(var(--chat-gradient-angle), var(--color-accent), var(--color-accent-violet));
   color: var(--color-on-accent);
-}
-
-.suggestion,
-.secondary {
-  border: 1px solid var(--color-border-accent);
-  background-color: var(--color-surface-card);
-  color: var(--color-accent);
-}
-
-.primary:hover,
-.primary:focus-visible {
-  border-color: var(--color-accent-hover);
-  background-color: var(--color-accent-hover);
 }
 
 .suggestion:hover,
@@ -336,33 +424,55 @@
   background-color: var(--color-surface-hover);
 }
 
-/* The field and its send control, at the panel's foot above a hairline. */
+.primary:hover,
+.primary:focus-visible {
+  background-image: linear-gradient(
+    var(--chat-gradient-angle),
+    var(--color-accent-hover),
+    var(--color-accent-violet-deep)
+  );
+}
+
+/* The foot, grey above a violet hairline, holds the field's white box with the send control inside
+   it. The box takes the focus outline while the field has it. */
 .form {
   flex: none;
-  padding: var(--space-medium);
-  border-block-start: 1px solid var(--color-border);
+  padding-block: var(--space-small) var(--chat-gap);
+  padding-inline: var(--chat-gap);
+  border-block-start: 1px solid var(--color-chat-hairline);
+  background-color: var(--color-chat-foot);
 }
 
 .row {
   display: flex;
   gap: var(--space-small);
   align-items: end;
+  padding-block: var(--space-small);
+  padding-inline: var(--chat-gap);
+  border: 1px solid var(--color-chat-edge);
+  border-radius: var(--radius-large);
+  background-color: var(--color-surface-card);
+  box-shadow: var(--shadow-chat-field);
+}
+
+.row:has(.field:focus-visible) {
+  outline: var(--focus-outline-width) solid var(--color-focus);
+  outline-offset: var(--focus-outline-offset);
 }
 
 /* The field takes the row's width, whatever its placeholder's, and grows with the question to five
-   lines, then scrolls. It is set at the browser's own size, so a phone does not zoom in as it takes
-   focus. */
+   lines, then scrolls. Below the wide breakpoint it is set at the browser's own size, so a phone
+   does not zoom in as it takes focus. */
 .field {
   flex: 1 1 0;
   box-sizing: border-box;
   min-inline-size: 0;
   max-block-size: var(--chat-field-height);
-  padding-block: var(--space-small);
-  padding-inline: var(--space-medium);
-  border: 1px solid var(--color-border-accent);
-  border-radius: var(--radius-large);
-  background-color: var(--color-surface-card);
-  color: var(--color-text);
+  padding-block: var(--chat-nudge);
+  padding-inline: 0;
+  border: 0;
+  background-color: transparent;
+  color: var(--color-text-chat);
   font: inherit;
   font-size: var(--font-size-large);
   line-height: var(--line-height-body);
@@ -370,40 +480,51 @@
   field-sizing: content;
 }
 
+.field:focus-visible {
+  outline: none;
+}
+
 .field::placeholder {
-  color: var(--color-text-muted);
+  color: var(--color-text-faint);
   opacity: 1;
 }
 
 .send {
   display: inline-flex;
   flex: none;
-  padding: var(--space-small);
-  border: 1px solid var(--color-accent);
-  border-radius: var(--radius-pill);
-  background-color: var(--color-accent);
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--chat-send-size);
+  block-size: var(--chat-send-size);
+  padding: 0;
+  border: 0;
+  border-radius: var(--chat-send-radius);
+  background-image: linear-gradient(var(--chat-gradient-angle), var(--color-accent), var(--color-accent-violet));
   color: var(--color-on-accent);
-  font-size: var(--font-size-x-large);
+  font-size: var(--chat-small-mark-size);
   cursor: pointer;
 }
 
 .send:hover,
 .send:focus-visible {
-  border-color: var(--color-accent-hover);
-  background-color: var(--color-accent-hover);
+  background-image: linear-gradient(
+    var(--chat-gradient-angle),
+    var(--color-accent-hover),
+    var(--color-accent-violet-deep)
+  );
 }
 
-/* While nothing can be sent, the control stays where focus can reach it, drawn in the tag's tint. */
+/* While nothing can be sent, the control stays where focus can reach it, faded as the design draws
+   it at rest. */
 .send[aria-disabled='true'] {
-  border-color: var(--color-border-accent);
-  background-color: var(--color-surface-tag);
-  color: var(--color-text-tag);
+  background-image: linear-gradient(var(--chat-gradient-angle), var(--color-accent), var(--color-accent-violet));
+  opacity: var(--chat-inert-opacity);
   cursor: default;
 }
 
 .count {
   margin-block-start: var(--space-x-small);
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
   font-size: var(--font-size-x-small);
 }
 
@@ -417,27 +538,89 @@
   white-space: nowrap;
 }
 
-/* From the wide breakpoint the launcher is a pill with its words, the height of the circle, and the
-   panel a card at the window's corner where the launcher stood, beside the page, which stays in
-   use. The card keeps its height as the conversation grows, and stops short of the contents bar. */
+/* From the wide breakpoint the launcher is a pill with its words, inset further, and while the
+   panel is open it stays in view as a shorter pill holding the cross, which closes it. The panel is
+   a card standing above it, at its right edge, beside the page, which stays in use. The card keeps
+   its height as the conversation grows, and stops short of the contents bar. The header needs no
+   cross of its own there, and the field takes the design's size. */
 @media (min-width: 48em) {
   .launcher {
-    inset-block-end: var(--space-large);
-    inset-inline-end: var(--space-large);
+    inset-block-end: var(--chat-inset);
+    inset-inline-end: var(--chat-inset);
     inline-size: auto;
     padding-inline: var(--space-medium);
+    background-image: linear-gradient(
+      var(--chat-launcher-gradient-angle),
+      var(--color-accent),
+      var(--color-accent-violet)
+    );
+  }
+
+  .launcher:hover,
+  .launcher:focus-visible {
+    background-image: linear-gradient(
+      var(--chat-launcher-gradient-angle),
+      var(--color-accent-hover),
+      var(--color-accent-violet-deep)
+    );
   }
 
   .launcherText {
     display: inline;
   }
 
+  .launcher[aria-expanded='true'] {
+    display: inline-flex;
+    inline-size: var(--chat-close-inline-size);
+    block-size: var(--chat-close-block-size);
+    padding-inline: 0;
+    background-image: linear-gradient(var(--chat-gradient-angle), var(--color-accent), var(--color-accent-violet));
+  }
+
+  .launcher[aria-expanded='true']:hover,
+  .launcher[aria-expanded='true']:focus-visible {
+    background-image: linear-gradient(
+      var(--chat-gradient-angle),
+      var(--color-accent-hover),
+      var(--color-accent-violet-deep)
+    );
+  }
+
+  .launcher[aria-expanded='true'] svg {
+    font-size: var(--chat-small-mark-size);
+  }
+
   .panel {
-    inset: auto var(--space-large) var(--space-large) auto;
+    inset: auto var(--chat-inset) var(--chat-panel-offset) auto;
     inline-size: var(--chat-panel-width);
     block-size: var(--chat-panel-height);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-large);
-    box-shadow: var(--shadow-bar);
+    border: 1px solid var(--color-chat-edge);
+    border-radius: var(--chat-radius);
+    box-shadow: var(--shadow-chat-panel);
+    overflow: hidden;
+  }
+
+  .close {
+    display: none;
+  }
+
+  .who {
+    flex: 0 1 auto;
+  }
+
+  .tools {
+    flex-basis: auto;
+  }
+
+  .turn {
+    margin-inline-end: var(--space-large);
+  }
+
+  .reader {
+    margin-inline-start: var(--space-large);
+  }
+
+  .field {
+    font-size: var(--font-size-x-small);
   }
 }

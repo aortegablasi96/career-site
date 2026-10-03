@@ -375,6 +375,13 @@ The page itself is the CV, so what it prints is designed.
   (`components/open-chat.ts`, a plain module so a Server Component can name it).
 * **`components/stylesheets.test.ts` admits its launcher and panel out of the flow**, and one rule
   of hidden text with a 1px box; a second of either is a decision.
+* **The launcher follows the panel in the markup** (DDR-102), so Tab from the send control reaches
+  it. While the panel is open it is the panel's close control on a wide window: its name becomes
+  "Close the chat", and Escape on it closes the panel too, since it's outside the dialog's
+  `keydown`. Its gradients are `background-image`, which doesn't transition, so it has no hover
+  transition.
+* **The field draws no outline of its own**: its white box takes the focus outline through
+  `:has(.field:focus-visible)`, because the send control sits inside the same box.
 * **The footer's foot is `--footer-padding-block-end`**, room for the launcher on screen and
   DDR-028's step on paper.
 * **Check it against the live API from `localhost:3000`**, an origin the API allows. A preview

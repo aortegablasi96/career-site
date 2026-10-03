@@ -13,9 +13,10 @@ if (!page) {
 /**
  * The chat with the owner's Digital Twin, per DDR-100 and ADR-028, on every page of the site.
  *
- * The words are the Content Brief's on #306, which the owner approved. The welcome and the
- * suggestions are the bot's own welcome in Telegram, in the site's British spelling. Since DDR-101
- * there is no note on where messages go.
+ * The words are the Content Brief's on #306, which the owner approved, and since DDR-102 the
+ * design's: the heading, the subtitle, the statuses, the welcome, the suggestions and the
+ * placeholder, which the owner approved on #321, with the site's curly apostrophes and no serial
+ * comma. Since DDR-101 there is no note on where messages go.
  *
  * The API's origin and the length it accepts are here rather than in an environment variable, per
  * ADR-028: there is one API, its address is public already, and a pull request reviews a change to
@@ -29,11 +30,12 @@ export const chat: Chat = {
   page,
   launcher: 'Ask my AI Digital Twin',
   newTab: introduction.newTab,
-  heading: 'My AI Digital Twin',
+  heading: 'AI Digital Twin',
+  subtitle: 'Andreu’s career assistant',
   status: {
-    warming: 'Starting up, which can take a minute',
-    ready: 'Ready',
-    unavailable: 'Can’t answer right now',
+    warming: 'Starting up',
+    ready: 'Online',
+    unavailable: 'Unavailable',
   },
   close: 'Close the chat',
   clear: 'Clear chat',
@@ -41,16 +43,16 @@ export const chat: Chat = {
   conversation: 'Conversation',
   sender: { reader: 'You:', twin: 'Digital Twin:' },
   welcome:
-    'Hi! I’m Andreu’s AI Digital Twin. I can answer questions about his professional background, experience, projects, skills and education, in the language you ask in.',
-  tryAsking: 'Try asking',
+    'Hi! I’m Andreu’s AI Digital Twin. Ask me anything about his career, projects, skills or education — I’ll answer in your language.',
+  suggested: 'Suggested questions',
   suggestions: [
-    'Can you summarise Andreu’s profile?',
-    'What projects has he worked on?',
-    'What are his strongest skills?',
-    'What kind of roles fit his experience?',
+    'Summarise Andreu’s professional profile',
+    'What AI and IoT products has he managed?',
+    'What does his tech stack look like?',
+    'Is he open to new opportunities?',
   ],
   field: 'Your question',
-  placeholder: 'Ask about Andreu…',
+  placeholder: 'Your question…',
   send: 'Send',
   limit: 'Questions can be up to 2,000 characters.',
   held: 'Starting up. This can take up to a minute; your question will be answered as soon as it’s ready.',

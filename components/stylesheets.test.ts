@@ -239,7 +239,7 @@ describe('component stylesheets', () => {
 
           // DDR-100 admits the chat's launcher and its panel, which stand at the window's corner
           // over the page, and its text said only to assistive technology, which draws nothing.
-          // The panel is last in the page's markup, after the launcher, as the reader meets them.
+          // Since DDR-102 the launcher follows the panel in the markup, as it stands below it.
           if (name === 'digital-twin-chat.module.css' && ['.launcher', '.panel', '.hidden'].includes(selector)) {
             continue;
           }
