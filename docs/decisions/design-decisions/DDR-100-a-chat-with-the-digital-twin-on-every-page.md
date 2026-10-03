@@ -9,6 +9,9 @@ It no longer opens the chatbot's own page. Without script it is the link DDR-096
 DDR-028 at the page's end, on screen only**: the footer leaves room below its line for the chat's
 launcher. Paper keeps the padding it set. Everything else those records decide stands.
 
+**Amended by DDR-101**: the note on where messages go is removed. The chat opens with the welcome
+and the suggestions alone.
+
 **Revised on 2026-10-03 by #307, which built it.**
 * As first accepted, this record put the room for the launcher in the last section's padding,
   amending DDR-040 and DDR-046. On every page the footer comes after the last section, so the room
@@ -147,16 +150,16 @@ them on #306.
 
 | State (ADR-028) | What the panel shows |
 | --------------- | -------------------- |
-| At rest (no message yet) | The welcome, as the Digital Twin's first message, which is never sent to the API: "Hi! I'm Andreu's AI Digital Twin. I can answer questions about his professional background, experience, projects, skills and education, in the language you ask in." Then "Try asking", in the label style, above four suggestions in outlined pills: "Can you summarise Andreu's profile?", "What projects has he worked on?", "What are his strongest skills?", "What kind of roles fit his experience?" Choosing one sends it. Then the note on where messages go. |
+| At rest (no message yet) | The welcome, as the Digital Twin's first message, which is never sent to the API: "Hi! I'm Andreu's AI Digital Twin. I can answer questions about his professional background, experience, projects, skills and education, in the language you ask in." Then "Try asking", in the label style, above four suggestions in outlined pills: "Can you summarise Andreu's profile?", "What projects has he worked on?", "What are his strongest skills?", "What kind of roles fit his experience?" Choosing one sends it. (DDR-101 removed the note on where messages go that followed them.) |
 | Warming up | The status line says "Starting up, which can take a minute". The reader can type and send meanwhile. |
 | Sending while warming up | The reader's question appears at once. In the answer's place, as the Digital Twin's message, in `--color-text-secondary`: "Starting up. This can take up to a minute; your question will be answered as soon as it's ready." |
 | Sending | The reader's question appears at once, and below it, in the same ink: "Writing an answer…". Nothing animates. The send control is inert until the answer arrives. |
 | Answered | The answer replaces the line above. The field is empty, and focus stays there for a follow-up. |
 | Rate-limited | In the answer's place: "You've sent a lot of questions in a short time. Wait a minute, then send yours again." The question goes back into the field. |
-| Cleared | "Clear chat" empties the conversation: the welcome, the suggestions and the note again, as at rest. It drops any question on its way or kept after a notice, and an answer that arrives for it isn't shown. The next question starts a new conversation with a new id, so the API keeps nothing of the old one. Focus moves to the field, the status line stays as it was, and nothing asks to confirm. |
+| Cleared | "Clear chat" empties the conversation: the welcome and the suggestions again, as at rest. It drops any question on its way or kept after a notice, and an answer that arrives for it isn't shown. The next question starts a new conversation with a new id, so the API keeps nothing of the old one. Focus moves to the field, the status line stays as it was, and nothing asks to confirm. |
 | Unavailable | In the answer's place: "The Digital Twin can't answer right now." Below it are two pills: "Try again", filled, and "Ask it on its own page", outlined, which opens the chatbot's page in a new tab and says so. "Try again" sends the kept question again, or starts warming again if there is none. The status line says "Can't answer right now". |
 
-* **The note on where messages go** is the last part of the welcome. The reader meets it before the
+* **Removed by DDR-101.** The note on where messages go was the last part of the welcome. The reader meets it before the
   field, and it stays at the top of the conversation: "Your messages leave this site for the
   Digital Twin's service, where AI models from OpenAI and Cohere are used to answer them. If you
   ask to be contacted, or ask something it can't answer, Andreu is notified." It is set in
@@ -267,7 +270,7 @@ Risks:
 * **The launcher must stay below the contents bar's menu** (DDR-075) and the larger picture's dialog
   (DDR-082), which stand above everything while open.
 * **The note names OpenAI and Cohere.** If the chatbot changes providers, the note must change with
-  it.
+  it. (The note is gone since DDR-101.)
 
 ## Related Documents
 
@@ -275,5 +278,6 @@ Risks:
 * ADR-028: the chat's states, rules and calls
 * DDR-096, which this amends, and DDR-050, DDR-043, DDR-035
 * DDR-028: the footer, whose foot this amends on screen
+* DDR-101: the note on where messages go, removed
 * DDR-015: the printed CV, unchanged. DDR-075 and DDR-082: the layers above the launcher
 * DDR-090: reduced motion, as the site's appearing elements respect it

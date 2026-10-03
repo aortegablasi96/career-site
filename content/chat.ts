@@ -14,8 +14,8 @@ if (!page) {
  * The chat with the owner's Digital Twin, per DDR-100 and ADR-028, on every page of the site.
  *
  * The words are the Content Brief's on #306, which the owner approved. The welcome and the
- * suggestions are the bot's own welcome in Telegram, in the site's British spelling; the note on
- * where messages go says only what ADR-028 records of the chatbot's service.
+ * suggestions are the bot's own welcome in Telegram, in the site's British spelling. Since DDR-101
+ * there is no note on where messages go.
  *
  * The API's origin and the length it accepts are here rather than in an environment variable, per
  * ADR-028: there is one API, its address is public already, and a pull request reviews a change to
@@ -49,7 +49,6 @@ export const chat: Chat = {
     'What are his strongest skills?',
     'What kind of roles fit his experience?',
   ],
-  note: 'Your messages leave this site for the Digital Twin’s service, where AI models from OpenAI and Cohere are used to answer them. If you ask to be contacted, or ask something it can’t answer, Andreu is notified.',
   field: 'Your question',
   placeholder: 'Ask about Andreu…',
   send: 'Send',

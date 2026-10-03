@@ -15,6 +15,9 @@ the page has loaded. There is still no application logic layer.
 * `LargerPicture` (ADR-018);
 * `ScrollAppear` (ADR-025).
 
+**Amended by DDR-101**: the reader is no longer told, before their first message, where it goes.
+See *What the reader is told*.
+
 ## Context
 
 Epic #304 lets a reader talk to the owner's Digital Twin on the site itself, rather than through
@@ -225,6 +228,9 @@ Anything else stays as its text.
 
 The Content Strategist words it on #306 from the facts in *Context*, and the owner approves it.
 
+**Amended by DDR-101 on 2026-10-03**: at the owner's request the chat no longer tells the reader
+this. The facts above still hold.
+
 ### Testing without the live API
 
 **No test calls the API.**
@@ -352,7 +358,7 @@ Negative:
   contract break it. The chatbot's repository owns those, so its README should name this site
   as a caller.
 * **A reader's words leave the site** for Render, OpenAI, Cohere and, sometimes, the owner's phone.
-  The chat says so before the first message.
+  The chat said so before the first message until DDR-101 removed the note.
 * **A fifth Client Component, with more logic than the other four.** It loads only on the routes
   where the chat is placed.
 * **A timed-out question may still be answered into the API's memory**, so the next answer can

@@ -391,13 +391,13 @@ describe('DigitalTwinChat', () => {
 });
 
 describe('Conversation', () => {
-  it('opens with the welcome, the four suggestions and the note on where messages go', () => {
+  it('opens with the welcome and the four suggestions, and nothing after them (DDR-101)', () => {
     const shown = text(conversation(initial));
 
     expect(shown).toContain(chat.welcome);
     expect(shown).toContain(chat.tryAsking);
     for (const suggestion of chat.suggestions) expect(shown).toContain(suggestion);
-    expect(shown.indexOf(chat.note)).toBeGreaterThan(shown.indexOf(chat.suggestions.at(-1)!));
+    expect(shown.endsWith(chat.suggestions.at(-1)!)).toBe(true);
   });
 
   it('says only to assistive technology who wrote each message', () => {
@@ -407,12 +407,11 @@ describe('Conversation', () => {
     expect(html).toMatch(/<span class="[^"]*hidden[^"]*">Digital Twin: <\/span><p>Hi\.<\/p>/);
   });
 
-  it('drops the suggestions once a question is sent, and keeps the welcome and the note', () => {
+  it('drops the suggestions once a question is sent, and keeps the welcome', () => {
     const shown = text(conversation(after({ type: 'ask', question: 'Hello?' })));
 
     expect(shown).not.toContain(chat.tryAsking);
     expect(shown).toContain(chat.welcome);
-    expect(shown).toContain(chat.note);
   });
 
   it('says a held question waits for the service to start', () => {
