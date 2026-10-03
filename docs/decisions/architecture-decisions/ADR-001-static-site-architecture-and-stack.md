@@ -78,8 +78,7 @@ durable part of this decision and later work is expected to respect them:
    violated under time pressure.
 2. **Components are presentational.** They render what they are given. They do not fetch,
    derive, or decide what content exists. *(Amended by ADR-028: the chat with the Digital Twin
-   calls its API from the reader's browser, once the reader starts to use it. It is the one
-   exception.)*
+   calls its API from the reader's browser, once the page has loaded. It is the one exception.)*
 3. **There is no application logic layer, and none should be created.** Shared code is
    limited to pure helpers such as date formatting. If something appears to need a service,
    store, or state management layer, that is a signal to revisit this ADR rather than to add

@@ -6,8 +6,8 @@ Date: 2026-10-03
 
 **Amends ADR-001's boundaries.** One component, the chat, sends the reader's words to a service
 and shows its answers, which no other component does. The site stays a static export. Nothing is
-fetched when a page is built or served, and the chat calls the API only when the reader starts
-to use it. There is still no application logic layer.
+fetched when a page is built or served. The chat calls the API from the reader's browser once
+the page has loaded. There is still no application logic layer.
 
 **Amends ADR-007 with the site's fifth Client Component**, `DigitalTwinChat`. The other four are:
 * `ContentsBar` (ADR-007);
@@ -129,11 +129,16 @@ The chat moves between these states, and #306 designs each one:
 * rate-limited;
 * unavailable.
 
-**It warms the API when the reader first engages:** the first time they open the chat or focus its
-field, whichever comes first in #306's design. It does this once per conversation.
-* A page load doesn't warm it, so a reader who never uses the chat doesn't wake the service.
-  Neither do crawlers, which don't engage.
-* A first question sent before then warms the API itself.
+**It warms the API as soon as a page that holds the chat has loaded,** once the component has
+mounted. The owner chose this on #305, so that a sleeping instance has the most time to wake before
+the reader asks. It does this once per conversation.
+* Every visit to such a page wakes the service, including visits from readers who never use the
+  chat, and from crawlers that run script. That's accepted. Render's free plan gives a workspace
+  750 instance hours a month, and one service awake all month uses about 744. The hours are shared
+  with any other free service in the owner's Render workspace.
+* So the chat can be warming up before the reader has done anything. #306 designs how that state
+  looks while the chat is at rest.
+* Without script, nothing is called.
 
 **Warming up** sends `POST /warmup`. A sleeping instance holds the request open while it starts.
 * If the request fails, the chat tries again. It waits 3 seconds, then twice as long each time,
@@ -318,16 +323,18 @@ Cons:
 
 Rejected for this epic.
 
-### Warming the API as the page loads
+### Warming the API only when the reader first engages
+
+The chat warms the API the first time the reader opens it or focuses its field.
 
 Pros:
-* The engine may be ready before the reader asks.
+* A reader who never uses the chat doesn't wake the service, and neither does a crawler.
 
 Cons:
-* Every visit would wake the service, including visits from readers who never use the chat. That
-  uses the free plan's hours and the engine's setup for nothing.
+* The reader waits the whole cold start, up to a minute or more, at the moment they've decided to
+  ask. That is when waiting costs the most.
 
-Rejected. The chat warms the API when the reader engages.
+Rejected by the owner on #305. The chat warms the API as the page loads.
 
 ## Consequences
 
