@@ -17,6 +17,11 @@ field and the words take the look the owner drew in `career-site-design`. On a w
 launcher stays in view as the panel's close control. Where the chat sits, its states, clearing,
 the length limit and what a screen reader hears stand.
 
+**Amended by DDR-103**: an answer replaces "Writing an answer…" with its first words and grows in
+place. The conversation follows it to its end, past the panel's foot, and leaves a reader who
+scrolls up where they are. The live region still says it once, complete. An answer cut off partway
+keeps what arrived, with a notice below it.
+
 **Revised on 2026-10-03 by #307, which built it.**
 * As first accepted, this record put the room for the launcher in the last section's padding,
   amending DDR-040 and DDR-046. On every page the footer comes after the last section, so the room
@@ -144,7 +149,7 @@ The panel holds three parts, top to bottom:
   heading shows as a bold paragraph. A link is an ordinary underlined link in DDR-096's colours,
   and opens a new tab saying so (DDR-043).
 * **The reader's words show exactly as typed.**
-* **When an answer arrives**, the conversation scrolls so that the answer's first line is at the
+* **When an answer arrives** (amended by DDR-103, while it grows), the conversation scrolls so that the answer's first line is at the
   top of what it shows, or the answer's end if it fits. It scrolls smoothly, or at once under
   reduced motion.
 
@@ -178,7 +183,8 @@ them on #306.
 
 ### What a screen reader hears
 
-**A visually hidden polite live region announces each of these once:**
+**A visually hidden polite live region announces each of these once** (DDR-103 adds the cut-off
+notice):
 * each new answer, in full;
 * the line shown while a question waits for the service to start;
 * the rate-limited notice;

@@ -4,7 +4,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { chat } from '@/content/chat';
 import { projects } from '@/content/projects';
 import {
-  answer,
   answerLimit,
   asleep,
   type ChatEvent,
@@ -13,9 +12,12 @@ import {
   count,
   deliver,
   DigitalTwinChat,
+  frames,
   heardFrom,
   initial,
   next,
+  opened,
+  pieceLimit,
   quietLimit,
   retryAfter,
   retryDelay,
@@ -151,15 +153,68 @@ describe('the chat’s states', () => {
   });
 });
 
+// ADR-030 and DDR-103: an answer grows piece by piece, is said once complete, and a failure after
+// some of it has arrived cuts it off.
+describe('a streamed answer', () => {
+  const writing = after({ type: 'warmed' }, { type: 'ask', question: 'Hello?' });
+  const growing = next(next(writing, { type: 'piece', text: 'Hi' }), { type: 'piece', text: ' there' });
+  const cut = next(growing, { type: 'failed' });
+
+  it('grows with each piece, still being written, and says nothing yet', () => {
+    expect(growing).toMatchObject({ waiting: 'writing', partial: 'Hi there', notice: null });
+    expect(growing.messages).toHaveLength(1);
+    expect(growing.said).toBe(writing.said);
+  });
+
+  it('becomes the whole reply at the end, and says it once', () => {
+    const state = next(growing, { type: 'answered', reply: 'Hi there.' });
+
+    expect(state.messages.at(-1)).toEqual({ from: 'twin', text: 'Hi there.' });
+    expect(state).toMatchObject({ waiting: null, partial: null, question: null });
+    expect(state.said?.what).toBe('answer');
+  });
+
+  it('is cut off by a failure after some of it has arrived, keeping it and the question, and says so', () => {
+    expect(cut).toMatchObject({
+      service: 'unavailable',
+      waiting: null,
+      partial: 'Hi there',
+      notice: 'cut-off',
+      question: 'Hello?',
+    });
+    expect(cut.said?.what).toBe('cut-off');
+    expect(next(writing, { type: 'failed' })).toMatchObject({ partial: null, notice: 'unavailable' });
+  });
+
+  it('gives way to a new answer on "Try again"', () => {
+    expect(next(cut, { type: 'retry' })).toMatchObject({
+      waiting: 'writing',
+      partial: null,
+      notice: null,
+      question: 'Hello?',
+    });
+  });
+
+  it('stays in the conversation, before a new question asked after it', () => {
+    expect(next(cut, { type: 'ask', question: 'And?' }).messages).toEqual([
+      { from: 'reader', text: 'Hello?' },
+      { from: 'twin', text: 'Hi there' },
+      { from: 'reader', text: 'And?' },
+    ]);
+  });
+
+  it('is dropped when the chat is cleared', () => {
+    expect(next(growing, { type: 'clear' })).toMatchObject({ messages: [], waiting: null, partial: null });
+  });
+});
+
 describe('the API’s answers', () => {
-  it('reads each response as ADR-028’s table does', () => {
-    expect(answer(200, { user_id: 'a', reply: 'Hi.' })).toEqual({ type: 'answered', reply: 'Hi.' });
-    expect(answer(200, { user_id: 'a' })).toEqual({ type: 'failed' });
-    expect(answer(200, null)).toEqual({ type: 'failed' });
-    expect(answer(503, null)).toEqual({ type: 'warming' });
-    expect(answer(429, null)).toEqual({ type: 'rate-limited' });
-    expect(answer(500, null)).toEqual({ type: 'failed' });
-    expect(answer(422, null)).toEqual({ type: 'failed' });
+  it('reads each response as ADR-028’s and ADR-030’s tables do, and a 200’s stream for its answer', () => {
+    expect(opened(200)).toBeNull();
+    expect(opened(503)).toEqual({ type: 'warming' });
+    expect(opened(429)).toEqual({ type: 'rate-limited' });
+    expect(opened(500)).toEqual({ type: 'failed' });
+    expect(opened(422)).toEqual({ type: 'failed' });
   });
 
   it('waits 3 seconds, then twice as long each time, while warming', () => {
@@ -174,9 +229,39 @@ describe('the API’s answers', () => {
     expect(retryAfter('soon')).toBe(10_000);
   });
 
-  it('gives warming two minutes and an answer one', () => {
+  it('gives warming two minutes, an answer’s first piece one, and each later piece 20 seconds', () => {
     expect(warmingLimit).toBe(120_000);
     expect(answerLimit).toBe(60_000);
+    expect(pieceLimit).toBe(20_000);
+  });
+});
+
+// ADR-030: the frames of `/chat/stream`, each a `data:` line of JSON ending at a blank line.
+describe('the stream’s frames', () => {
+  it('reads each whole frame, and keeps the start of one still arriving', () => {
+    expect(frames('data: {"type": "token", "content": "Hi"}\n\ndata: {"type": "do')).toEqual({
+      frames: [{ type: 'token', content: 'Hi' }],
+      rest: 'data: {"type": "do',
+    });
+  });
+
+  it('reads the end of an answer, and a failure', () => {
+    expect(frames('data: {"type":"done","content":"Hi."}\n\ndata: {"type":"error"}\n\n').frames).toEqual([
+      { type: 'done', content: 'Hi.' },
+      { type: 'error' },
+    ]);
+  });
+
+  it('reads lines that end in a carriage return too', () => {
+    expect(frames('data: {"type":"token","content":"a"}\r\n\r\n').frames).toEqual([{ type: 'token', content: 'a' }]);
+  });
+
+  it('skips comments, other fields, JSON it can’t read and frames the API doesn’t send', () => {
+    const skipped = [': ping', 'event: x', 'data: {oops', 'data: {"type":"token"}', 'data: 3', 'data: null'];
+
+    expect(frames(`${skipped.join('\n\n')}\n\ndata: {"type":"token","content":"ok"}\n\n`).frames).toEqual([
+      { type: 'token', content: 'ok' },
+    ]);
   });
 });
 
@@ -200,6 +285,7 @@ describe('a long silence from the API', () => {
   it('counts only the API’s own responses as hearing from it', () => {
     const heard: ChatEvent[] = [
       { type: 'warmed' },
+      { type: 'piece', text: 'Hi' },
       { type: 'answered', reply: 'Hi.' },
       { type: 'warming' },
       { type: 'rate-limited' },
@@ -299,37 +385,189 @@ describe('talking to the API', () => {
     });
   });
 
-  describe('a question', () => {
-    it('is sent as the conversation’s user_id and message once the API is warm, and answered', async () => {
-      fetch.mockResolvedValue(Response.json({ user_id: 'id', reply: 'Hi.' }));
+  /** A response to a question whose stream the test writes, piece by piece, as the API's arrives. */
+  function streamed() {
+    let stream!: ReadableStreamDefaultController<Uint8Array>;
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        stream = controller;
+      },
+    });
+    const raw = (text: string) => stream.enqueue(new TextEncoder().encode(text));
 
-      await deliver(chat.api, 'id', 'Hello?', Promise.resolve(true), dispatch);
+    return {
+      response: new Response(body, { headers: { 'Content-Type': 'text/event-stream' } }),
+      write: (...written: object[]) => raw(written.map((frame) => `data: ${JSON.stringify(frame)}\n\n`).join('')),
+      raw,
+      end: () => stream.close(),
+    };
+  }
+
+  describe('a question', () => {
+    it('is sent to /chat/stream as the conversation’s user_id and message, with no credentials', async () => {
+      const api = streamed();
+
+      fetch.mockResolvedValue(api.response);
+
+      const delivering = deliver(chat.api, 'id', 'Hello?', Promise.resolve(true), dispatch);
+
+      api.write({ type: 'done', content: 'Hi.' });
+      await delivering;
 
       const [url, init] = fetch.mock.calls[0]! as [string, RequestInit];
 
-      expect(url).toBe(`${chat.api}/chat`);
+      expect(url).toBe(`${chat.api}/chat/stream`);
       expect(init).toMatchObject({ method: 'POST', credentials: 'omit' });
       expect(JSON.parse(init.body as string)).toEqual({ user_id: 'id', message: 'Hello?' });
       expect(events).toEqual([{ type: 'answered', reply: 'Hi.' }]);
     });
 
-    it('is not sent while warming has given up', async () => {
+    it('is answered piece by piece as the pieces arrive, each read at once, then whole', async () => {
+      const api = streamed();
+
+      fetch.mockResolvedValue(api.response);
+
+      const delivering = deliver(chat.api, 'id', 'Hello?', Promise.resolve(true), dispatch);
+
+      api.write({ type: 'token', content: 'Hi' });
+      await vi.advanceTimersByTimeAsync(0);
+      expect(events).toEqual([{ type: 'piece', text: 'Hi' }]);
+      api.write({ type: 'token', content: ' there' }, { type: 'token', content: '.' });
+      await vi.advanceTimersByTimeAsync(0);
+      expect(events.at(-1)).toEqual({ type: 'piece', text: ' there.' });
+      api.write({ type: 'done', content: 'Hi there.' });
+      await delivering;
+      expect(events).toHaveLength(3);
+      expect(events.at(-1)).toEqual({ type: 'answered', reply: 'Hi there.' });
+    });
+
+    it('reads a frame split between two reads', async () => {
+      const api = streamed();
+
+      fetch.mockResolvedValue(api.response);
+
+      const delivering = deliver(chat.api, 'id', 'Hello?', Promise.resolve(true), dispatch);
+
+      api.raw('data: {"type": "tok');
+      await vi.advanceTimersByTimeAsync(0);
+      expect(events).toEqual([]);
+      api.raw('en", "content": "Hi"}\n\n');
+      await vi.advanceTimersByTimeAsync(0);
+      expect(events).toEqual([{ type: 'piece', text: 'Hi' }]);
+      api.write({ type: 'done', content: 'Hi' });
+      await delivering;
+    });
+
+    it('is answered whole when the whole stream arrives in one read, as a buffered one does', async () => {
+      const api = streamed();
+
+      fetch.mockResolvedValue(api.response);
+
+      const delivering = deliver(chat.api, 'id', 'Hello?', Promise.resolve(true), dispatch);
+
+      api.write({ type: 'token', content: 'Hi' }, { type: 'token', content: '.' }, { type: 'done', content: 'Hi.' });
+      await delivering;
+      expect(events).toEqual([{ type: 'answered', reply: 'Hi.' }]);
+    });
+
+    it('fails when the API reports an error partway, or the stream ends without its end', async () => {
+      const failing = streamed();
+      const ending = streamed();
+
+      fetch.mockResolvedValueOnce(failing.response).mockResolvedValueOnce(ending.response);
+
+      const first = deliver(chat.api, 'id', 'Hello?', Promise.resolve(true), dispatch);
+
+      failing.write({ type: 'token', content: 'Hi' }, { type: 'error' });
+      await first;
+      expect(events).toEqual([{ type: 'piece', text: 'Hi' }, { type: 'failed' }]);
+
+      events = [];
+
+      const second = deliver(chat.api, 'id', 'Hello?', Promise.resolve(true), dispatch);
+
+      ending.write({ type: 'token', content: 'Hi' });
+      ending.end();
+      await second;
+      expect(events).toEqual([{ type: 'piece', text: 'Hi' }, { type: 'failed' }]);
+      expect(fetch).toHaveBeenCalledTimes(2);
+    });
+
+    it('is given up after 60 seconds without a first piece, and not sent again', async () => {
+      fetch.mockResolvedValue(streamed().response);
+
+      const delivering = deliver(chat.api, 'id', 'Hello?', Promise.resolve(true), dispatch);
+
+      await vi.advanceTimersByTimeAsync(answerLimit - 1);
+      expect(events).toEqual([]);
+      await vi.advanceTimersByTimeAsync(1);
+      await delivering;
+      expect(fetch).toHaveBeenCalledOnce();
+      expect(events).toEqual([{ type: 'failed' }]);
+    });
+
+    it('is cut off after 20 seconds without its next piece, and not sent again', async () => {
+      const api = streamed();
+
+      fetch.mockResolvedValue(api.response);
+
+      const delivering = deliver(chat.api, 'id', 'Hello?', Promise.resolve(true), dispatch);
+
+      await vi.advanceTimersByTimeAsync(answerLimit - 1000);
+      api.write({ type: 'token', content: 'Hi' });
+      await vi.advanceTimersByTimeAsync(pieceLimit - 1);
+      api.write({ type: 'token', content: ' there' });
+      await vi.advanceTimersByTimeAsync(pieceLimit - 1);
+      expect(events).toEqual([
+        { type: 'piece', text: 'Hi' },
+        { type: 'piece', text: ' there' },
+      ]);
+      await vi.advanceTimersByTimeAsync(1);
+      await delivering;
+      expect(fetch).toHaveBeenCalledOnce();
+      expect(events.at(-1)).toEqual({ type: 'failed' });
+    });
+
+    it('drops the rest of its answer, and aborts the request, when the chat is cleared', async () => {
+      const api = streamed();
+      const clearing = new AbortController();
+
+      fetch.mockResolvedValue(api.response);
+
+      const delivering = deliver(chat.api, 'id', 'Hello?', Promise.resolve(true), dispatch, clearing.signal);
+
+      api.write({ type: 'token', content: 'Hi' });
+      await vi.advanceTimersByTimeAsync(0);
+      clearing.abort();
+      await delivering;
+      expect(events).toEqual([{ type: 'piece', text: 'Hi' }]);
+      expect((fetch.mock.calls[0]![1] as RequestInit).signal?.aborted).toBe(true);
+    });
+
+    it('is not sent while warming has given up, or once the chat is cleared', async () => {
+      const cleared = new AbortController();
+
+      cleared.abort();
       await deliver(chat.api, 'id', 'Hello?', Promise.resolve(false), dispatch);
+      await deliver(chat.api, 'id', 'Hello?', Promise.resolve(true), dispatch, cleared.signal);
 
       expect(fetch).not.toHaveBeenCalled();
       expect(events).toEqual([]);
     });
 
     it('is sent again after Retry-After when the API answers 503', async () => {
+      const api = streamed();
+
       fetch
         .mockResolvedValueOnce(new Response(null, { status: 503, headers: { 'Retry-After': '10' } }))
-        .mockResolvedValue(Response.json({ user_id: 'id', reply: 'Hi.' }));
+        .mockResolvedValue(api.response);
 
       const delivering = deliver(chat.api, 'id', 'Hello?', Promise.resolve(true), dispatch);
 
       await vi.advanceTimersByTimeAsync(9999);
       expect(fetch).toHaveBeenCalledTimes(1);
       await vi.advanceTimersByTimeAsync(1);
+      api.write({ type: 'done', content: 'Hi.' });
       await delivering;
       expect(fetch).toHaveBeenCalledTimes(2);
       expect(events).toEqual([{ type: 'warming' }, { type: 'answered', reply: 'Hi.' }]);
@@ -354,7 +592,7 @@ describe('talking to the API', () => {
       expect(events).toEqual([{ type: 'rate-limited' }]);
     });
 
-    it('is given up after 60 seconds, and not sent again', async () => {
+    it('is given up after 60 seconds when the API never answers, and not sent again', async () => {
       fetch.mockImplementation(hanging);
 
       const delivering = deliver(chat.api, 'id', 'Hello?', Promise.resolve(true), dispatch);
@@ -507,6 +745,30 @@ describe('Conversation', () => {
     expect(html).toContain('<p><strong>Yes</strong></p><ul><li>one</li><li>two</li></ul>');
   });
 
+  // DDR-103: the first words take the writing line's place, and the answer grows there.
+  it('shows an answer as it grows, in the writing line’s place, its Markdown as elements', () => {
+    const html = conversation(
+      after({ type: 'warmed' }, { type: 'ask', question: 'Hello?' }, { type: 'piece', text: '**Yes**\n\n- one\n- tw' }),
+    );
+
+    expect(text(html)).not.toContain(chat.writing);
+    expect(html).toMatch(/<li class="[^"]*turn[^"]*" data-growing="">/);
+    expect(html).toContain('<p><strong>Yes</strong></p><ul><li>one</li><li>tw</li></ul>');
+  });
+
+  it('keeps what arrived of an answer cut off, with its notice, "Try again" and the chatbot’s page', () => {
+    const html = conversation(
+      after({ type: 'warmed' }, { type: 'ask', question: 'Hello?' }, { type: 'piece', text: 'Half an ans' }, { type: 'failed' }),
+    );
+    const shown = text(html);
+
+    expect(shown.indexOf('Half an ans')).toBeGreaterThan(-1);
+    expect(shown.indexOf('Half an ans')).toBeLessThan(shown.indexOf(chat.cutOff));
+    expect(shown).not.toContain(chat.unavailable);
+    expect(html).toMatch(/<button type="button" class="[^"]*primary[^"]*">Try again<\/button>/);
+    expect(html).toContain(`aria-label="Ask it on its own page, ${chat.newTab}"`);
+  });
+
   it('asks the reader to wait after a 429, with no way to send at once', () => {
     const html = conversation(after({ type: 'warmed' }, { type: 'ask', question: 'Hello?' }, { type: 'rate-limited' }));
 
@@ -548,6 +810,13 @@ describe('what the live region says', () => {
     expect(spoken(after({ type: 'ask', question: 'Hello?' }), chat)).toBe(chat.held);
     expect(spoken(after({ type: 'rate-limited' }), chat)).toBe(chat.rateLimited);
     expect(spoken(after({ type: 'failed' }), chat)).toBe(chat.unavailable);
+  });
+
+  it('says nothing while an answer grows, and only the notice when it’s cut off', () => {
+    const growing = after({ type: 'warmed' }, { type: 'ask', question: 'Hello?' }, { type: 'piece', text: 'Half' });
+
+    expect(spoken(growing, chat)).toBeNull();
+    expect(spoken(next(growing, { type: 'failed' }), chat)).toBe(chat.cutOff);
   });
 
   it('says the chat is cleared', () => {

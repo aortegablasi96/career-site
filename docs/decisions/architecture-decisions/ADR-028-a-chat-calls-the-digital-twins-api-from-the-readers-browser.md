@@ -22,6 +22,11 @@ See *What the reader is told*.
 next time the reader engages, rather than only once per conversation. See *How the chat handles the
 API's states*.
 
+**Amended by ADR-030**: the chat sends a question to `POST /chat/stream` and reads the answer as it
+arrives. The first piece has 60 seconds and each later piece 20, where a whole answer had 60. An
+answer cut off partway keeps what arrived. See *How the chat handles the API's states* and *How a
+reply is shown*.
+
 ## Context
 
 Epic #304 lets a reader talk to the owner's Digital Twin on the site itself, rather than through
@@ -167,7 +172,8 @@ each conversation's memory as one list, and parallel requests would interleave i
 characters, and an empty or blank question isn't sent. HTML's `maxlength` counts UTF-16 units,
 which never undercounts the API's characters.
 
-**When `/chat` answers, or fails:**
+**When `/chat` answers, or fails:** (amended by ADR-030, which sends the question to
+`/chat/stream`, gives the first piece 60 seconds and each later piece 20, and adds the cut-off state)
 
 | Response | State | What happens next |
 | -------- | ----- | ----------------- |
@@ -181,6 +187,9 @@ The reader's question stays available to send again in the last two cases, and t
 unavailable state links to the chatbot's own page.
 
 ### How a reply is shown
+
+**Amended by ADR-030**: a reply that's still arriving is shown the same way, read again as each
+piece arrives.
 
 **As text, never as HTML.** The reply is the model's output, so it can carry anything a reader
 typed. Nothing reaches `dangerouslySetInnerHTML`.

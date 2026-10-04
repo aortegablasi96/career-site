@@ -785,6 +785,8 @@ export interface Chat {
   rateLimited: string;
   /** Shown, in the answer's place, when the API can't answer. */
   unavailable: string;
+  /** Shown below what arrived of an answer cut off partway (DDR-103). */
+  cutOff: string;
   /** The control that sends the kept question again. */
   tryAgain: string;
   /** The link to the chatbot's own page, beside it. */

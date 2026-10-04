@@ -4,6 +4,7 @@ import {
   useEffect,
   useEffectEvent,
   useId,
+  useLayoutEffect,
   useReducer,
   useRef,
   useState,
@@ -30,11 +31,11 @@ export interface Message {
 
 /** What the live region says, per DDR-100, and a count that changes each time it says it. */
 export interface Said {
-  what: 'answer' | 'held' | 'rate-limited' | 'unavailable' | 'cleared';
+  what: 'answer' | 'held' | 'rate-limited' | 'unavailable' | 'cut-off' | 'cleared';
   serial: number;
 }
 
-/** The conversation and where it stands, per ADR-028's states. */
+/** The conversation and where it stands, per ADR-028's states and ADR-030's. */
 export interface ChatState {
   service: Service;
   /** Whether the API has answered `/warmup` or a question since it last asked to wait. */
@@ -42,8 +43,10 @@ export interface ChatState {
   messages: readonly Message[];
   /** A question on its way: held until the service is ready, or being answered. */
   waiting: 'held' | 'writing' | null;
-  /** What takes the answer's place when there is none. */
-  notice: 'rate-limited' | 'unavailable' | null;
+  /** What has arrived of an answer still arriving, or of one cut off partway (ADR-030). */
+  partial: string | null;
+  /** What takes the answer's place when there is none, or follows what arrived of it. */
+  notice: 'rate-limited' | 'unavailable' | 'cut-off' | null;
   /** The question on its way, or kept to send again after a notice. */
   question: string | null;
   said: Said | null;
@@ -56,6 +59,7 @@ export type ChatEvent =
   | { type: 'warmed' }
   | { type: 'warming' }
   | { type: 'gave-up' }
+  | { type: 'piece'; text: string }
   | { type: 'answered'; reply: string }
   | { type: 'rate-limited' }
   | { type: 'failed' }
@@ -67,6 +71,7 @@ export const initial: ChatState = {
   warm: false,
   messages: [],
   waiting: null,
+  partial: null,
   notice: null,
   question: null,
   said: null,
@@ -85,14 +90,23 @@ function say(state: ChatState, what: Said['what']): Said {
  * drops any question on its way, so the chat is as it was before the first one, with the service as
  * it stands. The live region says each answer, the line a held question shows, each notice and the
  * clearing, once each: only the event that changes them says them.
+ *
+ * An answer grows piece by piece and is said once, complete, per ADR-030 and DDR-103. A failure
+ * after some of it has arrived cuts it off: what arrived stays, with its notice below it. "Try
+ * again" puts a new answer in its place, and a new question keeps it in the conversation.
  */
 export function next(state: ChatState, event: ChatEvent): ChatState {
   switch (event.type) {
     case 'ask':
       return {
         ...state,
-        messages: [...state.messages, { from: 'reader', text: event.question }],
+        messages: [
+          ...state.messages,
+          ...(state.partial === null ? [] : [{ from: 'twin', text: state.partial } as const]),
+          { from: 'reader', text: event.question },
+        ],
         waiting: state.warm ? 'writing' : 'held',
+        partial: null,
         notice: null,
         question: event.question,
         said: state.warm ? state.said : say(state, 'held'),
@@ -106,8 +120,16 @@ export function next(state: ChatState, event: ChatEvent): ChatState {
         ...state,
         service: state.warm ? 'ready' : 'warming',
         waiting: state.warm ? 'writing' : 'held',
+        partial: null,
         notice: null,
         said: state.warm ? state.said : say(state, 'held'),
+      };
+    case 'piece':
+      return {
+        ...state,
+        service: 'ready',
+        warm: true,
+        partial: (state.partial ?? '') + event.text,
       };
     case 'warmed':
       return {
@@ -140,6 +162,7 @@ export function next(state: ChatState, event: ChatEvent): ChatState {
         warm: true,
         messages: [...state.messages, { from: 'twin', text: event.reply }],
         waiting: null,
+        partial: null,
         notice: null,
         question: null,
         said: say(state, 'answer'),
@@ -153,19 +176,23 @@ export function next(state: ChatState, event: ChatEvent): ChatState {
         notice: 'rate-limited',
         said: say(state, 'rate-limited'),
       };
-    case 'failed':
+    case 'failed': {
+      const notice = state.partial === null ? 'unavailable' : 'cut-off';
+
       return {
         ...state,
         service: 'unavailable',
         waiting: null,
-        notice: 'unavailable',
-        said: say(state, 'unavailable'),
+        notice,
+        said: say(state, notice),
       };
+    }
     case 'clear':
       return {
         ...state,
         messages: [],
         waiting: null,
+        partial: null,
         notice: null,
         question: null,
         said: say(state, 'cleared'),
@@ -176,8 +203,11 @@ export function next(state: ChatState, event: ChatEvent): ChatState {
 /** How long warming tries, from its first request, before the chat is unavailable (ADR-028). */
 export const warmingLimit = 120_000;
 
-/** How long a question waits for its answer before it is given up (ADR-028). */
+/** How long a question waits for its answer's first piece before it is given up (ADR-030). */
 export const answerLimit = 60_000;
+
+/** How long an answer that has begun waits for its next piece before it is cut off (ADR-030). */
+export const pieceLimit = 20_000;
 
 /**
  * How long the chat goes without hearing from the API before it treats the service as possibly
@@ -195,7 +225,13 @@ export function asleep(warm: boolean, heard: number, now: number): boolean {
  * awake (ADR-029). A failure, a refused origin or a time-out isn't.
  */
 export function heardFrom(event: ChatEvent): boolean {
-  return event.type === 'warmed' || event.type === 'answered' || event.type === 'warming' || event.type === 'rate-limited';
+  return (
+    event.type === 'warmed' ||
+    event.type === 'piece' ||
+    event.type === 'answered' ||
+    event.type === 'warming' ||
+    event.type === 'rate-limited'
+  );
 }
 
 /** How long warming waits before its next try: 3 seconds, then twice as long each time (ADR-028). */
@@ -210,12 +246,13 @@ export function retryAfter(header: string | null): number {
   return (header !== null && header.trim() !== '' && Number.isFinite(seconds) && seconds >= 0 ? seconds : 10) * 1000;
 }
 
-/** What the API's answer to a question means, per ADR-028's table. */
-export function answer(status: number, body: unknown): ChatEvent {
-  const reply = typeof body === 'object' && body !== null ? (body as { reply?: unknown }).reply : undefined;
-
-  if (status === 200 && typeof reply === 'string') {
-    return { type: 'answered', reply };
+/**
+ * What the API's response to a question means before its stream is read, per ADR-028's table and
+ * ADR-030's: nothing yet for a 200, whose stream holds the answer.
+ */
+export function opened(status: number): ChatEvent | null {
+  if (status === 200) {
+    return null;
   } else if (status === 503) {
     return { type: 'warming' };
   } else if (status === 429) {
@@ -223,6 +260,50 @@ export function answer(status: number, body: unknown): ChatEvent {
   }
 
   return { type: 'failed' };
+}
+
+/** One frame of the API's stream (ADR-030): a piece of the answer, the whole of it, or a failure. */
+export type Frame = { type: 'token'; content: string } | { type: 'done'; content: string } | { type: 'error' };
+
+function isFrame(value: unknown): value is Frame {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+
+  const { type, content } = value as { type?: unknown; content?: unknown };
+
+  return type === 'error' || ((type === 'token' || type === 'done') && typeof content === 'string');
+}
+
+/**
+ * The frames that have arrived whole in `text`, and the start of one still arriving, per ADR-030.
+ * A frame is its `data:` lines, holding JSON, and ends at a blank line. A comment, any other field,
+ * and JSON that isn't a frame the API sends are skipped.
+ */
+export function frames(text: string): { frames: Frame[]; rest: string } {
+  const parts = text.split(/\r?\n\r?\n/);
+  const rest = parts.pop() ?? '';
+  const read: Frame[] = [];
+
+  for (const part of parts) {
+    const data = part
+      .split(/\r?\n/)
+      .filter((line) => line.startsWith('data:'))
+      .map((line) => line.slice(5).replace(/^ /, ''))
+      .join('\n');
+
+    try {
+      const frame: unknown = JSON.parse(data);
+
+      if (isFrame(frame)) {
+        read.push(frame);
+      }
+    } catch {
+      // Not JSON, or no data at all: skipped, as a stream reader skips what it doesn't know.
+    }
+  }
+
+  return { frames: read, rest };
 }
 
 /** The count below the field, from `countFrom` characters, as "1,850 / 2,000" (DDR-100). */
@@ -233,33 +314,18 @@ export function count(length: number, { countFrom, maxLength }: Pick<Chat, 'coun
 const sleep = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
 /**
- * One request to the API, given up after `limit` milliseconds, with its status, its `Retry-After`
- * and its body where it succeeded. It carries no credentials (ADR-028). A request the network or the
- * API's CORS policy refuses throws, as one that runs out of time does.
+ * One request to `/warmup`, given up after `limit` milliseconds, with its status. It carries no
+ * credentials (ADR-028). A request the network or the API's CORS policy refuses throws, as one that
+ * runs out of time does.
  */
-async function post(
-  api: string,
-  path: string,
-  body: object | undefined,
-  limit: number,
-): Promise<{ status: number; retryAfter: string | null; data: unknown }> {
+async function post(api: string, path: string, limit: number): Promise<number> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), limit);
 
   try {
-    const response = await fetch(`${api}${path}`, {
-      method: 'POST',
-      credentials: 'omit',
-      headers: body ? { 'Content-Type': 'application/json' } : undefined,
-      body: body ? JSON.stringify(body) : undefined,
-      signal: controller.signal,
-    });
+    const response = await fetch(`${api}${path}`, { method: 'POST', credentials: 'omit', signal: controller.signal });
 
-    return {
-      status: response.status,
-      retryAfter: response.headers.get('Retry-After'),
-      data: response.ok ? await response.json().catch(() => null) : null,
-    };
+    return response.status;
   } finally {
     clearTimeout(timer);
   }
@@ -276,7 +342,7 @@ export async function warmUp(api: string, dispatch: (event: ChatEvent) => void):
 
   for (let attempt = 0; ; attempt++) {
     try {
-      const { status } = await post(api, '/warmup', undefined, warmingLimit - (Date.now() - started));
+      const status = await post(api, '/warmup', warmingLimit - (Date.now() - started));
 
       if (status >= 200 && status < 300) {
         dispatch({ type: 'warmed' });
@@ -298,9 +364,97 @@ export async function warmUp(api: string, dispatch: (event: ChatEvent) => void):
 }
 
 /**
- * Sends a question once the API is warm and says what came of it, per ADR-028. A 503 waits its
- * `Retry-After` and sends the question again, for two minutes at most. Nothing else is retried: a
- * question that ran out of time may have been answered into the conversation's memory.
+ * One question to `POST /chat/stream`, read as it arrives, per ADR-030. Says the pieces that arrive
+ * in each read as one, then the answer, or a failure: an `error` frame, a stream that ends without
+ * `done`, no first piece within a minute, or 20 seconds without the next. A time-out aborts the
+ * request, so the API stops writing. Nothing is said once `signal` has aborted it. Resolves to how
+ * long a 503 asks the chat to wait before sending the question again, or to null.
+ */
+async function stream(
+  api: string,
+  user: string,
+  question: string,
+  dispatch: (event: ChatEvent) => void,
+  signal: AbortSignal | undefined,
+): Promise<number | null> {
+  const controller = new AbortController();
+  const stop = () => controller.abort();
+  const say = (event: ChatEvent) => {
+    if (!signal?.aborted) {
+      dispatch(event);
+    }
+  };
+  let timer = setTimeout(stop, answerLimit);
+
+  signal?.addEventListener('abort', stop);
+
+  try {
+    const response = await fetch(`${api}/chat/stream`, {
+      method: 'POST',
+      credentials: 'omit',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: user, message: question }),
+      signal: controller.signal,
+    });
+    const refused = opened(response.status);
+
+    if (refused?.type === 'warming') {
+      return retryAfter(response.headers.get('Retry-After'));
+    } else if (refused) {
+      say(refused);
+      return null;
+    }
+
+    const reader = response.body?.getReader();
+    const decoder = new TextDecoder();
+    let rest = '';
+
+    // Aborting a request ends its body too, wherever the body comes from.
+    controller.signal.addEventListener('abort', () => void reader?.cancel().catch(() => {}));
+
+    for (;;) {
+      const { done, value } = reader ? await reader.read() : { done: true, value: undefined };
+
+      if (done) {
+        break;
+      }
+
+      const read = frames(rest + decoder.decode(value, { stream: true }));
+      const end = read.frames.find(({ type }) => type !== 'token');
+      const text = read.frames.map((frame) => (frame.type === 'token' ? frame.content : '')).join('');
+
+      rest = read.rest;
+
+      if (end?.type === 'done') {
+        say({ type: 'answered', reply: end.content });
+        return null;
+      } else if (text) {
+        say({ type: 'piece', text });
+        clearTimeout(timer);
+        timer = setTimeout(stop, pieceLimit);
+      }
+
+      if (end) {
+        break;
+      }
+    }
+  } catch {
+    // A failure, a refused origin or a time-out, said below as a stream that ended is.
+  } finally {
+    clearTimeout(timer);
+    signal?.removeEventListener('abort', stop);
+  }
+
+  say({ type: 'failed' });
+
+  return null;
+}
+
+/**
+ * Sends a question once the API is warm and says what came of it, per ADR-028 and ADR-030. A 503
+ * waits its `Retry-After` and sends the question again, for two minutes at most. Nothing else is
+ * retried: once the API has taken a question, the reader decides whether to send it again. Aborting
+ * `signal`, as clearing the chat does, drops the rest of the answer and says nothing more.
  */
 export async function deliver(
   api: string,
@@ -308,6 +462,7 @@ export async function deliver(
   question: string,
   warm: Promise<boolean>,
   dispatch: (event: ChatEvent) => void,
+  signal?: AbortSignal,
 ): Promise<void> {
   if (!(await warm)) {
     return;
@@ -315,21 +470,10 @@ export async function deliver(
 
   const started = Date.now();
 
-  for (;;) {
-    let event: ChatEvent;
-    let wait = 0;
+  while (!signal?.aborted) {
+    const wait = await stream(api, user, question, dispatch, signal);
 
-    try {
-      const response = await post(api, '/chat', { user_id: user, message: question }, answerLimit);
-
-      event = answer(response.status, response.data);
-      wait = retryAfter(response.retryAfter);
-    } catch {
-      event = { type: 'failed' };
-    }
-
-    if (event.type !== 'warming') {
-      dispatch(event);
+    if (wait === null || signal?.aborted) {
       return;
     }
 
@@ -338,7 +482,7 @@ export async function deliver(
       return;
     }
 
-    dispatch(event);
+    dispatch({ type: 'warming' });
     await sleep(wait);
   }
 }
@@ -363,7 +507,7 @@ function TwinMark() {
  */
 export function Conversation({
   chat,
-  state: { messages, waiting, notice },
+  state: { messages, waiting, partial, notice },
   mounted,
   ask,
   retry,
@@ -424,9 +568,18 @@ export function Conversation({
               )}
             </li>
           ))}
+          {partial !== null && (
+            <li className={styles.turn} data-growing="">
+              <TwinMark />
+              <div className={`${styles.message} ${styles.twin}`}>
+                <span className={styles.hidden}>{chat.sender.twin} </span>
+                <Reply text={partial} newTab={chat.newTab} />
+              </div>
+            </li>
+          )}
         </ol>
       )}
-      {waiting && (
+      {waiting && partial === null && (
         <div className={styles.turn}>
           <TwinMark />
           <p className={`${styles.message} ${styles.twin} ${styles.pending}`}>
@@ -440,8 +593,8 @@ export function Conversation({
           <TwinMark />
           <div className={`${styles.message} ${styles.twin} ${styles.pending}`}>
             <span className={styles.hidden}>{chat.sender.twin} </span>
-            <p>{notice === 'rate-limited' ? chat.rateLimited : chat.unavailable}</p>
-            {notice === 'unavailable' && (
+            <p>{{ 'rate-limited': chat.rateLimited, unavailable: chat.unavailable, 'cut-off': chat.cutOff }[notice]}</p>
+            {notice !== 'rate-limited' && (
               <ul className={styles.actions}>
                 <li>
                   <button type="button" className={styles.primary} onClick={retry}>
@@ -483,6 +636,7 @@ export function spoken(state: ChatState, chat: Chat): string | null {
     held: chat.held,
     'rate-limited': chat.rateLimited,
     unavailable: chat.unavailable,
+    'cut-off': chat.cutOff,
     cleared: chat.cleared,
   }[state.said.what];
 }
@@ -529,6 +683,15 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
   // Whether warming is under way, and when the API last answered anything (ADR-029).
   const warming = useRef(false);
   const heard = useRef(0);
+  // The question on its way, to abort when the chat is cleared (ADR-030).
+  const delivery = useRef<AbortController | null>(null);
+  // Whether the conversation follows the answer, where it last put it, and whether the answer has
+  // grown in view, so that it stays at its end once complete (DDR-103).
+  const follow = useRef(true);
+  const scrolled = useRef(0);
+  const grew = useRef(false);
+  // Where the conversation's end stood when the answer last grew, to tell a reader who came back to it.
+  const end = useRef(Infinity);
   const headingId = useId();
   const fieldId = useId();
   const countId = useId();
@@ -585,22 +748,36 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
 
   /**
    * Sends a question, and puts it back in the field if the API asks the reader to wait (429). What
-   * comes of it once the reader has cleared its conversation is dropped.
+   * comes of it once the reader has cleared its conversation is dropped, and clearing aborts it.
+   * The conversation follows its answer until the reader scrolls (DDR-103).
    */
   function send(question: string) {
     const conversation = (user.current ??= crypto.randomUUID());
+    const controller = new AbortController();
 
-    void deliver(chat.api, conversation, question, warmth.current ?? warm(), (event) => {
-      if (user.current !== conversation) {
-        return;
-      }
+    delivery.current = controller;
+    follow.current = true;
+    grew.current = false;
+    end.current = Infinity;
 
-      hear(event);
+    void deliver(
+      chat.api,
+      conversation,
+      question,
+      warmth.current ?? warm(),
+      (event) => {
+        if (user.current !== conversation) {
+          return;
+        }
 
-      if (event.type === 'rate-limited') {
-        setDraft((current) => current || question);
-      }
-    });
+        hear(event);
+
+        if (event.type === 'rate-limited') {
+          setDraft((current) => current || question);
+        }
+      },
+      controller.signal,
+    );
   }
 
   function ask(question: string) {
@@ -625,10 +802,12 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
     }
   }
 
-  // Clearing forgets the conversation's id, so the API keeps none of it for the next question, and
-  // takes the reader back to the welcome with focus in the field.
+  // Clearing forgets the conversation's id, so the API keeps none of it for the next question, drops
+  // the rest of an answer on its way, and takes the reader back to the welcome with focus in the field.
   function clear() {
     user.current = null;
+    delivery.current?.abort();
+    delivery.current = null;
     dispatch({ type: 'clear' });
     log.current?.scrollTo({ top: 0 });
     field.current?.focus();
@@ -679,15 +858,17 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
     return () => box?.removeEventListener('command', onCommand);
   }, []);
 
-  // A new message comes into view: the reader's question at the foot, and an answer from its first
-  // line, or whole if it fits, smoothly unless the reader has asked for less motion.
+  // A new message comes into view: the reader's question at the foot, and an answer that arrives
+  // whole from its first line, or whole if it fits, smoothly unless the reader has asked for less
+  // motion. An answer that grew in view stays at its end, where it was followed to. Once the reader
+  // has scrolled during an answer, nothing moves until the next question (DDR-103).
   const last = state.messages.at(-1);
 
   useEffect(() => {
     const region = log.current;
     const item = region?.querySelector('[data-last]');
 
-    if (!region || !(item instanceof HTMLElement)) {
+    if (!region || !(item instanceof HTMLElement) || !follow.current || (grew.current && last?.from === 'twin')) {
       return;
     }
 
@@ -700,6 +881,46 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
       behavior,
     });
   }, [last, state.waiting, state.notice]);
+
+  // While an answer grows, the conversation follows its end at once, so the newest words stay in
+  // view as the answer runs past the panel's foot. A reader who has scrolled back down to the end as
+  // it stood before this piece is followed again (DDR-103). It runs before the browser paints, so the
+  // newest line is never drawn below the foot first.
+  useLayoutEffect(() => {
+    const region = log.current;
+
+    if (!region || state.partial === null) {
+      return;
+    }
+
+    if (region.scrollTop >= end.current - 1) {
+      follow.current = true;
+    }
+
+    if (follow.current) {
+      region.scrollTo({ top: region.scrollHeight - region.clientHeight });
+      scrolled.current = region.scrollTop;
+      grew.current = true;
+    }
+
+    end.current = region.scrollHeight - region.clientHeight;
+  }, [state.partial]);
+
+  // While an answer grows, a reader who scrolls up from where it was followed to stops the following
+  // (DDR-103). An answer can grow shorter for a moment, as a line becomes a list, and the browser then
+  // moves the conversation up to its new end: that is still the end, so it doesn't count as leaving.
+  function scroll() {
+    const region = log.current;
+
+    if (
+      region &&
+      state.partial !== null &&
+      region.scrollTop < scrolled.current - 1 &&
+      region.scrollHeight - region.clientHeight - region.scrollTop > 1
+    ) {
+      follow.current = false;
+    }
+  }
 
   function change(event: ChangeEvent<HTMLTextAreaElement>) {
     const { value } = event.target;
@@ -791,7 +1012,11 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
         </div>
         {/* The conversation scrolls inside the panel, so it takes focus, for a keyboard to scroll
             it. It opens with the welcome and the suggestions until a question is sent. */}
-        <div ref={log} className={styles.log} role="region" aria-label={chat.conversation} tabIndex={0}>
+        <div ref={log} className={styles.log} role="region"
+          aria-label={chat.conversation}
+          tabIndex={0}
+          onScroll={scroll}
+        >
           <Conversation chat={chat} state={state} mounted={mounted} ask={ask} retry={retry} />
         </div>
         <form className={styles.form} onSubmit={submit}>

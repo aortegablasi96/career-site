@@ -348,12 +348,12 @@ The page itself is the CV, so what it prints is designed.
   `backwards` fill, so the element stays hidden while it waits. It is removed with the state.
 * To watch it, set `--appear-duration` on the root to a few seconds before a screenshot.
 
-### Chat with the Digital Twin (ADR-028, DDR-100)
+### Chat with the Digital Twin (ADR-028, ADR-030, DDR-100, DDR-103)
 
 * **It is in `app/layout.tsx`, so it is on every route** and its conversation survives `next/link`
   navigation; a reload ends it. Its words and the API's origin are `content/chat.ts`.
-* **The rules are pure and tested in Node**: `next` (the states), `answer`, `warmUp` and `deliver`
-  in `digital-twin-chat.tsx`, and the Markdown in `reply.tsx`. Tests stub `fetch` and use fake
+* **The rules are pure and tested in Node**: `next` (the states), `opened`, `frames`, `warmUp` and
+  `deliver` in `digital-twin-chat.tsx`, and the Markdown in `reply.tsx`. Tests stub `fetch` and use fake
   timers; `post` times out by its own `setTimeout`, not `AbortSignal.timeout`, so fake timers reach
   it. `Conversation` renders any state with `react-dom/server`.
 * **The panel is a `dialog`**: `show()` from the wide breakpoint (non-modal, `position: fixed` at
@@ -364,7 +364,22 @@ The page itself is the CV, so what it prints is designed.
   count as hearing from it. To try it in a browser, install Playwright's `page.clock` before the
   page loads and `fastForward` past the 10 minutes.
 * **Clearing forgets the conversation's id** (`user.current`), and `send` drops what `deliver`
-  dispatches once the id it sent has changed, so a late answer can't land in the cleared chat.
+  dispatches once the id it sent has changed, so a late answer can't land in the cleared chat. It
+  also aborts the request (`delivery.current`), so the API stops writing.
+* **A question goes to `/chat/stream`** (ADR-030). The pieces of one read are dispatched as one
+  `piece`, so the answer redraws once per read. `partial` holds the answer so far, inside the
+  `ol` as the last item (`data-growing`), and `failed` with a `partial` is the cut-off state.
+  Aborting a request also cancels its body's reader, because a stubbed `fetch` ignores the signal.
+* **Following a growing answer** (DDR-103) scrolls to the end at once, in a `useLayoutEffect` so the
+  new line is never painted below the foot first. A smooth scroll would fire scroll events at
+  in-between positions. A scroll event above where it last put the conversation (`scrolled`)
+  switches `follow` off, unless the conversation is still at its end: a growing answer can get
+  shorter for a moment, as a line becomes a list, and the browser then clamps the scroll position.
+  The reader's return to the end is noticed at the next piece, against the end as it stood before it
+  (`end`), because by the time their scroll event fires the answer has often grown again. Once an
+  answer has grown in view (`grew`), its completion doesn't move the conversation.
+* **Tests write a `ReadableStream` piece by piece** as the stubbed response's body, and flush each
+  piece with `advanceTimersByTimeAsync(0)`.
 * **The corner panel has a fixed `block-size`**, which the contents bar's height caps: the bar
   stands above a non-modal panel, so a panel as tall as the window less its insets slid under it.
 * **A view has other dialogs before it**, the larger pictures', so look the chat up by its id,
@@ -386,8 +401,10 @@ The page itself is the CV, so what it prints is designed.
   DDR-028's step on paper.
 * **Check it against the live API from `localhost:3000`**, an origin the API allows. A preview
   can't reach it until the chatbot's repository allows the preview origins
-  (aortegablasi96/career_conversation_chatbot#1). Stub `**/chat` with Playwright's `page.route` to
-  reach the 429 and unavailable states.
+  (aortegablasi96/career_conversation_chatbot#1). Stub `**/chat/stream` with Playwright's `page.route`
+  to reach the 429, unavailable and cut-off states. `route.fulfill` sends its body in one piece, so
+  watch an answer grow against the live API. The first question after warming spends about 20
+  seconds before its first words.
 
 ### Footer (DDR-028, DDR-029)
 
