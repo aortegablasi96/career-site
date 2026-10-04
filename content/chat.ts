@@ -16,7 +16,8 @@ if (!page) {
  * The words are the Content Brief's on #306, which the owner approved, and since DDR-102 the
  * design's: the heading, the subtitle, the statuses, the welcome, the suggestions and the
  * placeholder, which the owner approved on #321, with the site's curly apostrophes and no serial
- * comma. Since DDR-101 there is no note on where messages go.
+ * comma. Since DDR-101 there is no note on where messages go. The cut-off notice is DDR-103's,
+ * which the owner approved on #317.
  *
  * The API's origin and the length it accepts are here rather than in an environment variable, per
  * ADR-028: there is one API, its address is public already, and a pull request reviews a change to
@@ -59,6 +60,7 @@ export const chat: Chat = {
   writing: 'Writing an answer…',
   rateLimited: 'You’ve sent a lot of questions in a short time. Wait a minute, then send yours again.',
   unavailable: 'The Digital Twin can’t answer right now.',
+  cutOff: 'The answer was cut off before it was finished.',
   tryAgain: 'Try again',
   ownPage: 'Ask it on its own page',
 };
