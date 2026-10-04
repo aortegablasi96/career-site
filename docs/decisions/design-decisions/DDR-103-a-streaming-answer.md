@@ -24,7 +24,10 @@ scrolls while it grows, what a screen reader hears, and what the reader sees whe
 The owner chose on #317:
 * nothing marks an answer that's still arriving;
 * an answer cut off partway keeps what arrived;
-* the cut-off notice's words.
+* the cut-off notice's words;
+* the conversation following a growing answer to its end, past the panel's foot, which the owner
+  asked for after trying the first version. That stopped once the answer's first line reached the
+  top.
 
 ## Decision
 
@@ -49,16 +52,18 @@ answer's place below it. A question held while the service starts up shows DDR-1
 
 ### How the conversation scrolls
 
-* **While the answer grows, the conversation follows its end**, so the newest words stay in view,
-  until the answer's first line reaches the top of what the conversation shows. It then stays there,
-  and the reader scrolls on. This keeps DDR-100's rule, the answer's first line at the top or its
-  end if it fits, at every moment of the answer's growth.
+* **While the answer grows, the conversation follows its end**, so the newest words stay in view as
+  the answer runs past the panel's foot, until the answer is complete. It then stays at the answer's
+  end. This replaces DDR-100's rule for an answer that grows: DDR-100 put a long answer's first line
+  at the top. An answer that arrives whole, such as the reply to an off-topic question, keeps
+  DDR-100's rule.
 * **It follows at once, never smoothly**, whether or not the reader has asked for less motion. A
   smooth scroll for each piece would never settle. The reader's question still comes into view as
   DDR-100 decided.
-* **A reader who scrolls while the answer grows is left where they are.** The conversation doesn't
-  follow the answer, or move when it completes or is cut off, until the reader sends the next
-  question or tries again.
+* **A reader who scrolls up while the answer grows is left where they are.** The conversation
+  doesn't follow the answer, or move when it completes or is cut off.
+* **A reader who scrolls back down to the answer's end is followed again**, as the answer grows.
+  Otherwise the following starts again with the next question, or with "Try again".
 
 ### What a screen reader hears
 
@@ -139,6 +144,20 @@ Cons:
 
 Declined by the owner.
 
+### Following the answer only until its first line reaches the top
+
+DDR-100's rule kept at every moment: the conversation follows the answer's end while it fits, then
+holds its first line at the top, and the reader scrolls on.
+
+Pros:
+* A long answer is read from its start, as DDR-100 shows a whole one.
+
+Cons:
+* The newest words run out of sight below the panel's foot while the answer is still arriving.
+
+This was the first version. The owner asked for the conversation to follow the answer to its end
+instead.
+
 ### Following the growing answer smoothly
 
 Pros:
@@ -166,6 +185,7 @@ Rejected.
 Benefits:
 * A reader starts reading an answer about 4 seconds after asking.
 * A screen reader hears each answer once, as before.
+* The newest words stay in view while the answer arrives.
 * A reader who scrolls up to read isn't pulled down.
 * A cut-off answer keeps what arrived, and "Try again" replaces it.
 
@@ -174,6 +194,8 @@ Tradeoffs:
   and the send control becomes usable.
 * **A Markdown mark can show briefly** as its characters, until its pair arrives.
 * **A screen reader user waits for the whole answer**, as before streaming.
+* **A long answer ends with its last lines in view, not its first**, so the reader scrolls up to
+  read it from the start.
 
 Risks:
 * **A reader who scrolled away during an answer doesn't see its cut-off notice** until they scroll

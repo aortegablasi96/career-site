@@ -146,7 +146,7 @@ Each record keeps everything not listed against it.
 * **DDR-100** (chat): DDR-101 removes the note on where messages go; DDR-102 gives the chat the look
   and words the owner drew in `career-site-design`, keeps the launcher in view as its close control on
   a wide window, and keeps the full window on a phone. DDR-103 grows an answer in place as it
-  arrives, follows it until its first line reaches the top, and keeps a cut-off answer's part.
+  arrives, follows it to its end unless the reader scrolls up, and keeps a cut-off answer's part.
 * **DDR-101** (no note): DDR-102 changes the welcome's words.
 * **DDR-051** (project cards): DDR-054 every technology; DDR-055 the lift; DDR-062 the hover
   shadow; DDR-063 the shared card behaviour.

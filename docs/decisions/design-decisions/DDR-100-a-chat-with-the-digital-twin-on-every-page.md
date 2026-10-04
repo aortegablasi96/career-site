@@ -18,8 +18,8 @@ launcher stays in view as the panel's close control. Where the chat sits, its st
 the length limit and what a screen reader hears stand.
 
 **Amended by DDR-103**: an answer replaces "Writing an answer…" with its first words and grows in
-place. The conversation follows it until its first line reaches the top, and leaves a reader who
-scrolls where they are. The live region still says it once, complete. An answer cut off partway
+place. The conversation follows it to its end, past the panel's foot, and leaves a reader who
+scrolls up where they are. The live region still says it once, complete. An answer cut off partway
 keeps what arrived, with a notice below it.
 
 **Revised on 2026-10-03 by #307, which built it.**

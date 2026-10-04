@@ -370,10 +370,14 @@ The page itself is the CV, so what it prints is designed.
   `piece`, so the answer redraws once per read. `partial` holds the answer so far, inside the
   `ol` as the last item (`data-growing`), and `failed` with a `partial` is the cut-off state.
   Aborting a request also cancels its body's reader, because a stubbed `fetch` ignores the signal.
-* **Following a growing answer** (DDR-103) scrolls at once, never smoothly, and records where it put
-  the conversation (`scrolled`). A scroll event anywhere else while `partial` is set means the
-  reader moved, and `follow` stays off until the next question. A smooth scroll would fire scroll
-  events at in-between positions and switch it off.
+* **Following a growing answer** (DDR-103) scrolls to the end at once, in a `useLayoutEffect` so the
+  new line is never painted below the foot first. A smooth scroll would fire scroll events at
+  in-between positions. A scroll event above where it last put the conversation (`scrolled`)
+  switches `follow` off, unless the conversation is still at its end: a growing answer can get
+  shorter for a moment, as a line becomes a list, and the browser then clamps the scroll position.
+  The reader's return to the end is noticed at the next piece, against the end as it stood before it
+  (`end`), because by the time their scroll event fires the answer has often grown again. Once an
+  answer has grown in view (`grew`), its completion doesn't move the conversation.
 * **Tests write a `ReadableStream` piece by piece** as the stubbed response's body, and flush each
   piece with `advanceTimersByTimeAsync(0)`.
 * **The corner panel has a fixed `block-size`**, which the contents bar's height caps: the bar

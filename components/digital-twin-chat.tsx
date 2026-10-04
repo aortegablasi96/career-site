@@ -4,6 +4,7 @@ import {
   useEffect,
   useEffectEvent,
   useId,
+  useLayoutEffect,
   useReducer,
   useRef,
   useState,
@@ -684,9 +685,13 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
   const heard = useRef(0);
   // The question on its way, to abort when the chat is cleared (ADR-030).
   const delivery = useRef<AbortController | null>(null);
-  // Whether the conversation follows the answer, and where it last put it (DDR-103).
+  // Whether the conversation follows the answer, where it last put it, and whether the answer has
+  // grown in view, so that it stays at its end once complete (DDR-103).
   const follow = useRef(true);
   const scrolled = useRef(0);
+  const grew = useRef(false);
+  // Where the conversation's end stood when the answer last grew, to tell a reader who came back to it.
+  const end = useRef(Infinity);
   const headingId = useId();
   const fieldId = useId();
   const countId = useId();
@@ -752,6 +757,8 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
 
     delivery.current = controller;
     follow.current = true;
+    grew.current = false;
+    end.current = Infinity;
 
     void deliver(
       chat.api,
@@ -851,8 +858,9 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
     return () => box?.removeEventListener('command', onCommand);
   }, []);
 
-  // A new message comes into view: the reader's question at the foot, and an answer from its first
-  // line, or whole if it fits, smoothly unless the reader has asked for less motion. Once the reader
+  // A new message comes into view: the reader's question at the foot, and an answer that arrives
+  // whole from its first line, or whole if it fits, smoothly unless the reader has asked for less
+  // motion. An answer that grew in view stays at its end, where it was followed to. Once the reader
   // has scrolled during an answer, nothing moves until the next question (DDR-103).
   const last = state.messages.at(-1);
 
@@ -860,7 +868,7 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
     const region = log.current;
     const item = region?.querySelector('[data-last]');
 
-    if (!region || !(item instanceof HTMLElement) || !follow.current) {
+    if (!region || !(item instanceof HTMLElement) || !follow.current || (grew.current && last?.from === 'twin')) {
       return;
     }
 
@@ -874,25 +882,42 @@ export function DigitalTwinChat({ chat }: { chat: Chat }) {
     });
   }, [last, state.waiting, state.notice]);
 
-  // While an answer grows, the conversation follows its end at once until its first line reaches the
-  // top, which is DDR-100's rule at every moment of the answer (DDR-103).
-  useEffect(() => {
+  // While an answer grows, the conversation follows its end at once, so the newest words stay in
+  // view as the answer runs past the panel's foot. A reader who has scrolled back down to the end as
+  // it stood before this piece is followed again (DDR-103). It runs before the browser paints, so the
+  // newest line is never drawn below the foot first.
+  useLayoutEffect(() => {
     const region = log.current;
-    const item = region?.querySelector('[data-growing]');
 
-    if (!region || !(item instanceof HTMLElement) || !follow.current) {
+    if (!region || state.partial === null) {
       return;
     }
 
-    const top = region.scrollTop + item.getBoundingClientRect().top - region.getBoundingClientRect().top;
+    if (region.scrollTop >= end.current - 1) {
+      follow.current = true;
+    }
 
-    region.scrollTo({ top: Math.min(top, region.scrollHeight - region.clientHeight) });
-    scrolled.current = region.scrollTop;
+    if (follow.current) {
+      region.scrollTo({ top: region.scrollHeight - region.clientHeight });
+      scrolled.current = region.scrollTop;
+      grew.current = true;
+    }
+
+    end.current = region.scrollHeight - region.clientHeight;
   }, [state.partial]);
 
-  // The reader has scrolled away from where the answer was put, so it stops following (DDR-103).
+  // While an answer grows, a reader who scrolls up from where it was followed to stops the following
+  // (DDR-103). An answer can grow shorter for a moment, as a line becomes a list, and the browser then
+  // moves the conversation up to its new end: that is still the end, so it doesn't count as leaving.
   function scroll() {
-    if (state.partial !== null && Math.abs((log.current?.scrollTop ?? 0) - scrolled.current) > 1) {
+    const region = log.current;
+
+    if (
+      region &&
+      state.partial !== null &&
+      region.scrollTop < scrolled.current - 1 &&
+      region.scrollHeight - region.clientHeight - region.scrollTop > 1
+    ) {
       follow.current = false;
     }
   }
