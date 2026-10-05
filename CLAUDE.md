@@ -31,6 +31,8 @@ npm run dev         Start the local development server at http://localhost:3000
 npm run lint        Lint with ESLint; any error or warning fails
 npm run typecheck   Generate Next.js route types, then type-check with tsc
 npm run test        Run the test suite once with Vitest
+npm run test -- components/contents-bar.test.ts     Run one test file
+npm run test -- -t "<test name>"                    Run the tests whose name matches
 npm run build       Build the static site into out/
 ```
 
