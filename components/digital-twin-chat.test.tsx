@@ -676,6 +676,13 @@ describe('DigitalTwinChat', () => {
     expect(css).toMatch(/@media \(min-width: 48em\) \{[\s\S]*\.panel \{\s*inset: auto var\(--chat-inset\) var\(--chat-panel-offset\) auto;\s*inline-size: var\(--chat-panel-width\);\s*block-size: var\(--chat-panel-height\);/);
   });
 
+  // DDR-104: the card is 400px, not the design's 360px, so the header's status and "Clear chat"
+  // stand beside the heading in every state.
+  it('is a card wide enough for the header to hold its status and “Clear chat” on one line', () => {
+    const tokens = readFileSync(new URL('../app/tokens.css', import.meta.url), 'utf8');
+    expect(tokens).toMatch(/--chat-panel-width: 25rem;/);
+  });
+
   // DDR-102: from the wide breakpoint the open launcher stays in view as the panel's close control,
   // after the panel in the markup as it is below it on screen; below it the header's cross closes
   // the full-window panel, and the launcher is hidden under it.

@@ -926,8 +926,10 @@
   --chat-launcher-gradient-angle: 167deg;
   /* The launcher is 44px: a circle below the wide breakpoint and the pill's height from it, inset
      24px from the window's corner there. Open, it is a 48 by 40px pill holding the cross, and the
-     panel stands 16px above it. The panel is 360 by 483px, a size that holds as the conversation
-     grows, and never taller than the window less the contents bar, the launcher and the insets.
+     panel stands 16px above it. The panel is 400 by 483px, wider than the design's 360px so the
+     header's status and "Clear chat" stand beside the heading (DDR-104), a size that holds as the
+     conversation grows, and never taller than the window less the contents bar, the launcher and
+     the insets.
      The field grows to five of its lines and its padding, then scrolls; `lh` is the field's own
      line, so the limit follows its size and leading. */
   --chat-launcher-size: 2.75rem;
@@ -935,7 +937,7 @@
   --chat-close-inline-size: 3rem;
   --chat-close-block-size: 2.5rem;
   --chat-panel-offset: calc(var(--chat-inset) + var(--chat-close-block-size) + var(--space-medium));
-  --chat-panel-width: 22.5rem;
+  --chat-panel-width: 25rem;
   --chat-panel-height: min(
     30.1875rem,
     100dvh - var(--contents-bar-height) - var(--chat-inset) - var(--chat-panel-offset)

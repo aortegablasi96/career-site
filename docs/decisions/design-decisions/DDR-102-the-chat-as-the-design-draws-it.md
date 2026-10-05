@@ -9,6 +9,9 @@ the look the owner drew in `career-site-design`. Where the chat sits, how it beh
 what a screen reader hears all stand. **Amends DDR-101** only in its words: the welcome changes, and
 still nothing follows it but the suggestions.
 
+**Amended by DDR-104**: from the wide breakpoint the panel is 400px wide, not the design's 360px, so
+the header's status and "Clear chat" stand beside the heading in every state.
+
 ## Context
 
 The chat went live with Epic #304 in a design set from the owner's NumisBook widget (DDR-100),
@@ -63,7 +66,8 @@ the design's.
 
 ### The panel
 
-* **From the wide breakpoint** it is a card `--chat-panel-width` wide (22.5rem, 360px) and
+* **From the wide breakpoint** it is a card `--chat-panel-width` wide (22.5rem, 360px; 25rem, 400px,
+  since DDR-104) and
   `--chat-panel-height` tall (483px). It never grows taller than the window, less the contents bar
   and the launcher below it. Its right edge is the launcher's, and it stands `--space-medium` above
   the open launcher, at `--chat-panel-offset` from the window's foot. It is not modal, as before.
@@ -104,7 +108,8 @@ The panel holds three parts, top to bottom.
      panel.
    * From the wide breakpoint, where the status and "Clear chat" don't fit beside the heading,
      they take a line of their own, still at the right. "Unavailable" with "Clear chat" doesn't
-     fit, so the header is two lines then.
+     fit, so the header is two lines then. DDR-104 widens the panel so every status fits beside
+     the heading with "Clear chat"; the second line stays as the fallback.
    * The heading and its subtitle wrap beside the avatar, between words, never below it.
 2. **The conversation**, DDR-100's region named "Conversation", on the panel's surface, with
    `--space-medium` padding and `--chat-gap` between turns. It scrolls inside the panel and takes
