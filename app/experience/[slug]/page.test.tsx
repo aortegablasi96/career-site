@@ -62,8 +62,8 @@ describe('a role’s view', () => {
 
     expect(html.indexOf('<nav')).toBeLessThan(html.indexOf('<main>'));
     expect(nav).toContain('href="/#experience"');
-    // DDR-091: the title leads to the page's top, as Home does.
-    expect(nav).toMatch(/<a [^>]*href="\/"[^>]*>Andreu’s site<\/a>/);
+    // DDR-091: the title leads to the page's top, as Home does, and is the owner's mark, per DDR-105.
+    expect(nav).toMatch(/<a (?=[^>]*href="\/")(?=[^>]*aria-label="Andreu Ortega Blasi, home")[^>]*><svg /);
     expect(nav).not.toContain('aria-current');
   });
 

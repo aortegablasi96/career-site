@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-09-19
 
+**Amended by DDR-105**: the title is the owner's "AO" mark rather than the words "Andreu’s site"
+in bold and the heading ink, and the clearance's title row without script is the mark's height and
+the gap below it. Its place, the paragraph and the links' arrangement stand.
+
 **Amended by DDR-091**: the title's words are now a link to where Home leads, which "A paragraph,
 not a heading and not a link" below ruled out. Its look at rest, its place and the paragraph stand.
 

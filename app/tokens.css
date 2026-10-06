@@ -851,7 +851,9 @@
   /* The contents bar, per DDR-031, which supersedes DDR-010's and DDR-006's rejection of it: the
      contents are pinned to the top of the window rather than scrolling away with the introduction.
 
-     The height is the design's 48px (node 2:7), written in rem so the bar keeps its proportion to
+     The height is the design's 64px (node 552:603), per DDR-105, which took it from the 48px of
+     node 2:7 so the owner's mark has the room the design draws around it. It is written in rem so
+     the bar keeps its proportion to
      the links inside it when text is enlarged, as the page column, the photo and the timeline are.
      It is a minimum rather than a fixed height — the five links wrap when they run out of width,
      and a bar that cannot grow would put them behind its own edge.
@@ -888,8 +890,16 @@
      scrolled to inside it. It is the second length on the page measured from the viewport, after
      the wide photo, because what it limits is the room the window has, in `dvh` so that a phone's
      collapsing toolbar is counted. */
-  --contents-bar-height: 3rem;
+  --contents-bar-height: 4rem;
   --contents-bar-blur: 12px;
+  /* The owner's mark, which is the bar's title since DDR-105, which amends DDR-049: drawn at the
+     design's 40px (node 552:605), in rem so it grows with the text as the words it replaces did,
+     and so it sits in the bar's 64px with 12px above and below it, as the design draws it (node
+     552:604). Its width follows from its
+     59 by 40 grid. Under the pointer and on keyboard focus it fades to the opacity below rather
+     than taking the accent, as the words did, because the mark is never recoloured. */
+  --contents-bar-mark-height: 2.5rem;
+  --contents-bar-mark-hover-opacity: 0.8;
   --contents-bar-title-row: 0rem;
   --contents-menu-icon-size: 1.5rem;
   --contents-menu-max-size: calc(100dvh - var(--contents-bar-clearance));
@@ -909,6 +919,13 @@
   --color-accent-violet: #7c3aed;
   --color-accent-violet-deep: #6d28d9;
   --color-text-chat: #1e1b4b;
+  /* The owner's mark, per DDR-105 (node 552:605): the A in the chat's deep indigo, and the O in a
+     gradient from an indigo the palette did not hold to the chat's violet. Each is a non-text
+     mark, held to WCAG 1.4.11's 3:1 on the bar: 14.92:1, 10.66:1 and 5.32:1 on the page's
+     surface, and no less than 4.87:1, the violet's, with black behind the bar's 96%. */
+  --color-brand-mark-ink: var(--color-text-chat);
+  --color-brand-mark-start: #312e81;
+  --color-brand-mark-end: var(--color-accent-violet);
   --color-chat-surface: #f8f7ff;
   --color-chat-foot: #f3f4f6;
   --color-chat-edge: #e0d6fd;
@@ -1002,13 +1019,14 @@
 /*
  * A reader without script, per DDR-075. The contents bar cannot open its menu for them, so below the
  * wide breakpoint it lays its links out below the title, as it did before the menu, and the scroll
- * clearance adds the title's row back: its line and the gap below it, per DDR-049. The wide
+ * clearance adds the title's row back: the mark's height and the gap below it, per DDR-049 and
+ * DDR-105. The wide
  * breakpoint, below, takes it away again, where the title shares the links' row with or without
  * script. It is written before that block so that the wide breakpoint wins where both apply.
  */
 @media (scripting: none) {
   :root {
-    --contents-bar-title-row: calc(var(--font-size-x-large) * var(--line-height-body) + var(--space-small));
+    --contents-bar-title-row: calc(var(--contents-bar-mark-height) + var(--space-small));
   }
 }
 
@@ -1020,7 +1038,7 @@
  * one factor keeps every space in step with the others.
  *
  * Since DDR-049 it also takes the contents bar's title row out of the scroll clearance, because
- * from here the title shares the links' row and the bar is its own 48px again. Since DDR-075 the
+ * from here the title shares the links' row and the bar is its own 64px again. Since DDR-075 the
  * title row is only ever something without script, but the reason it is nothing here is the same.
  */
 @media (min-width: 48em) {

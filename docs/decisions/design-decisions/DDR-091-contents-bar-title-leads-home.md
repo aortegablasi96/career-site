@@ -4,6 +4,10 @@ Status: Accepted
 
 Date: 2026-10-02
 
+**Amended by DDR-105**: the title is the owner's mark, so its link is named by `aria-label`, "Andreu
+Ortega Blasi, home", rather than by its visible text, and under the pointer and on focus the mark
+fades rather than taking the accent. Where it leads and what choosing it does stand.
+
 **Amends DDR-049 in one respect**: the site's title in the contents bar is no longer "not a link".
 Its words lead where the bar's Home link leads. Everything else DDR-049 decides stands: the title's
 words, size, weight, ink and place, the paragraph that holds it, the links' arrangement and the

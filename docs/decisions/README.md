@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `031`. The next DDR is `105`.** Update both lines when a record lands.
+**The next ADR is `031`. The next DDR is `106`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -52,7 +52,7 @@ ADR-001, ADR-002 and ADR-004 to ADR-030 are accepted. ADR-003 is superseded.
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-104. There are
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-105. There are
 two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
@@ -119,7 +119,7 @@ Each record keeps everything not listed against it.
   the space above its hairline; DDR-100 pads its foot on screen for the chat's launcher.
 * **DDR-029** (pill labels): DDR-073 takes the email pill's visible label.
 * **DDR-031** (sticky bar): DDR-033 its underline; DDR-034 the scrolled edge; DDR-042 current
-  section; DDR-045 Home link and 8px narrow gap; DDR-049 title at the left.
+  section; DDR-045 Home link and 8px narrow gap; DDR-049 title at the left; DDR-105 64px tall.
 * **DDR-033**: DDR-042 underlines the current section's link as a state.
 * **DDR-034** (bar edge): DDR-048 draws the edge at all times.
 * **DDR-036** (dot): DDR-046 takes its fill; DDR-057 sizes it 16px/10px on screen, 12px on paper.
@@ -132,7 +132,9 @@ Each record keeps everything not listed against it.
   "Ask it on its own page" and a reply's links.
 * **DDR-044** (service pills): DDR-047 the GitHub hover fill; DDR-073 the email pill's M alone.
 * **DDR-049** (bar title): DDR-075 the menu below the wide breakpoint; DDR-091 the title leads
-  where Home does, which it ruled out.
+  where Home does, which it ruled out; DDR-105 the title is the owner's mark.
+* **DDR-091** (title leads home): DDR-105 names the mark's link by `aria-label` and fades the mark
+  on hover and focus rather than taking the accent.
 * **DDR-075** (menu): DDR-091 the title's link closes it too, though it is outside the menu.
 * **DDR-050** (project view): DDR-052 neighbours; DDR-053 gallery; DDR-078 "How I built it";
   DDR-079 the business-case switch; DDR-081 the gallery's thumbnails in the lead's column; DDR-082

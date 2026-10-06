@@ -345,6 +345,9 @@ describe('colour tokens', () => {
       'accent-violet',
       'accent-violet-deep',
       'text-chat',
+      'brand-mark-ink',
+      'brand-mark-start',
+      'brand-mark-end',
       'chat-surface',
       'chat-foot',
       'chat-edge',
@@ -498,6 +501,11 @@ describe('colour tokens', () => {
     { foreground: 'text-faint', background: 'surface-card', asked: 4.5, recorded: 2.56, meets: false },
     { foreground: 'chat-edge', background: 'surface-card', asked: 0, recorded: 1.38, meets: true },
     { foreground: 'chat-hairline', background: 'surface-card', asked: 0, recorded: 1.19, meets: true },
+    // The owner's mark, per DDR-105: the bar's title, drawn over the bar's surface, which is the
+    // page's at 96%. Each ink is a mark rather than text, so WCAG 1.4.11's 3:1 is what is asked.
+    { foreground: 'brand-mark-ink', background: 'surface', asked: 3, recorded: 14.92, meets: true },
+    { foreground: 'brand-mark-start', background: 'surface', asked: 3, recorded: 10.66, meets: true },
+    { foreground: 'brand-mark-end', background: 'surface', asked: 3, recorded: 5.32, meets: true },
   ] as const;
 
   it.each(pairings)(
@@ -1141,6 +1149,7 @@ describe('responsive tokens', () => {
   // DDR-075: with script the title shares its row with the menu's button at every width, so the
   // clearance counts no title row; without script it counts the row the title takes above the
   // links, as DDR-049 did, until the wide breakpoint, which is written after it, takes it away.
+  // Since DDR-105 the title is the owner's mark, so its row is the mark's 40px and the gap below.
   it('counts the bar’s title row in the clearance only without script, below the wide breakpoint, per DDR-075', () => {
     expect(token('contents-bar-title-row')).toBe('0rem');
     expect([...mediaRules.map(({ query }) => query)]).toEqual([
@@ -1152,13 +1161,21 @@ describe('responsive tokens', () => {
     expect([...redefined(withoutScript?.body).entries()]).toEqual([
       [
         'contents-bar-title-row',
-        'calc(var(--font-size-x-large) * var(--line-height-body) + var(--space-small))',
+        'calc(var(--contents-bar-mark-height) + var(--space-small))',
       ],
     ]);
   });
 
   // DDR-075: the menu's mark is WCAG 2.5.8's 24 by 24 on its own, so the button clears it before
   // its padding, and the open panel is held inside the window below the clearance.
+  // DDR-105: the owner's mark is the design's 40px in the design's 64px bar, which was 48px, and
+  // fades a little when pointed at rather than being recoloured.
+  it('draws the bar’s title as the design’s 40px mark in its 64px bar, per DDR-105', () => {
+    expect(rem(token('contents-bar-mark-height')!) * 16).toBe(40);
+    expect(rem(token('contents-bar-height')!) * 16).toBe(64);
+    expect(token('contents-bar-mark-hover-opacity')).toBe('0.8');
+  });
+
   it('draws the menu’s mark at 24px and holds its panel inside the window, per DDR-075', () => {
     expect(token('contents-menu-icon-size')).toBe('1.5rem');
     expect(rem(token('contents-menu-icon-size')!) * 16).toBe(24);

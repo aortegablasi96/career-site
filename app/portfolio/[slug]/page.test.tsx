@@ -83,8 +83,9 @@ describe('a project’s view', () => {
     );
 
     expect(html.indexOf('<nav')).toBeLessThan(html.indexOf('<main>'));
+    // DDR-091: the title leads to the page's top, as Home does, and is the owner's mark, per DDR-105.
+    expect(nav).toMatch(/<a (?=[^>]*href="\/")(?=[^>]*aria-label="Andreu Ortega Blasi, home")[^>]*><svg /);
     expect(links).toEqual([
-      { href: '/', word: 'Andreu’s site' },
       { href: '/', word: 'Home' },
       { href: '/#experience', word: 'Experience' },
       { href: '/#portfolio', word: 'Portfolio' },

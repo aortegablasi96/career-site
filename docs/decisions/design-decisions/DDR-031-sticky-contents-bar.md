@@ -4,6 +4,9 @@ Status: Accepted
 
 Date: 2026-09-18
 
+**Amended by DDR-105**: the bar is the design's 64px, where it was 48px, so the owner's mark has the
+room the design draws around it. It is still a minimum, and the clearance still follows it.
+
 **Supersedes in part DDR-010**, and through it DDR-006: the bullet under "The contents" that says
 "It is not sticky", and the alternative "Adopt the sticky navigation bar" that it rests on. The
 contents are now the design's bar, pinned to the top of the window. Everything else DDR-010 says

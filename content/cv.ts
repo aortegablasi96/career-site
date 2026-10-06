@@ -181,9 +181,13 @@ import type { Cv } from './types';
  * so the CV file need not change. The chat's control that clears it moved it once more, for the same
  * reason, and so did removing the chat's note on where messages go (DDR-101), and giving the chat
  * the design's words (DDR-102).
+ *
+ * It moved again with #330, because the contents bar's title is now the owner's mark, per DDR-105,
+ * and its words became the name of the mark's link. The bar does not print, and the title is not a
+ * fact ADR-005 lists as shared, so it did not move the CV.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '0f1935740136e959a521795e4c784c0e471ae845670b07fb256e7bd7e4de9572',
+  contentDigest: '768385aefc243281b38fed3490ca968bb8cee0221e690fba11e6007011f88644',
 };

@@ -1,0 +1,29 @@
+/*
+ * The owner's mark, per DDR-105, in the design's inks (node 552:605). The mark is a block, so it
+ * takes no line box and adds no space below itself, and its width follows the height a place gives
+ * it through the grid's 59 by 40. Nothing here changes under the pointer or on focus: the mark is
+ * never recoloured, and what lights its link is the link's own rule.
+ */
+.mark {
+  display: block;
+  inline-size: auto;
+}
+
+/* The A and its crossbar, in the deep indigo the chat's ink already is. */
+.ink {
+  fill: var(--color-brand-mark-ink);
+}
+
+.bar {
+  fill: none;
+  stroke: var(--color-brand-mark-ink);
+}
+
+/* The O, in a gradient from indigo to the violet the chat's accent already is. */
+.start {
+  stop-color: var(--color-brand-mark-start);
+}
+
+.end {
+  stop-color: var(--color-brand-mark-end);
+}
