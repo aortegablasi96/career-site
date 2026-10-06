@@ -1,8 +1,12 @@
 # DDR-094-The Site's Icon Is a Serif A on the Accent
 
-Status: Accepted
+Status: Superseded
 
 Date: 2026-10-02
+
+**Superseded by DDR-106**: the icon is the owner's "AO" mark on a white rounded square (#331).
+The three files, their sizes, the browser's rounded square and the phone's full square stand; the
+white serif A on the accent does not.
 
 ## Context
 

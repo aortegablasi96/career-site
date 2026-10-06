@@ -10,7 +10,7 @@ Alternatives Considered, Consequences and Related Documents. Files are named seq
 descriptively, `ADR-001-short-title.md`, `DDR-001-short-title.md`. Status is `Proposed`, `Accepted`,
 `Superseded` or `Deprecated`.
 
-**The next ADR is `031`. The next DDR is `106`.** Update both lines when a record lands.
+**The next ADR is `031`. The next DDR is `107`.** Update both lines when a record lands.
 
 When a record supersedes or amends another, say so at the top of both records and again at the
 section concerned, and add a line below. Read the newest record first, and the older one for the
@@ -52,8 +52,8 @@ ADR-001, ADR-002 and ADR-004 to ADR-030 are accepted. ADR-003 is superseded.
 
 ## DDRs
 
-Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-105. There are
-two files numbered 059 (`introduction-photo-centred` and `role-view`).
+Accepted: DDR-010, DDR-011, DDR-013 to DDR-015, DDR-017 to DDR-057, DDR-059 to DDR-093, DDR-095 to
+DDR-106. There are two files numbered 059 (`introduction-photo-centred` and `role-view`).
 
 ### Superseded outright
 
@@ -71,6 +71,7 @@ two files numbered 059 (`introduction-photo-centred` and `role-view`).
 | DDR-012    | DDR-025 | The design's palette entire, with pairings that fail WCAG |
 | DDR-016    | DDR-021 | Photo corner radius and lights; ratio and widths carry over |
 | DDR-058    | DDR-073 | Email pill shows Gmail's M alone; "Email me" is its accessible name |
+| DDR-094    | DDR-106 | The icon is the owner's AO mark on a white rounded square; its files and shapes carry over |
 
 ### Superseded or amended in part
 
