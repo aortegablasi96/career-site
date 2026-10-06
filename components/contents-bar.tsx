@@ -11,6 +11,7 @@ import {
   type KeyboardEvent,
   type MouseEvent,
 } from 'react';
+import { BrandMark } from './brand-mark';
 import { Icon } from './icon';
 import styles from './contents.module.css';
 
@@ -197,7 +198,7 @@ function choose(event: MouseEvent): void {
  * Whether a click in the bar was on one of its links, which closes the menu, per DDR-075: the
  * reader has chosen where to go, and the menu would otherwise stay open over the section they
  * went to. The site's title is one of them since DDR-091, though it is outside the menu. A click on
- * the button, or beside the title's words, is not one.
+ * the button, or beside the title's mark, is not one.
  */
 export function choseLink(event: Pick<MouseEvent, 'target'>): boolean {
   return event.target instanceof Element && event.target.closest('a') !== null;
@@ -239,8 +240,10 @@ function currentSectionOnServer(): string | null {
  * only thing that sets it apart is that it has no section to measure.
  *
  * Before the links it shows the site's title, per DDR-049, which the stylesheet sets at the left of
- * the page's column, with the links at its right. Since DDR-091 its words lead where Home does, so
- * choosing them glides, holds the mark on Home and closes the menu exactly as choosing Home does:
+ * the page's column, with the links at its right. Since DDR-105 the title is the owner's mark rather
+ * than words, and `title` is the name its link carries, since the mark says nothing to assistive
+ * technology. Since DDR-091 it leads where Home does, so
+ * choosing it glides, holds the mark on Home and closes the menu exactly as choosing Home does:
  * the code that handles a contents link handles it, because its address is Home's. It is never
  * marked itself, since Home is the link that names that place, and nothing about it changes as the
  * page scrolls.
@@ -272,6 +275,7 @@ export function ContentsBar({
 }: {
   label: string;
   home: string;
+  /** The accessible name of the title's link, which shows the owner's mark, per DDR-105. */
   title: string;
   /** The accessible name of the button that opens the links below the wide breakpoint. */
   menu: string;
@@ -343,12 +347,12 @@ export function ContentsBar({
       <div className={styles.bar}>
         <p className={styles.title}>
           {page === undefined ? (
-            <a href={`#${homeId}`} className={styles.home}>
-              {title}
+            <a href={`#${homeId}`} className={styles.home} aria-label={title}>
+              <BrandMark className={styles.mark} />
             </a>
           ) : (
-            <Link href={page} className={styles.home} prefetch={false}>
-              {title}
+            <Link href={page} className={styles.home} aria-label={title} prefetch={false}>
+              <BrandMark className={styles.mark} />
             </Link>
           )}
         </p>

@@ -27,7 +27,7 @@ function rowRule(selector: string): string {
   return block.match(new RegExp(`(?:^|\\n)\\s*${escaped}\\s*\\{([^}]*)\\}`))?.[1] ?? '';
 }
 
-const title = 'Andreu’s site';
+const title = 'Andreu Ortega Blasi, home';
 
 /** The bar as the server renders it, with the menu's name. */
 function render(): string {
@@ -50,7 +50,8 @@ describe('Contents', () => {
 
   // DDR-031: a link shows the design's word for its section, which is not always the heading.
   // DDR-045: the first link is Home, which leads to the top of the page, before every section.
-  // DDR-091: the site's title, before Home, leads there too.
+  // DDR-091: the site's title, before Home, leads there too, and since DDR-105 it shows the
+  // owner's mark rather than words, so it is the one link without a word of its own.
   it('links to the top of the page, then to each section by its content’s word, in order', () => {
     const html = render();
     const links = [...html.matchAll(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(([, href, text]) => ({
@@ -59,7 +60,6 @@ describe('Contents', () => {
     }));
 
     expect(links).toEqual([
-      { href: '#top', text: 'Andreu’s site' },
       { href: '#top', text: 'Home' },
       { href: '#experience', text: 'Experience' },
       { href: '#education', text: 'Education' },
@@ -112,38 +112,42 @@ describe('Contents', () => {
 
   // DDR-049: the title starts at the column's left edge, and the links follow it in the markup, as
   // they do on screen, so the reading order and the tab order are what the bar shows. DDR-091,
-  // amending DDR-049: the title's words are a link to where Home leads, named by those words alone,
-  // and never marked, since Home is the link that names that place.
-  it('shows the site’s title before the links, as a link to the top, per DDR-049 and DDR-091', () => {
+  // amending DDR-049: the title is a link to where Home leads, and never marked, since Home is the
+  // link that names that place. DDR-105, amending both: the title is the owner's mark, hidden from
+  // assistive technology, and the link is named by the content, so it is announced as one link.
+  it('shows the site’s title before the links, as a link to the top, per DDR-049, DDR-091 and DDR-105', () => {
     const html = render();
 
     expect(html).toMatch(
-      /<div [^>]*><p [^>]*><a href="#top" [^>]*>Andreu’s site<\/a><\/p><button [^>]*>.*<\/button><ul /,
+      /<div [^>]*><p [^>]*><a href="#top" [^>]*aria-label="Andreu Ortega Blasi, home"><svg [^>]*>.*<\/svg><\/a><\/p><button [^>]*>.*<\/button><ul /,
     );
     expect(html.match(/<a /g)).toHaveLength(4);
-    expect(html).not.toMatch(/aria-label="[^"]*site/);
+    expect(html.match(/<svg [^>]*>/)?.[0]).toMatch(/aria-hidden="true"/);
   });
 
-  // DDR-091: at rest the title keeps the heading ink and no underline, as it looked when it was
-  // text; under the pointer and on keyboard focus it takes the accent, as a contents link does, per
-  // DDR-035. It stays inline, so its box is the words and the bar's height cannot move.
-  it('draws the title’s link as the title at rest and in the accent when pointed at, per DDR-091', () => {
+  // DDR-105, amending DDR-091: the link's box is the mark's, with the small radius the focus
+  // outline follows; under the pointer and on keyboard focus the mark fades a little rather than
+  // taking the accent, as the words did, because the mark is never recoloured.
+  it('draws the title’s link as the mark, which fades when pointed at, per DDR-105', () => {
     const home = rule('.home');
 
-    expect(home).toMatch(/color:\s*var\(--color-text-heading\);/);
-    expect(home).toMatch(/text-decoration-line:\s*none;/);
-    expect(home).not.toMatch(/display/);
-    expect(styles).toMatch(/\.home:hover,\s*\.home:focus-visible\s*\{\s*color:\s*var\(--color-accent\);\s*\}/);
+    expect(home).toMatch(/display:\s*flex;/);
+    expect(home).toMatch(/border-radius:\s*var\(--radius-small\);/);
+    expect(home).not.toMatch(/color/);
+    expect(styles).toMatch(
+      /\.home:hover \.mark,\s*\.home:focus-visible \.mark\s*\{\s*opacity:\s*var\(--contents-bar-mark-hover-opacity\);\s*\}/,
+    );
   });
 
-  // DDR-049: the title is at the column's left edge, larger than the links and bold; the list's
-  // auto margin takes the links to the other edge, and each row they wrap to is set to the right.
-  it('puts the larger bold title at the left of the column and the links at its right, per DDR-049', () => {
+  // DDR-049: the title is at the column's left edge; the list's auto margin takes the links to the
+  // other edge, and each row they wrap to is set to the right. DDR-105: the title is the mark, at
+  // the design's height, laid out with no line of text around it, so the bar keeps its height.
+  it('puts the mark at the left of the column and the links at its right, per DDR-049 and DDR-105', () => {
     expect(rowRule('.list')).toMatch(/padding:\s*0;/);
     expect(rowRule('.list')).toMatch(/margin-inline-start:\s*auto;/);
     expect(rowRule('.list')).toMatch(/justify-content:\s*flex-end;/);
-    expect(rule('.title')).toMatch(/font-size:\s*var\(--font-size-x-large\);/);
-    expect(rule('.title')).toMatch(/font-weight:\s*var\(--font-weight-bold\);/);
+    expect(rule('.title')).toMatch(/display:\s*flex;/);
+    expect(rule('.mark')).toMatch(/block-size:\s*var\(--contents-bar-mark-height\);/);
   });
 
   // DDR-025: the design sets a contents link in #64748b where every other link on the page is in
@@ -155,10 +159,11 @@ describe('Contents', () => {
   // DDR-033: the design draws no underline on a contents link, and it supersedes DDR-025's ruling
   // that kept one. The link is identified by its place in the bar, its weight and its focus
   // outline. Only the link rule takes the underline away, so no other link on the page loses it;
-  // the title's link takes it away too, per DDR-091, and the third is DDR-042's mark.
+  // the other is DDR-042's mark. The title's link, which DDR-091 also took it away from, holds no
+  // words to underline since DDR-105.
   it('draws no underline on a contents link, per DDR-033', () => {
     expect(rule('.link')).toMatch(/text-decoration-line:\s*none;/);
-    expect(styles.match(/text-decoration/g)).toHaveLength(3);
+    expect(styles.match(/text-decoration/g)).toHaveLength(2);
   });
 
   // DDR-042: the static HTML marks no section, so a reader without script gets the bar as it was,

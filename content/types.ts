@@ -234,7 +234,10 @@ export interface Contents {
   label: string;
   /** The word the bar's first link shows, which returns the reader to the top of the page. */
   home: string;
-  /** The site's title, which the bar shows at the left of the page's column, per DDR-049. */
+  /**
+   * The accessible name of the site's title, which the bar shows at the left of the page's column,
+   * per DDR-049, as the owner's mark, per DDR-105. It says whose site it is and that it leads home.
+   */
   title: string;
   /** The accessible name of the button that opens the links below the wide breakpoint, per DDR-075. */
   menu: string;

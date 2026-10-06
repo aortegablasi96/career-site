@@ -48,13 +48,13 @@ describe('HomePage', () => {
 
   // DDR-031: each link shows the design's word, stated beside its section's heading in content/.
   // DDR-045: Home comes first, before every section's link. DDR-091: the site's title, before them
-  // all, is a link too.
+  // all, is a link too, and since DDR-105 it is the owner's mark, named by the content.
   it('labels each contents link with its section’s own link word, after Home', () => {
     const nav = html.match(/<nav [\s\S]*?<\/nav>/)?.[0] ?? '';
     const words = [...nav.matchAll(/<a [^>]*>([^<]+)<\/a>/g)].map(([, word]) => word);
 
+    expect(nav).toMatch(/^<nav [^>]*><div [^>]*><p [^>]*><a href="#top" [^>]*aria-label="Andreu Ortega Blasi, home"[^>]*><svg /);
     expect(words).toEqual([
-      'Andreu’s site',
       'Home',
       'Experience',
       'Portfolio',

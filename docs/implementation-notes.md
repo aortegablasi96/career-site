@@ -177,6 +177,8 @@ The page itself is the CV, so what it prints is designed.
   loads and focus scrolls.
 * **Home is `#top`; no element may have the id `top`** (`app/page.test.tsx`). The title's link
   (DDR-091) leads there too, so it glides, marks Home and closes the menu through the same code.
+* **The bar's title is `BrandMark`, inline SVG** (DDR-105), named by its link's `aria-label`. Its
+  gradient's id, `brand-mark-ring`, is fixed: a second mark on one page needs its own.
 * **Without script the bar is the full row at every width**, through `(scripting: none)`, and
   `--contents-bar-title-row` returns to the clearance there.
 * **The clearance is the root's `scroll-padding-block-start`**; sections write no `scroll-margin`.
