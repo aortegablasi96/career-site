@@ -185,6 +185,28 @@ import type { Cv } from './types';
  * It moved again with #330, because the contents bar's title is now the owner's mark, per DDR-105,
  * and its words became the name of the mark's link. The bar does not print, and the title is not a
  * fact ADR-005 lists as shared, so it did not move the CV.
+ *
+ * With #335, on Epic #334, the owner replaced the file with their redesigned CV, and it was reviewed
+ * against the content this digest records, which did not move. Two of #59's differences are gone:
+ * its AI portfolio is now the site's Digital Twin, NumisBook and Stock Portfolio Viewer, with the
+ * links the site gives them, and the "LLM Evaluation & Quality Framework" and its 20% are gone with
+ * it. It also links to the site, and its profile is rewritten, which ADR-005 leaves free.
+ * It adds one credential, "Proficient AI Engineer", Ed Donner, 2026, which the site does not list
+ * until #336 adds it from the issued certificate. These differences still stand, and the owner left
+ * them out of Epic #334:
+ * - The job titles: "Global Product Manager - UPS Digital Services" at ABB, "Product Manager - SaaS
+ *   solutions" at Ponera Group and "Project Manager - Data & Digital Projects" at Randstad, against
+ *   DDR-060's titles.
+ * - Randstad's city and end date: Ghent and June 2023, against Leuven and May 2023.
+ * - Electrónica Digital de Protección's role, which the CV leaves out.
+ * - English "Fluent" and Italian "Intermediate", against C1 and B2, and "Universitat Politècnica,
+ *   Barcelona", against "Universitat Politècnica de Catalunya".
+ * - Credentials dated by the year and awarded by "PMI", against the month and "Project Management
+ *   Institute".
+ * - "Coin Collection Management SaaS" and "On-premise stock portfolio manager", against NumisBook
+ *   and Stock Portfolio Viewer, and This site, which the CV does not list as a project.
+ * - Counts the site does not state: 4+ years, a 5+ product portfolio, 4 cross-functional teams,
+ *   10+ sales and technical teams, 5+ vendors, 2 client engagements and 3 business processes.
  */
 export const cv: Cv = {
   label: 'Get my CV',
