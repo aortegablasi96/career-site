@@ -48,9 +48,11 @@ describe('Credentials', () => {
 
   // DDR-057: the dates stand above the card, which opens with the institution and then the name.
   it('gives each certification the month it was granted, then its issuer and its name', () => {
+    expect(text).toContain('Oct 2026 Ed Donner Proficient AI Engineer');
     expect(text).toContain('May 2026 Project Management Institute PMI Certified Professional in Managing AI (PMI-CPMAI)');
     expect(text).toContain('Jun 2024 Project Management Institute Project Management Professional (PMP)');
     expect(text).not.toContain('Project Management Institute ·');
+    expect(text).not.toContain('Ed Donner ·');
   });
 
   it('gives each degree the months it ran, then its institution and its name', () => {
@@ -147,10 +149,13 @@ describe('credentials content', () => {
     expect(credentials.title).toBe('Education and certifications');
   });
 
-  it('names and dates each certification as its certificate does, issued by the Project Management Institute', () => {
+  // #336: the Proficient AI Engineer credential as its certificate states it, completed on
+  // 8 October 2026, with the name, body and year the owner's CV gives.
+  it('names and dates each certification as its certificate does', () => {
     expect(certifications.map(({ name, institution, granted }) => [name, institution, granted])).toEqual([
       ['Project Management Professional (PMP)', 'Project Management Institute', '2024-06'],
       ['PMI Certified Professional in Managing AI (PMI-CPMAI)', 'Project Management Institute', '2026-05'],
+      ['Proficient AI Engineer', 'Ed Donner', '2026-10'],
     ]);
   });
 
@@ -162,24 +167,27 @@ describe('credentials content', () => {
   });
 
   // DDR-068: the UPC's official logo, as a WebP beside the others, per ADR-004. PMI allows its logo
-  // only with its written authorization, which the owner has asked for on #197, so neither
-  // certification carries one yet.
-  it('gives both degrees the UPC’s logo, drawn tall, and neither certification a logo', () => {
+  // only with its written authorization, which the owner has asked for on #197, and the owner
+  // supplied no logo for the Proficient AI Engineer credential on #336, so no certification
+  // carries one yet.
+  it('gives both degrees the UPC’s logo, drawn tall, and no certification a logo', () => {
     for (const { logo, logoTall } of degrees) {
       expect(logo).toBe('/education/upc/logo.webp');
       expect(logoTall).toBe(true);
       expect(existsSync(new URL(`../public${logo}`, import.meta.url))).toBe(true);
     }
-    expect(certifications.map(({ logo }) => logo)).toEqual([undefined, undefined]);
+    expect(certifications.map(({ logo }) => logo)).toEqual([undefined, undefined, undefined]);
   });
 
-  // DDR-069: a degree leads to the UPC's site, and a certification to its Credly badge, the
-  // addresses in the owner's knowledge base. The page links to the badge and draws none of it.
-  it('leads each degree to the UPC’s site and each certification to its own badge', () => {
+  // DDR-069: a degree leads to the UPC's site, a PMI certification to its Credly badge, the
+  // addresses in the owner's knowledge base, and the Proficient AI Engineer credential to its
+  // certificate, the address the owner gave on #336. The page draws none of them.
+  it('leads each degree to the UPC’s site and each certification to its own badge or certificate', () => {
     expect(degrees.map(({ href }) => href)).toEqual(['https://www.upc.edu', 'https://www.upc.edu']);
     expect(certifications.map(({ href }) => href)).toEqual([
       'https://www.credly.com/badges/0453ee02-59fe-441b-9481-48ca4030662d',
       'https://www.credly.com/badges/a8e7a58f-ee8d-4f21-9b7a-136d353ffc6a',
+      'https://proficientaiengineer.com/certificate/5358f6e9-71aa-4561-80d7-74dfce85fe98',
     ]);
     expect(html).not.toMatch(/<img[^>]*credly/i);
   });
