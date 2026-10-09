@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-09-27
 
+**Extended per #336**: the Proficient AI Engineer credential, from Ed Donner, leads to its certificate on the program's site, where the program verifies it, as the owner gave it. Nothing else about the cards changes.
+
 **Reworded per #291**: the hint reads "Open a credential to learn more", where it read "Click any credential…", so it names no input device. Its place and look are unchanged.
 
 **Amends DDR-057, DDR-059, DDR-063, DDR-064 and DDR-043.** Each card in the education timeline is
@@ -40,6 +42,7 @@ the owner keeps in their knowledge base, where PMI verifies each one.
   | Master's degree in IoT | https://www.upc.edu |
   | Project Management Professional (PMP) | its Credly badge, `…/badges/0453ee02-…` |
   | PMI Certified Professional in Managing AI (PMI-CPMAI) | its Credly badge, `…/badges/a8e7a58f-…` |
+  | Proficient AI Engineer (added per #336) | its certificate, `proficientaiengineer.com/certificate/5358f6e9-…` |
 
 * **Each opens a new tab**, as the LinkedIn and GitHub pills do, per DDR-043, which this widens to
   the education cards. The owner chose it on #200: like a profile, each is a page off the site that

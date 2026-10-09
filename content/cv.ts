@@ -207,9 +207,15 @@ import type { Cv } from './types';
  *   and Stock Portfolio Viewer, and This site, which the CV does not list as a project.
  * - Counts the site does not state: 4+ years, a 5+ product portfolio, 4 cross-functional teams,
  *   10+ sales and technical teams, 5+ vendors, 2 client engagements and 3 business processes.
+ *
+ * It moved again with #336, which lists the Proficient AI Engineer credential from its issued
+ * certificate: "Proficient AI Engineer", from Ed Donner, completed in October 2026. That is the
+ * name, the body and the year the CV file gives, so the CV now agrees with the site and did not
+ * change. Like the PMI certifications, the CV dates it by the year alone, which the difference
+ * above already covers.
  */
 export const cv: Cv = {
   label: 'Get my CV',
   file: '/home/andreu-ortega-blasi-cv.pdf',
-  contentDigest: '768385aefc243281b38fed3490ca968bb8cee0221e690fba11e6007011f88644',
+  contentDigest: '7751664fc5dacc5e8af3eb502d898641b8fc96686cc2b6032c2d1a41501ef3e8',
 };

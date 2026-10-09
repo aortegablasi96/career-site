@@ -1,7 +1,7 @@
 import { introduction } from './introduction';
 import type { Credentials } from './types';
 
-/** The body that issued both certifications, as their certificates name it. */
+/** The body that issued the two PMI certifications, as their certificates name it. */
 const pmi = 'Project Management Institute';
 
 /** Where the owner took both degrees. */
@@ -22,11 +22,13 @@ const upcSite = 'https://www.upc.edu';
  * answers on #26. The owner removed each degree's thesis sentence on #173.
  *
  * The degrees carry the UPC's logo, per DDR-068. The certifications carry none: PMI allows its logo
- * only with its written authorization, which the owner has asked for, per #197.
+ * only with its written authorization, which the owner has asked for, per #197, and the owner
+ * supplied none for the Proficient AI Engineer credential on #336.
  *
- * Each card leads off the site, per DDR-069: a degree's to the UPC's site, and a certification's to
- * its Credly badge, the addresses the owner keeps in their knowledge base. The page links to the
- * badge and draws none of it.
+ * Each card leads off the site, per DDR-069: a degree's to the UPC's site, a PMI certification's to
+ * its Credly badge, the addresses the owner keeps in their knowledge base, and the Proficient AI
+ * Engineer credential's to its certificate, where its program verifies it, the address the owner
+ * gave on #336. The page links to each and draws none of it.
  */
 export const credentials: Credentials = {
   title: 'Education and certifications',
@@ -66,6 +68,14 @@ export const credentials: Credentials = {
       institution: pmi,
       href: 'https://www.credly.com/badges/a8e7a58f-ee8d-4f21-9b7a-136d353ffc6a',
       granted: '2026-05',
+    },
+    {
+      // As its certificate names it: the program's title, created by Ed Donner, completed on
+      // 8 October 2026. The CV gives the same name and body, and the year.
+      name: 'Proficient AI Engineer',
+      institution: 'Ed Donner',
+      href: 'https://proficientaiengineer.com/certificate/5358f6e9-71aa-4561-80d7-74dfce85fe98',
+      granted: '2026-10',
     },
   ],
 };
